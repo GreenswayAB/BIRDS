@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+createSampleData.R
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

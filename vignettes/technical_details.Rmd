@@ -1,0 +1,98 @@
+---
+title: "BIRDS technical details"
+author: "Alejandro Ruete and Debora Arlt"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BIRDS technical details}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#'
+#' OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
+#'  taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
+#'
+#' # polygon
+#' data(searchPolygon)
+#' # alternatively:
+#' # polygon <- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")
+#' grid<-makeGrid(searchPolygon, gridSize = 10)
+
+#' overlaidB <- overlayBirds(x=OB, grid=grid, spillOver = TRUE)
+#' SB <- summariseBirds(OB, grid=grid)
+
+
+Now use organise the data into a visit-based structure. Decide about the variables to use for identifying visist. The default is .... 
+organiseBirds(....)
+[perhaps explain some of the specification used in the specific function call]
+
+...
+If you cannot use named locations you can define visits by overlaying the data with a spatial grid. ....some more brief explanation:
+Code
+
+..explaining the spillover
+
+.....etc.
+
+Your organised data may now look like this:
+.....
+
+Something about refining visits and using exploreVisits().
+
+When coming to the output just demonstrate the main functions, and show a couple of typical plots /maps.
+
+### exports
+EBnObs<- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
+EBnVis<- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "sum")
+EBavgObs<- colMeans(SB$spatioTemporal[,,"Yearly","nObs"], na.rm = TRUE) #exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "median")
+EBavgVis<- colMeans(SB$spatioTemporal[,,"Yearly","nVis"], na.rm = TRUE) #exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "median")
+EBavgSll<- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
+relObs<-EBnObs/EBnVis
+
+
+Defining visits using a combination of variables
+
+…describe 
+
+Defining visits using the grid overlay
+
+…describe 
+
+
+Use this here:
+Spill over:
+In general in this package NA are left for complete spatial gaps (no data in the grid cell at any time during the considered time period), while 0 is used for temporal gaps (there is data in the grid cell but not at this time unit).
+
+
+Species list length (SLL)
+
+The SLL per visit is calculated as the number of unique species found among all observations belonging to an identified visit. 
+
+Fore the derived summaries….
+
+Your text:
+average species list length per grid cell (the mean among the grid cells of the median  of all the grids visits SLL)
+
+….sorry – I can’t work out how you calculate the averages – mean /median?
+Can you describe how it is done?
+1)	For each visit: no. species,
+2)	…now somehow median for visits in a grid cell – but over what temporal unit?
+3)	…now somehow mean from the medians
+
+
+exportBirds() - (plus other examples on the extraction of summaries not yet implemented into that function)
+
+
+Any other consept/function that needs more detailed explanation?
+
+
+
