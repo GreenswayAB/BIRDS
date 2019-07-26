@@ -7,8 +7,9 @@
 \usage{
 organizeBirds(x, sppCol = "scientificName", timeCol = c(Year = "year",
   Month = "month", Day = "day"), visitsIdentifier = c("locality", "day",
-  "month", "year", "recordedBy"), xyCols = c("decimalLongitude",
-  "decimalLatitude"), dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
+  "month", "year", "recordedBy"), presenceCol = NULL,
+  xyCols = c("decimalLongitude", "decimalLatitude"),
+  dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
   simplifySppName = FALSE)
 }
@@ -18,9 +19,8 @@ column for species name, one or several columns for date of observation, one or
 several columns for identifying a visit and, if it is not spatial, coordinate
 columns.}
 
-\item{sppCol}{A character string of the column name for the column which is
-holding the species names. Default is the Darwin Core standard name
-\code{"scientificName"}.}
+\item{sppCol}{A character string with the column name for the column for the
+species names. Default is the Darwin Core standard name \code{"scientificName"}.}
 
 \item{timeCol}{A character vector (named or not) of the names for the
 column(s) which is holding the observation dates. Default is the Darwin Core
@@ -30,6 +30,9 @@ standard column names \code{c("Year"="year", "Month"="month", "Day"="day")}.}
 are holding the information that identifies a visit. Default is the Darwin
 Core standard column names \code{c("locality", "day", "month", "year",
 "recordedBy")}.}
+
+\item{presenceCol}{A character string with the column name for the column for the
+precense status. Default is \code{NULL}.}
 
 \item{xyCols}{A character vector of the names for the columns that are holding
 the coordinates for the observations. The order should be longitude(x),
@@ -51,7 +54,7 @@ Only evaluated if taxonRankCol is not \code{NULL}}
 \item{simplifySppName}{wheter to remove everything else that is not the species name (authors, years and intraspecific epithets). Default set to FALSE}
 }
 \value{
-A OrganizedBirds-class.
+a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 }
 \description{
 Takes a dataframe with reported species observations and reformats it to a

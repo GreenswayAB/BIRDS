@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Götaland, Sweden. — gotaland • BIRDS</title>
+<title>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217; — OB2Polygon • BIRDS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Götaland, Sweden. — gotaland" />
+<meta property="og:title" content="Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217; — OB2Polygon" />
 
-<meta property="og:description" content="A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
-holes for water bodies." />
+<meta property="og:description" content="Create the polygon for the study area from a dataset of class &amp;#8216;OrganizedBirds&amp;#8217;" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,32 +114,58 @@ holes for water bodies." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Götaland, Sweden.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>gotaland.Rd</code></div>
+    <h1>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217;</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/makeGrid.r'><code>R/makeGrid.r</code></a></small>
+    <div class="hidden name"><code>OB2Polygon.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
-holes for water bodies.</p>
+    <p>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217;</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>gotaland</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='fu'>OB2Polygon</span>(<span class='no'>df</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"bBox"</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>df</th>
+      <td><p>an object of class &#8216;OrganizedBirds&#8217; or &#8216;SpatialPointsDataFrame&#8217;</p></td>
+    </tr>
+    <tr>
+      <th>shape</th>
+      <td><p>which type of polygon should be made from the data:</p><ul>
+<li><p>a bounding box (&#8220;bBox&#8221; or &#8220;bounding box&#8221;; i.e. the smallest bounding rectangle
+  that contains all points),</p></li>
+<li><p>a convex hull (&#8220;cHull&#8221; or &#8220;convex hull&#8221;; i.e. the smallest
+  convex set that contains all the points).</p></li>
+<li><p>the minimum circle (&#8220;buffCircle&#8221; or &#8220;buffer circle&#8221;; i.e. the smallest
+  circle that covers all the points).</p></li>
+</ul></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A SpatialPolygonsDataFrame with 1 polygon with CRS(&#8220;+init=epsg:4326&#8221;)</p>
+    <p>an object of class &#8216;SpatialPolygon&#8217; with a polygon with geodesic
+coordinates in WGS84 (ESPG:4326).</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>orgDf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
+<span class='no'>polygon</span> <span class='kw'>&lt;-</span> <span class='fu'>OB2Polygon</span>(<span class='no'>orgDf</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"cHull"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

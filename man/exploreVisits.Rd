@@ -44,7 +44,7 @@ definition of visit aligns with your grid size, you must explore the spatial ext
 OB<-organizeBirds(bombusObs)
 visitStats<-exploreVisits(OB)
 # open an interactive data explorer
-esquisse::esquisser(visitStats)
+# esquisse::esquisser(visitStats)
 }
 
 # alternativelly, plot the variable you want, e.g.:

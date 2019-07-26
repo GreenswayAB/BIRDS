@@ -29,7 +29,7 @@
 #' OB<-organizeBirds(bombusObs)
 #' visitStats<-exploreVisits(OB)
 #' # open an interactive data explorer
-#' esquisse::esquisser(visitStats)
+#' # esquisse::esquisser(visitStats)
 #' }
 #'
 #' # alternativelly, plot the variable you want, e.g.:
@@ -51,7 +51,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
     spdf<- x$spdf
     dat <- spdf@data
   } else {
-    stop("The object 'df' must be of class OrganizedBirds. See the function 'organizeBirds()'.")
+    stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)

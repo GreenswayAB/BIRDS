@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Götaland, Sweden. — gotaland • BIRDS</title>
+<title>Organize the date-column(s) — organizeDate • BIRDS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Götaland, Sweden. — gotaland" />
+<meta property="og:title" content="Organize the date-column(s) — organizeDate" />
 
-<meta property="og:description" content="A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
-holes for water bodies." />
+<meta property="og:description" content="Organize the date-column(s) in a dataframe to three columns" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,32 +114,59 @@ holes for water bodies." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Götaland, Sweden.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>gotaland.Rd</code></div>
+    <h1>Organize the date-column(s)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/organizeBirds.R'><code>R/organizeBirds.R</code></a></small>
+    <div class="hidden name"><code>organizeDate.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
-holes for water bodies.</p>
+    <p>Organize the date-column(s) in a dataframe to three columns</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>gotaland</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <pre class="usage"><span class='fu'>organizeDate</span>(<span class='no'>date</span>, <span class='no'>cols</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>date</th>
+      <td><p>A dataframe with at least the columns specified in cols</p></td>
+    </tr>
+    <tr>
+      <th>cols</th>
+      <td><p>A character vector with the column names for the dates specified.
+It can either be one column formatted as "yyyy-mm-dd" or a vector of
+length=3. If the vector is named as "year", "month", "day" it will take
+these column names. Otherwise, it will take the column names and interpret
+the first as year, the second as month and the third as day.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A SpatialPolygonsDataFrame with 1 polygon with CRS(&#8220;+init=epsg:4326&#8221;)</p>
+    <p>A data.frame with the columns "year", "month", "day"</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>ymd</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/as.Date'>as.Date</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.time'>Sys.Date</a></span>())+<span class='fl'>1</span>:<span class='fl'>5</span>
+<span class='fu'>organizeDate</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/as.data.frame'>as.data.frame</a></span>(<span class='no'>ymd</span>), <span class='st'>"ymd"</span>)</div><div class='output co'>#&gt;      year month day
+#&gt; [1,] 2019     7  27
+#&gt; [2,] 2019     7  28
+#&gt; [3,] 2019     7  29
+#&gt; [4,] 2019     7  30
+#&gt; [5,] 2019     7  31</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#format">Format</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Götaland, Sweden. — gotaland • BIRDS</title>
+<title>Summarize the OrganizedBirds — summarizeBirds.OrganizedBirds • BIRDS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Götaland, Sweden. — gotaland" />
+<meta property="og:title" content="Summarize the OrganizedBirds — summarizeBirds.OrganizedBirds" />
 
-<meta property="og:description" content="A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
-holes for water bodies." />
+<meta property="og:description" content="Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
+in spatial and  temporal dimensions." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,32 +115,49 @@ holes for water bodies." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Götaland, Sweden.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>gotaland.Rd</code></div>
+    <h1>Summarize the OrganizedBirds</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
+    <div class="hidden name"><code>summarizeBirds.OrganizedBirds.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
-holes for water bodies.</p>
+    <p>Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
+in spatial and  temporal dimensions.</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>gotaland</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A SpatialPolygonsDataFrame with 1 polygon with CRS(&#8220;+init=epsg:4326&#8221;)</p>
+    <pre class="usage"><span class='co'># S3 method for OrganizedBirds</span>
+<span class='fu'>summarizeBirds</span>(<span class='no'>x</span>, <span class='no'>grid</span>, <span class='kw'>spillOver</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An OrgnanizedBirds-object created by <code><a href='organizeBirds.html'>organizeBirds</a></code></p></td>
+    </tr>
+    <tr>
+      <th>grid</th>
+      <td><p>A SpatialPolygons or SpatialPolygonsDataFrame-object whith
+grid cells for the study area. This variable is optional and can be set to
+NULL, which will treat the area for all observations as one single
+grid cell.</p></td>
+    </tr>
+    <tr>
+      <th>spillOver</th>
+      <td><p>Specifies if the function should search for observations done during
+the same visit (identified by visit UID) but that fall outside the grid cell. Default is <code>TRUE</code>.</p></td>
+    </tr>
+    </table>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
-      <li><a href="#format">Format</a></li>
-          </ul>
+      <li><a href="#arguments">Arguments</a></li>
+                </ul>
 
   </div>
 </div>

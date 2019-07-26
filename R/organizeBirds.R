@@ -241,9 +241,8 @@ obsData.OrganizedBirds<-function(x){
 #'  column for species name, one or several columns for date of observation, one or
 #'  several columns for identifying a visit and, if it is not spatial, coordinate
 #'  columns.
-#' @param sppCol A character string of the column name for the column which is
-#'  holding the species names. Default is the Darwin Core standard name
-#'  \code{"scientificName"}.
+#' @param sppCol A character string with the column name for the column for the
+#' species names. Default is the Darwin Core standard name \code{"scientificName"}.
 #'@param timeCol A character vector (named or not) of the names for the
 #'  column(s) which is holding the observation dates. Default is the Darwin Core
 #'  standard column names \code{c("Year"="year", "Month"="month", "Day"="day")}.
@@ -251,6 +250,8 @@ obsData.OrganizedBirds<-function(x){
 #'  are holding the information that identifies a visit. Default is the Darwin
 #'  Core standard column names \code{c("locality", "day", "month", "year",
 #'  "recordedBy")}.
+#' @param presenceCol A character string with the column name for the column for the
+#' precense status. Default is \code{NULL}.
 #' @param xyCols A character vector of the names for the columns that are holding
 #'  the coordinates for the observations. The order should be longitude(x),
 #'  latitude(y). Default is the Darwin Core standard column names
@@ -266,7 +267,7 @@ obsData.OrganizedBirds<-function(x){
 #' Only evaluated if taxonRankCol is not \code{NULL}
 #' @param simplifySppName wheter to remove everything else that is not the species name (authors, years and intraspecific epithets). Default set to FALSE
 #'
-#' @return A OrganizedBirds-class.
+#' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 #' @export
 #'
 #' @examples organizeBirds(bombusObs)
@@ -275,7 +276,7 @@ obsData.OrganizedBirds<-function(x){
 #'  \code{\link{obsData}} to retrieve the dataframe from this class.
 #' @aliases organiseBirds
 organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year", "Month"="month", "Day"="day"),
-                        visitsIdentifier = c("locality", "day", "month", "year", "recordedBy"),
+                        visitsIdentifier = c("locality", "day", "month", "year", "recordedBy"), presenceCol=NULL,
                         xyCols=c("decimalLongitude", "decimalLatitude"), dataCRS = "+init=epsg:4326",
                         taxonRankCol=NULL, taxonRank=c("SPECIES","SUBSPECIES","VARIETY"), simplifySppName=FALSE){
 
@@ -338,7 +339,13 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
 
   visitUID<-createVisits(df,visitsIdentifier)
 
-  df<-cbind(sp, time, visitUID)
+  if (is.null(presenceCol)){
+    df<-cbind(sp, time, visitUID)
+  } else {
+    presence<-df[, presenceCol]
+
+    df<-cbind(sp, time, visitUID, presence)
+  }
 
   colnames(df)[1]<-"scientificName"
 
