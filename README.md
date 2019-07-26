@@ -138,11 +138,10 @@ You can find an overview of the `BIRDS` main components and function, organised 
 
 The [Intro to BIRDS](./vignettes/intro_to_BIRDS.html) vignette provides a useful walkthrough the package tools using an example data set.
 
-<<<<<<< HEAD
 In general in this package NA are left for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data on this grid but not on this time unit).
 
 
 
 ## In the TODO LIST
 =======
->>>>>>> 2667c6f17f64eca015caa384bbed711ec06a5acc
+
