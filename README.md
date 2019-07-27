@@ -84,7 +84,7 @@ Use your review to evaluate sampling effort and data completeness, and to inform
 decisions about whether the data are fit-for-purpose and how to further analyse the data.
 
 
-##### Field visit
+#### Field visit
 
 A central concept used by the `BIRDS` package is the “visit” – defining the sampling
 unit as a sampling event by a unique observer (or group of observers), at a unique
@@ -106,27 +106,25 @@ You can examine this in the [Intro to BIRDS](./vignettes/intro_to_BIRDS.html)
 vignette following the example in the walkthrough of the package tools.
 
 
-##### Spatial grid and spillover
+#### Spatial grid and spillover
 
 Defined by a unique observer (or group of observers), at a unique unit of space and time visits can be identified by a unique combination of variables: observer id, location, time. Often location is a named unit of space that has been visited during the same sampling event. For example a botanist visiting and reporting species for a meadow, or a bird watcher visiting and reporting species for a lake. 
 
 Sometimes locations can be more accurate positions for individuals of species that have been observed and reported during the same field visit. The botanist may have visited the meadow but reported species from a number of different sampling points in that meadow. Or the bird watcher reported species for different parts of the lake. In that case there is no common spatial identifier for the visit. 
 
-If there is no lcommon spatial identifier to define the visit extent, and the obverver id is not enough to constrain observations spatially (e.g. group of observers from organisation where observer id = organisation name), then visits can be created *when* overlaying the observation data with the spatial grid. A visit is then defined as all the observations falling into the same grid cell. It is important to keep in mind to choose a grid with a cell size that corresponds to (or at least is not smaller than) the average spatial extent known (or assumed) to be typical for field visits for the reference species group (see below). This process can be repeated with a set of grids with different offset to explore the sensitivity of the results to the size of the grid cells. 
+If there is no common spatial identifier to define the visit extent, and the obverver id is not enough to constrain observations spatially (e.g. group of observers from organisation where observer id = organisation name), then visits can be created *when* overlaying the observation data with the spatial grid. A visit is then defined as all the observations falling into the same grid cell. It is important to keep in mind to choose a grid with a cell size that corresponds to (or at least is not smaller than) the average spatial extent known (or assumed) to be typical for field visits for the reference species group (see below). This process can be repeated with a set of grids with different offset to explore the sensitivity of the results to the size of the grid cells. 
 
 You can examine this in the [Intro to BIRDS](./vignettes/intro_to_BIRDS.html) vignette.
 
-Technical note: In general in this package NA are used for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data for this grid cell but not in this time unit).
 
-
-##### Reference species group
+#### Reference species group
 
 Because visits result from the sampling process they can only be defined for a reference species group, i.e. a group of species observed and recorded by similar methods. The rationale for a reference species group is based on the assumption that species groups share similar bias: we assume that, despite varying field skills and accuracy, observers reporting observations for species of a reference species group share similar observer behaviour and methods and, hence, generate data with similar sampling bias (Phillips et al. 2009). From this we can assume that the larger the number of visits (or observations) reporting species from the reference group at a specific unit of space and time, the more likely it is that the lack of visits for (or observations of) a particular species reflects the absence of (or failure to detect) a focal species rather than a lack of visits and reports made.
 
 It is important to keep in mind that, to keep the sampling bias consistent, the reference species group should only include species that are assumed to be sampled with the same methodology (Ponder et al. 2001). For example, a reference group should not include all species in the Order Lepidoptera because butterflies sensu stricto (superfamily Papilionoidea) are sampled in very different ways than most other species of Lepidoptera (mainly moths).
 
 
-##### Species list length (SLL)
+#### Species list length (SLL)
 
 The SLL per visit (i.e. the number of species observed and recorded per visit) is a well known proxy for the time spent in the field and willingness to report all species seen of a reference taxonomic group, Szabo et al. 2010). The `BIRDS` package therefore uses SLL as a proxy for sampling effort.
 
@@ -150,7 +148,7 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐col
 
 ### Overview of main components
 
-You can find an overview of the `BIRDS` main components and function, organised as workflows [here](./images/BIRDs.png) and [here](./images/BIRDsDecision.png). 
+You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](./images/BIRDs.png) and [here](./images/BIRDsDecision.png). 
 
 
 
@@ -159,9 +157,9 @@ You can find an overview of the `BIRDS` main components and function, organised 
 The [Intro to BIRDS](./vignettes/intro_to_BIRDS.html) vignette provides a useful
 walkthrough the package tools using an example data set.
 
-In general in this package NA are left for spatial gaps (no data at all in the 
-grid cell), while 0 is used for temporal gaps (there is data on this grid but not
-on this time unit).
+
+#### Technical note
+In general in this package NA are used for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data for this grid cell but not in this time unit).
 
 
 
