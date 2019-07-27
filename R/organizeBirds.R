@@ -77,7 +77,7 @@ organizeDate <- function(date, cols){
 #' What a visit should be is not always clearly defined and extractable in a
 #' dataset. A reasonable assumption is that a visit could be identified from the records
 #' made by one person on a certain day and at a specific location or site. The
-#' default value for the variable column is therefor that a visit is identified
+#' default value for the variable column is therefore that a visit is identified
 #' by the Darwin Core variables \code{c("locality", "day", "month", "year",
 #' "recordedBy")}.
 #'
