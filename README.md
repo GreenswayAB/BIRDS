@@ -78,10 +78,7 @@ data before processing by `BIRDS`. Hence, before using biodiversity data for
 intended analysis start by optionally cleaning the data, then use `BIRDS` to 
 organize the data, summarize and review the data:
 
-<img src=https://raw.githubusercontent.com/Greensway/BIRDS/master/man/figures/BIRDs.png />
-or this  
-
-![BIRDS](./man/figures/BIRDs.png)
+<img src=https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png />
 
 Use your review to evaluate sampling effort and data completeness, and to inform
 decisions about whether the data are fit-for-purpose and how to further analyse the data.
@@ -151,7 +148,7 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐col
 
 ### Overview of main components
 
-You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](https://github.com/Greensway/BIRDS/vignettes/BIRDs.png) and [here](https://github.com/Greensway/BIRDS/vignettes/BIRDsDecision.png). 
+You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png) and [here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDsDecision.png). 
 
 ### Example
 
