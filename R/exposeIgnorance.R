@@ -1,8 +1,10 @@
 #' A function to create Ignorance Scores
 #'
 #' A function to create Ignorance Scores.
-#' Ignorance scores are a proxy for the lack of sampling effort, computed by relating
-#' a focal species’ occurrence to occurrences of all species in a reference species group.
+#' Ignorance scores are a proxy for the lack of sampling effort, computed by making
+#' the number of observations relative to a reference number of observations that
+#' is considered to be enough to reduce the ignorance score by half (henceforth 
+#' the Half-ignorance approach).
 #' Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
 #' @param nObs an object of any class (mainly resulting from \code{summariseBirds} or
 #' \code{exportBirds} with  the number of observations, or visits in your desired analysis unit.
