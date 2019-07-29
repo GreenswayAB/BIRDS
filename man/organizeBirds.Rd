@@ -45,13 +45,15 @@ System). Default is \code{"+init=epsg:4326"}, which is WGS 84. This is only
 applicable to non-spatial dataframes, since a spatial dataframes already
 should have this information.}
 
-\item{taxonRankCol}{the name of the column containing the taxonomic rank for the observation.
+\item{taxonRankCol}{the name of the column containing the taxonomic rank for 
+the observation.
 That is the minimum taxonomic identification level.}
 
 \item{taxonRank}{a string or vector of strings containing the taxonomic ranks to keep.
 Only evaluated if taxonRankCol is not \code{NULL}}
 
-\item{simplifySppName}{wheter to remove everything else that is not the species name (authors, years and intraspecific epithets). Default set to FALSE}
+\item{simplifySppName}{wheter to remove everything else that is not the species
+name (authors, years and intraspecific epithets). Default set to FALSE}
 }
 \value{
 a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.

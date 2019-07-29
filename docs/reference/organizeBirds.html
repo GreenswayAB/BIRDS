@@ -32,9 +32,9 @@
 
 <meta property="og:title" content="Organize a dataframe to a usable format — organizeBirds" />
 
-<meta property="og:description" content="Takes a dataframe with reported species observations and reformats it to a
-OrganizedBirds-class that can be used in further analyses with the
-BIRDS-package." />
+<meta property="og:description" content="Takes a dataframe with reported species observations and reformats it, using 
+visit identifiers, to an OrganizedBirds-class that can be used in further 
+analyses with the BIRDS-package." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,9 +123,9 @@ BIRDS-package." />
 
     <div class="ref-description">
     
-    <p>Takes a dataframe with reported species observations and reformats it to a
-OrganizedBirds-class that can be used in further analyses with the
-BIRDS-package.</p>
+    <p>Takes a dataframe with reported species observations and reformats it, using 
+visit identifiers, to an OrganizedBirds-class that can be used in further 
+analyses with the BIRDS-package.</p>
     
     </div>
 
@@ -187,7 +187,8 @@ should have this information.</p></td>
     </tr>
     <tr>
       <th>taxonRankCol</th>
-      <td><p>the name of the column containing the taxonomic rank for the observation.
+      <td><p>the name of the column containing the taxonomic rank for 
+the observation.
 That is the minimum taxonomic identification level.</p></td>
     </tr>
     <tr>
@@ -197,7 +198,8 @@ Only evaluated if taxonRankCol is not <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>simplifySppName</th>
-      <td><p>wheter to remove everything else that is not the species name (authors, years and intraspecific epithets). Default set to FALSE</p></td>
+      <td><p>wheter to remove everything else that is not the species
+name (authors, years and intraspecific epithets). Default set to FALSE</p></td>
     </tr>
     </table>
     

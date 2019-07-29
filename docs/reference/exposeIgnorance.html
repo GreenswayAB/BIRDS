@@ -33,7 +33,11 @@
 <meta property="og:title" content="A function to create Ignorance Scores — exposeIgnorance" />
 
 <meta property="og:description" content="A function to create Ignorance Scores.
-Read more here ..." />
+Ignorance scores are a proxy for the lack of sampling effort, computed by making
+the number of observations relative to a reference number of observations that
+is considered to be enough to reduce the ignorance score by half (henceforth 
+the Half-ignorance approach).
+Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,7 +127,11 @@ Read more here ..." />
     <div class="ref-description">
     
     <p>A function to create Ignorance Scores.
-Read more here ...</p>
+Ignorance scores are a proxy for the lack of sampling effort, computed by making
+the number of observations relative to a reference number of observations that
+is considered to be enough to reduce the ignorance score by half (henceforth 
+the Half-ignorance approach).
+Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361</p>
     
     </div>
 
@@ -134,8 +142,8 @@ Read more here ...</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>nObs</th>
-      <td><p>an object of any class (mainly resulting from summariseBirds() or
-exportBirds() with  the number of observations, or visits in your desired analysis unit.</p></td>
+      <td><p>an object of any class (mainly resulting from <code>summariseBirds</code> or
+<code>exportBirds</code> with  the number of observations, or visits in your desired analysis unit.</p></td>
     </tr>
     <tr>
       <th>nSpp</th>

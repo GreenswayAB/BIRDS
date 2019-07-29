@@ -78,7 +78,7 @@ data before processing by `BIRDS`. Hence, before using biodiversity data for
 intended analysis start by optionally cleaning the data, then use `BIRDS` to 
 organise the data, summarise and review the data:
 
-![BIRDS workflow](./vignettes/images/BIRDs.png)
+![BIRDS workflow](./vignettes/BIRDs.png)
 
 Use your review to evaluate sampling effort and data completeness, and to inform
 decisions about whether the data are fit-for-purpose and how to further analyse the data.
@@ -131,7 +131,7 @@ The SLL per visit (i.e. the number of species observed and recorded per visit) i
 
 ### What does the package do?
 
-With the `BIRDS`’ package set of tools PBD can be reviewed based on the information contained in the visits. Use `BIRDS` to organise the data, summarise and review the data as shown [here](./vignettes/images/BIRDs.png). 
+With the `BIRDS`’ package set of tools PBD can be reviewed based on the information contained in the visits. Use `BIRDS` to organise the data, summarise and review the data as shown [here](./vignettes/BIRDs.png). 
 The `BIRDS` package organizes the data into a spatially gridded visit-based format, from which summaries are retrieved for a number of variables describing the visits across both spatial and temporal dimension. Those variables are the number of visits, number of species, number of observations, average species list length per visit, number of units of space and time with visits. The variables can be used to collectively describe the sampling effort and data completeness (data gaps), and can be examined spatially (e.g. viewed on maps) and temporally (e.g. plotted as time series). 
 
 
@@ -148,7 +148,7 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐col
 
 ### Overview of main components
 
-You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](./vignettes/images/BIRDs.png) and [here](./ignettes/images/BIRDsDecision.png). 
+You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](./vignettes/BIRDs.png) and [here](./ignettes/images/BIRDsDecision.png). 
 
 
 

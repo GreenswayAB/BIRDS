@@ -132,21 +132,25 @@
     <p>The primary aim of this package is to provide tools for Biodiversity Informatics
 in order to understand the specis information data and decide about what analyses
 we can perform and draw approriate conclusions. For this we need to understand
-the data acquisition/generation process. With this R package we want to take the
-user a step closer to understanding the observers’ behavior.#'</p>
+the data generation process. With this R package we want to take the
+user a step closer to understanding the observers’ behaviour.
+The BIRDS packages provides a workflow for reproducable data review, involving 
+three basic steps: organise data, summarise data, review data.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="examples"><div class='input'><span class='co'># Organise the data</span>
+<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='no'>OB2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"species"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
  <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='st'>"taxonRank"</span>, <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>,<span class='st'>"VARIETY"</span>))</div><div class='output co'>#&gt; <span class='message'>46 observations did not match with the specified taxon rank and were removed.</span></div><div class='input'>
+<span class='co'># Make a grid that can be used by summariseBirds()</span>
 <span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
 <span class='co'># alternatively:</span>
 <span class='co'># polygon &lt;- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")</span>
 <span class='co'># grid &lt;- makeGrid(polygon, gridSize = 10)</span>
 
-<span class='co'># Summarise the data</span>
+<span class='co'># Summarise the data (using the grid to overlay with the organised data)</span>
 <span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summariseBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)
 <span class='no'>EBnObs</span><span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nObs"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
 <span class='no'>EBnVis</span><span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nVis"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
