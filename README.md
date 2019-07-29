@@ -38,7 +38,7 @@ and data completeness (or data gaps).
 
 The `BIRDS` package is **not** concerned with data accuracy, which can be evaluated 
 and improved using other existing packages (as outlined in the 
-[technical details](./vignettes/technical_details.html) vignette), before processing 
+[technical details](https://greensway.github.io/BIRDS/articles/technical_details.html) vignette), before processing 
 the data using `BIRDS`.
 
 The concepts and methods, and examples are described after a short description on 
@@ -78,7 +78,7 @@ data before processing by `BIRDS`. Hence, before using biodiversity data for
 intended analysis start by optionally cleaning the data, then use `BIRDS` to 
 organise the data, summarise and review the data:
 
-![BIRDS workflow](./images/BIRDs.png)
+![BIRDS workflow](./vignettes/images/BIRDs.png)
 
 Use your review to evaluate sampling effort and data completeness, and to inform
 decisions about whether the data are fit-for-purpose and how to further analyse the data.
@@ -102,7 +102,7 @@ visit (e.g. species list length, or when available the time spent during a visit
 Hence, the quality (completeness) of the data can be judged by using information 
 for each visit and information from a collection of visits. 
 
-You can examine this in the [Intro to BIRDS](./vignettes/intro_to_BIRDS.html) 
+You can examine this in the [Intro to BIRDS](https://greensway.github.io/BIRDS/articles/intro_to_BIRDS.html) 
 vignette following the example in the walkthrough of the package tools.
 
 
@@ -114,7 +114,7 @@ Sometimes locations can be more accurate positions for individuals of species th
 
 If there is no common spatial identifier to define the visit extent, and the obverver id is not enough to constrain observations spatially (e.g. group of observers from organisation where observer id = organisation name), then visits can be created *when* overlaying the observation data with the spatial grid. A visit is then defined as all the observations falling into the same grid cell. It is important to keep in mind to choose a grid with a cell size that corresponds to (or at least is not smaller than) the average spatial extent known (or assumed) to be typical for field visits for the reference species group (see below). This process can be repeated with a set of grids with different offset to explore the sensitivity of the results to the size of the grid cells. 
 
-You can examine this in the [Intro to BIRDS](./vignettes/intro_to_BIRDS.html) vignette.
+You can examine this in the [Intro to BIRDS](https://greensway.github.io/BIRDS/articles/intro_to_BIRDS.html) vignette.
 
 
 #### Reference species group
@@ -129,7 +129,7 @@ It is important to keep in mind that, to keep the sampling bias consistent, the 
 The SLL per visit (i.e. the number of species observed and recorded per visit) is a well known proxy for the time spent in the field and willingness to report all species seen of a reference taxonomic group, Szabo et al. 2010). The `BIRDS` package therefore uses SLL as a proxy for sampling effort.
 
 
-#### What does the package do?
+### What does the package do?
 
 With the `BIRDS`’ package set of tools PBD can be reviewed based on the information contained in the visits. Use `BIRDS` to organise the data, summarise and review the data as shown [here](./images/BIRDs.png). 
 The `BIRDS` package organizes the data into a spatially gridded visit-based format, from which summaries are retrieved for a number of variables describing the visits across both spatial and temporal dimension. Those variables are the number of visits, number of species, number of observations, average species list length per visit, number of units of space and time with visits. The variables can be used to collectively describe the sampling effort and data completeness (data gaps), and can be examined spatially (e.g. viewed on maps) and temporally (e.g. plotted as time series). 
@@ -154,7 +154,7 @@ You can find an overview of the `BIRDS` main components and functions, organised
 
 ### Example
 
-The [Intro to BIRDS](./vignettes/intro_to_BIRDS.html) vignette provides a useful
+The [Intro to BIRDS](https://greensway.github.io/BIRDS/articles/intro_to_BIRDS.html) vignette provides a useful
 walkthrough the package tools using an example data set.
 
 
