@@ -78,7 +78,7 @@ data before processing by `BIRDS`. Hence, before using biodiversity data for
 intended analysis start by optionally cleaning the data, then use `BIRDS` to 
 organise the data, summarise and review the data:
 
-![BIRDS workflow](./vignettes/BIRDs.png)
+![BIRDS workflow](./articles/BIRDs.png)
 
 Use your review to evaluate sampling effort and data completeness, and to inform
 decisions about whether the data are fit-for-purpose and how to further analyse the data.

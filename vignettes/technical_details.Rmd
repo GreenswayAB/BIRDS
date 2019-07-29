@@ -84,7 +84,7 @@ The idea is to see, for example, if the distribution of covered area (effortDiam
 
 You can directly plot these variables or use the suggested package `esquisse`.
 ```{r, eval=FALSE}
-visitStats<-exploreVisits(OB)
+visitStats <- exploreVisits(OB)
 # open an interactive data explorer
 esquisse::esquisser(visitStats)
 
@@ -97,10 +97,12 @@ esquisse::esquisser(visitStats)
 #### Summarise
 The function `summariseBirds()` will overlay the organized data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, spatiotemporally, and also provide other intermediate results useful for later analyses. The grid can be easily created in different ways (see figure below). 
 
-[General function workflow within the *BIRDS* package](./images/BIRDs.png)
+![General function workflow within the *BIRDS* package](./vignettes/BIRDs.png)
 
 This function takes a few parameters, and with those your assumptions. The grid size becomes very important if your definition of visits lacks a good spatial constrain (i.e. column "locality"). If the accuracy of the locations is too poor or inexistent, then the the visits will be constrained by the grid cells. Therefore the size of the grid cells must be carefully thought of. If the visits will be constrained by the grid cells then grid cell size should match how much terrain an observer can cover during a typcal sampling event for species of the considered reference group. 
-Then, the parameter "spillOver" will help you to determine whether, after the overlay of the observations to the grid, you want to keep connected the observations with the same visit ID. With this parameter you decide whether observations belonging to the same visit will be split into different grid cells when visit extent overlaps more than one grid cell, or not. That is, with  `spillOver = TRUE` you decide that visits should not be split, instead the function copies into a focal grid cell all those observations falling outside the cell but belonging to visits that fall within the cell. It creates duplicates to be able to summarise complete visits (soon, we will add the option to *move* the observations to the grid cell with the most observations for the focal visit). In the best of the cases, this should not cause much bias, because one expects that only a handfull of visits lay in between two or more cells. However, if grid cell size is too small, or the visits are too loosely defined, everything will end up duplicated everywhere. On the contrary, with `spillOver = FALSE` the function will split the observations strictly to the grid cell they fall in.
+Then, the parameter `spillOver` determines whether, after the overlay of the observations to the grid, you want to keep connected the observations with the same visit ID. With this parameter you decide whether observations belonging to the same visit will be split into different grid cells when visit extent overlaps more than one grid cell, or not. That is, with  `spillOver = TRUE` you decide that visits should not be split, instead the function copies into a focal grid cell all those observations falling outside the cell but belonging to visits that fall within the cell. It creates duplicates to be able to summarise complete visits (soon, we will add the option to *move* the observations to the grid cell with the most observations for the focal visit). In the best of the cases, this should not cause much bias, because one expects that only a handfull of visits lay in between two or more cells. However, if grid cell size is too small, or the visits are too loosely defined, everything will end up duplicated everywhere. On the contrary, with `spillOver = FALSE` the function will split the observations strictly to the grid cell they fall in.  
+
+NOTE: The overlay of the organized data to the grid can be performed separatedly using the function `overlayBirds()` in order to check how does the spillOver option affects your definition of visit and the duplicate of data.
 
 > **Spatial grid and spillover**  
 >Defined by a unique observer (or group of observers), at a unique unit of space and time visits can be identified by a unique combination of variables: observer id, location, time. Often location is a named unit of space that has been visited during the same sampling event. For example a botanist visiting and reporting species for a meadow, or a bird watcher visiting and reporting species for a lake.  

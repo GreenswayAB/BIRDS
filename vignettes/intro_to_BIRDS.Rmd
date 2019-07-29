@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-# Installing `BIRDS`
+## Installing `BIRDS`
 
 The package `BIRDS` is currently available on GitHub and you can freely download 
 the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
@@ -34,7 +34,7 @@ install_github('Greensway/BIRDS')
 If you receive an error we would love to receive your bug report 
 [here](https://github.com/Greensway/BIRDS/issues)
 
-# Basic example and data requirements
+## Basic example and data requirements
 
 Starting with a primary biodiversity data set (species observations) `BIRDS` employs 
 three basic steps: organising the data into a sampling event-based format, summarising
