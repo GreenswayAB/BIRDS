@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{makeCircle}
 \alias{makeCircle}
-\title{Creates the minimum circle containing the points}
+\title{Create the minimum circle containing the points}
 \usage{
 makeCircle(spdf)
 }
@@ -15,5 +15,5 @@ an object of class \sQuote{SpatialPolygon} with a polygon with geodesic
 coordinates in WGS84 (ESPG:4326).
 }
 \description{
-Creates the minimum circle containing the points
+Create the minimum circle containing the points
 }

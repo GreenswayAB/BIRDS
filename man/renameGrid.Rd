@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{renameGrid}
 \alias{renameGrid}
-\title{Renames a grid}
+\title{Rename the cells in a grid}
 \usage{
 renameGrid(grid)
 }

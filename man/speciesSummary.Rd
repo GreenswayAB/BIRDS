@@ -2,7 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{speciesSummary}
 \alias{speciesSummary}
-\title{A function to list all species and count number of visits}
+\title{Summarize all records for a species}
 \usage{
 speciesSummary(x)
 }

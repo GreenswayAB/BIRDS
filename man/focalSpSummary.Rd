@@ -2,7 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{focalSpSummary}
 \alias{focalSpSummary}
-\title{A function to find records of a species among all visits}
+\title{Summarize records of a species among all visits}
 \usage{
 focalSpSummary(x, focalSp = NULL)
 }

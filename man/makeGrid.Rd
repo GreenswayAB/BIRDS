@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{makeGrid}
 \alias{makeGrid}
-\title{Makes a grid}
+\title{Make a grid}
 \usage{
 makeGrid(polygon, gridSize, buffer = FALSE, hexGrid = TRUE,
   offset = NULL, simplify = FALSE, tol = 0.01)

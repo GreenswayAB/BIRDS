@@ -2,7 +2,7 @@
 % Please edit documentation in R/exposeIgnorance.R
 \name{exposeIgnorance}
 \alias{exposeIgnorance}
-\title{A function to create Ignorance Scores}
+\title{Create ignorance scores}
 \usage{
 exposeIgnorance(nObs, nSpp = NULL, h = 1)
 }
@@ -18,7 +18,6 @@ exposeIgnorance(nObs, nSpp = NULL, h = 1)
 a \code{data.frame} with ignorance scores
 }
 \description{
-A function to create Ignorance Scores.
 Ignorance scores are a proxy for the lack of sampling effort, computed by making
 the number of observations relative to a reference number of observations that
 is considered to be enough to reduce the ignorance score by half (henceforth

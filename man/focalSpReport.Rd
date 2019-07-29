@@ -2,7 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{focalSpReport}
 \alias{focalSpReport}
-\title{A function to summarise records for a species}
+\title{Summarise all records for a species}
 \usage{
 focalSpReport(x, focalSp = NULL, long = TRUE)
 }

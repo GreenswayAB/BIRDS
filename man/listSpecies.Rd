@@ -2,12 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{listSpecies}
 \alias{listSpecies}
-\title{Five functions extracting summaries for species:
-1) A function to list all species from all visits
-2) A function to find records of a species among all visits
-3) A function to summarise records for a species
-4) A function to list all species and count number of visits
-5) A function to create a community matrix}
+\title{Lists all species names from the data set}
 \usage{
 listSpecies(x)
 }
@@ -18,10 +13,7 @@ listSpecies(x)
 a \code{vector} with all species names in the data set
 }
 \description{
-A function to list all species from all visits
-}
-\details{
-A function to list all species from all visits (total species list for the data set).
+Lists all species names from the data set.
 }
 \examples{
 OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)

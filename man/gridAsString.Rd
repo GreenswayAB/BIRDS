@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{gridAsString}
 \alias{gridAsString}
-\title{Converts a grid into a web query string.}
+\title{Convert a grid into a web query string.}
 \usage{
 gridAsString(grid)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{communityMatrix}
 \alias{communityMatrix}
-\title{A function to create a community matrix}
+\title{Create a community matrix}
 \usage{
 communityMatrix(x, sampleUnit = "observation")
 }

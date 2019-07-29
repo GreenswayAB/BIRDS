@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="100.54414mm"
+   height="114.53806mm"
+   viewBox="0 0 100.54414 114.53806"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
@@ -27,25 +27,29 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5744437"
-     inkscape:cx="537.85085"
-     inkscape:cy="651.40002"
+     inkscape:cx="-8.1658304"
+     inkscape:cy="15.757363"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
-     inkscape:window-width="1536"
-     inkscape:window-height="811"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
      inkscape:window-x="-8"
-     inkscape:window-y="1072"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
     <sodipodi:guide
-       position="175.71529,203.81131"
+       position="111.85171,35.630854"
        orientation="1,0"
        id="guide9297"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="114.13564,281.85614"
+       position="50.272068,113.67568"
        orientation="1,0"
        id="guide13642"
        inkscape:locked="false" />
@@ -68,7 +72,8 @@
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
-     sodipodi:insensitive="true">
+     sodipodi:insensitive="true"
+     transform="translate(-63.863569,-14.281484)">
     <path
        sodipodi:type="star"
        style="fill:#6bc471;fill-opacity:0.83417089;stroke:#008000;stroke-width:6.00004864;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -630,7 +635,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="text">
+     inkscape:label="text"
+     transform="translate(-63.863569,-14.281484)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:16.01750946px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.40043771"
