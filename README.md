@@ -148,7 +148,7 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐col
 
 ### Overview of main components
 
-You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](./vignettes/BIRDs.png) and [here](./ignettes/images/BIRDsDecision.png). 
+You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](./vignettes/BIRDs.png) and [here](./vignettes/BIRDsDecision.png). 
 
 
 

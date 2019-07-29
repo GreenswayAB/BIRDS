@@ -4,8 +4,10 @@ Title: A set of tools for Biodiversity Information Review and Decision Support
 Version: 0.0.1
 URL: https://github.com/greensway/BIRDS
 Authors@R: c(
-    person("Debora", "Arlt", email = "debora.arlt@slu.se", role = "aut"),
-    person("Alejandro", "Ruete", email = "alejandro@greensway.se", role = c("aut","cre")),
+    person("Debora", "Arlt", email = "debora.arlt@slu.se", role = "aut",
+            comment = c(ORCID = "0000-0003-0874-4250")),
+    person("Alejandro", "Ruete", email = "alejandro@greensway.se", role = c("aut","cre"),
+            comment = c(ORCID = "0000-0001-7681-2812")),
     person("Anton", "Hammarström", email = "anton@greensway.se", role = "aut"))
 Description: A set of tools to review and make decisions upon the use of
     biodiversity data. 
