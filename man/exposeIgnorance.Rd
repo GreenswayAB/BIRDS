@@ -7,8 +7,8 @@
 exposeIgnorance(nObs, nSpp = NULL, h = 1)
 }
 \arguments{
-\item{nObs}{an object of any class (mainly resulting from summariseBirds() or
-exportBirds() with  the number of observations, or visits in your desired analysis unit.}
+\item{nObs}{an object of any class (mainly resulting from \code{summariseBirds} or
+\code{exportBirds} with  the number of observations, or visits in your desired analysis unit.}
 
 \item{nSpp}{the number of unique species observed}
 
@@ -19,7 +19,9 @@ a \code{data.frame} with ignorance scores
 }
 \description{
 A function to create Ignorance Scores.
-Read more here ...
+Ignorance scores are a proxy for the lack of sampling effort, computed by relating
+a focal species’ occurrence to occurrences of all species in a reference species group.
+Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
 }
 \examples{
 OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)

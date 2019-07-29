@@ -83,7 +83,7 @@
       <h1>Introduction to BIRDS</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2019-07-26</h4>
+            <h4 class="date">2019-07-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/intro_to_BIRDS.Rmd"><code>vignettes/intro_to_BIRDS.Rmd</code></a></small>
       <div class="hidden name"><code>intro_to_BIRDS.Rmd</code></div>
@@ -97,7 +97,7 @@
 <a href="#installing-birds" class="anchor"></a>Installing <code>BIRDS</code>
 </h1>
 <p>The package <code>BIRDS</code> is currently available on GitHub and you can freely download the source code here <a href="https://github.com/Greensway/BIRDS">BIRDS on GitHub</a></p>
-<p>The easiest option is to install the package directly from GitHub using the package <code>devtools</code>. If you do not already have <code>devtools</code> installed then need to install it.</p>
+<p>The easiest option is to install the package directly from GitHub using the package <code>devtools</code>. Install <code>devtools</code> if you do not already have installed it.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">'devtools'</span>)</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(devtools)</a>
 <a class="sourceLine" id="cb1-3" title="3"><span class="kw">install_github</span>(<span class="st">'Greensway/BIRDS'</span>)</a></code></pre></div>
@@ -106,41 +106,49 @@
 <div id="basic-example-and-data-requirements" class="section level1">
 <h1 class="hasAnchor">
 <a href="#basic-example-and-data-requirements" class="anchor"></a>Basic example and data requirements</h1>
+<p>Starting with a primary biodiversity data set (species observations) <code>BIRDS</code> employs three basic steps: organising the data into a sampling event-based format, summarising the data producing summary variables that inform about sampling effort and data completeness, and reviewing the summarised variables.</p>
 <p>This package works with <code>data.frame</code> tables containing raw species observations as rows (i.e. primary biodiversity data, PBD), with minimal information required for each observation in the following columns:</p>
 <ol style="list-style-type: decimal">
-<li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>
 <li>species idenfications</li>
+<li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>
 <li>date of the observation (either in one formated column or three columns y-m-d)</li>
 </ol>
-<p>The function <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit it belongs to, given some input parameters. The function <code><a href="../reference/organizeBirds.html">organizeBirds()</a></code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options on each function please refer to each function’s help page and to the <a href="./vignettes/technical_details.pdf">technical vignette</a>.</p>
-<p>Then, the function <code><a href="../reference/summariseBirds.html">summariseBirds()</a></code> will overlay the data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, and spatiotemporally, and also provide other intermediate results useful for later analyses. Finally, the function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
-<p>We use as an example a dataset consisting on 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The dataset <code>bombusObs</code> is part of this package and its metadata can be found in the dataset help page <code><a href="../reference/bombusObs.html">?bombusObs</a></code>.</p>
-<p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>
+<p>The function <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code><a href="../reference/organizeBirds.html">organizeBirds()</a></code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="./vignettes/technical_details.pdf">technical vignette</a> and to each function’s help page.</p>
+<p>Then, the function <code><a href="../reference/summariseBirds.html">summariseBirds()</a></code> will overlay the data with a given spatial grid and create a set of objects that summarise the data spatially, temporally, and spatiotemporally, and also provide other intermediate results useful for later analyses. Finally, the function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
+<p>We use as an example a dataset consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The dataset <code>bombusObs</code> is part of this package and its metadata can be found in the dataset help page <code><a href="../reference/bombusObs.html">?bombusObs</a></code>.</p>
+<p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organise and summarise the data, and export the variables you want to plot:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(BIRDS)</a>
-<a class="sourceLine" id="cb2-2" title="2">grid &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeGrid.html">makeGrid</a></span>(gotaland, <span class="dt">gridSize =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="co"># The grid can be easily created in different ways. </span></a>
-<a class="sourceLine" id="cb2-4" title="4"></a>
-<a class="sourceLine" id="cb2-5" title="5">PBD&lt;-bombusObs</a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co"># PBD &lt;- read.csv(file="path/to/your/file.csv)</span></a>
-<a class="sourceLine" id="cb2-8" title="8">OB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/organizeBirds.html">organizeBirds</a></span>(PBD, <span class="dt">sppCol =</span> <span class="st">"scientificName"</span>, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-9" title="9">SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summariseBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; Registered S3 method overwritten by 'xts':</span></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt;   method     from</span></a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt;   as.zoo.xts zoo</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></a>
+<a class="sourceLine" id="cb2-3" title="3">grid &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeGrid.html">makeGrid</a></span>(gotaland, <span class="dt">gridSize =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co"># The grid can be easily created in different ways. </span></a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co"># Import the species observation data:</span></a>
+<a class="sourceLine" id="cb2-7" title="7">PBD&lt;-bombusObs</a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co"># PBD &lt;- read.csv(file="path/to/your/file.csv)</span></a>
+<a class="sourceLine" id="cb2-10" title="10"></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="co"># Convert the data from an observation-based to a visit-based format, adding a unique identifier for each visit:</span></a>
+<a class="sourceLine" id="cb2-12" title="12">OB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/organizeBirds.html">organizeBirds</a></span>(PBD, <span class="dt">sppCol =</span> <span class="st">"scientificName"</span>, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb2-13" title="13"></a>
-<a class="sourceLine" id="cb2-14" title="14"><span class="co"># Number of observations</span></a>
-<a class="sourceLine" id="cb2-15" title="15">EBnObs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </a>
-<a class="sourceLine" id="cb2-16" title="16">                      <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="co"># Number of visits</span></a>
-<a class="sourceLine" id="cb2-18" title="18">EBnVis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </a>
-<a class="sourceLine" id="cb2-19" title="19">                      <span class="dt">variable =</span> <span class="st">"nVis"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</a>
-<a class="sourceLine" id="cb2-20" title="20"><span class="co"># Average species list length (SLL) per year (i.e. the median over all visits </span></a>
-<a class="sourceLine" id="cb2-21" title="21"><span class="co"># per year and cell, and then the mean over cell values) </span></a>
-<a class="sourceLine" id="cb2-22" title="22">EBavgSll &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-23" title="23"><span class="co"># The ratio of number of observations over number of visits</span></a>
-<a class="sourceLine" id="cb2-24" title="24">relObs&lt;-EBnObs<span class="op">/</span>EBnVis</a></code></pre></div>
-<p>Then, with the functions you already know, plot this into a time series.</p>
+<a class="sourceLine" id="cb2-14" title="14"><span class="co"># Summarise the data:</span></a>
+<a class="sourceLine" id="cb2-15" title="15">SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summariseBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; Registered S3 method overwritten by 'xts':</span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt;   method     from</span></a>
+<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt;   as.zoo.xts zoo</span></a>
+<a class="sourceLine" id="cb2-19" title="19"></a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="co"># Look at some summarised variables:</span></a>
+<a class="sourceLine" id="cb2-21" title="21"><span class="co"># Number of observations</span></a>
+<a class="sourceLine" id="cb2-22" title="22">EBnObs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </a>
+<a class="sourceLine" id="cb2-23" title="23">                      <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</a>
+<a class="sourceLine" id="cb2-24" title="24"><span class="co"># Number of visits</span></a>
+<a class="sourceLine" id="cb2-25" title="25">EBnVis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </a>
+<a class="sourceLine" id="cb2-26" title="26">                      <span class="dt">variable =</span> <span class="st">"nVis"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</a>
+<a class="sourceLine" id="cb2-27" title="27"><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean over cell values</span></a>
+<a class="sourceLine" id="cb2-28" title="28"><span class="co"># for the median SLL from all visits per year and cell) </span></a>
+<a class="sourceLine" id="cb2-29" title="29">EBavgSll &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb2-30" title="30"><span class="co"># The ratio of number of observations over number of visits</span></a>
+<a class="sourceLine" id="cb2-31" title="31">relObs&lt;-EBnObs<span class="op">/</span>EBnVis</a></code></pre></div>
+<p>Then, with functions you already know, plot this into a time series.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mar=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">6</span>), <span class="dt">las=</span><span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb3-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(EBnObs), EBnObs, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">xlab =</span> <span class="st">"Year"</span>, <span class="dt">ylab =</span> <span class="st">"Number"</span>, </a>
 <a class="sourceLine" id="cb3-3" title="3">     <span class="dt">ylim=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(EBnObs)), <span class="dt">xaxp=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2000</span>, <span class="dv">2018</span>, <span class="dv">18</span>))</a>
@@ -162,8 +170,9 @@
 Time series for <em>Bombus</em> spp. dataset.
 </p>
 </div>
-<p>Altough we downloaded the data in April 2019, we know that the latest reports for 2018 were not yet uploaded and we see that in the figure.</p>
-<p>Then, we can summarize spatial data in some maps, to answer e.g.  where do we have visits at all?, or how often are visits performed in July vs December?</p>
+<p>Altough we downloaded the data in April 2019, we know that the latest reports for 2018 were not yet uploaded and we see that in the figure.<br>
+We can see that over the years there are on average more observations, more visits and also more species reported for each visit. While it looks like as sampling effort has increased we can also see that there are on average fewer observations per visit. This suggests that the sampling effort per visit has actually decreased. There seem to be many more visits reported in later years driving also an increase in number of observations, but many visits hold only few observations. There seem to be also few visits with long species lists driving the increase of average SLL.</p>
+<p>Then, we can summarise spatial data in some maps, to review, for example, Where do we have visits at all?, or How often are visits performed in July vs December?</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(sp)</a>
 <a class="sourceLine" id="cb4-2" title="2">wNonEmpty&lt;-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unname">unname</a></span>( <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>( <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(SB<span class="op">$</span>overlaid, nrow)) <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) )</a>
 <a class="sourceLine" id="cb4-3" title="3">EB&lt;-<span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="st">"Spatial"</span>, <span class="st">"Month"</span>, <span class="st">"nYears"</span>, <span class="st">"sum"</span>)</a>
@@ -187,7 +196,7 @@ Time series for <em>Bombus</em> spp. dataset.
 <a class="sourceLine" id="cb4-21" title="21">      <span class="dt">col =</span> <span class="kw">palBW</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(EB<span class="op">@</span>data, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">length.out =</span> <span class="dv">5</span>)),</a>
 <a class="sourceLine" id="cb4-22" title="22">      <span class="dt">title =</span> <span class="st">"Number of years"</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">"n"</span>)</a></code></pre></div>
 <p><img src="intro_to_BIRDS_files/figure-html/figure%202-1.png" width="672"></p>
-<p>Also, we could map the ignorance scores based on the number of visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code></p>
+<p>We could also map the ignorance scores based on the number of visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb5-2" title="2">palBW &lt;-<span class="st"> </span>leaflet<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/leaflet/topics/colorNumeric">colorNumeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"white"</span>, <span class="st">"navyblue"</span>), </a>
 <a class="sourceLine" id="cb5-3" title="3">                               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), </a>
@@ -207,7 +216,7 @@ Time series for <em>Bombus</em> spp. dataset.
 <a class="sourceLine" id="cb5-17" title="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"bottomleft"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>), <span class="st">"NA"</span>),</a>
 <a class="sourceLine" id="cb5-18" title="18">      <span class="dt">col =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw">palBWR</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>)), <span class="st">"grey90"</span>),</a>
 <a class="sourceLine" id="cb5-19" title="19">      <span class="dt">title =</span> <span class="st">"Ignorance </span><span class="ch">\n</span><span class="st">nVis, </span><span class="ch">\n</span><span class="st">O0.5=5"</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">"n"</span>)</a></code></pre></div>
-<p><img src="intro_to_BIRDS_files/figure-html/figure%203-1.png" width="672"></p>
+<p><img src="intro_to_BIRDS_files/figure-html/figure%203-1.png" width="672"> The ignorance scores are highlighting where we have little information and hence cannot be confident about the lack of reports implying an absence of the species.</p>
 <p>Or we could connect to other packages like <code>vegan</code> to continue with community analyses. In this case, we create a community matrix using the visits as sampling units, summarising for each grid cell the number of visits a species was observed (i.e.  ignoring replicates within visits).</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## Community analysis</span></a>
 <a class="sourceLine" id="cb6-2" title="2">CM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/communityMatrix.html">communityMatrix</a></span>(SB, <span class="dt">sampleUnit=</span><span class="st">"visit"</span>)</a>

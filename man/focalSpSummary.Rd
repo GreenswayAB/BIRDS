@@ -2,7 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{focalSpSummary}
 \alias{focalSpSummary}
-\title{A function to find a species among all visits}
+\title{A function to find records of a species among all visits}
 \usage{
 focalSpSummary(x, focalSp = NULL)
 }
@@ -15,7 +15,8 @@ focalSpSummary(x, focalSp = NULL)
 a \code{data.frame} with summary data for the focal species
 }
 \description{
-A function to find a species among all visits.
+A function to summarise records of a species among all visits. Returns number of grid cells with occurrences,
+number of observations, number of visits, number of years and number of months with occurrences.
 }
 \examples{
 OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)

@@ -57,9 +57,9 @@ Only evaluated if taxonRankCol is not \code{NULL}}
 a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 }
 \description{
-Takes a dataframe with reported species observations and reformats it to a
-OrganizedBirds-class that can be used in further analyses with the
-BIRDS-package.
+Takes a dataframe with reported species observations and reformats it, using 
+visit identifiers, to an OrganizedBirds-class that can be used in further 
+analyses with the BIRDS-package.
 }
 \details{
 An OrganizedBirds-class is essentially a list containing one element, a

@@ -14,22 +14,26 @@ BIRDS: A set of tools for Biodiversity Information Review and Decision Support.
 The primary aim of this package is to provide tools for Biodiversity Informatics
 in order to understand the specis information data and decide about what analyses
 we can perform and draw approriate conclusions. For this we need to understand
-the data acquisition/generation process. With this R package we want to take the
-user a step closer to understanding the observers’ behavior.#'
+the data generation process. With this R package we want to take the
+user a step closer to understanding the observers’ behaviour.
+The BIRDS packages provides a workflow for reproducable data review, involving 
+three basic steps: organise data, summarise data, review data.
 }
 
 \examples{
+# Organise the data
 OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
 
 OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
  taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
 
+# Make a grid that can be used by summariseBirds()
 grid <- makeGrid(gotaland, gridSize = 10)
 # alternatively:
 # polygon <- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")
 # grid <- makeGrid(polygon, gridSize = 10)
 
-# Summarise the data
+# Summarise the data (using the grid to overlay with the organised data)
 SB <- summariseBirds(OB, grid=grid)
 EBnObs<- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
 EBnVis<- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "sum")

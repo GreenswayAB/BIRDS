@@ -2,7 +2,7 @@
 % Please edit documentation in R/focalSpecies.R
 \name{focalSpReport}
 \alias{focalSpReport}
-\title{A function to report records for a species}
+\title{A function to summarise records for a species}
 \usage{
 focalSpReport(x, focalSp = NULL, long = TRUE)
 }
@@ -17,7 +17,8 @@ focalSpReport(x, focalSp = NULL, long = TRUE)
 a plot with a brief species summary
 }
 \description{
-A function to report records for a species
+A function to summarise records for a species, showing grid cells with records on a map, 
+and bar charts with number of records per year and month.
 }
 \examples{
 library(sp)
