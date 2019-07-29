@@ -25,7 +25,9 @@ The use of the package is very simple but requires knowledge of a few concepts a
 
 Apart from this, biodiversity databases require a plethora of variables and metadata, often following the [DarwinCore](https://dwc.tdwg.org/) standard. This package recognizes as a default the column names of DarwinCore, but other names can be specified too. 
 
-Before using the BIRDS package we already have to make some first decisions which data to retrieve and how, and whether to clean the data, as shown in this workflow ![Decision workflow](./BIRDsDecision.png). 
+Before using the BIRDS package we already have to make some first decisions which data to retrieve and how, and whether to clean the data, as shown in this workflow  
+
+![Decision workflow](./BIRDsDecision.png). 
 The user can download the primary biodiversity data from their database of choice, import it into R. Data can be cleaned when considered necessary. As mentioned in the package description, the tools provided by the `BIRDS` package **do not** correct or improve the accuracy of the data.
 
 

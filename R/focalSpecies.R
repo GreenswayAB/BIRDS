@@ -113,19 +113,31 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE){
   overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
-  yearRng <- range(yearsAll) # range(unname(unlist(lapply(x$overlaid, FUN=function(x) x$year) )))
+  yearRng <- range(yearsAll) 
   yearMax <- max(yearsAll)
   yearMin <- min(yearsAll)
-
+  
   wNonEmptyFocal <- unname(which(unlist(lapply(overFocal, nrow))>0))
   nObs <- sum(unlist(lapply(overFocal[wNonEmptyFocal], nrow)))
-  visitsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,visitCol]) ))
+  visitsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], 
+                                      FUN=function(x) x[,visitCol]) ))
   nVis <- length(visitsFocal)
-  yearsFocal <- unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"year"]) )
-  monthsFocal <- unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"month"]) )
+  yearsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], 
+                              FUN=function(x) x[,"year"]) ))
+  yearsFocalTbl <- table( factor(yearsFocal, 
+                             levels = yearsAll)
+                        )
+  
+  monthsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], 
+                                      FUN=function(x) x[,"month"]) ))
+  monthsFocalTbl <- table( factor(monthsFocal, 
+                                  levels=1:12, 
+                                  labels = month.abb[1:12])
+                           )
+  
   reportStrg <- paste0("Number of observations: ", nObs)
 
-  layout(matrix(c(1,2,1,3), nrow=2, byrow = long))
+  layout(matrix(c(1,2,1,3), nrow = 2, byrow = long))
   par(mar=c(1,1,1,1))
   plot(x$spatial[wNonEmpty,], col="grey", border = NA, )
   plot(x$spatial[wNonEmptyFocal,], col="red", border = NA, add=TRUE)
@@ -134,9 +146,9 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE){
   legend("bottomleft", legend=c("visited", "present"), col = c("grey", "red"), pch = 15, bty="n")
 
   par(mar=c(3,4,1,1))
-  barplot(table(yearsFocal), ylab = "Number of observations")
+  barplot(yearsFocalTbl, ylab = "n. visits", las=2)
   par(mar=c(4,4,1,1))
-  barplot(table(month.name[monthsFocal]), ylab = "Number of observations")
+  barplot(monthsFocalTbl, ylab = "n. visits", las=2)
 
 }
 
