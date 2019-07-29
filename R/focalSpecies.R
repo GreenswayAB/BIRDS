@@ -1,14 +1,6 @@
-#' Five functions extracting summaries for species:
-#' 1) A function to list all species from all visits
-#' 2) A function to find records of a species among all visits
-#' 3) A function to summarise records for a species
-#' 4) A function to list all species and count number of visits
-#' 5) A function to create a community matrix
+#' Lists all species names from the data set
 #'
-#'
-#' A function to list all species from all visits
-#'
-#' A function to list all species from all visits (total species list for the data set).
+#' Lists all species names from the data set.
 #' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SummarizeBirds}.
 #' @return a \code{vector} with all species names in the data set
 #' @examples
@@ -29,7 +21,7 @@ listSpecies<-function(x){
   return(allSpecies)
 }
 
-#' A function to find records of a species among all visits
+#' Summarize records of a species among all visits
 #'
 #' A function to summarise records of a species among all visits. Returns number of grid cells with occurrences,
 #' number of observations, number of visits, number of years and number of months with occurrences.
@@ -86,7 +78,7 @@ focalSpSummary <- function(x, focalSp=NULL){
 }
 
 
-#' A function to summarise records for a species
+#' Summarise all records for a species
 #'
 #' This function will produce a simple visual report for the obsrevation pattern
 #' of the focal species. It shows grid cells with records on a map,
@@ -149,7 +141,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE){
 }
 
 
-#' A function to list all species and count number of visits
+#' Summarize all records for a species
 #'
 #' A function that counts the number of observations, number of visits and number of grid cells with occurrences for all species.
 #' @param x an object of class \sQuote{SummarizeBirds}.
@@ -186,7 +178,7 @@ speciesSummary <- function(x){
   return(res)
 }
 
-#' A function to create a community matrix
+#' Create a community matrix
 #'
 #' A function that counts the number of observations or visits per grid cell for all species.
 #' @param x an object of class \sQuote{SummarizeBirds}.

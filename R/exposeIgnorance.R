@@ -1,6 +1,5 @@
-#' A function to create Ignorance Scores
+#' Create ignorance scores
 #'
-#' A function to create Ignorance Scores.
 #' Ignorance scores are a proxy for the lack of sampling effort, computed by making
 #' the number of observations relative to a reference number of observations that
 #' is considered to be enough to reduce the ignorance score by half (henceforth

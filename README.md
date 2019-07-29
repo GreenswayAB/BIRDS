@@ -1,5 +1,5 @@
-BIRDS
-============
+# BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" alt="" width="120" />
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 
@@ -75,16 +75,17 @@ the `BIRDS` package takes a systematic approach. With this package the date are
 systematically organised and reviewed. This systematic approach actually starts 
 before using `BIRDS` as we suggest steps and tools for optionally cleaning the 
 data before processing by `BIRDS`. Hence, before using biodiversity data for 
-intended analysis start by optionally cleaning the data, then use `BIRDS` to 
-organize the data, summarize and review the data:
+the intended analysis start by optionally cleaning the data, then use `BIRDS` to 
+organize, summarize and review the data:
 
 <img src=https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png />
 
-Use your review to evaluate sampling effort and data completeness, and to inform
-decisions about whether the data are fit-for-purpose and how to further analyse the data.
+Then, use your review to evaluate sampling effort and data gaps, and to inform
+decisions about whether the data are fit-for-purpose and how to further analyse
+the data.
 
 
-#### Field visit
+##### Field visit
 
 A central concept used by the `BIRDS` package is the “visit” – defining the sampling
 unit as a sampling event by a unique observer (or group of observers), at a unique
@@ -102,11 +103,11 @@ visit (e.g. species list length, or when available the time spent during a visit
 Hence, the quality (completeness) of the data can be judged by using information 
 for each visit and information from a collection of visits. 
 
-You can examine this in the [Intro to BIRDS](https://greensway.github.io/BIRDS/articles/BIRDS.html) 
-vignette following the example in the walk through of the package tools.
+You can examine this in the 
+[technical details](https://greensway.github.io/BIRDS/articles/technical-details.html)
+vignette.
 
-
-#### Spatial grid and spillover
+##### Spatial grid and spillover
 
 Defined by a unique observer (or group of observers), at a unique unit of space and time visits can be identified by a unique combination of variables: observer id, location, time. Often location is a named unit of space that has been visited during the same sampling event. For example a botanist visiting and reporting species for a meadow, or a bird watcher visiting and reporting species for a lake. 
 
@@ -117,22 +118,21 @@ If there is no common spatial identifier to define the visit extent, and the obs
 You can examine this in the [technical details](https://greensway.github.io/BIRDS/articles/technical-details.html) vignette.
 
 
-#### Reference species group
+##### Reference species group
 
 Because visits result from the sampling process they can only be defined for a reference species group, i.e. a group of species observed and recorded by similar methods. The rationale for a reference species group is based on the assumption that species groups share similar bias: we assume that, despite varying field skills and accuracy, observers reporting observations for species of a reference species group share similar observer behavior and methods and, hence, generate data with similar sampling bias (Phillips et al. 2009). From this we can assume that the larger the number of visits (or observations) reporting species from the reference group at a specific unit of space and time, the more likely it is that the lack of visits for (or observations of) a particular species reflects the absence of (or failure to detect) a focal species rather than a lack of visits and reports made.
 
 It is important to keep in mind that, to keep the sampling bias consistent, the reference species group should only include species that are assumed to be sampled with the same methodology (Ponder et al. 2001). For example, a reference group should not include all species in the Order Lepidoptera because butterflies *sensu stricto* (superfamily Papilionoidea) are sampled in very different ways than most other species of Lepidoptera (mainly moths).
 
 
-#### Species list length (SLL)
+##### Species list length (SLL)
 
 The SLL per visit (i.e. the number of species observed and recorded per visit) is a well known proxy for the time spent in the field and willingness to report all species seen of a reference taxonomic group, Szabo et al. 2010). The `BIRDS` package therefore uses SLL as a proxy for sampling effort.
 
 
 ### What does the package do?
 
-With the `BIRDS`’ package set of tools PBD can be reviewed based on the information contained in the visits. Use `BIRDS` to organize the data, summarize and review the data as shown [here](https://github.com/Greensway/BIRDS/vignettes/BIRDs.png). 
-The `BIRDS` package organizes the data into a spatially gridded visit-based format, from which summaries are retrieved for a number of variables describing the visits across both spatial and temporal dimension. Those variables are the number of visits, number of species, number of observations, average species list length per visit, number of units of space and time with visits. The variables can be used to collectively describe the sampling effort and data completeness (data gaps), and can be examined spatially (e.g. viewed on maps) and temporally (e.g. plotted as time series). 
+With the `BIRDS`’ package set of tools PBD can be reviewed based on the information contained in the visits. Use `BIRDS` to organize the data, summarize and review the data as shown above. The `BIRDS` package organizes the data into a spatially gridded visit-based format, from which summaries are retrieved for a number of variables describing the visits across both spatial and temporal dimension. Those variables are the number of visits, number of species, number of observations, average species list length per visit, number of units of space and time with visits. The variables can be used to collectively describe the sampling effort and data completeness (data gaps), and can be examined spatially (e.g. viewed on maps) and temporally (e.g. plotted as time series). 
 
 
 #### What does the package help us with?
@@ -156,12 +156,7 @@ The [Intro to BIRDS](https://greensway.github.io/BIRDS/articles/BIRDS.html) vign
 walk through the package tools using an example data set.
 
 
-#### Technical note
-In general in this package NA are used for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data for this grid cell but not in this time unit).
-
-
-
-## In the TODO LIST
+### In the TODO LIST
 Check [here](https://github.com/Greensway/BIRDS/projects/1) for a list of future features to be added, and don't hesitate sending your suggestions by [e-mail](mailto:alejandro@greensway.se) 
 
 

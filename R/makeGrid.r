@@ -50,12 +50,13 @@ drawPolygon <- function(lat = 0,
 }  ## end draw polygon
 
 
-#' Creates the minimum circle containing the points
+#' Create the minimum circle containing the points
 #'
 #' @param spdf an object of class \sQuote{SpatialPointsDataFrame} with geodesic
 #' coordinates in WGS84 (ESPG:4326).
 #' @return an object of class \sQuote{SpatialPolygon} with a polygon with geodesic
 #' coordinates in WGS84 (ESPG:4326).
+#' @export
 makeCircle<-function(spdf){
     # error not a SpatialPolygon
     if(!(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame"))) {
@@ -176,7 +177,7 @@ OB2Polygon <- function(df, shape="bBox") {
     return(polygon)
 }
 
-#' Renames a grid
+#' Rename the cells in a grid
 #'
 #' Takes a SpatialPolygon* and renames it to "ID1":"IDn".
 #' @return the same input object with known names
@@ -189,7 +190,7 @@ renameGrid<-function(grid){
 }
 
 
-#' Makes a grid
+#' Make a grid
 #'
 #' Makes a grid adapted to the purpose of this package and simplifing options
 #' from the  \code{sp} package. The central concept of the BIRDS package is the
@@ -291,7 +292,7 @@ makeGrid <- function(polygon, gridSize, buffer = FALSE, hexGrid = TRUE, offset=N
 
 
 
-#' Converts a grid into a web query string.
+#' Convert a grid into a web query string.
 #'
 #' Converts a grid (or any SpatialPolygon for that matter) into a web query string.
 #' @param grid an object of class \sQuote{SpatialPolygon-class} or

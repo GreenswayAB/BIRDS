@@ -61,7 +61,9 @@ includeSpillover<-function(x, birdData, visitCol){
 #' all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
 #'
 #' @param x An OrganizedBirds object
-#' @param ... additional parameters for \code{\link{overlayBirds}}
+#' @param grid A SpatialPolygonsDataFrame object of the grid in the study area
+#' @param spillOver Specifies if the function should search for observations belonging to the same
+#'   visit (identified by visit UID) but fall outside of the grid cell. Default is \code{TRUE}.
 #'
 #' @return The output is a OverlaidBirds-class object, which is a list
 #'   containing three objects;
@@ -74,11 +76,11 @@ includeSpillover<-function(x, birdData, visitCol){
 #'    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
 #'   }
 #' @export
-#'
+#' @rdname overlayBirds
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' overlayBirds(ob, grid)
-overlayBirds<-function(x, ...){
+overlayBirds<-function(x, grid, spillOver = TRUE){
   UseMethod("overlayBirds")
 }
 
@@ -98,11 +100,6 @@ overlayBirds<-function(x, ...){
 #' to the visits inside the gridcell (identified by visit UID) in the entire dataset and includes
 #' all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
 #'
-#' @param x An OrganizedBirds object
-#' @param grid A SpatialPolygonsDataFrame object of the grid in the study area
-#' @param spillOver Specifies if the function should search for observations belonging to the same
-#'   visit (identified by visit UID) but fall outside of the grid cell. Default is \code{TRUE}.
-#'
 #' @return The output is a OverlaidBirds-class object, which is a list
 #'   containing three objects;
 #'   \describe{
@@ -114,7 +111,7 @@ overlayBirds<-function(x, ...){
 #'    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
 #'   }
 #' @export
-#'
+#' @rdname overlayBirds
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' overlayBirds(ob, grid)
