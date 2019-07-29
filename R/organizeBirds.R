@@ -105,8 +105,6 @@ createVisits<-function(x, columns=c("locality", "day", "month", "year", "recorde
   }else{
 
   }
-
-
 }
 
 
@@ -145,8 +143,6 @@ visits<-function(x, name=NULL){
   }
 
   return(x[[1]]@data[,name])
-
-
 }
 
 #' @rdname visits
@@ -261,11 +257,13 @@ obsData.OrganizedBirds<-function(x){
 #'  System). Default is \code{"+init=epsg:4326"}, which is WGS 84. This is only
 #'  applicable to non-spatial dataframes, since a spatial dataframes already
 #'  should have this information.
-#' @param taxonRankCol the name of the column containing the taxonomic rank for the observation.
+#' @param taxonRankCol the name of the column containing the taxonomic rank for 
+#' the observation.
 #' That is the minimum taxonomic identification level.
 #' @param taxonRank a string or vector of strings containing the taxonomic ranks to keep.
 #' Only evaluated if taxonRankCol is not \code{NULL}
-#' @param simplifySppName wheter to remove everything else that is not the species name (authors, years and intraspecific epithets). Default set to FALSE
+#' @param simplifySppName wheter to remove everything else that is not the species
+#' name (authors, years and intraspecific epithets). Default set to FALSE
 #'
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 #' @export
