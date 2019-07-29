@@ -79,8 +79,8 @@ intended analysis start by optionally cleaning the data, then use `BIRDS` to
 organize the data, summarize and review the data:
 
 <img src=https://github.com/Greensway/BIRDS/blob/master/images/BIRDs.png />
-or this
-![BIRDS](man/figures/BIRDs.png)
+or this  
+![BIRDS](./man/figures/BIRDs.png)
 
 Use your review to evaluate sampling effort and data completeness, and to inform
 decisions about whether the data are fit-for-purpose and how to further analyse the data.
