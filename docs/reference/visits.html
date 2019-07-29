@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get/set the visits — visits • BIRDS</title>
+<title>Create unique visits IDs — createVisits • BIRDS</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="Get/set the visits — visits" />
+<meta property="og:title" content="Create unique visits IDs — createVisits" />
 
-<meta property="og:description" content="Gets or sets the visits identifier for a OrganizedBirds-class." />
+<meta property="og:description" content="Takes a dataframe and a vector of column names and classifies each row of the
+dataframe based on the combination of values in the specified columns.
+Gets or sets the visits identifier for a OrganizedBirds-class." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -76,18 +78,18 @@
   </a>
 </li>
 <li>
+  <a href="../articles/BIRDS.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Documents
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/intro_to_BIRDS.html">Introduction to BIRDS</a>
-    </li>
     <li>
       <a href="../articles/technical_details.html">BIRDS technical details</a>
     </li>
@@ -114,18 +116,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get/set the visits</h1>
+    <h1>Create unique visits IDs</h1>
     <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/organizeBirds.R'><code>R/organizeBirds.R</code></a></small>
     <div class="hidden name"><code>visits.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Gets or sets the visits identifier for a OrganizedBirds-class.</p>
+    <p>Takes a dataframe and a vector of column names and classifies each row of the
+dataframe based on the combination of values in the specified columns.</p>
+<p>Gets or sets the visits identifier for a OrganizedBirds-class.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>visits</span>(<span class='no'>x</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='kw'>NULL</span>)
+    <pre class="usage"><span class='fu'>createVisits</span>(<span class='no'>x</span>, <span class='kw'>columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>,
+  <span class='st'>"recordedBy"</span>))
+
+<span class='fu'>visits</span>(<span class='no'>x</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='kw'>NULL</span>)
 
 <span class='fu'>visits</span>(<span class='no'>x</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>useAsDefault</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span></pre>
     
@@ -134,7 +141,14 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An OrganizedBirds-object</p></td>
+      <td><p>a dataframe or OrganizedBirds-class including at least the
+specified columns that are used to identify a visit.</p></td>
+    </tr>
+    <tr>
+      <th>columns</th>
+      <td><p>A vector with the names of the columns that are used to identify a visit.
+Default is the Darwin Core variables <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("locality", "day", "month",
+"year", "recordedBy")</a></code>.</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -152,13 +166,35 @@ column (<code>visitUID</code>) and that column will be set to default.</p></td>
       <th>value</th>
       <td><p>the value to assign</p></td>
     </tr>
+    <tr>
+      <th>x</th>
+      <td><p>An OrganizedBirds-object</p></td>
+    </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A vector of the same length as the number of rows as the dataframe
+  with a unique number for each combination of the values in the specified
+  columns.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>What a visit should be is not always clearly defined and extractable in a
+dataset. A reasonable assumption is that a visit could be identified from the records
+made by one person on a certain day and at a specific location or site. The
+default value for the variable column is therefore that a visit is identified
+by the Darwin Core variables <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("locality", "day", "month", "year",
+"recordedBy")</a></code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ob</span><span class='kw'>&lt;-</span><span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
+    <pre class="examples"><div class='input'><span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
+<span class='no'>tmp.vis</span> <span class='kw'>&lt;-</span> <span class='fu'>createVisits</span>(<span class='no'>bombusObs</span>, <span class='kw'>columns</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>))
+<span class='fu'>visits</span>(<span class='no'>OB</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"visNoRecorder"</span>, <span class='kw'>useAsDefault</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='no'>tmp.vis</span>
+<span class='no'>ob</span><span class='kw'>&lt;-</span><span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>ob</span>, <span class='st'>"visitCol"</span>)</div><div class='output co'>#&gt; [1] "visitUID"</div><div class='input'><span class='no'>vis</span><span class='kw'>&lt;-</span><span class='fu'>visits</span>(<span class='no'>ob</span>)
-<span class='no'>tmp.vis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='createVisits.html'>createVisits</a></span>(<span class='no'>bombusObs</span>, <span class='kw'>columns</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>))
+<span class='no'>tmp.vis</span> <span class='kw'>&lt;-</span> <span class='fu'>createVisits</span>(<span class='no'>bombusObs</span>, <span class='kw'>columns</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>))
 <span class='fu'>visits</span>(<span class='no'>ob</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"visNoRecorder"</span>, <span class='kw'>useAsDefault</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='no'>tmp.vis</span>
 <span class='no'>vis2</span><span class='kw'>&lt;-</span><span class='fu'>visits</span>(<span class='no'>ob</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>ob</span>, <span class='st'>"visitCol"</span>)</div><div class='output co'>#&gt; [1] "visNoRecorder"</div></pre>
@@ -167,7 +203,11 @@ column (<code>visitUID</code>) and that column will be set to default.</p></td>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

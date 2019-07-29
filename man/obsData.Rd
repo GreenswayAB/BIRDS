@@ -2,14 +2,19 @@
 % Please edit documentation in R/organizeBirds.R
 \name{obsData}
 \alias{obsData}
+\alias{obsData.OrganizedBirds}
 \title{Extract observation data}
 \usage{
 obsData(x, ...)
+
+\method{obsData}{OrganizedBirds}(x)
 }
 \arguments{
 \item{x}{An OrganizedBirds-object}
 
 \item{...}{additional arguments for \code{\link{obsData}}}
+
+\item{x}{An OrganizedBirds-object}
 }
 \value{
 A dataframe

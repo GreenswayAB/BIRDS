@@ -76,18 +76,18 @@
   </a>
 </li>
 <li>
+  <a href="../articles/BIRDS.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Documents
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/intro_to_BIRDS.html">Introduction to BIRDS</a>
-    </li>
     <li>
       <a href="../articles/technical_details.html">BIRDS technical details</a>
     </li>
@@ -125,7 +125,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>exportBirds</span>(<span class='no'>x</span>, <span class='no'>dimension</span>, <span class='no'>timeRes</span>, <span class='no'>variable</span>, <span class='no'>method</span>)</pre>
+    <pre class="usage"><span class='fu'>exportBirds</span>(<span class='no'>x</span>, <span class='no'>dimension</span>, <span class='no'>timeRes</span>, <span class='no'>variable</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,8 +143,8 @@
       <th>timeRes</th>
       <td><p>A character string indicating what tempral resolution should
 be used. For Spatial export the function accepts <code>NULL, "Yearly", "Monthly"</code>
-or <code>"Month"</code>. For temporal export the function accepts <code>"Yearly", "Monthly", "Daily"</code>
-or <code>"Month"</code>.</p></td>
+or <code>"Month"</code>. For temporal export the function accepts <code>"Yearly",
+"Monthly", "Daily"</code> or <code>"Month"</code>.</p></td>
     </tr>
     <tr>
       <th>variable</th>
@@ -162,12 +162,20 @@ statistical method should be applied. The function accepts <code>"sum", "median"
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a named vector or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial, respectively</p>
+    <p>a named vector or a SpatialPolygonsDataFrame depending on the
+dimension, temporal or spatial, respectively</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>the difference between Monthly and Month is that the former returns
+"n.years x 12" values, while Month summarize over years and returns only 12 values.
+For more details over the possible combinations of dimensions and variables please
+refer to the vignette "Technical details".</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>grid</span><span class='kw'>&lt;-</span><span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summariseBirds.html'>summariseBirds</a></span>(<span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>), <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>), <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)
 <span class='no'>EB</span> <span class='kw'>&lt;-</span> <span class='fu'>exportBirds</span>(<span class='no'>SB</span>, <span class='st'>"Spatial"</span>, <span class='st'>"Month"</span>, <span class='st'>"nDays"</span>, <span class='st'>"median"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -176,6 +184,8 @@ statistical method should be applied. The function accepts <code>"sum", "median"
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#note">Note</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

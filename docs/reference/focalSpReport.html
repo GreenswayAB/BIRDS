@@ -32,7 +32,8 @@
 
 <meta property="og:title" content="A function to summarise records for a species — focalSpReport" />
 
-<meta property="og:description" content="A function to summarise records for a species, showing grid cells with records on a map, 
+<meta property="og:description" content="This function will produce a simple visual report for the obsrevation pattern
+of the focal species. It shows grid cells with records on a map,
 and bar charts with number of records per year and month." />
 <meta name="twitter:card" content="summary" />
 
@@ -77,18 +78,18 @@ and bar charts with number of records per year and month." />
   </a>
 </li>
 <li>
+  <a href="../articles/BIRDS.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Documents
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/intro_to_BIRDS.html">Introduction to BIRDS</a>
-    </li>
     <li>
       <a href="../articles/technical_details.html">BIRDS technical details</a>
     </li>
@@ -122,7 +123,8 @@ and bar charts with number of records per year and month." />
 
     <div class="ref-description">
     
-    <p>A function to summarise records for a species, showing grid cells with records on a map, 
+    <p>This function will produce a simple visual report for the obsrevation pattern
+of the focal species. It shows grid cells with records on a map,
 and bar charts with number of records per year and month.</p>
     
     </div>
@@ -152,14 +154,14 @@ and bar charts with number of records per year and month.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>summarizeBirds</code>, <code><a href='exportBirds.html'>exportBirds</a></code></p></div>
+    <div class='dont-index'><p><code><a href='summarizeBirds.html'>summarizeBirds</a></code>, <code><a href='exportBirds.html'>exportBirds</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
 <span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summariseBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)
 <span class='no'>allSpp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='listSpecies.html'>listSpecies</a></span>(<span class='no'>SB</span>)
 <span class='no'>focal</span><span class='kw'>&lt;-</span><span class='st'>"Zygodon viridissimus"</span>
 <span class='fu'>focalSpReport</span>(<span class='no'>SB</span>, <span class='kw'>focalSp</span><span class='kw'>=</span><span class='no'>focal</span>)</div><div class='img'><img src='focalSpReport-1.png' alt='' width='700' height='433' /></div></pre>

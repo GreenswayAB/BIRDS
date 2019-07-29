@@ -37,18 +37,18 @@ If you receive an error we would love to receive your bug report
 ## Basic example and data requirements
 
 Starting with a primary biodiversity data set (species observations) `BIRDS` employs 
-three basic steps: organising the data into a sampling event-based format, summarising
+three basic steps: organizing the data into a sampling event-based format, summarizing
 the data producing summary variables that inform about sampling effort and 
-data completeness, and reviewing the summarised variables.
+data completeness, and reviewing the summarized variables.
 
 This package works with `data.frame` tables containing raw species observations 
 as rows (i.e. primary biodiversity data, PBD), with minimal information required
 for each observation in the following columns:
 
-1. species idenfications 
+1. species identification 
 2. x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise 
 specified)
-3. date of the observation (either in one formated column or three columns y-m-d)
+3. date of the observation (either in one formatted column or three columns y-m-d)
 
 The function `organiseBirds()` converts ‘data.frame’ into a `SpatialPointsDataFrame`
 adding to each observation a unique identifier for the assumed visit (sampling event) 
@@ -59,20 +59,20 @@ refer to the [technical vignette](./vignettes/technical_details.pdf) and to
 each function's help page.  
 
 Then, the function `summariseBirds()` will overlay the data with a given spatial
-grid and create a set of objects that summarise the data spatially, temporally, 
-and spatiotemporally, and also provide other intermediate results useful for 
+grid and create a set of objects that summarize the data spatially, temporally, 
+and spatio-temporally, and also provide other intermediate results useful for 
 later analyses. Finally, the function `exportBirds()` helps the user to obtain 
 the data ready to be plotted with widely known functions. 
 
-We use as an example a dataset consisting of 10k species observations of 
+We use as an example a data set consisting of 10k species observations of 
 bumblebees (i.e. *Bombus* spp.) in Götaland (the southern part of Sweden) during
-2000-2018. The dataset `bombusObs` is part of this package and its metadata
-can be found in the dataset help page `?bombusObs`.  
+2000-2018. The data set `bombusObs` is part of this package and its metadata
+can be found in the data set help page `?bombusObs`.  
 
-You can easily create a grid over a sample area (i.e. `gotaland`), organise and 
-summarise the data, and export the variables you want to plot:
+You can easily create a grid over a sample area (i.e. `gotaland`), organize and 
+summarize the data, and export the variables you want to plot:
 
-```{r basic example, eval = T}
+```{r basic example, eval = TRUE}
 library(BIRDS)
 # Create a grid for your sample area that will be used to summarise the data:
 grid <- makeGrid(gotaland, gridSize = 10)
@@ -117,13 +117,13 @@ axis(4, at = seq(0, max(EBnObs), length.out = 5),
 axis(4, at = seq(0, max(EBnObs), length.out = 5) , 
      labels = round(seq(0,max(EBavgSll), length.out = 5), 1), 
      lwd = 2, col = "#FFB3B5", col.ticks = "#FFB3B5", line = 3)
-legend("topleft", legend=c("observations","visits"), 
+legend("topleft", legend=c("n.observations","n.visits"), 
        lty = c(1,2), lwd = 3, bty = "n")
-legend("bottomright", legend=c("n.observations / n.visits", "Mean SLL per cell"),
+legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell"),
        lty = 1, lwd = 3, col = c("#78D2EB", "#FFB3B5"), bty = "n")
 ```  
 
-Altough we downloaded the data in April 2019, we know that the latest reports
+Although we downloaded the data in April 2019, we know that the latest reports
 for 2018 were not yet uploaded and we see that in the figure.  
 We can see that over the years there are on average more observations, more visits and 
 also more species reported for each visit. While it looks like as sampling effort has increased
@@ -132,7 +132,7 @@ sampling effort per visit has actually decreased. There seem to be many more vis
 in later years driving also an increase in number of observations, but many visits hold only few observations.
 There seem to be also few visits with long species lists driving the increase of average SLL.
 
-Then, we can summarise spatial data in some maps, to review, for example, 
+Then, we can summarize spatial data in some maps, to review, for example, 
 Where do we have visits at all?, or How often are visits performed in July vs December?  
 
 ```{r figure 2, fig.show='hold', fig.width= 7, fig.height= 3}
@@ -161,8 +161,15 @@ legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
 ```
   
 
-We could also map the ignorance scores based on the number of visits using the 
-function `exposeIgnorance()` 
+We could also map the ignorance scores based on the either the number of observations 
+or visits using the function `exposeIgnorance()`. Ignorance scores are a proxy 
+for the lack of sampling effort, computed by making the number of observations 
+relative to a reference number of observations that is considered to be enough to 
+reduce the ignorance score by half (henceforth the Half-ignorance approach).
+The algorithm behind the Ignorance Score is designed for comparison of bias and 
+gaps in primary biodiversity data across taxonomy, time and space
+ Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
+ 
 ```{r figure 3, fig.show='hold', fig.width= 7, fig.height= 4}
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
@@ -187,20 +194,20 @@ legend("bottomleft", legend=c(seq(0, 1, length.out = 5), "NA"),
 The ignorance scores are highlighting where we have little information and hence cannot be 
 confident about the lack of reports implying an absence of the species. 
 
-Or we could connect to other packages like `vegan` to continue with community analyses.
-In this case, we create a community matrix using the visits as sampling units, 
-summarising for each grid cell the number of visits a species was observed (i.e. 
-ignoring replicates within visits).
-  
-```{r community richness, fig.show='hold', fig.width=7, message=FALSE}
-## Community analysis
-CM <- communityMatrix(SB, sampleUnit="visit")
-library(vegan)
-sp1 <- specaccum(CM, method = "exact")
-par(mar=c(4,4,1,1), xlog=TRUE, las=1)
-plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, 
-     ci.col="lightblue", log="x",  
-     xlab="Number of grid cells sampled", 
-     ylab="Species richness", 
-     main="Species accumulation curve")
-```
+<!-- Or we could connect to other packages like `vegan` to continue with community analyses. -->
+<!-- In this case, we create a community matrix using the visits as sampling units,  -->
+<!-- summarizing for each grid cell the number of visits a species was observed (i.e.  -->
+<!-- ignoring replicates within visits). -->
+
+<!-- ```{r community richness, fig.show='hold', fig.width=7, message=FALSE} -->
+<!-- ## Community analysis -->
+<!-- CM <- communityMatrix(SB, sampleUnit="visit") -->
+<!-- library(vegan) -->
+<!-- sp1 <- specaccum(CM, method = "exact") -->
+<!-- par(mar=c(4,4,1,1), xlog=TRUE, las=1) -->
+<!-- plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0,  -->
+<!--      ci.col="lightblue", log="x",   -->
+<!--      xlab="Number of grid cells sampled",  -->
+<!--      ylab="Species richness",  -->
+<!--      main="Species accumulation curve") -->
+<!-- ``` -->

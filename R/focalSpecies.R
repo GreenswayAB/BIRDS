@@ -4,8 +4,8 @@
 #' 3) A function to summarise records for a species
 #' 4) A function to list all species and count number of visits
 #' 5) A function to create a community matrix
-#' 
-#' 
+#'
+#'
 #' A function to list all species from all visits
 #'
 #' A function to list all species from all visits (total species list for the data set).
@@ -88,7 +88,8 @@ focalSpSummary <- function(x, focalSp=NULL){
 
 #' A function to summarise records for a species
 #'
-#' A function to summarise records for a species, showing grid cells with records on a map, 
+#' This function will produce a simple visual report for the obsrevation pattern
+#' of the focal species. It shows grid cells with records on a map,
 #' and bar charts with number of records per year and month.
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param focalSp the focal spp to look for.
@@ -210,7 +211,7 @@ communityMatrix<-function(x, sampleUnit="observation"){
   nCells<-length(x$spatial)
   cellID<-sapply(methods::slot(x$spatial, "polygons"), FUN=function(x) methods::slot(x, "ID"))
   wNonEmpty<-unname(which(unlist(lapply(x$overlaid, nrow))>0))
-  res<-matrix(0, nrow=nCells, ncol = length(allSpecies), dimnames = list(cellID, allSpecies))
+  res<-matrix(NA, nrow=nCells, ncol = length(allSpecies), dimnames = list(cellID, allSpecies))
 
   if (sampleUnit == "visit"){
     for(i in wNonEmpty){

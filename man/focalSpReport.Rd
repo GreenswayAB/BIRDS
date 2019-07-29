@@ -17,7 +17,8 @@ focalSpReport(x, focalSp = NULL, long = TRUE)
 a plot with a brief species summary
 }
 \description{
-A function to summarise records for a species, showing grid cells with records on a map, 
+This function will produce a simple visual report for the obsrevation pattern
+of the focal species. It shows grid cells with records on a map,
 and bar charts with number of records per year and month.
 }
 \examples{

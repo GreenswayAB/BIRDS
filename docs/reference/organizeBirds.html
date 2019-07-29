@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Organize a dataframe to a usable format — organizeBirds" />
 
-<meta property="og:description" content="Takes a dataframe with reported species observations and reformats it, using 
-visit identifiers, to an OrganizedBirds-class that can be used in further 
+<meta property="og:description" content="Takes a dataframe with reported species observations and reformats it, using
+visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package." />
 <meta name="twitter:card" content="summary" />
 
@@ -78,18 +78,18 @@ analyses with the BIRDS-package." />
   </a>
 </li>
 <li>
+  <a href="../articles/BIRDS.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Documents
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/intro_to_BIRDS.html">Introduction to BIRDS</a>
-    </li>
     <li>
       <a href="../articles/technical_details.html">BIRDS technical details</a>
     </li>
@@ -123,13 +123,21 @@ analyses with the BIRDS-package." />
 
     <div class="ref-description">
     
-    <p>Takes a dataframe with reported species observations and reformats it, using 
-visit identifiers, to an OrganizedBirds-class that can be used in further 
+    <p>Takes a dataframe with reported species observations and reformats it, using
+visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>organizeBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
+  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
+  <span class='st'>"month"</span>, <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
+  <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
+  <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='fu'>organiseBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
   <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
   <span class='st'>"month"</span>, <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
@@ -187,7 +195,7 @@ should have this information.</p></td>
     </tr>
     <tr>
       <th>taxonRankCol</th>
-      <td><p>the name of the column containing the taxonomic rank for 
+      <td><p>the name of the column containing the taxonomic rank for
 the observation.
 That is the minimum taxonomic identification level.</p></td>
     </tr>
@@ -214,7 +222,7 @@ SpatialPointsDataFrame. This SpatialPointsDataFrame has its data formatted in
 a way that the other functions in the BIRDS-package can use further on. It
 also has the attribute <code>"visitCol"</code>, which indicates which column in the
 dataframe holds the visit identifier. The visit identifier is created by
-the function <code><a href='createVisits.html'>createVisits</a></code>, which creates a unique id for each
+the function <code><a href='visits.html'>createVisits</a></code>, which creates a unique id for each
 combination of the values in the defined columns.</p>
 <p>The variable <code>timeCol</code> can be formatted differently. If the variable is a
 named vector with the names "Year", "Month" and "Day" (letter capitalization
@@ -226,7 +234,7 @@ as "yyyy-mm-dd".</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='createVisits.html'>createVisits</a></code> to create unique visits IDs,
+    <div class='dont-index'><p><code><a href='visits.html'>createVisits</a></code> to create unique visits IDs,
  <code><a href='visits.html'>visits</a></code> to get or set the visit IDs to this class,
  <code><a href='obsData.html'>obsData</a></code> to retrieve the dataframe from this class.</p></div>
     

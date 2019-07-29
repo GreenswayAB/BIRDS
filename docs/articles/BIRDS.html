@@ -43,19 +43,19 @@
   </a>
 </li>
 <li>
+  <a href="../articles/BIRDS.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Documents
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/intro_to_BIRDS.html">Introduction to BIRDS</a>
-    </li>
-    <li>
       <a href="../articles/technical_details.html">BIRDS technical details</a>
     </li>
   </ul>
@@ -85,17 +85,17 @@
             
             <h4 class="date">2019-07-29</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/intro_to_BIRDS.Rmd"><code>vignettes/intro_to_BIRDS.Rmd</code></a></small>
-      <div class="hidden name"><code>intro_to_BIRDS.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/BIRDS.Rmd"><code>vignettes/BIRDS.Rmd</code></a></small>
+      <div class="hidden name"><code>BIRDS.Rmd</code></div>
 
     </div>
 
     
     
-<div id="installing-birds" class="section level1">
-<h1 class="hasAnchor">
+<div id="installing-birds" class="section level2">
+<h2 class="hasAnchor">
 <a href="#installing-birds" class="anchor"></a>Installing <code>BIRDS</code>
-</h1>
+</h2>
 <p>The package <code>BIRDS</code> is currently available on GitHub and you can freely download the source code here <a href="https://github.com/Greensway/BIRDS">BIRDS on GitHub</a></p>
 <p>The easiest option is to install the package directly from GitHub using the package <code>devtools</code>. Install <code>devtools</code> if you do not already have installed it.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">'devtools'</span>)</a>
@@ -103,20 +103,20 @@
 <a class="sourceLine" id="cb1-3" title="3"><span class="kw">install_github</span>(<span class="st">'Greensway/BIRDS'</span>)</a></code></pre></div>
 <p>If you receive an error we would love to receive your bug report <a href="https://github.com/Greensway/BIRDS/issues">here</a></p>
 </div>
-<div id="basic-example-and-data-requirements" class="section level1">
-<h1 class="hasAnchor">
-<a href="#basic-example-and-data-requirements" class="anchor"></a>Basic example and data requirements</h1>
-<p>Starting with a primary biodiversity data set (species observations) <code>BIRDS</code> employs three basic steps: organising the data into a sampling event-based format, summarising the data producing summary variables that inform about sampling effort and data completeness, and reviewing the summarised variables.</p>
+<div id="basic-example-and-data-requirements" class="section level2">
+<h2 class="hasAnchor">
+<a href="#basic-example-and-data-requirements" class="anchor"></a>Basic example and data requirements</h2>
+<p>Starting with a primary biodiversity data set (species observations) <code>BIRDS</code> employs three basic steps: organizing the data into a sampling event-based format, summarizing the data producing summary variables that inform about sampling effort and data completeness, and reviewing the summarized variables.</p>
 <p>This package works with <code>data.frame</code> tables containing raw species observations as rows (i.e. primary biodiversity data, PBD), with minimal information required for each observation in the following columns:</p>
 <ol style="list-style-type: decimal">
-<li>species idenfications</li>
+<li>species identification</li>
 <li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>
-<li>date of the observation (either in one formated column or three columns y-m-d)</li>
+<li>date of the observation (either in one formatted column or three columns y-m-d)</li>
 </ol>
 <p>The function <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code><a href="../reference/organizeBirds.html">organizeBirds()</a></code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="./vignettes/technical_details.pdf">technical vignette</a> and to each function’s help page.</p>
-<p>Then, the function <code><a href="../reference/summariseBirds.html">summariseBirds()</a></code> will overlay the data with a given spatial grid and create a set of objects that summarise the data spatially, temporally, and spatiotemporally, and also provide other intermediate results useful for later analyses. Finally, the function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
-<p>We use as an example a dataset consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The dataset <code>bombusObs</code> is part of this package and its metadata can be found in the dataset help page <code><a href="../reference/bombusObs.html">?bombusObs</a></code>.</p>
-<p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organise and summarise the data, and export the variables you want to plot:</p>
+<p>Then, the function <code><a href="../reference/summarizeBirds.html">summariseBirds()</a></code> will overlay the data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, and spatio-temporally, and also provide other intermediate results useful for later analyses. Finally, the function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
+<p>We use as an example a data set consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The data set <code>bombusObs</code> is part of this package and its metadata can be found in the data set help page <code><a href="../reference/bombusObs.html">?bombusObs</a></code>.</p>
+<p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(BIRDS)</a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></a>
 <a class="sourceLine" id="cb2-3" title="3">grid &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeGrid.html">makeGrid</a></span>(gotaland, <span class="dt">gridSize =</span> <span class="dv">10</span>)</a>
@@ -131,7 +131,7 @@
 <a class="sourceLine" id="cb2-12" title="12">OB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/organizeBirds.html">organizeBirds</a></span>(PBD, <span class="dt">sppCol =</span> <span class="st">"scientificName"</span>, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb2-13" title="13"></a>
 <a class="sourceLine" id="cb2-14" title="14"><span class="co"># Summarise the data:</span></a>
-<a class="sourceLine" id="cb2-15" title="15">SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summariseBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</a>
+<a class="sourceLine" id="cb2-15" title="15">SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summarizeBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</a>
 <a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; Registered S3 method overwritten by 'xts':</span></a>
 <a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt;   method     from</span></a>
 <a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt;   as.zoo.xts zoo</span></a>
@@ -161,18 +161,18 @@
 <a class="sourceLine" id="cb3-10" title="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/axis">axis</a></span>(<span class="dv">4</span>, <span class="dt">at =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(EBnObs), <span class="dt">length.out =</span> <span class="dv">5</span>) , </a>
 <a class="sourceLine" id="cb3-11" title="11">     <span class="dt">labels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(EBavgSll), <span class="dt">length.out =</span> <span class="dv">5</span>), <span class="dv">1</span>), </a>
 <a class="sourceLine" id="cb3-12" title="12">     <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">"#FFB3B5"</span>, <span class="dt">col.ticks =</span> <span class="st">"#FFB3B5"</span>, <span class="dt">line =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb3-13" title="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"topleft"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"observations"</span>,<span class="st">"visits"</span>), </a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"topleft"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"n.observations"</span>,<span class="st">"n.visits"</span>), </a>
 <a class="sourceLine" id="cb3-14" title="14">       <span class="dt">lty =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">bty =</span> <span class="st">"n"</span>)</a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"bottomright"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"n.observations / n.visits"</span>, <span class="st">"Mean SLL per cell"</span>),</a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"bottomright"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"n.observations / n.visits"</span>, <span class="st">"avg. SLL per cell"</span>),</a>
 <a class="sourceLine" id="cb3-16" title="16">       <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">col =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"#78D2EB"</span>, <span class="st">"#FFB3B5"</span>), <span class="dt">bty =</span> <span class="st">"n"</span>)</a></code></pre></div>
 <div class="figure">
-<img src="intro_to_BIRDS_files/figure-html/figure%201-1.png" alt="Time series for *Bombus* spp. dataset." width="672"><p class="caption">
+<img src="BIRDS_files/figure-html/figure%201-1.png" alt="Time series for *Bombus* spp. dataset." width="672"><p class="caption">
 Time series for <em>Bombus</em> spp. dataset.
 </p>
 </div>
-<p>Altough we downloaded the data in April 2019, we know that the latest reports for 2018 were not yet uploaded and we see that in the figure.<br>
+<p>Although we downloaded the data in April 2019, we know that the latest reports for 2018 were not yet uploaded and we see that in the figure.<br>
 We can see that over the years there are on average more observations, more visits and also more species reported for each visit. While it looks like as sampling effort has increased we can also see that there are on average fewer observations per visit. This suggests that the sampling effort per visit has actually decreased. There seem to be many more visits reported in later years driving also an increase in number of observations, but many visits hold only few observations. There seem to be also few visits with long species lists driving the increase of average SLL.</p>
-<p>Then, we can summarise spatial data in some maps, to review, for example, Where do we have visits at all?, or How often are visits performed in July vs December?</p>
+<p>Then, we can summarize spatial data in some maps, to review, for example, Where do we have visits at all?, or How often are visits performed in July vs December?</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(sp)</a>
 <a class="sourceLine" id="cb4-2" title="2">wNonEmpty&lt;-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unname">unname</a></span>( <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>( <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(SB<span class="op">$</span>overlaid, nrow)) <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) )</a>
 <a class="sourceLine" id="cb4-3" title="3">EB&lt;-<span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="st">"Spatial"</span>, <span class="st">"Month"</span>, <span class="st">"nYears"</span>, <span class="st">"sum"</span>)</a>
@@ -195,8 +195,8 @@ We can see that over the years there are on average more observations, more visi
 <a class="sourceLine" id="cb4-20" title="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"bottomleft"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(EB<span class="op">@</span>data, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">length.out =</span> <span class="dv">5</span>),</a>
 <a class="sourceLine" id="cb4-21" title="21">      <span class="dt">col =</span> <span class="kw">palBW</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(EB<span class="op">@</span>data, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">length.out =</span> <span class="dv">5</span>)),</a>
 <a class="sourceLine" id="cb4-22" title="22">      <span class="dt">title =</span> <span class="st">"Number of years"</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">"n"</span>)</a></code></pre></div>
-<p><img src="intro_to_BIRDS_files/figure-html/figure%202-1.png" width="672"></p>
-<p>We could also map the ignorance scores based on the number of visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code></p>
+<p><img src="BIRDS_files/figure-html/figure%202-1.png" width="672"></p>
+<p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete 2015 Biodiv Data J 3:e5361, <a href="doi:10.3897/BDJ.3.e5361" class="uri">doi:10.3897/BDJ.3.e5361</a></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb5-2" title="2">palBW &lt;-<span class="st"> </span>leaflet<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/leaflet/topics/colorNumeric">colorNumeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"white"</span>, <span class="st">"navyblue"</span>), </a>
 <a class="sourceLine" id="cb5-3" title="3">                               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), </a>
@@ -216,23 +216,23 @@ We can see that over the years there are on average more observations, more visi
 <a class="sourceLine" id="cb5-17" title="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/legend">legend</a></span>(<span class="st">"bottomleft"</span>, <span class="dt">legend=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>), <span class="st">"NA"</span>),</a>
 <a class="sourceLine" id="cb5-18" title="18">      <span class="dt">col =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw">palBWR</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>)), <span class="st">"grey90"</span>),</a>
 <a class="sourceLine" id="cb5-19" title="19">      <span class="dt">title =</span> <span class="st">"Ignorance </span><span class="ch">\n</span><span class="st">nVis, </span><span class="ch">\n</span><span class="st">O0.5=5"</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">"n"</span>)</a></code></pre></div>
-<p><img src="intro_to_BIRDS_files/figure-html/figure%203-1.png" width="672"> The ignorance scores are highlighting where we have little information and hence cannot be confident about the lack of reports implying an absence of the species.</p>
-<p>Or we could connect to other packages like <code>vegan</code> to continue with community analyses. In this case, we create a community matrix using the visits as sampling units, summarising for each grid cell the number of visits a species was observed (i.e.  ignoring replicates within visits).</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co">## Community analysis</span></a>
-<a class="sourceLine" id="cb6-2" title="2">CM &lt;-<span class="st"> </span><span class="kw"><a href="../reference/communityMatrix.html">communityMatrix</a></span>(SB, <span class="dt">sampleUnit=</span><span class="st">"visit"</span>)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(vegan)</a>
-<a class="sourceLine" id="cb6-4" title="4">sp1 &lt;-<span class="st"> </span><span class="kw">specaccum</span>(CM, <span class="dt">method =</span> <span class="st">"exact"</span>)</a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mar=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">xlog=</span><span class="ot">TRUE</span>, <span class="dt">las=</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sp1, <span class="dt">ci.type=</span><span class="st">"poly"</span>, <span class="dt">col=</span><span class="st">"blue"</span>, <span class="dt">lwd=</span><span class="dv">2</span>, <span class="dt">ci.lty=</span><span class="dv">0</span>, </a>
-<a class="sourceLine" id="cb6-7" title="7">     <span class="dt">ci.col=</span><span class="st">"lightblue"</span>, <span class="dt">log=</span><span class="st">"x"</span>,  </a>
-<a class="sourceLine" id="cb6-8" title="8">     <span class="dt">xlab=</span><span class="st">"Number of grid cells sampled"</span>, </a>
-<a class="sourceLine" id="cb6-9" title="9">     <span class="dt">ylab=</span><span class="st">"Species richness"</span>, </a>
-<a class="sourceLine" id="cb6-10" title="10">     <span class="dt">main=</span><span class="st">"Species accumulation curve"</span>)</a>
-<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; Warning in polygon(c(xaxvar, rev(xaxvar)), c(x$richness - ci * x$sd,</span></a>
-<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt; rev(x$richness + : "log" is not a graphical parameter</span></a>
-<a class="sourceLine" id="cb6-13" title="13"><span class="co">#&gt; Warning in plot.xy(xy.coords(x, y), type = type, ...): "log" is not a</span></a>
-<a class="sourceLine" id="cb6-14" title="14"><span class="co">#&gt; graphical parameter</span></a></code></pre></div>
-<p><img src="intro_to_BIRDS_files/figure-html/community%20richness-1.png" width="672"></p>
+<p><img src="BIRDS_files/figure-html/figure%203-1.png" width="672"> The ignorance scores are highlighting where we have little information and hence cannot be confident about the lack of reports implying an absence of the species.</p>
+<!-- Or we could connect to other packages like `vegan` to continue with community analyses. -->
+<!-- In this case, we create a community matrix using the visits as sampling units,  -->
+<!-- summarizing for each grid cell the number of visits a species was observed (i.e.  -->
+<!-- ignoring replicates within visits). -->
+<!-- ```{r community richness, fig.show='hold', fig.width=7, message=FALSE} -->
+<!-- ## Community analysis -->
+<!-- CM <- communityMatrix(SB, sampleUnit="visit") -->
+<!-- library(vegan) -->
+<!-- sp1 <- specaccum(CM, method = "exact") -->
+<!-- par(mar=c(4,4,1,1), xlog=TRUE, las=1) -->
+<!-- plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0,  -->
+<!--      ci.col="lightblue", log="x",   -->
+<!--      xlab="Number of grid cells sampled",  -->
+<!--      ylab="Species richness",  -->
+<!--      main="Species accumulation curve") -->
+<!-- ``` -->
 </div>
   </div>
 

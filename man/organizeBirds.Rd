@@ -12,6 +12,14 @@ organizeBirds(x, sppCol = "scientificName", timeCol = c(Year = "year",
   dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
   simplifySppName = FALSE)
+
+organiseBirds(x, sppCol = "scientificName", timeCol = c(Year = "year",
+  Month = "month", Day = "day"), visitsIdentifier = c("locality", "day",
+  "month", "year", "recordedBy"), presenceCol = NULL,
+  xyCols = c("decimalLongitude", "decimalLatitude"),
+  dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
+  taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
+  simplifySppName = FALSE)
 }
 \arguments{
 \item{x}{A dataframe or a SpatialPointsDataFrame containing at least a
@@ -45,7 +53,7 @@ System). Default is \code{"+init=epsg:4326"}, which is WGS 84. This is only
 applicable to non-spatial dataframes, since a spatial dataframes already
 should have this information.}
 
-\item{taxonRankCol}{the name of the column containing the taxonomic rank for 
+\item{taxonRankCol}{the name of the column containing the taxonomic rank for
 the observation.
 That is the minimum taxonomic identification level.}
 
@@ -59,8 +67,8 @@ name (authors, years and intraspecific epithets). Default set to FALSE}
 a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 }
 \description{
-Takes a dataframe with reported species observations and reformats it, using 
-visit identifiers, to an OrganizedBirds-class that can be used in further 
+Takes a dataframe with reported species observations and reformats it, using
+visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.
 }
 \details{

@@ -91,7 +91,7 @@ organizeDate <- function(date, cols){
 #'   with a unique number for each combination of the values in the specified
 #'   columns.
 #' @export
-#'
+#' @rdname visits
 #' @examples
 #' OB <- organizeBirds(bombusObs)
 #' tmp.vis <- createVisits(bombusObs, columns=c("locality", "day", "month", "year"))
@@ -123,7 +123,7 @@ createVisits<-function(x, columns=c("locality", "day", "month", "year", "recorde
 #'   column (\code{visitUID}) and that column will be set to default.
 #'
 #' @export
-#'
+#' @rdname visits
 #' @examples
 #' ob<-organizeBirds(bombusObs)
 #' attr(ob, "visitCol")
@@ -200,7 +200,7 @@ obsData<-function(x, ...){
   UseMethod("obsData")
 }
 
-#' Extract observation data
+#' @rdname obsData
 #' @param x An OrganizedBirds-object
 #' @export
 obsData.OrganizedBirds<-function(x){
@@ -213,8 +213,8 @@ obsData.OrganizedBirds<-function(x){
 
 #'Organize a dataframe to a usable format
 #'
-#'Takes a dataframe with reported species observations and reformats it, using 
-#' visit identifiers, to an OrganizedBirds-class that can be used in further 
+#'Takes a dataframe with reported species observations and reformats it, using
+#' visit identifiers, to an OrganizedBirds-class that can be used in further
 #' analyses with the BIRDS-package.
 #'
 #'An OrganizedBirds-class is essentially a list containing one element, a
@@ -257,7 +257,7 @@ obsData.OrganizedBirds<-function(x){
 #'  System). Default is \code{"+init=epsg:4326"}, which is WGS 84. This is only
 #'  applicable to non-spatial dataframes, since a spatial dataframes already
 #'  should have this information.
-#' @param taxonRankCol the name of the column containing the taxonomic rank for 
+#' @param taxonRankCol the name of the column containing the taxonomic rank for
 #' the observation.
 #' That is the minimum taxonomic identification level.
 #' @param taxonRank a string or vector of strings containing the taxonomic ranks to keep.
@@ -335,7 +335,7 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
 
   time<-organizeDate(df[timeCol], timeCol)
 
-  visitUID<-createVisits(df,visitsIdentifier)
+  visitUID<-createVisits(df, visitsIdentifier)
 
   if (is.null(presenceCol)){
     df<-cbind(sp, time, visitUID)
@@ -359,5 +359,6 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
   return(res)
 
 }
-
+#' @rdname organizeBirds
+#' @export
 organiseBirds<-organizeBirds ## To include the brits as well

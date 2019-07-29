@@ -502,16 +502,20 @@ exportTemporal <- function(sb, scale, variable, method){
 #'   \code{"Spatial"} or \code{"Temporal"}
 #' @param timeRes A character string indicating what tempral resolution should
 #'   be used. For Spatial export the function accepts \code{NULL, "Yearly", "Monthly"}
-#'   or \code{"Month"}. For temporal export the function accepts \code{"Yearly", "Monthly", "Daily"}
-#'   or \code{"Month"}.
+#'   or \code{"Month"}. For temporal export the function accepts \code{"Yearly",
+#'   "Monthly", "Daily"} or \code{"Month"}.
 #' @param variable a character string indicating which variable should be
 #'   exported, \code{"nObs", "nvis", "nSpp"} or \code{"avgSll" }.
 #'   For \code{scale = "Month"} the function also accepts \code{"nYears"} and for all except
 #'   \code{scale = "Daily"} the function accepts \code{"nDays"}.
 #' @param method Only applicable to \code{timeRes = "Month"}. A variable specifying which
 #'   statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.
-#'
-#' @return a named vector or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial, respectively
+#' @note the difference between Monthly and Month is that the former returns
+#' "n.years x 12" values, while Month summarize over years and returns only 12 values.
+#' For more details over the possible combinations of dimensions and variables please
+#' refer to the vignette "Technical details".
+#' @return a named vector or a SpatialPolygonsDataFrame depending on the
+#' dimension, temporal or spatial, respectively
 #' @export
 #'
 #' @examples
@@ -519,7 +523,7 @@ exportTemporal <- function(sb, scale, variable, method){
 #' SB <- summariseBirds(organizeBirds(bombusObs), grid=grid)
 #' EB <- exportBirds(SB, "Spatial", "Month", "nDays", "median")
 
-exportBirds <- function(x, dimension, timeRes, variable, method){
+exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
   dimension<-tolower(dimension)
   if(!is.null(timeRes)){

@@ -21,8 +21,10 @@ a \code{data.frame} with ignorance scores
 A function to create Ignorance Scores.
 Ignorance scores are a proxy for the lack of sampling effort, computed by making
 the number of observations relative to a reference number of observations that
-is considered to be enough to reduce the ignorance score by half (henceforth 
-the Half-ignorance approach).
+is considered to be enough to reduce the ignorance score by half (henceforth
+the Half-ignorance approach). The algorithm behind the Ignorance Score is
+designed for comparison of bias and gaps in primary biodiversity data across
+taxonomy, time and space
 Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
 }
 \examples{

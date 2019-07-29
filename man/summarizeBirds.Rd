@@ -2,12 +2,26 @@
 % Please edit documentation in R/summarizeBirds.R
 \name{summarizeBirds}
 \alias{summarizeBirds}
+\alias{summarizeBirds.OrganizedBirds}
+\alias{summariseBirds}
 \title{Summarize the OrganizedBirds}
 \usage{
-summarizeBirds(x, ...)
+summarizeBirds(x, grid, spillOver = TRUE)
+
+\method{summarizeBirds}{OrganizedBirds}(x, grid, spillOver = TRUE)
+
+summariseBirds(x, grid, spillOver = TRUE)
 }
 \arguments{
 \item{x}{An OrgnanizedBirds-object created by \code{\link{organizeBirds}}}
+
+\item{grid}{A SpatialPolygons or SpatialPolygonsDataFrame-object whith
+grid cells for the study area. This variable is optional and can be set to
+NULL, which will treat the area for all observations as one single
+grid cell.}
+
+\item{spillOver}{Specifies if the function should search for observations done during
+the same visit (identified by visit UID) but that fall outside the grid cell. Default is \code{TRUE}.}
 
 \item{...}{additional parameters for \code{\link{summarizeBirds}}}
 }

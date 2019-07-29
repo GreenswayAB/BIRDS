@@ -4,7 +4,7 @@
 \alias{exportBirds}
 \title{Export single variables from SummarisedBirds objects}
 \usage{
-exportBirds(x, dimension, timeRes, variable, method)
+exportBirds(x, dimension, timeRes, variable, method = "sum")
 }
 \arguments{
 \item{x}{a SummarizedBirds-object}
@@ -14,8 +14,8 @@ exportBirds(x, dimension, timeRes, variable, method)
 
 \item{timeRes}{A character string indicating what tempral resolution should
 be used. For Spatial export the function accepts \code{NULL, "Yearly", "Monthly"}
-or \code{"Month"}. For temporal export the function accepts \code{"Yearly", "Monthly", "Daily"}
-or \code{"Month"}.}
+or \code{"Month"}. For temporal export the function accepts \code{"Yearly",
+"Monthly", "Daily"} or \code{"Month"}.}
 
 \item{variable}{a character string indicating which variable should be
 exported, \code{"nObs", "nvis", "nSpp"} or \code{"avgSll" }.
@@ -26,10 +26,17 @@ For \code{scale = "Month"} the function also accepts \code{"nYears"} and for all
 statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.}
 }
 \value{
-a named vector or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial, respectively
+a named vector or a SpatialPolygonsDataFrame depending on the
+dimension, temporal or spatial, respectively
 }
 \description{
 Export single variables from SummarisedBirds objects
+}
+\note{
+the difference between Monthly and Month is that the former returns
+"n.years x 12" values, while Month summarize over years and returns only 12 values.
+For more details over the possible combinations of dimensions and variables please
+refer to the vignette "Technical details".
 }
 \examples{
 grid<-makeGrid(searchPolygon, gridSize = 10)

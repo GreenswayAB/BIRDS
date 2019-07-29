@@ -238,19 +238,22 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 #' in spatial and  temporal dimensions.
 #'
 #' @param x An OrgnanizedBirds-object created by \code{\link{organizeBirds}}
-#' @param ... additional parameters for \code{\link{summarizeBirds}}
-#'
+#' @param grid A SpatialPolygons or SpatialPolygonsDataFrame-object whith
+#'   grid cells for the study area. This variable is optional and can be set to
+#'   NULL, which will treat the area for all observations as one single
+#'   grid cell.
+#' @param spillOver Specifies if the function should search for observations done during
+#'   the same visit (identified by visit UID) but that fall outside the grid cell. Default is \code{TRUE}.
 #' @return A SummarizedBirds-object
 #' @export
-#'
+#' @rdname summarizeBirds
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' SB <- summarizeBirds(ob, grid)
 #' nObsG<-rowSums(SB$spatioTemporal[,,13,"nObs"], na.rm = FALSE)
 #' nObsG2<-SB$spatial@data$nObs
 #' any(nObsG != nObsG2, na.rm = TRUE) ## Check, two ways to obtain the same
-
-summarizeBirds<-function(x, ...){
+summarizeBirds<-function(x, grid, spillOver = TRUE){
   UseMethod("summarizeBirds")
 }
 
@@ -258,18 +261,8 @@ summarizeBirds<-function(x, ...){
 
 ##TODO include an exclude variable in summarizeBirds that remove different parts of the results to save up memory?
 
-#' Summarize the OrganizedBirds
-#'
-#' Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
-#' in spatial and  temporal dimensions.
-#' @param x An OrgnanizedBirds-object created by \code{\link{organizeBirds}}
-#' @param grid A SpatialPolygons or SpatialPolygonsDataFrame-object whith
-#'   grid cells for the study area. This variable is optional and can be set to
-#'   NULL, which will treat the area for all observations as one single
-#'   grid cell.
-#' @param spillOver Specifies if the function should search for observations done during
-#'   the same visit (identified by visit UID) but that fall outside the grid cell. Default is \code{TRUE}.
-
+#' @param ... additional parameters for \code{\link{summarizeBirds}}
+#' @rdname summarizeBirds
 #' @export
 summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
 
@@ -332,12 +325,7 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
 
 }
 
-#' Summarize the OrganizedBirds
-#'
-#' Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
-#' in spatial and  temporal dimensions.
-#' @param x An OrgnanizedBirds-object created by \code{\link{organizeBirds}}
-#' @param ... additional parameters for \code{\link{summarizeBirds}}
+#' @rdname summarizeBirds
 #' @aliases summarizeBirds
 #' @export
-summariseBirds<-summarizeBirds  ## To include the brits as well
+summariseBirds <- summarizeBirds  ## To include the brits as well
