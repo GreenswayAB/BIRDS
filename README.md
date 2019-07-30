@@ -148,12 +148,14 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐col
 
 ### Overview of main components
 
-You can find an overview of the `BIRDS` main components and functions, organised as workflows [here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png) and [here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDsDecision.png). 
+You can find an overview of the `BIRDS` main components and functions, organised as an [overview workflow here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png) and a [workflow highlighting the decisions to be taking when using BIRDS here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDsDecision.png). 
 
 ### Example
 
 The [Intro to BIRDS](https://greensway.github.io/BIRDS/articles/BIRDS.html) vignette provides a useful
 walk through the package tools using an example data set.
+
+A short introductory [video can be found here](https://www.dropbox.com/s/fxg1t9vl4ainipy/BirdsLR.mp4?dl=0).
 
 
 ### In the TODO LIST
