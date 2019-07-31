@@ -189,19 +189,17 @@ visits<-function(x, name=NULL){
 #' Extract the observation data from a OrganizedBirds-object
 #'
 #' @param x An OrganizedBirds-object
-#' @param ... additional arguments for \code{\link{obsData}}
-#'
 #' @return A dataframe
 #' @export
 #'
-#' @examples ob<-organizeBirds(bombusObs)
+#' @examples
+#' ob<-organizeBirds(bombusObs)
 #' obsData(ob)
-obsData<-function(x, ...){
+obsData<-function(x){
   UseMethod("obsData")
 }
 
 #' @rdname obsData
-#' @param x An OrganizedBirds-object
 #' @export
 obsData.OrganizedBirds<-function(x){
 

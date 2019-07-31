@@ -38,8 +38,8 @@ and data completeness (or data gaps).
 
 The `BIRDS` package is **not** concerned with data accuracy, which can be evaluated 
 and improved using other existing packages (as outlined in the 
-[technical details](https://greensway.github.io/BIRDS/articles/technical_details.html) vignette), before processing 
-the data using `BIRDS`.
+[technical details](https://greensway.github.io/BIRDS/articles/technical_details.html) 
+vignette), before processing the data using `BIRDS`.
 
 The concepts and methods, and examples are described after a short description on 
 how to install this package into R.
@@ -47,16 +47,19 @@ how to install this package into R.
 
 ### How to install `BIRDS`
 
-This package is package is still not published in CRAN. Therefore the easiest 
-option is to install the package directly from GitHub using the package
-`devtools`. 
+This package is still not published in CRAN. Therefore the easiest option to 
+install it is directly from GitHub using the package `devtools`. 
 
 Install devtools if you do not already have installed it:
 ```r
 install.packages('devtools')
 library(devtools)
 ```
-This package may have some other dependencies.  
+`devtools` may have some other dependencies. Please visits the following webpages 
+to be sure you are on the right track:
+
+* [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html)  
+* [Rtools](https://cran.r-project.org/bin/windows/Rtools/) 
 
 Now you should be ready to go with the `BIRDS` install:
 

@@ -25,6 +25,7 @@ Imports:
     lubridate (>= 1.7.4),
     magrittr,
     mapedit (>= 0.5),
+    methods,
     rgeos (>= 0.4),
     rgdal (>= 1.4),
     rlang,
