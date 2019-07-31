@@ -6,6 +6,10 @@
 \usage{
 renameGrid(grid)
 }
+\arguments{
+\item{grid}{an object of class \sQuote{SpatialPolygon-class} or
+\sQuote{SpatialPolygonDataFrame-class}.}
+}
 \value{
 the same input object with known names
 }

@@ -165,7 +165,7 @@ OB2Polygon <- function(df, shape="bBox") {
                 proj4string=sp::CRS("+init=epsg:4326")
                 )
         } else {
-            stop("More than two unique set of coordinates is needed to make a 
+            stop("More than two unique set of coordinates is needed to make a
                  convex hull polygon.")
         }
     }
@@ -181,6 +181,8 @@ OB2Polygon <- function(df, shape="bBox") {
 #' Rename the cells in a grid
 #'
 #' Takes a SpatialPolygon* and renames it to "ID1":"IDn".
+#' @param grid an object of class \sQuote{SpatialPolygon-class} or
+#' \sQuote{SpatialPolygonDataFrame-class}.
 #' @return the same input object with known names
 renameGrid<-function(grid){
     for(i in 1:length(grid)){
@@ -227,14 +229,14 @@ renameGrid<-function(grid){
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @export
-makeGrid <- function(polygon, 
-                     gridSize, 
-                     buffer = FALSE, 
-                     hexGrid = TRUE, 
-                     offset=NULL, 
-                     simplify=FALSE, 
+makeGrid <- function(polygon,
+                     gridSize,
+                     buffer = FALSE,
+                     hexGrid = TRUE,
+                     offset=NULL,
+                     simplify=FALSE,
                      tol=0.01) {
-  
+
     gridSizeM <- gridSize * 1000 # in meters
     gridSizeDg <- gridSize/111  # because on average 1 degree is 111 km
 
