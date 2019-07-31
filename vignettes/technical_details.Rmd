@@ -165,7 +165,7 @@ It takes as parameters:
 * method: as of v.0.0.1 it only accepts "sum", "mean", and "median". More methods to come later.
 
 The following diagram explains the possible combinations of dimension, temporal resolutions, variables and methods
-![Possible outcomes to the export function](./Export function.png)
+![Possible outcomes to the export function](./ExportFunction.png)
 
   
   
