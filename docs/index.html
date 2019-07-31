@@ -89,7 +89,7 @@
   <div class="contents col-md-9">
 <div id="birds-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#birds-" class="anchor"></a>BIRDS <img src="reference/figures/logo.png" align="right" alt="" width="120">
+<a href="#birds-" class="anchor"></a>BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" alt="" width="120">
 </h1></div>
 
 <div id="a-set-of-tools-for-biodiversity-informatics-in-r" class="section level3">
@@ -106,14 +106,20 @@
 <h3 class="hasAnchor">
 <a href="#how-to-install-birds" class="anchor"></a>How to install <code>BIRDS</code>
 </h3>
-<p>This package is package is still not published in CRAN. Therefore the easiest option is to install the package directly from GitHub using the package <code>devtools</code>.</p>
+<p>This package is still not published in CRAN. Therefore the easiest option to install it is directly from GitHub using the package <code>devtools</code>.</p>
 <p>Install devtools if you do not already have installed it:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">'devtools'</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(devtools)</a></code></pre></div>
-<p>This package may have some other dependencies.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">'devtools'</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(devtools)</span></code></pre></div>
+<p><code>devtools</code> may have some other dependencies. Please visits the following webpages to be sure you are on the right track:</p>
+<ul>
+<li>
+<a href="https://www.r-project.org/nosvn/pandoc/devtools.html">devtools</a><br>
+</li>
+<li><a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></li>
+</ul>
 <p>Now you should be ready to go with the <code>BIRDS</code> install:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">'Greensway/BIRDS'</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(BIRDS)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">'Greensway/BIRDS'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(BIRDS)</span></code></pre></div>
 </div>
 <div id="concepts-and-methods" class="section level3">
 <h3 class="hasAnchor">
@@ -171,12 +177,13 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐co
 <div id="overview-of-main-components" class="section level3">
 <h3 class="hasAnchor">
 <a href="#overview-of-main-components" class="anchor"></a>Overview of main components</h3>
-<p>You can find an overview of the <code>BIRDS</code> main components and functions, organised as workflows <a href="https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png">here</a> and <a href="https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDsDecision.png">here</a>.</p>
+<p>You can find an overview of the <code>BIRDS</code> main components and functions, organised as an <a href="https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png">overview workflow here</a> and a <a href="https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDsDecision.png">workflow highlighting the decisions to be taking when using BIRDS here</a>.</p>
 </div>
 <div id="example" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h3>
 <p>The <a href="https://greensway.github.io/BIRDS/articles/BIRDS.html">Intro to BIRDS</a> vignette provides a useful walk through the package tools using an example data set.</p>
+<p>A short introductory <a href="https://www.dropbox.com/s/fxg1t9vl4ainipy/BirdsLR.mp4?dl=0">video can be found here</a>.</p>
 </div>
 <div id="in-the-todo-list" class="section level3">
 <h3 class="hasAnchor">
