@@ -22,8 +22,13 @@ knitr::opts_chunk$set(
 The package `BIRDS` is currently available on GitHub and you can freely download 
 the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
 
-The easiest option is to install the package directly from GitHub using the package `devtools`. 
-Install `devtools` if you do not already have installed it.
+The easiest option is to install the package directly from GitHub using the 
+package `devtools`.  Install `devtools` if you do not already have installed it.
+`devtools` may have some other dependencies. Please visits the following webpages 
+to be sure you are on the right track:
+
+* [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html)  
+* [Rtools](https://cran.r-project.org/bin/windows/Rtools/) 
 
 ```{r install package, eval = F}
 install.packages('devtools')
