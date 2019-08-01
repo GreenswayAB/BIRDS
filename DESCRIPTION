@@ -14,7 +14,7 @@ Description: A set of tools to review and make decisions upon the use of
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5.0)
+Depends: R (>= 3.4.0)
 SystemRequirements: GDAL (>= 2.0.1)
 Imports:
     data.table, 
