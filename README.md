@@ -1,4 +1,4 @@
-# BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" alt="" width="120" />
+# BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.svg" align="right" alt="" width="120" />
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
