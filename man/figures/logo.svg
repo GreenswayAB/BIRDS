@@ -29,7 +29,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="-8.56828"
+     inkscape:cx="-171.06828"
      inkscape:cy="163.29989"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -63,14 +63,14 @@
     <path
        inkscape:connector-curvature="0"
        id="path9314-2-85-9"
-       d="m 94.820677,55.85577 -16.421733,9.405628 -4.106228,2.350244 -4.105169,2.352828 -16.42173,9.405628 -4.10621,2.350243 -4.10518,2.352829 -10e-4,4.702553 10e-4,4.703072 v 18.811255 l -10e-4,4.70307 10e-4,4.70256 v 18.81177 l 16.422253,9.40563 4.104666,2.35231 4.106201,2.35076 16.42226,9.40563 4.10517,2.35231 4.1057,2.35076 4.1062,-2.35076 4.105173,-2.35231 16.42176,-9.40563 4.1062,-2.35076 4.10517,-2.35231 16.42174,-9.40563 v -18.81177 l 0.002,-4.70256 -0.002,-4.70307 V 93.478795 l 0.002,-4.703072 -0.002,-4.702553 -4.10467,-2.352829 -4.1062,-2.350243 -16.42224,-9.405628 -4.10466,-2.352828 -4.10623,-2.350244 z"
-       style="fill:#ffffff;fill-opacity:0.53266332;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 94.820693,55.855618 -16.42173,9.405628 -4.10623,2.350244 -4.10517,2.352828 -16.42173,9.405628 -4.10621,2.350243 -4.10518,2.352829 -10e-4,4.702553 10e-4,4.703072 V 112.2899 l -10e-4,4.70307 10e-4,4.70256 v 18.81177 l 16.42226,9.40563 4.10466,2.35231 4.1062,2.35076 16.42226,9.40563 4.10517,2.35231 4.1057,2.35076 4.1062,-2.35076 4.105177,-2.35231 16.42176,-9.40563 4.1062,-2.35076 4.10517,-2.35231 16.42174,-9.40563 v -18.81177 l 0.002,-4.70256 -0.002,-4.70307 V 93.478643 l 0.002,-4.703072 -0.002,-4.702553 -4.10467,-2.352829 -4.1062,-2.350243 -16.42224,-9.405628 -4.10466,-2.352828 -4.10623,-2.350244 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        inkscape:export-xdpi="72"
        inkscape:export-ydpi="72" />
     <g
        id="layer1-8"
        inkscape:label="Layer 1"
-       transform="translate(-19.314953,40.711812)">
+       transform="translate(-19.314957,40.711812)">
       <path
          sodipodi:type="star"
          style="fill:#6bc471;fill-opacity:0.83417089;stroke:#008000;stroke-width:6.00004864;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
