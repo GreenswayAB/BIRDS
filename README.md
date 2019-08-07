@@ -146,11 +146,11 @@ Using the detailed information on sampling effort and data completeness provided
 It helps you getting :world_map: :bar_chart: :chart_with_upwards_trend: :chart_with_downwards_trend:
 :page_facing_up: :bulb: about  
 
-:dog2: :cat2: :pig2: :mouse2: :cat: :sheep: :cow2: :rat: :rabbit: :goat: :baby_chick: 
-:rooster: :wolf: :frog: :tiger: :koala: :bear: :boar: :monkey: :horse: :camel:
-:elephant: :panda_face: :snake: :bird: :penguin: :turtle: :bug: :honeybee: :ant:
-:beetle: :snail: :octopus: :tropical_fish: :blowfish: :fish: :shell: :whale: 
-:dolphin: :water_buffalo: :tiger2: :leopard: :ox: :crocodile: :dromedary_camel:
+:dog2: :cat2: :pig2: :mouse2: :sheep: :cow2: :rat: :rabbit2: :goat: :baby_chick: 
+:rooster: :wolf: :frog: :koala: :bear: :boar: :monkey: :camel: :elephant: 
+:panda_face: :snake: :bird: :penguin: :turtle: :bug: :honeybee: :ant: :beetle: 
+:snail: :octopus: :tropical_fish: :blowfish: :fish: :shell: :whale: :dolphin: 
+:water_buffalo: :tiger2: :leopard: :ox: :crocodile: :dromedary_camel:
 
 and 
  

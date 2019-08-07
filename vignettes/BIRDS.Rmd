@@ -195,7 +195,8 @@ plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 legend("bottomleft", legend=c(seq(0, 1, length.out = 5), "NA"),
       col = c(palBWR(seq(0, 1, length.out = 5)), "grey90"),
       title = "Ignorance \nnVis, \nO0.5=5", pch = 15, bty="n")
-```
+```  
+  
 The ignorance scores are highlighting where we have little information and hence cannot be 
 confident about the lack of reports implying an absence of the species. 
 

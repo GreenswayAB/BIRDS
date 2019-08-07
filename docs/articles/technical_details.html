@@ -90,7 +90,7 @@
       <h1>BIRDS technical details</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2019-08-06</h4>
+            <h4 class="date">2019-08-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/technical_details.Rmd"><code>vignettes/technical_details.Rmd</code></a></small>
       <div class="hidden name"><code>technical_details.Rmd</code></div>
@@ -110,8 +110,11 @@
 <li>and hopefully the name of the observer/s (this requirement varies for different biodiversity databases)</li>
 </ol>
 <p>Apart from this, biodiversity databases require a plethora of variables and metadata, often following the <a href="https://dwc.tdwg.org/">DarwinCore</a> standard. This package recognizes as a default the column names of DarwinCore, but other names can be specified too.</p>
-<p>Before using the BIRDS package we already have to make some first decisions which data to retrieve and how, and whether to clean the data, as shown in this workflow</p>
-<p><img src="BIRDsDecision.png" alt="Decision workflow">. The user can download the primary biodiversity data from their database of choice, import it into R. Data can be cleaned when considered necessary. As mentioned in the package description, the tools provided by the <code>BIRDS</code> package <strong>do not</strong> correct or improve the accuracy of the data.</p>
+<p>Before using the BIRDS package we already have to make some first decisions which data to retrieve and how, and whether to clean the data, as shown in this workflow:</p>
+<div class="figure">
+<img src="BIRDsDecision.png" alt="Decision workflow"><p class="caption">Decision workflow</p>
+</div>
+<p>The user can download the primary biodiversity data from their database of choice, import it into R. Data can be cleaned when considered necessary. As mentioned in the package description, the tools provided by the <code>BIRDS</code> package <strong>do not</strong> correct or improve the accuracy of the data.</p>
 <blockquote>
 <p><strong>Reference species group</strong><br>
 Because visits result from the sampling process they can only be defined for a reference species group, i.e. a group of species observed and recorded by similar methods. The rationale for a reference species group is based on the assumption that species groups share similar bias: we assume that, despite varying field skills and accuracy, observers reporting observations for species of a reference species group share similar observer behavior and methods and, hence, generate data with similar sampling bias (Phillips et al. 2009). From this we can assume that the larger the number of visits (or observations) reporting species from the reference group at a specific unit of space and time, the more likely it is that the lack of visits for (or observations of) a particular species reflects the absence of (or failure to detect) a focal species rather than a lack of visits and reports made.<br>
@@ -135,8 +138,18 @@ A central concept used by the <code>BIRDS</code> package is the “visit” – 
 <div id="first-exploration" class="section level4">
 <h4 class="hasAnchor">
 <a href="#first-exploration" class="anchor"></a>First exploration</h4>
-<p>Once you have organised your data, we highly recommend to explore the data to see if the definition of the visits that you applied matches your expectations. The <code><a href="../reference/exploreVisits.html">exploreVisits()</a></code> function will summarize some statistics for each visit and return a <code>data.frame</code> with the following columns:<br>
-* day * month * year * nObs: number of species observations * SLL: species list length (i.e. the number of observed species) * effortDiam: the diameter of the minimum circle that covers all points (i.e. locations for species observations), in meters. This is calculated as two times the maximum distance between the centroid of all observation points and any individual observation. * medianDist: the median (Q2) of the distances between the centroid and the observations, in meters. * iqrDist: the interquartile range of the distances between the centroid the observations, in meters. * nOutliers: the number of observations whose distance to the centroid is considered an outlier. Ouliers are defined as distances grater than the Q3 * 1.5 (i.e. <code><a href="https://www.rdocumentation.org/packages/base/topics/length">length(boxplot.stats(distances)$out)</a></code>as all distances are positive).</p>
+<p>Once you have organised your data, we highly recommend to explore the data to see if the definition of the visits that you applied matches your expectations. The <code><a href="../reference/exploreVisits.html">exploreVisits()</a></code> function will summarize some statistics for each visit and return a <code>data.frame</code> with the following columns:</p>
+<ul>
+<li>day</li>
+<li>month</li>
+<li>year</li>
+<li>nObs: number of species observations</li>
+<li>SLL: species list length (i.e. the number of observed species)</li>
+<li>effortDiam: the diameter of the minimum circle that covers all points (i.e. locations for species observations), in meters. This is calculated as two times the maximum distance between the centroid of all observation points and any individual observation.</li>
+<li>medianDist: the median (Q2) of the distances between the centroid and the observations, in meters.</li>
+<li>iqrDist: the interquartile range of the distances between the centroid the observations, in meters.</li>
+<li>nOutliers: the number of observations whose distance to the centroid is considered an outlier. Ouliers are defined as distances grater than the Q3 * 1.5 (i.e. <code><a href="https://www.rdocumentation.org/packages/base/topics/length">length(boxplot.stats(distances)$out)</a></code>as all distances are positive).</li>
+</ul>
 <p>The idea is to see, for example, if the distribution of covered area (effortDiam) matches your expectations for how much terrain an observer can cover during a typical sampling event for species of the considered reference group.</p>
 <p>You can directly plot these variables or use the suggested package <code>esquisse</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">visitStats &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exploreVisits.html">exploreVisits</a></span>(OB)</a>
@@ -169,14 +182,39 @@ If there is no common spatial identifier to define the visit extent, and the obs
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">grid &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeGrid.html">makeGrid</a></span>(searchPolygon, <span class="dt">gridSize =</span> <span class="dv">10</span>) <span class="co"># grid size in kilometers!</span></a>
 <a class="sourceLine" id="cb4-2" title="2">SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summarizeBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</a></code></pre></div>
 <p>It is important to note that after summarizing the data, NA are used for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data for this grid cell but not in this time unit).</p>
-<p>The <code>SummarisedBirds</code> object, here called SB, is then a set of objects with different dimensions returning the variables: * nObs: number of observations * nVis: number of visits * nSpp: number of observed species * avgSll: median species list length among all visits</p>
+<p>The <code>SummarisedBirds</code> object, here called SB, is then a set of objects with different dimensions returning the variables:</p>
+<ul>
+<li>nObs: number of observations</li>
+<li>nVis: number of visits</li>
+<li>nSpp: number of observed species</li>
+<li>avgSll: median species list length among all visits</li>
+</ul>
 <blockquote>
 <p><strong>Species list length (SLL)</strong> The SLL per visit (i.e. the number of species observed and recorded per visit) is a well known proxy for the time spent in the field and willingness to report all species seen of a reference taxonomic group, Szabo et al. 2010). The <code>BIRDS</code> package therefore uses SLL as a proxy for sampling effort. when summarized over a set of visits (often within grid cell) we summarize it as “avgSll”, and it is by default the median (Q2, 50% quantile) of all visits’ SLL. We use the median instead of the mean to better represent the bulk of the data and not let single large numbers bias this estimate.</p>
 </blockquote>
-<p>The objects within SB can be called with <code>SB$x</code> where x is the object name described below: * <code>spatial</code> is a <code>SpatialPolygonDataFrame</code> object with variables summarized per grid cell. As usual for an SPDF the values are stored in the slot <span class="citation">@data</span>, e.g. <a href="mailto:SB%24Spatial@data" class="email">SB$Spatial@data</a><br>
-* <code>temporal</code> is an <code>xts</code> object with variables summarized per day. Read more about specific functions for extended time series <a href="https://cran.r-project.org/web/packages/xts/index.html">here</a><br>
-* <code>spatioTemporal</code> is an array with four dimensions: + grid cell (as many as your grid and in the same order) + year (as many as there are in your data set) + month + yearly (12 plus a yearly summary) + variable (nObs, nVis, nSpp, avgSll)<br>
-* <code>spatioTemporalVisits</code> is an array like the one listed above, with the difference that it stores the ids of the visits in any combination of grid - year - month. Ids are stored as character string separated by “,”. * <code>overlaid</code> is a list with one element per grid cell, where each element is a subset of the OrganisedBirds object containing all observations falling into that grid cell.</p>
+<p>The objects within SB can be called with <code>SB$x</code> where x is the object name described below:</p>
+<ul>
+<li>
+<code>spatial</code> is a <code>SpatialPolygonDataFrame</code> object with variables summarized per grid cell. As usual for an SPDF the values are stored in the slot <span class="citation">@data</span>, e.g. <a href="mailto:SB%24Spatial@data" class="email">SB$Spatial@data</a><br>
+</li>
+<li>
+<code>temporal</code> is an <code>xts</code> object with variables summarized per day. Read more about specific functions for extended time series <a href="https://cran.r-project.org/web/packages/xts/index.html">here</a><br>
+</li>
+<li>
+<code>spatioTemporal</code> is an array with four dimensions:
+<ul>
+<li>grid cell (as many as your grid and in the same order)</li>
+<li>year (as many as there are in your data set)</li>
+<li>month + yearly (12 plus a yearly summary)</li>
+<li>variable (nObs, nVis, nSpp, avgSll)<br>
+</li>
+</ul>
+</li>
+<li>
+<code>spatioTemporalVisits</code> is an array like the one listed above, with the difference that it stores the ids of the visits in any combination of grid - year - month. Ids are stored as character string separated by “,”.</li>
+<li>
+<code>overlaid</code> is a list with one element per grid cell, where each element is a subset of the OrganisedBirds object containing all observations falling into that grid cell.</li>
+</ul>
 </div>
 <div id="export-and-visualization" class="section level4">
 <h4 class="hasAnchor">
@@ -187,9 +225,33 @@ If there is no common spatial identifier to define the visit extent, and the obs
 <a href="#exportbirds" class="anchor"></a><code><a href="../reference/exportBirds.html">exportBirds()</a></code>
 </h5>
 <p>The function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps you to obtain the data ready to be plotted with widely known commands for vectors and spatial data. NOTE: please note that this is an experimental function under development that is subject to changes and additions.<br>
-It takes as parameters:<br>
-* x: the SummarizedBirds object * dimension: <code>Spatial</code> for maps or <code>Temporal</code> for time series) * timeRes: the time resolution: + <code>NULL</code> atemporal, only spatial + “Yearly” one value per year + “Monthly” one value per month per year + “Daily” one value per day, for every year + “Month” 12 values, summarized over all years * method: as of v.0.0.1 it only accepts “sum”, “mean”, and “median”. More methods to come later.</p>
-<p>The following diagram explains the possible combinations of dimension, temporal resolutions, variables and methods <img src="ExportFunction.png" alt="Possible outcomes to the export function"></p>
+It takes as parameters:</p>
+<ul>
+<li>x: the SummarizedBirds object<br>
+</li>
+<li>dimension: <code>Spatial</code> for maps or <code>Temporal</code> for time series<br>
+</li>
+<li>timeRes: the time resolution:
+<ul>
+<li>
+<code>NULL</code> atemporal, only spatial<br>
+</li>
+<li>“Yearly” one value per year<br>
+</li>
+<li>“Monthly” one value per month per year<br>
+</li>
+<li>“Daily” one value per day, for every year<br>
+</li>
+<li>“Month” 12 values, summarized over all years<br>
+</li>
+</ul>
+</li>
+<li>method: as of v.0.0.1 it only accepts “sum”, “mean”, and “median”. More methods to come later.</li>
+</ul>
+<p>The following diagram explains the possible combinations of dimension, temporal resolutions, variables and methods</p>
+<div class="figure">
+<img src="ExportFunction.png" alt="Possible outcomes to the export function"><p class="caption">Possible outcomes to the export function</p>
+</div>
 <p>Some examples of this function could be:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="co"># this is equivalent to </span></a>
