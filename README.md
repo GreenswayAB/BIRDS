@@ -5,6 +5,7 @@
 
 ### A set of tools for Biodiversity Informatics in R 
 This is the Biodiversity Information Review and Decision Support package for R! 
+NB: BIRDS is an acronym. This packages is not limited to birds' (Aves) data :smiley:  
 
 This repository hosts an R package that is being developed for systematizing biodiversity
 data review in order to evaluate whether a set of species observation data is 
