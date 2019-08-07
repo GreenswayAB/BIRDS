@@ -5,7 +5,7 @@
 
 ### A set of tools for Biodiversity Informatics in R 
 This is the Biodiversity Information Review and Decision Support package for R!  
-NB: BIRDS is an acronym. This packages is not limited to birds' data (i.e. Aves) :smiley:  
+**NB**: BIRDS is an acronym. This packages is not limited to birds' data (i.e. Aves) :smiley:  
 
 This repository hosts an R package that is being developed for systematizing biodiversity
 data review in order to evaluate whether a set of species observation data is 
@@ -143,76 +143,22 @@ With the `BIRDS`’ package set of tools PBD can be reviewed based on the inform
 
 Using the detailed information on sampling effort and data completeness provided by the `BIRDS`’ package summaries allows better inference on what the reported species observations mean. As a much of the PBD is presence-only data the provided information helps us judging to what degree a lack of observations may be (1) due to the species not being observed (absent, or failed to detect) or (2) due to a lack of reports (lack of visits, or lack of reports for observed species) (little sampling effort). We can be more confident about the first when there is good sampling effort and data completeness, while evidence is shaky, i.e. high probability to have missed species, when there is little sampling effort and data completeness.  In this way the user can judge whether the data is fit-for-purpose for the intended use. Using this information about how the data has been collected the user can also decide about how to analyse the data.
 
-:dog2:
-:pig2:
-:mouse2:
-:cat:
-:sheep:
-:cow2:
-:ram:
-:rat:
-:rabbit:
-:goat:
-:baby_chick:
-:rooster:
-:wolf:
-:frog:
-:tiger:
-:koala:
-:bear:
-:boar:
-:monkey:
-:horse:
-:camel:
-:elephant:
-:panda_face:
-:snake:
-:bird:
-:penguin:
-:turtle:
-:bug:
-:honeybee:
-:ant:
-:beetle:
-:snail:
-:octopus:
-:tropical_fish:
-:blowfish:
-:fish:
-:shell:
-:whale:
-:dolphin:
-:water_buffalo:
-:tiger2:
-:leopard:
-:ox:
-:crocodile:
-:dromedary_camel:
+It helps you getting :world_map: :bar_chart: :chart_with_upwards_trend: :chart_with_downwards_trend:
+:page_facing_up: :bulb: about  
 
- and 
+:dog2: :cat2: :pig2: :mouse2: :cat: :sheep: :cow2: :rat: :rabbit: :goat: :baby_chick: 
+:rooster: :wolf: :frog: :tiger: :koala: :bear: :boar: :monkey: :horse: :camel:
+:elephant: :panda_face: :snake: :bird: :penguin: :turtle: :bug: :honeybee: :ant:
+:beetle: :snail: :octopus: :tropical_fish: :blowfish: :fish: :shell: :whale: 
+:dolphin: :water_buffalo: :tiger2: :leopard: :ox: :crocodile: :dromedary_camel:
+
+and 
  
-:bouquet:
-:cherry_blossom:
-:tulip:
-:four_leaf_clover:
-:rose:
-:sunflower:
-:hibiscus:
-:maple_leaf:
-:leaves:
-:fallen_leaf:
-:herb:
-:mushroom:
-:cactus:
-:palm_tree:
-:evergreen_tree:
-:deciduous_tree:
-:chestnut:
-:seedling:
-:blossom:
-:ear_of_rice:  
+:bouquet: :cherry_blossom: :tulip: :four_leaf_clover: :rose: :sunflower: :hibiscus:
+:maple_leaf: :leaves: :fallen_leaf: :herb: :mushroom: :cactus: :palm_tree: :evergreen_tree:
+:deciduous_tree: :chestnut: :seedling: :blossom: :ear_of_rice:  
 
-maybe not :dragon_face:  :dragon:
+but, maybe not :dragon_face: :dragon: :christmas_tree:
 
 ##### References:  
 Phillips et al. 2009 Sample selection bias and presence‐only distribution models: implications for background and pseudo‐absence data, Ecol Appl 19:181-197.  
