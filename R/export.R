@@ -1,36 +1,36 @@
 
 ###This takes the overlay reconstruct it as an data.frame and removes duplicate visits in other gridcells.
-deconstructOverlay<-function(overlay, visitCol){
+deconstructOverlay <- function(overlay, visitCol){
 
   for(i in 1:length(overlay)){
     if(nrow(overlay[[i]])==0){
-      overlay[[i]]$grid<-integer(0)
+      overlay[[i]]$grid <- integer(0)
     }else{
-      overlay[[i]]$grid<-i
+      overlay[[i]]$grid <- i
     }
   }
 
-  overlay<-data.frame(data.table::rbindlist(overlay))
-
-  res<-overlay[,]
-
-  visitList<-integer(0)
+  overlay <- data.frame(data.table::rbindlist(overlay))
+  res <- overlay[,]
+  visitList <- integer(0)
 
   for(r in 1:nrow(overlay)){
-    visit<-overlay[r,visitCol]
+    visit <- overlay[r,visitCol]
     if(any(visit==visitList)){
       next()
     }
-    visitList<-c(visitList, visit)
-    grid<-overlay[r,"grid"]
-    res<-res[!(res[,visitCol] == visit & res[,"grid"]!=grid),]
+    visitList <- c(visitList, visit)
+    grid <- overlay[r,"grid"]
+    res <- res[!(res[,visitCol] == visit & res[,"grid"]!=grid),]
   }
 
-  cols<-c("scientificName", "year", "month", "day", visitCol)
+  res<<-res
+  cols <- c("scientificName", "year", "month", "day", visitCol)
 ## TODO if there is spill over and duplicates have created they have to be removed from this result
+  ### Delete duplicated observations
+
   return(res[,cols])
 }
-
 
 
 exportSpatial <- function(sb, timeRes, variable, method){
@@ -275,29 +275,29 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #'
 #' @param x a SummarizedBirds-object
 #' @param dimension a character string indicating if the export should be
-#'   \code{"Spatial"} or \code{"Temporal"}
+#'   \code{"spatial"} or \code{"temporal"}
 #' @param timeRes A character string indicating what tempral resolution should
-#'   be used. For Spatial export the function accepts \code{NULL, "Yearly", "Monthly"}
-#'   or \code{"Month"}. For temporal export the function accepts \code{"Yearly",
-#'   "Monthly", "Daily"} or \code{"Month"}.
+#'   be used. For Spatial export the function accepts \code{NULL, "yearly", "monthly"}
+#'   or \code{"month"}. For temporal export the function accepts \code{"yearly",
+#'   "monthly", "daily"} or \code{"month"}.
 #' @param variable a character string indicating which variable should be
-#'   exported, \code{"nObs", "nvis", "nSpp"} or \code{"avgSll" }.
-#'   For \code{timeRes = "Month"} the function also accepts \code{"nYears"} and for all except
-#'   \code{timeRes = "Daily"} the function accepts \code{"nDays"}.
-#' @param method Only applicable to \code{timeRes = "Month"}. A variable specifying which
+#'   exported, \code{"nObs", "nvis", "nSpp", "nDays"} or \code{"avgSll" }.
+#'   For \code{timeRes = c(NULL, "month")} the function also accepts \code{"nYears"}.
+#' @param method Only applicable to \code{timeRes = "month"}. A variable specifying which
 #'   statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.
-#' @note the difference between Monthly and Month is that the former returns
-#' "n.years x 12" values, while Month summarize over years and returns only 12 values.
-#' For more details over the possible combinations of dimensions and variables please
-#' refer to the vignette "Technical details".
-#' @return a named vector or a SpatialPolygonsDataFrame depending on the
-#' dimension, temporal or spatial, respectively
+#' @note the difference between \code{timeRes = "monthly"} and \code{timeRes = "month"}
+#' is that the former returns "n.years x 12" values, while month summarize over
+#' years and returns only 12 values aplying the method among years.
+#' For more details over the possible combinations of dimensions and variables
+#' please refer to the vignette "Technical details".
+#' @return an xts time series, a named vector (if dimension = "temporal" and timeRes = "month")
+#' or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial
 #' @export
 #'
 #' @examples
-#' grid<-makeGrid(searchPolygon, gridSize = 10)
+#' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(organizeBirds(bombusObs), grid=grid)
-#' EB <- exportBirds(SB, "Spatial", "Month", "nDays", "median")
+#' EB <- exportBirds(SB, "spatial", "month", "nDays", "median")
 
 exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
@@ -323,7 +323,7 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }else if(dimension == "temporal"){
     res<-exportTemporal(x, timeRes, variable, method)
   }else{
-    stop("Wrong input for variable dimension Try \"Spatial\" or \"Temporal\".")
+    stop("Wrong input for variable dimension. Try \"spatial\" or \"temporal\".")
   }
 
   return(res)

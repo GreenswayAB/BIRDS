@@ -7,7 +7,7 @@
 #' we can perform and draw approriate conclusions. For this we need to understand
 #' the data generation process. With this R package we want to take the
 #' user a step closer to understanding the observers’ behaviour.
-#' The BIRDS packages provides a workflow for reproducable data review, involving 
+#' The BIRDS packages provides a workflow for reproducable data review, involving
 #' three basic steps: organise data, summarise data, review data.
 #'
 #'
@@ -29,9 +29,9 @@
 #' # Summarise the data (using the grid to overlay with the organised data)
 #' SB <- summariseBirds(OB, grid=grid)
 
-#' EBnObs<- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
-#' EBnVis<- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "sum")
-#' EBavgSll<- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE) ## to be implemented in export
+#' EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
+#' EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "sum")
+#' EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE) ## to be implemented in export
 #'
 #'
 #' \donttest{

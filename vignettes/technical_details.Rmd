@@ -167,7 +167,9 @@ It takes as parameters:
     + "Monthly" one value per month per year  
     + "Daily" one value per day, for every year  
     + "Month" 12 values, summarized over all years  
-* method: as of v.0.0.1 it only accepts "sum", "mean", and "median". More methods to come later.  
+* method: as of v.0.0.2 it only accepts "sum", "mean", and "median". More methods to come later.  
+
+It returns an xts object for time series, a named vector ( if dimension = "temporal" and timeRes = "month") or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial.
 
 The following diagram explains the possible combinations of dimension, temporal resolutions, variables and methods
 
