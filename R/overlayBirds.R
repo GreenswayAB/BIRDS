@@ -9,16 +9,11 @@
 #'
 #' @return The overlay dataframe for a specific grid, including the spillover visits.
 #' @keywords internal
-createOverlayForGrid<-function(x, birdData, visitCol){
-
-  visitsInGrid<-unique(x[visitCol])
-
-  birdDF<-birdData[[1]]@data
-
-  res<-birdDF[which(birdDF[,visitCol] %in% visitsInGrid[,1]),]
-
+createOverlayForGrid <- function(x, birdData, visitCol){
+  visitsInGrid <- unique(x[visitCol])
+  birdDF <- birdData[[1]]@data
+  res <- birdDF[which(birdDF[,visitCol] %in% visitsInGrid[,1]),]
   return(res)
-
 }
 
 
@@ -34,14 +29,9 @@ createOverlayForGrid<-function(x, birdData, visitCol){
 #'
 #' @return A modified observationsInGrid list
 #' @keywords internal
-includeSpillover<-function(x, birdData, visitCol){
-
-
-  res<-lapply(x, createOverlayForGrid, birdData, visitCol)
-
+includeSpillover <- function(x, birdData, visitCol){
+  res <- lapply(x, createOverlayForGrid, birdData, visitCol)
   return(res)
-
-
 }
 
 #' Overlay BIRDS object and grid
@@ -80,7 +70,7 @@ includeSpillover<-function(x, birdData, visitCol){
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' overlayBirds(ob, grid)
-overlayBirds<-function(x, grid, spillOver = TRUE){
+overlayBirds <- function(x, grid, spillOver = TRUE){
   UseMethod("overlayBirds")
 }
 
@@ -127,24 +117,24 @@ overlayBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
 
   #### Rename grid
   if (any(duplicated(names(grid)))){
-    grid<-renameGrid(grid)
+    grid <- renameGrid(grid)
     warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
     All results will use this nomenclature, but the order of the cells will remain unaltered.")
   }
 
-  ObsInGridList<-sp::over(grid, spBird, returnList=TRUE)
-  wNonEmpty<-unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+  ObsInGridList <- sp::over(grid, spBird, returnList=TRUE)
+  wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
 
   if(spillOver){
-    tmp.spill<-includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
-    ObsInGridList[wNonEmpty]<-tmp.spill
+    tmp.spill <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
+    ObsInGridList[wNonEmpty] <- tmp.spill
 
     wSpill <- unname(which( unlist(lapply(tmp.spill, nrow)) != unlist(lapply(ObsInGridList[wNonEmpty], nrow)) ))
     diffSpill <- unname(unlist(lapply(tmp.spill, nrow)) - unlist(lapply(ObsInGridList[wNonEmpty], nrow)))[wSpill]
     porcSpill <- diffSpill / unname(unlist(lapply(ObsInGridList[wNonEmpty], nrow)))[wSpill]
 
     ### Warning for too many spill over, may be a bad definition of visit
-    nBigSpill<-length(porcSpill>=.5)
+    nBigSpill <- length(porcSpill>=.5)
 
     if (nBigSpill >= length(wNonEmpty) * .1) {
       warning("When more than 50% of the observations on a grid cell spill over other grid cells, it is considered as a big spill over.
@@ -158,15 +148,15 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
 
   if (class(grid) == "SpatialPolygonsDataFrame"){
 
-    grid@data<-grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribut data from the input grid, if there is any
+    grid@data <- grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribut data from the input grid, if there is any
 
   }
 
 
-  res<-list("observationsInGrid" = ObsInGridList, "grid"= grid, "nonEmptyGridCells" = wNonEmpty)
+  res <- list("observationsInGrid" = ObsInGridList, "grid"= grid, "nonEmptyGridCells" = wNonEmpty)
 
-  attr(res, "visitCol")<-visitCol ##An attribute to indicate which of the visits-column should be used in further analyses
-  attr(res, "spillOver")<-spillOver ##An attribute to indicate whether spillover observations should be included
+  attr(res, "visitCol") <- visitCol ##An attribute to indicate which of the visits-column should be used in further analyses
+  attr(res, "spillOver") <- spillOver ##An attribute to indicate whether spillover observations should be included
 
   return(res)
 

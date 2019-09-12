@@ -11,16 +11,24 @@
 #'
 #' @return The overlay dataframe for a specific grid, including the spillover visits.
 #' @keywords internal
-getTemporal<-function(birdData, visitCol){
+getTemporal<-function(birdData, visitCol=NULL){
+  if (length(birdData$observationsInGrid)>1) stop("The input should ALWAYS be a overlayBirds whith only one gridcell")
+
   data<-birdData$observationsInGrid[[1]] ##The input should ALWAYS be a overlayBirds whith only one gridcell.
 
-  visitCol<-attr(birdData, "visitCol")
+  if (is.null(visitCol)){
+    visitCol<-attr(birdData, "visitCol")
+  }
 
   ts<-xts::xts(data[, ! names(data) %in% c("year", "month", "day")], order.by=as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-")))
 
   tempData<-xts::apply.daily(ts, function(x){
 
-    return(c("nObs"=length(x[,1]), "nVis"=length(unique(x[,visitCol])), "nSpp"=length(unique(x[,"scientificName"]))))
+    return(c("nObs" = length(x[,1]),
+             "nVis" = length(unique(x[, visitCol])),
+             "nSpp" = length(unique(x[, "scientificName"]))#,
+             # "avgSll" = median(dplyr::summarise(dplyr::group_by(data, !!dplyr::sym(visitCol)), avgSLL=dplyr::n_distinct(scientificName))$avgSLL)
+             ))
 
   })
 
@@ -46,21 +54,23 @@ getSpatial<-function(birdDataOL){
                   "nVis"=as.numeric(rep(NA,nCells)),
                   "nSpp"=as.numeric(rep(NA,nCells)),
                   "avgSll"=as.numeric(rep(NA,nCells)),
+                  "nDays"=as.numeric(rep(NA,nCells)),
                   "nYears"=as.numeric(rep(NA,nCells)),
                   "visitsUID"=as.character(rep(NA,nCells)),
                   stringsAsFactors = FALSE)
 
-  cols2use<-c("scientificName", "year", visitCol)
+  cols2use<-c("scientificName", "year", "month", "day", visitCol)
 
   dataRes<-lapply(dataList[birdDataOL$nonEmptyGridCells], function(x){
 
     x<-x[,cols2use]
-    colnames(x)<-c("scientificName", "year", "visitCol")
+    colnames(x)<-c("scientificName", "year", "month", "day", "visitCol")
 
       return(c("nObs"=length(x[,"scientificName"]),
                "nVis"=length(unique(x[,"visitCol"])),
                "nSpp"=length(unique(x[,"scientificName"])),
                "avgSll"=median(summarise(group_by(x, visitCol), avgSLL=n_distinct(scientificName))$avgSLL),
+               "nDays"=length(unique( paste0(x[,"year"],"-", as.numeric(x[,"month"]), "-", as.numeric(x[,"day"]))) ),
                "nYears"=length(unique(x[,"year"])),
                "visitsUID"= paste0(unique(x[,"visitCol"]), collapse = ",")
                ))
@@ -73,6 +83,7 @@ getSpatial<-function(birdDataOL){
   dataRes$X3<-as.numeric(dataRes$X3)
   dataRes$X4<-as.numeric(dataRes$X4)
   dataRes$X5<-as.numeric(dataRes$X5)
+  dataRes$X6<-as.numeric(dataRes$X6)
 
   res[birdDataOL$nonEmptyGridCells,]<-dataRes
 
@@ -92,7 +103,7 @@ getSpatial<-function(birdDataOL){
 countsYearMonth<-function(x, yearsAll, visitCol){
   ## Yearly Monthly
 
-  vars<-c("nObs", "nVis", "nSpp", "avgSll")
+  vars<-c("nObs", "nVis", "nSpp", "avgSll", "nDays")
 
   resYM<-array(0, dim = c(length(yearsAll), 13, length(vars)),
              dimnames = list(as.character(yearsAll), c(month.abb,"Year"), vars))
@@ -105,6 +116,7 @@ countsYearMonth<-function(x, yearsAll, visitCol){
                           nVis=n_distinct(!!! rlang::syms(visitCol)),
                           nSpp=n_distinct(scientificName),
                           avgSll=NA,
+                          nDays=n_distinct(day),
                           visitUID=paste0(unique(!!! rlang::syms(visitCol)), collapse = ",")) ## a string with all cell_visit names
 
   wYears<-sort(match( tmp$year, yearsAll))
@@ -115,7 +127,7 @@ countsYearMonth<-function(x, yearsAll, visitCol){
   tmp$avgSll <- (summarise(tmpSLL, avgSLL=median(SLL)))$avgSLL
 
   for(i in 1:nrow(tmp)){
-    resYM[wYears[i], wMonths[i], ] <- as.numeric(tmp[i, 3:6])
+    resYM[wYears[i], wMonths[i], ] <- as.numeric(tmp[i, (1:length(vars))+2 ])
     resYMvisits[wYears[i], wMonths[i]] <- tmp$visitUID[i]
   }
 
@@ -123,9 +135,11 @@ countsYearMonth<-function(x, yearsAll, visitCol){
   if(is.null(nrow(resYM[,1:12,"nObs"]))){
     resYM[,13,"nObs"] <- sum(resYM[,1:12,"nObs"], na.rm = TRUE)
     resYM[,13,"nVis"] <- sum(resYM[,1:12,"nVis"], na.rm = TRUE)
+    resYM[,13,"nDays"] <- sum(resYM[,1:12,"nDays"], na.rm = TRUE)
   }else{
     resYM[,13,"nObs"] <- rowSums(resYM[,1:12,"nObs"], na.rm = TRUE)
     resYM[,13,"nVis"] <- rowSums(resYM[,1:12,"nVis"] , na.rm = TRUE)
+    resYM[,13,"nDays"] <- rowSums(resYM[,1:12,"nDays"] , na.rm = TRUE)
   }
 
   xGBY <- group_by(x, year)
@@ -176,56 +190,23 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
   visitsAll<-sort(as.character(
     unique(unlist(lapply(dataList, FUN=function(x)return(x[, visitCol]))))
   ))
-  # visitsAll<-character()
-  # for(i in 1:length(dataList)){
-  #   if (nrow(dataList[[i]]) > 0){
-  #     #cellName<-gsub("ID","", names(dataList[i]))
-  #     visitsAll<-c(visitsAll, unique(dataList[[i]]$visitCol)) #, paste0(cellName, "_", dataList[[i]]$visitCol))
-  #   }
-  # }
 
   # Variables to summarize Number of observations, Number of visits, Number of unique Species, Average species list length.
-  vars<-c("nObs", "nVis", "nSpp", "avgSll")
+  vars<-c("nObs", "nVis", "nSpp", "avgSll", "nDays")
 
   resYM<-array(dim = c(gridLength, length(yearsAll), 13, length(vars)),
              dimnames = list(names(dataList), as.character(yearsAll), c(month.abb, "Yearly"), vars))
   resYMvisits<-array(dim = c(gridLength, length(yearsAll), 13),
                dimnames = list(names(dataList), as.character(yearsAll), c(month.abb, "Yearly")))
 
-  ## spillOver<-attr(birdOverlay, "spillOver")
-  ## if(!spillOver){ ## There is risk that the same visit gets split into two or more grid cells making partial visits
-  ##   resSpp<-array(dim = c(gridLength, length(sppAll), ncol = length(visitsAll)),
-  ##                  dimnames = list(names(dataList), sppAll, visitsAll))
-  ## } else {  ## Even if repeated all visits are equal (complete)
-  #   resSpp<-matrix(0, nrow = length(sppAll), ncol = length(visitsAll),
-  #                  dimnames = list(sppAll, visitsAll))
-  ## }
+  for(g in wNonEmpty){
+    x<-dataList[[g]]
+    # cellName<-gsub("ID", "", names(dataList[wNonEmpty[i]]))
+    tmpYM<-countsYearMonth(x, yearsAll, visitCol)
+    resYM[g,,,]  <- tmpYM$resYM
+    resYMvisits[g,,]  <- tmpYM$resYMvisits
+  }
 
-    for(g in wNonEmpty){
-      x<-dataList[[g]]
-      # cellName<-gsub("ID", "", names(dataList[wNonEmpty[i]]))
-      tmpYM<-countsYearMonth(x, yearsAll, visitCol)
-      resYM[g,,,]  <- tmpYM$resYM
-      resYMvisits[g,,]  <- tmpYM$resYMvisits
-
-      # ### SppList
-      # tmp<-summarise(group_by(x, visitCol),
-      #                Spp=paste0(unique(scientificName), collapse = ";"))
-      # theseVisits<-tmp$visitCol
-      # wVisits<-sort(match( theseVisits, visitsAll))
-      #
-      # for(j in 1:nrow(tmp)){
-      #   theseSpp<-unlist(strsplit(tmp$Spp[j], ";"))
-      #   wSpp<-sort(match( theseSpp, sppAll))
-      #   if(!spillOver){
-      #     resSpp[g, wSpp, wVisits[j]]<-1
-      #   } else {
-      #     resSpp[wSpp, wVisits[j]]<-1
-      #   }
-      # }
-    }
-
-  # return(list("resYM"=resYM, "resYMvisits"=resYMvisits, "resSpp"=resSpp))
   return(list("resYM"=resYM, "resYMvisits"=resYMvisits))
 }
 
@@ -275,7 +256,7 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
   spatial<-NULL
   spatioTemporal<-NULL
   visits<-NULL
-  speciesLists<-NULL
+  # speciesLists<-NULL
   #The grid is exported in the spatial variable
 
   if(!is.null(grid)){
