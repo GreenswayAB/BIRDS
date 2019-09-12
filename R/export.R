@@ -1,5 +1,5 @@
 
-##This takes the overlay reconstruct it as an data.frame and removes duplicate visits in other gridcells.
+###This takes the overlay reconstruct it as an data.frame and removes duplicate visits in other gridcells.
 deconstructOverlay<-function(overlay, visitCol){
 
   for(i in 1:length(overlay)){
@@ -17,412 +17,257 @@ deconstructOverlay<-function(overlay, visitCol){
   visitList<-integer(0)
 
   for(r in 1:nrow(overlay)){
-
     visit<-overlay[r,visitCol]
-
     if(any(visit==visitList)){
       next()
     }
-
     visitList<-c(visitList, visit)
-
     grid<-overlay[r,"grid"]
-
     res<-res[!(res[,visitCol] == visit & res[,"grid"]!=grid),]
-
   }
 
   cols<-c("scientificName", "year", "month", "day", visitCol)
-
+## TODO if there is spill over and duplicates have created they have to be removed from this result
   return(res[,cols])
-
 }
 
 
-exportSpatial <- function(sb, scale, variable, method){
 
-  res<-sb$spatial
+exportSpatial <- function(sb, timeRes, variable, method){
 
-  resRowNames<-rownames(res@data)
+  spatial <- sb$spatial
+  resRowNames <- rownames(spatial@data)
+  yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
+  visitCol <- attr(sb, "visitCol")
 
-###No temporal scale
-  if(is.null(scale)){
-    if( #Check if the combination of method and variable is allowed
-      (method=="sum" & any(variable==c("nObs", "nVis", "nSpp", "nYears", "nDays"))) |
-      (method=="median" & variable=="avgSll")){
-      if(variable != "nDays"){
-        #If the variable not is nDays it's already in the dataset
-        res<-res[,variable]
-      }else{
-        #If the variable is nDays it has to be extracted from the overlay
+  if(variable %in% c("nObs", "nVis","nSpp","nDays", "nYears")){
+    if (is.null(timeRes)){
+      if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+      tmp<-data.frame(spatial@data[,variable])
+      colnames(tmp)<-variable
+      spatial@data<-tmp
+    } else if(timeRes == "yearly"){
+      if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
+      if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+      tmp<-data.frame(sb$spatioTemporal[,,13, variable])## Already added accordingly
+      colnames(tmp)<-yearsAll
+      spatial@data<- tmp
 
-        res@data<-res@data[,-c(1:ncol(res@data))]
+    } else if(timeRes == "monthly"){
+      if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
+      if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+      dat <- sb$spatioTemporal[,, 1:12, variable]
+      nyears<-dim(dat)[2]
+      for(i in 1:nyears){
+        start <- (i - 1) * 12 + 1
+        stop <- i * 12
+        spatial@data[,start:stop] <- data.frame(dat[,i,])
+      }
+      colnames(spatial@data) <- paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12))
 
-        res$nDays<-unlist(lapply(sb$overlaid, function(x){
-          length(unique(apply(x, 1, function(y){
-            paste0(y["year"],"-",y["month"],"-",y["day"])
-            })))
-          }))
+    } else if(timeRes == "month"){
+      if(variable == "nYears"){
+        if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+        tmp <- apply(sb$spatioTemporal[,,1:12, "nObs"], 2:3, function(x) sum(!is.na(x) & x!=0))
+        spatial@data <- data.frame(round(tmp, 2))
+      } else {
+        if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
+        tmp <- apply(sb$spatioTemporal[,,1:12, variable], c(1,3), method)
+        spatial@data <- data.frame(round(tmp, 2))
       }
     }else{
-      stop(paste0("variable = \"", variable, "\" and method = \"", method, "\" is not an allowed combination."))
+      stop("Wrong input for variable timeRes Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
     }
+  }
 
-###Summarize yearly
-  }else if(scale == "yearly"){
-    if(#Check if the combination of method and variable is allowed
-      (method=="sum" & any(variable==c("nObs", "nVis", "nSpp", "nDays"))) |
-      (method=="median" & variable=="avgSll")){
-      if(variable != "nDays"){
-        #If the variable not is nDays it's already in the dataset
-        res@data<-data.frame(sb$spatioTemporal[,,13,variable])
-      }else{
-        #If the variable is nDays it has to be extracted from the overlay
+  if(variable == "avgSll"){
+    if (is.null(timeRes)){
+      if (method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
+      tmp<-data.frame(spatial@data[,variable])
+      colnames(tmp)<-variable
+      spatial@data<-tmp
+    } else {
+      if (timeRes %in% c("yearly", "monthly") & method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
+      if (timeRes == "month" & !(method %in% c("median","mean"))) stop("This combination of variable and time resolution only accepts 'median' or 'mean' as summary method")
 
-        res@data<-res@data[,-c(1:ncol(res@data))]
+      wNonEmpty <- unlist(lapply(sb$overlaid, function(x) nrow(x)>0))
 
-        years<-range(as.numeric(dimnames(sb$spatioTemporal)[[2]]))
+      ncolumns <- switch(timeRes,
+                         "yearly" = length(yearsAll),
+                         "monthly"= length(yearsAll)*12,
+                         "month"  = 12)
+      resList <- lapply(1:length(sb$overlaid), function(x) rep(NA, ncolumns))
+      tmpList <- lapply(sb$overlaid[wNonEmpty], function(x){
+        if(timeRes == "yearly"){
+          gby<-dplyr::group_by(x, factor(year, levels = yearsAll),
+                               !!dplyr::sym(visitCol),
+                               .drop=FALSE)
+          resSLL <- dplyr::summarise(gby, SLL=n_distinct(scientificName))
+          resAvg <- dplyr::summarise(resSLL, avgSll=median(SLL))
+          return(resAvg$avgSll)
+        } else { # monthly
+          gby<-dplyr::group_by(x, factor(year, levels = yearsAll),
+                               factor(month, levels = 1:12), #, labels=month.abb
+                               !!dplyr::sym(visitCol),
+                               .drop=FALSE)
+          resSLL <- dplyr::summarise(gby, SLL=n_distinct(scientificName))
+          resAvg <- as.data.frame(dplyr::summarise(resSLL, avgSll=median(SLL)))
+          colnames(resAvg) <- c("year", "month", "avgSll")
 
-        for(y in years[1]:years[2]){
-          res[[as.character(y)]]<-unlist(lapply(sb$overlaid, function(x){
-            length(unique(apply(x[x[,"year"]==y,], 1, function(y){
-              paste0(y["year"],"-",y["month"],"-",y["day"])
-            })))
-          }))
-        }
-      }
-
-      colnames(res@data)<-dimnames(sb$spatioTemporal)[2][[1]]
-
-    }else if(variable=="nYears"){
-      stop("Variable nYears cannot be exported for timeRes=\"yearly\"")
-    }else{
-      stop(paste0("variable = \"", variable, "\" and method = \"", method, "\" is not an allowed combination."))
-    }
-###Summarize monthly
-  }else if(scale == "monthly"){
-    if(#Check if the combination of method and variable is allowed
-      (method=="sum" & any(variable==c("nObs", "nVis", "nSpp", "nDays"))) |
-      (method=="median" & variable=="avgSll")){
-
-      if(variable != "nDays"){
-        #If the variable not is nDays it's already in the dataset
-        res@data<-res@data[,-c(1:ncol(res@data))]
-
-        dat<-sb$spatioTemporal[,,1:12,variable]
-
-        for(i in 1:dim(dat)[2]){
-          start<-(i-1)*12+1
-          stop<-i*12
-          res@data[,start:stop]<-data.frame(dat[,i,])
-        }
-
-        colnames(res@data)<-paste0(rep(attributes(sb$spatioTemporal)$dimnames[[2]],each=12),"-",1:12)
-      }else{
-        #If the variable is nDays it has to be extracted from the overlay
-        res@data<-res@data[,-c(1:ncol(res@data))]
-
-        years<-range(as.numeric(dimnames(sb$spatioTemporal)[[2]]))
-        month<-1:12
-
-        for(y in years[1]:years[2]){
-          for(m in month){
-            res[[paste0(as.character(y),"-",as.character(m))]]<-unlist(lapply(sb$overlaid, function(x){
-              length(unique(apply(x[x[,"year"]==y & x[,"month"]==m,], 1, function(y){
-                paste0(y["year"],"-",y["month"],"-",y["day"])
-              })))
-            }))
+          if(timeRes == "monthly"){
+            res<-resAvg$avgSll
+            # names(res) <- dimnames(sb$spatioTemporal)[[1]]
+            return(res)
+          } else if (timeRes == "month"){ # timeRes == "month"
+            res<-numeric(12)
+            for(m in 1:12){
+              tmp <- resAvg$avgSll[which(resAvg$month==m)]
+              if (sum(tmp>0) == 0) {
+                res[m] <- 0
+              } else {
+                res[m] <- switch(method,
+                                 "median"= median(tmp[tmp>0]),
+                                 "mean"  = round(mean(tmp[tmp>0])), 2)
+              }
+            }
+            # names(res) <- month.abb
+            return(res)
+          } else {
+            stop("Wrong input for variable timeRes. Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
           }
-        }
-      }
+        } ## end if timeRes
+      })  ### end lapply
 
-    }else if(variable=="nYears"){
-      stop("Variable nYears cannot be exported for timeRes=\"monthly\"")
-    }else{
-      stop(paste0("variable = \"", variable, "\" and method = \"", method, "\" is not an allowed combination."))
+      resList[wNonEmpty]<-tmpList
+      tmp<-as.data.frame(matrix(unlist(resList, use.names = TRUE),
+                                nrow=dim(sb$spatioTemporal)[1],
+                                ncol=ncolumns, byrow = TRUE),
+                         row.names=dimnames(sb$spatioTemporal)[[1]])
+      colnames(tmp)<-switch(timeRes,
+                            "yearly" = yearsAll,
+                            "monthly"= paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12)),
+                            "month"  = month.abb)
+
+      spatial@data<-tmp
     }
-
-##Summarize month
-  }else if(scale == "month"){
-    if(any(variable==c("nObs", "nVis", "nSpp"))){
-      if(any(method==c("sum","median", "mean"))){
-        res@data<-data.frame(apply(sb$spatioTemporal[,,1:12, variable], c(1,3), method))
-      }else{
-        stop("Wrong input for method, try \"sum\",\"median\" or \"mean\".")
-      }
-    }else if(variable=="avgSll"){
-      if (any(method==c("median", "mean"))){
-        res@data<-data.frame(apply(sb$spatioTemporal[,,1:12, variable], c(1,3), method))
-      }else{
-        stop(paste0("variable = \"", variable, "\" and method = \"", method,
-                    "\" is not an allowed combination. \nOnly method = \"median\" is allowed for avgSll"))
-      }
-    }else if(variable=="nYears"){
-      if (method=="sum"){
-        res@data<-res@data[,-c(1:ncol(res@data))]
-
-        month<-1:12
-
-        for(m in month){
-          res[[as.character(m)]]<-unlist(lapply(sb$overlaid, function(x){
-            length(unique(x[x[,"month"]==m,"year"]))
-          }))
-        }
-
-        colnames(res@data)<-month.abb
-
-      }else{
-        stop(paste0("variable = \"", variable, "\" and method = \"", method,
-                    "\" is not an allowed combination. \nOnly method = \"sum\" is allowed for nYears"))
-      }
-    } else if(variable=="nDays"){
-      # if (method %in% c("sum", "mean", "median")){
-        res@data<-res@data[,-c(1:ncol(res@data))]
-
-        res@data<-as.data.frame(
-          matrix(
-          unlist(lapply(sb$overlaid, function(x){
-            vec.res<-numeric(12)
-            # names(vec.res)<-1:12
-            tmp<-summarise(
-                    summarise(group_by(x, month,year), nDaysY=n_distinct(day)),
-                    nDays=switch(method,
-                                        "sum" = sum(nDaysY),
-                                        "mean" = mean(nDaysY),
-                                        "median" = median(nDaysY)) )
-            vec.res[tmp$month]<-tmp$nDays
-            return(vec.res)
-          })), ncol=12, byrow=TRUE)
-        )
-
-        colnames(res@data)<-month.abb
-    }
-
-  }else{
-    stop("Wrong input for variable timeRes Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
   }
-
-  return(res)
-
+  return(spatial)
 }
 
-getTemporalAvgSll<-function(sb, scale){
-  ##This function works only for temporal resolution yearly, monthly and daily
+####### Temporal
+
+### a funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors
+removeInexDays<-function(x){
+  if (!all(c("year", "month", "day") %in% colnames(res) )) stop("Input data must have the columns 'year', 'month' and 'day'")
+
+  dates<-as.Date(paste0(x$year, "-", sprintf("%02d", x$month), "-", sprintf("%02d", x$day)))
+  wRm <- which(is.na(dates))
+  x <- x[-wRm,]
+  return(x)
+}
+
+getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
+  if(timeRes=="yearly"){
+    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+                         !!dplyr::sym(visitCol), .drop=FALSE)
+  } else if(timeRes %in% c("monthly", "month")){
+    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+                         month=factor(month, levels = 1:12),
+                         !!dplyr::sym(visitCol), .drop=FALSE)
+  } else if(timeRes=="daily"){
+    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+                         month=factor(month, levels = 1:12),
+                         day=factor(day, levels = 1:31),
+                         !!dplyr::sym(visitCol), .drop=FALSE)
+  } else {
+    stop(paste0("Unknown timeRes: ", timeRes ))
+  }
+  resSLL <- dplyr::summarise(gby, SLL=n_distinct(scientificName))
+  res <- dplyr::summarise(resSLL, avgSll=median(SLL))
+
+  if(timeRes=="daily") res <- removeInexDays(res)
+  return(res)
+}
 
 
+exportTemporal <- function(sb, timeRes, variable, method){
+  if(variable == "nYears" & timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
+
+  yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
   visitCol<-attr(sb, "visitCol")
+  obsData<-deconstructOverlay(sb$overlaid, attr(SB, "visitCol"))
 
-  #We need to deconstruct the overlay to a dataframe again
+  if(timeRes=="yearly"){
+    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll), .drop=FALSE)
+  } else if(timeRes %in% c("monthly", "month")){
+    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+                                  month=factor(month, levels = 1:12), .drop=FALSE)
+  } else if(timeRes=="daily"){
+    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+                                  month=factor(month, levels = 1:12),
+                                  day=factor(day, levels = 1:31), .drop=FALSE)
+  } else {
+    stop(paste0("Unknown timeRes: ", timeRes ))
+  }
 
-  obsData<-deconstructOverlay(sb$overlaid, attr(sb, "visitCol"))
+  res <- summarise(gby,
+                 nObs=n(),
+                 nVis=n_distinct(!!dplyr::sym(visitCol)),
+                 nSpp=n_distinct(scientificName),
+                 nDays=n_distinct(paste0(year,month,day)))
+  if(timeRes=="daily") res <- removeInexDays(res)
 
-  if(scale=="yearly"){
-   res<-dplyr::group_by(obsData, year, !!dplyr::sym(visitCol))
-  }else if(scale=="monthly"){
-    res<-dplyr::group_by(obsData, year, month, !!dplyr::sym(visitCol))
-  }else if(scale=="daily"){
-    res<-dplyr::group_by(obsData, year, month, day, !!dplyr::sym(visitCol))
-  }else(
-    stop(paste0("Unknown timeRes: ",scale ))
-  )
+  if (variable %in% c("nObs", "nVis","nSpp","nDays")){
+    if (timeRes %in% c("yearly", "monthly", "daily")){
+      if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+      resVar <- dplyr::pull(res, !!dplyr::sym(variable))
+      names(resVar) <- switch(timeRes,
+                              "yearly" = paste0(yearsAll, "-01-01"),
+                              "monthly"= paste0(res$year, "-", sprintf("%02d", res$month), "-01"),
+                              "daily"  = paste0(res$year, "-", sprintf("%02d", res$month), "-", sprintf("%02d", res$day)))
+      # MAKE RESVAR to xts::as.xts()
+      resVar <- xts::as.xts(resVar)
 
-  res<-dplyr::summarise(res,SLL=n_distinct(scientificName))
+    } else { #month
+      if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'median' or 'mean' as summary method")
+      if (method == "sum")    resMon <-  summarise(group_by(res, month), var=sum(!!dplyr::sym(variable)))
+      if (method == "mean")   resMon <-  summarise(group_by(res, month), var=mean(!!dplyr::sym(variable)))
+      if (method == "median") resMon <-  summarise(group_by(res, month), var=median(!!dplyr::sym(variable)))
+      resVar <- dplyr::pull(resMon, var)
+      names(resVar) <- month.abb
+    }
 
-  res <- summarise(res,avgSLL=median(SLL))
+  } else if (variable == "nYears"){
+    ## only valid for month, prohibition set at the begining
+    tmp<-summarise(gby, nYear=n_distinct(year))
+    resMon <-  summarise(group_by(tmp, month), var=sum(nYear))
+    resVar <- dplyr::pull(resMon, var)
+    names(resVar) <- month.abb
 
-  return(res)
+  } else if (variable == "avgSll"){
+    ## Group also by visit
+    res <- getTemporalAvgSll(obsData, timeRes, visitCol, yearsAll)
+    if (timeRes %in% c("yearly", "monthly", "daily")){
+      if (method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
+      resVar <- dplyr::pull(res, avgSll)
+      names(resVar) <- switch(timeRes,
+                              "yearly" = paste0(yearsAll, "-01-01"),
+                              "monthly"= paste0(res$year, "-", sprintf("%02d", res$month), "-01"),
+                              "daily"  = paste0(res$year, "-", sprintf("%02d", res$month), "-", sprintf("%02d", res$day)))
+      resVar <- xts::as.xts(resVar)
 
+    } else { #month
+      if (!(method %in% c("median", "mean"))) stop("This combination of variable and time resolution only accepts 'median' or 'mean' as summary method")
+      if (method == "mean")   resMon <-  summarise(group_by(res, month), var = round(mean(avgSll),2))
+      if (method == "median") resMon <-  summarise(group_by(res, month), var = median(avgSll))
+      resVar <- dplyr::pull(resMon, var)
+      names(resVar) <- month.abb
+    }
+  } else {
+    stop(paste0("variable = ", variable, " is not a valid input"))
+  }
+  return(resVar)
 }
-
-
-
-
-exportTemporal <- function(sb, scale, variable, method){
-
-  if(any(scale==c("yearly", "monthly", "daily"))){
-
-    if(any(variable==c("nObs", "nVis", "nSpp"))){
-
-      if(method != "sum"){
-        stop(paste0("method = \"",method, "\" is not a valid input for variable = \"",variable, "\"."))
-      }
-
-      if(scale=="yearly"){
-        byScale<-xts::apply.yearly(sb$temporal[,variable], sum)
-        dates<-as.character(lubridate::year(byScale))
-        yRange<-range(lubridate::year(byScale))
-        range<-as.character(yRange[1]:yRange[2])
-      }else if(scale=="monthly"){
-        byScale<-xts::apply.monthly(sb$temporal[,variable], sum)
-        dates<-paste0(lubridate::year(byScale),"-", lubridate::month(byScale))
-        yRange<-range(lubridate::year(byScale))
-        range<-paste0(rep(yRange[1]:yRange[2],each=12),"-",1:12)
-      }else if(scale=="daily"){
-        byScale<-sb$temporal[,variable]
-        dates<-as.character(lubridate::date(byScale))
-        range<-as.character(seq(lubridate::date(byScale[1,]),lubridate::date(byScale[nrow(byScale),]), by="days"))
-      }
-
-      res<-c(rep(0, length(range)))
-      names(res)<-range
-
-      res[dates]<-byScale[,1]
-
-
-
-    }else if(variable=="avgSll"){
-
-      if(method != "median"){
-        stop(paste0("method = \"",method, "\" is not a valid input for variable = \"",variable, "\"."))
-      }
-
-      byScale<-getTemporalAvgSll(sb, scale)
-
-      if(scale=="yearly"){
-        dates<-as.character(byScale$year)
-        range<-as.character(range(byScale$year)[1]:range(byScale$year)[2])
-      }else if(scale=="monthly"){
-        dates<-paste0(byScale$year,"-", byScale$month)
-        yRange<-range(byScale$year)
-        range<-paste0(rep(yRange[1]:yRange[2],each=12),"-",1:12)
-      }else if(scale=="daily"){
-        dates<-as.character(as.Date(paste0(byScale$year,"-", byScale$month, "-", byScale$day)))
-        range<-as.character(seq(as.Date(dates[1]),as.Date(dates[length(dates)]), by="days"))
-      }
-
-
-      res<-c(rep(0, length(range)))
-      names(res)<-range
-
-      res[dates]<-as.data.frame(byScale)[,"avgSLL"]
-
-
-    }else if(variable=="nDays"){
-
-      if(scale=="daily"){
-        stop("Cannot calculate varibale nDays for tempRes = \"Daily\".")
-      }
-
-      if(method != "sum"){
-        stop(paste0("method = \"",method, "\" is not a valid input for variable = \"",variable, "\"."))
-      }
-
-      if(scale=="yearly"){
-        byScale<-xts::apply.yearly(sb$temporal, nrow)
-        dates<-as.character(lubridate::year(byScale))
-        yRange<-range(lubridate::year(byScale))
-        range<-as.character(yRange[1]:yRange[2])
-      }else{
-        byScale<-xts::apply.monthly(sb$temporal, nrow)
-        dates<-paste0(lubridate::year(byScale),"-", lubridate::month(byScale))
-        yRange<-range(lubridate::year(byScale))
-        range<-paste0(rep(yRange[1]:yRange[2],each=12),"-",1:12)
-      }
-
-      res<-c(rep(0, length(range)))
-      names(res)<-range
-
-      res[dates]<-byScale[,1]
-
-
-
-    }else{
-      stop(paste0("variable = \"",variable, "\" is not a valid input"))
-    }
-
-### Month
-  }else if(scale=="month"){
-
-    res=c(rep(0, 12))
-    names(res)=month.abb
-
-    if(any(variable==c("nObs", "nVis", "nSpp"))){
-
-      #Would have been less cod and more readable if the if statement was inside the for-loop
-      # but its more efficient to not have a if-statement evaluated 12 times
-      if(method=="sum"){
-        for(m in 1:12){
-          res[m]<-sum(sb$temporal[lubridate::month(sb$temporal)==m,variable])
-        }
-      }else if(method=="mean"){
-        for(m in 1:12){
-          res[m]<-sum(sb$temporal[lubridate::month(sb$temporal)==m,variable])/
-            (max(lubridate::year(sb$temporal))-min(lubridate::year(sb$temporal))+1)
-        }
-      }else{
-        for(m in 1:12){
-          val<-sb$temporal[lubridate::month(sb$temporal)==m,variable]
-
-          ##We need to calcualte a yearly median for month m and add 0 for month with no data.
-
-          valDF<-data.frame(val)
-          valDF$year<-lubridate::year(val)
-
-          valDF<-summarise(dplyr::group_by(valDF, year),res=sum(!!dplyr::sym(variable)))
-
-          res[m]<-median(c(valDF$res,
-                          rep(0, (max(lubridate::year(sb$temporal))-min(lubridate::year(sb$temporal))+1)-length(valDF$res))))
-
-        }
-      }
-
-    }else if(variable=="avgSll"){
-
-      t<-getTemporalAvgSll(sb, "monthly")
-
-      if(method == "median"){
-        for(m in 1:12){
-          res[m]<-median(as.data.frame(t[t[,"month"]==m,])[,"avgSLL"])
-        }
-      }else if(method == "mean"){
-        for(m in 1:12){
-          res[m]<-mean(as.data.frame(t[t[,"month"]==m,])[,"avgSLL"])
-        }
-      }else{
-        stop(paste0("method = \"",method, "\" is not a valid input for variable = \"",variable, "\"."))
-      }
-    }else if (variable == "nYears"){
-
-      if(method != "sum"){
-        stop(paste("method = \"",method, "\" is not a valid input for variable = \"",variable, "\"."))
-      }
-
-      t<-xts::apply.monthly(sb$temporal, nrow)
-
-      for(m in 1:12){
-        res[m]<-length(unique(lubridate::year(t[lubridate::month(t)==m,])))
-      }
-
-    }else if(variable == "nDays"){
-
-      t<-xts::apply.monthly(sb$temporal, nrow)
-
-      if(method=="sum"){
-        for(m in 1:12){
-          res[m]<-sum(t[lubridate::month(t)==m,1])
-        }
-      }else if(method=="mean"){
-        for(m in 1:12){
-          res[m]<-mean(t[lubridate::month(t)==m,1])
-        }
-      }else{
-        for(m in 1:12){
-          res[m]<-median(t[lubridate::month(t)==m,1])
-        }
-      }
-
-
-    }else{
-      stop(paste0("variable = ",variable, "\" is not a valid input for timeRes = \"Month\"."))
-    }
-
-
-
-  }else{
-    stop("Wrong input for variable timeRes Try \"Yearly\", \"Monthly\", \"Daily\" or \"Month\" for dimension = \"Temporal\".")
-  }
-  return(res)
-  }
 
 
 
@@ -437,8 +282,8 @@ exportTemporal <- function(sb, scale, variable, method){
 #'   "Monthly", "Daily"} or \code{"Month"}.
 #' @param variable a character string indicating which variable should be
 #'   exported, \code{"nObs", "nvis", "nSpp"} or \code{"avgSll" }.
-#'   For \code{scale = "Month"} the function also accepts \code{"nYears"} and for all except
-#'   \code{scale = "Daily"} the function accepts \code{"nDays"}.
+#'   For \code{timeRes = "Month"} the function also accepts \code{"nYears"} and for all except
+#'   \code{timeRes = "Daily"} the function accepts \code{"nDays"}.
 #' @param method Only applicable to \code{timeRes = "Month"}. A variable specifying which
 #'   statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.
 #' @note the difference between Monthly and Month is that the former returns
@@ -462,7 +307,7 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }
   variable<-tolower(variable)
   if(any(variable==c("nobs", "nvis", "nspp", "nyears", "ndays"))){
-    variable<-paste0(substr(variable,1,1),toupper(substr(variable,2,2)), substr(variable,3,nchar(variable)))
+    variable<-paste0(substr(variable,1,1), toupper(substr(variable,2,2)), substr(variable, 3, nchar(variable)))
   }else if(variable=="avgsll"){
     variable<-"avgSll"
   }else{
@@ -482,6 +327,4 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }
 
   return(res)
-
-
 }
