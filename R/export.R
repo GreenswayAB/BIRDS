@@ -28,6 +28,7 @@ deconstructOverlay <- function(overlay, visitCol){
   cols <- c("scientificName", "year", "month", "day", visitCol)
 ## TODO if there is spill over and duplicates have created they have to be removed from this result
   ### Delete duplicated observations
+  ## maybe with help from SB$spatial@data$visitsUID
 
   return(res[,cols])
 }
