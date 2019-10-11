@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 This vignette is adapted from https://rpubs.com/RLodge/timeseriesintro
 
 ## xts Objects
-One of the objects that comes out of the `summaryBirds()` function is `$temporal`, a `xts` object. A `xts` is a time series (a series of data points in chronological order, where time is the independent variable). The ‘x’ in xts stands for extensible, because it is an extension of `zoo` (another package). An `xts` object is formed just as a `zoo` object is. However, an `xts` object is in matrix form and thus is easier to subset through.
+One of the objects that comes out of the `summariseBirds()` function is `$temporal`, a `xts` object. A `xts` is a time series (a series of data points in chronological order, where time is the independent variable). The ‘x’ in xts stands for extensible, because it is an extension of `zoo` (another package). An `xts` object is formed just as a `zoo` object is. However, an `xts` object is in matrix form and thus is easier to subset through.
 
 If we start from the basic example
 ```{r SB, echo=TRUE, message=FALSE, warning=FALSE}
