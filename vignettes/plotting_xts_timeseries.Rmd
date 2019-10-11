@@ -22,6 +22,7 @@ The ‘x’ in xts stands for extensible, named as such because it is an extensi
 
 What comes from the export function ...is an xts object.
 
+
 library(xts)
 mpls.temp.xts <- as.xts(mpls.zoo2)
 head(mpls.temp.xts)
