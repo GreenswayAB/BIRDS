@@ -24,6 +24,8 @@ navbar:
       menu:
       - text: BIRDS technical details
         href: articles/technical_details.html
+      - text: Working with xts time series
+        href: articles/working_with_xts_timeseries.html
     github:
       icon: fa-github fa-lg
       href: https://github.com/greensway/BIRDS

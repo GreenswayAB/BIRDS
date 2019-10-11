@@ -4,7 +4,7 @@
 \alias{getTemporal}
 \title{Create spillover overlay for specific grid}
 \usage{
-getTemporal(birdData, visitCol)
+getTemporal(birdData, visitCol = NULL)
 }
 \arguments{
 \item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}

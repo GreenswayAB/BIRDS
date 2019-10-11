@@ -10,36 +10,36 @@ exportBirds(x, dimension, timeRes, variable, method = "sum")
 \item{x}{a SummarizedBirds-object}
 
 \item{dimension}{a character string indicating if the export should be
-\code{"Spatial"} or \code{"Temporal"}}
+\code{"spatial"} or \code{"temporal"}}
 
 \item{timeRes}{A character string indicating what tempral resolution should
-be used. For Spatial export the function accepts \code{NULL, "Yearly", "Monthly"}
-or \code{"Month"}. For temporal export the function accepts \code{"Yearly",
-"Monthly", "Daily"} or \code{"Month"}.}
+be used. For Spatial export the function accepts \code{NULL, "yearly", "monthly"}
+or \code{"month"}. For temporal export the function accepts \code{"yearly",
+"monthly", "daily"} or \code{"month"}.}
 
 \item{variable}{a character string indicating which variable should be
-exported, \code{"nObs", "nvis", "nSpp"} or \code{"avgSll" }.
-For \code{scale = "Month"} the function also accepts \code{"nYears"} and for all except
-\code{scale = "Daily"} the function accepts \code{"nDays"}.}
+exported, \code{"nObs", "nvis", "nSpp", "nDays"} or \code{"avgSll" }.
+For \code{timeRes = c(NULL, "month")} the function also accepts \code{"nYears"}.}
 
-\item{method}{Only applicable to \code{timeRes = "Month"}. A variable specifying which
+\item{method}{Only applicable to \code{timeRes = "month"}. A variable specifying which
 statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.}
 }
 \value{
-a named vector or a SpatialPolygonsDataFrame depending on the
-dimension, temporal or spatial, respectively
+an xts time series, a named vector (if dimension = "temporal" and timeRes = "month")
+or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial
 }
 \description{
 Export single variables from SummarisedBirds objects
 }
 \note{
-the difference between Monthly and Month is that the former returns
-"n.years x 12" values, while Month summarize over years and returns only 12 values.
-For more details over the possible combinations of dimensions and variables please
-refer to the vignette "Technical details".
+the difference between \code{timeRes = "monthly"} and \code{timeRes = "month"}
+is that the former returns "n.years x 12" values, while month summarize over
+years and returns only 12 values aplying the method among years.
+For more details over the possible combinations of dimensions and variables
+please refer to the vignette "Technical details".
 }
 \examples{
-grid<-makeGrid(searchPolygon, gridSize = 10)
+grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(organizeBirds(bombusObs), grid=grid)
-EB <- exportBirds(SB, "Spatial", "Month", "nDays", "median")
+EB <- exportBirds(SB, "spatial", "month", "nDays", "median")
 }
