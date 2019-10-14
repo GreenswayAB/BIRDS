@@ -24,7 +24,7 @@ deconstructOverlay <- function(overlay, visitCol){
     res <- res[!(res[,visitCol] == visit & res[,"grid"]!=grid),]
   }
 
-  res<<-res
+  res <-res
   cols <- c("scientificName", "year", "month", "day", visitCol)
 ## TODO if there is spill over and duplicates have created they have to be removed from this result
   ### Delete duplicated observations
@@ -159,7 +159,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
 
 ### a funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors
 removeInexDays<-function(x){
-  if (!all(c("year", "month", "day") %in% colnames(res) )) stop("Input data must have the columns 'year', 'month' and 'day'")
+  if (!all(c("year", "month", "day") %in% colnames(x) )) stop("Input data must have the columns 'year', 'month' and 'day'")
 
   dates<-as.Date(paste0(x$year, "-", sprintf("%02d", x$month), "-", sprintf("%02d", x$day)))
   wRm <- which(is.na(dates))
@@ -195,8 +195,8 @@ exportTemporal <- function(sb, timeRes, variable, method){
   if(variable == "nYears" & timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
 
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
-  visitCol<-attr(sb, "visitCol")
-  obsData<-deconstructOverlay(sb$overlaid, attr(SB, "visitCol"))
+  visitCol <- attr(sb, "visitCol")
+  obsData <- deconstructOverlay(sb$overlaid, attr(sb, "visitCol"))
 
   if(timeRes=="yearly"){
     gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll), .drop=FALSE)
@@ -240,7 +240,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
   } else if (variable == "nYears"){
     ## only valid for month, prohibition set at the begining
-    tmp<-summarise(gby, nYear=n_distinct(year))
+    tmp <- summarise(gby, nYear=n_distinct(year))
     resMon <-  summarise(group_by(tmp, month), var=sum(nYear))
     resVar <- dplyr::pull(resMon, var)
     names(resVar) <- month.abb
@@ -302,16 +302,18 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
 exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
-  dimension<-tolower(dimension)
-  if(!is.null(timeRes)){
-    timeRes<-tolower(timeRes)
+  dimension <- tolower(dimension)
+
+  if (!is.null(timeRes)){
+    timeRes <- tolower(timeRes)
   }
-  variable<-tolower(variable)
-  if(any(variable==c("nobs", "nvis", "nspp", "nyears", "ndays"))){
-    variable<-paste0(substr(variable,1,1), toupper(substr(variable,2,2)), substr(variable, 3, nchar(variable)))
-  }else if(variable=="avgsll"){
-    variable<-"avgSll"
-  }else{
+
+  variable <- tolower(variable)
+  if (any(variable == c("nobs", "nvis", "nspp", "nyears", "ndays"))){
+    variable <- paste0(substr(variable,1,1), toupper(substr(variable,2,2)), substr(variable, 3, nchar(variable)))
+  } else if (variable == "avgsll"){
+    variable <- "avgSll"
+  } else {
    stop("No valid variable")
   }
 
@@ -320,12 +322,15 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }
 
   if(dimension == "spatial"){
-    res<-exportSpatial(x, timeRes, variable, method)
+    res <- exportSpatial(x, timeRes, variable, method)
+    return(res)
   }else if(dimension == "temporal"){
-    res<-exportTemporal(x, timeRes, variable, method)
+    res <- exportTemporal(x, timeRes, variable, method)
+    return(res)
   }else{
+    return(NULL)
     stop("Wrong input for variable dimension. Try \"spatial\" or \"temporal\".")
   }
 
-  return(res)
+
 }

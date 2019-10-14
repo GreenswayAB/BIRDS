@@ -15,21 +15,25 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,14 +41,14 @@
 
 
 
-<meta property="og:title" content="Organize a dataframe to a usable format — organizeBirds" />
 
+<meta property="og:title" content="Organize a dataframe to a usable format — organizeBirds" />
 <meta property="og:description" content="Takes a dataframe with reported species observations and reformats it, using
 visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package." />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -67,6 +71,7 @@ analyses with the BIRDS-package." />
 
   gtag('config', 'UA-147720899-1');
 </script>
+
 
   </head>
 
@@ -121,7 +126,6 @@ analyses with the BIRDS-package." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
@@ -136,6 +140,7 @@ analyses with the BIRDS-package." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -147,29 +152,27 @@ analyses with the BIRDS-package." />
     </div>
 
     <div class="ref-description">
-    
     <p>Takes a dataframe with reported species observations and reformats it, using
 visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>organizeBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
-  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
+    <pre class="usage"><span class='fu'>organizeBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
+  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
   <span class='st'>"month"</span>, <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
+  <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
   <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
+  <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
   <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>organiseBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
-  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
+<span class='fu'>organiseBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
+  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
   <span class='st'>"month"</span>, <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
+  <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
   <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
+  <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
   <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -189,13 +192,13 @@ species names. Default is the Darwin Core standard name <code>"scientificName"</
       <th>timeCol</th>
       <td><p>A character vector (named or not) of the names for the
 column(s) which is holding the observation dates. Default is the Darwin Core
-standard column names <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Year"="year", "Month"="month", "Day"="day")</a></code>.</p></td>
+standard column names <code><a href='https://rdrr.io/r/base/c.html'>c("Year"="year", "Month"="month", "Day"="day")</a></code>.</p></td>
     </tr>
     <tr>
       <th>visitsIdentifier</th>
       <td><p>A character vector of the names for the columns that
 are holding the information that identifies a visit. Default is the Darwin
-Core standard column names <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("locality", "day", "month", "year",
+Core standard column names <code><a href='https://rdrr.io/r/base/c.html'>c("locality", "day", "month", "year",
 "recordedBy")</a></code>.</p></td>
     </tr>
     <tr>
@@ -208,7 +211,7 @@ precense status. Default is <code>NULL</code>.</p></td>
       <td><p>A character vector of the names for the columns that are holding
 the coordinates for the observations. The order should be longitude(x),
 latitude(y). Default is the Darwin Core standard column names
-<code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("decimalLongitude", "decimalLatitude")</a></code>. Only applicable to non-
+<code><a href='https://rdrr.io/r/base/c.html'>c("decimalLongitude", "decimalLatitude")</a></code>. Only applicable to non-
 spatial dataframes.</p></td>
     </tr>
     <tr>
@@ -235,11 +238,10 @@ Only evaluated if taxonRankCol is not <code>NULL</code></p></td>
 name (authors, years and intraspecific epithets). Default set to FALSE</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>An OrganizedBirds-class is essentially a list containing one element, a
@@ -256,13 +258,11 @@ on. Otherwise it will use the first variable as year, the second as month and
 the third as day, if there is a vector of length three or more. If the vector
 is of only length one it will interpret the column as a date column formatted
 as "yyyy-mm-dd".</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='createVisits.html'>createVisits</a></code> to create unique visits IDs,
  <code><a href='visits.html'>visits</a></code> to get or set the visit IDs to this class,
  <code><a href='obsData.html'>obsData</a></code> to retrieve the dataframe from this class.</p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>organizeBirds</span>(<span class='no'>bombusObs</span>)</div><div class='output co'>#&gt; $spdf
@@ -10277,18 +10277,15 @@ as "yyyy-mm-dd".</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -10296,13 +10293,16 @@ as "yyyy-mm-dd".</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

@@ -42,7 +42,7 @@ OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 SB <- summariseBirds(OB, grid=grid)
 ```  
 
-we see that SB contains an element called `SB$temporal` that contains a daily time series with time specific rows when there is information. `xts` also supports time, but dating below day resolution is not yet implementen in the `BIRDS` package.  
+we see that SB contains an element called `SB$temporal` that contains a daily time series with time specific rows when there is information. `xts` also supports time, but dating below day resolution is not yet implemented in the `BIRDS` package.  
 
 ```{r}
 sb.xts<-SB$temporal
@@ -61,7 +61,7 @@ sb.xts["2017-01-01/2017-05-01"] #for a period
 
 `xts` has several tools for converting to different periods. Here we will use `to.monthly`. This provides, the first, min, max, and last of the data. We can plot the daily maximum number of observations. The plot command with an `xts` object provides a TON of features. This makes it fairly easy to customize your plots. Read more in `?plot.xts`.  
 
-```{r monthly and plot, echo=TRUE, fig.height=7, fig.width=7, message=FALSE, warning=FALSE}
+```{r monthly and plot, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
 obs.m <- to.monthly(sb.xts$nObs) 
 obs.m["2017-04"]
 sb.xts["2017-04"]
@@ -69,7 +69,7 @@ sb.xts["2017-04"]
 plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month", major.ticks = "month", grid.col = "lightgrey", main = "Maximum number of daily observations per month")
 ```
 
-Only the month with data are ploted in this figure. What if we whant to complete the time series and plot all zeros too?
+Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too?
 in the original time series there is not data for every day, therefore the time series is incomplete. 
 
 ```{r completting, echo=TRUE, message=FALSE, warning=FALSE}
@@ -77,9 +77,9 @@ in the original time series there is not data for every day, therefore the time 
 rng <- range(time(sb.xts))
 sb.xts.na <- merge(sb.xts, xts(, seq(rng[1], rng[2], by = "day")))
 ```
-However, in our monthly example we may not need data for every day, but month, and this time we need 0s instead of NAs. Even more, we dont want to add zeros for the months we allready have data, because that will change the summary statistics. Then we add 0s for the months we have no data.
+However, in our monthly example we may not need data for every day, but month, and this time we need 0s instead of NAs. Even more, we don't want to add zeros for the months we already have data, because that will change the summary statistics. Then we add 0s for the months we have no data.
 
-```{r completting2, echo=TRUE, message=FALSE, warning=FALSE}
+```{r completting2, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
 z.seq <- seq(rng[1], rng[2], by = "month")
 YM.sb.xts<-unique(as.Date(as.yearmon(index(sb.xts))))
 YM.z.seq<-as.Date(as.yearmon(z.seq))
