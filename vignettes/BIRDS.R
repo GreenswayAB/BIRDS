@@ -60,7 +60,7 @@ legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell")
 ## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3--------------
 library(sp)
 wNonEmpty<-unname( which( unlist(lapply(SB$overlaid, nrow)) != 0) )
-EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
+EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 # because the dimension is "spatial", the result is a 'SpatialPolygonDataFrame'
 
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
@@ -74,6 +74,7 @@ mtext("Visited cells", 3, line=-1)
 plot(EB, col=palBW(EB@data$Jul), border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 mtext("Number of years for which \nJuly was sampled", 3, line=-2)
+
 plot(EB, col=palBW(EB@data$Dec), border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 mtext("Number of years for which \nDecember was sampled", 3, line=-2)
