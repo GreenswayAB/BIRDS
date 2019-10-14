@@ -69,7 +69,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
     } else if(timeRes == "month"){
       if(variable == "nYears"){
         if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-        tmp <- apply(sb$spatioTemporal[,,1:12, "nObs"], 2:3, function(x) sum(!is.na(x) & x!=0))
+        tmp <- apply(sb$spatioTemporal[,,1:12, "nObs"], c(1,3), function(x) sum(!is.na(x) & x!=0))
         spatial@data <- data.frame(round(tmp, 2))
       } else {
         if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
