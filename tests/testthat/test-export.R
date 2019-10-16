@@ -17,7 +17,7 @@ timeResVar<-c("NULL", "Yearly","Monthly", "Daily", "Month")
 varVar<-c("nObs", "nVis", "nSpp", "avgSll", "nYears", "nDays")
 methVar<-c("sum","median", "mean")
 
-exportShouldWork<-array(TRUE, dim=c(length(dimVar), length(timeResVar),length(varVar), length(methVar)),
+exportShouldWork<-array(TRUE, dim=c(length(dimVar), length(timeResVar), length(varVar), length(methVar)),
                         dimnames = list(dimVar, timeResVar, varVar, methVar))
 
 #nYears for Spatial FALSE
@@ -33,7 +33,7 @@ exportShouldWork["Temporal", "NULL",,]<-FALSE
 exportShouldWork["Temporal", c("NULL", "Yearly", "Monthly", "Daily"), "nYears",]<-FALSE
 
 #nDays FALSE
-exportShouldWork["Temporal", "Daily", "nDays",]<-FALSE
+# exportShouldWork["Temporal", "Daily", "nDays",]<-FALSE
 
 #Only sum for most
 exportShouldWork[,c("NULL", "Yearly","Monthly", "Daily"), c("nObs", "nVis", "nSpp", "nYears", "nDays"), c("median", "mean")]<-FALSE
@@ -54,15 +54,15 @@ test_that("Test valid export variables", {
         for(m in 1:length(methVar)){
           if(exportShouldWork[s,t,v,m]){
             if(timeResVar[t]=="NULL"){
-              expect_error(exportBirds(SB,!!dimVar[s],NULL,!!varVar[v],!!methVar[m]),NA)
+              expect_error(exportBirds(SB, !!dimVar[s], NULL, !!varVar[v], !!methVar[m]), NA)
             }else{
-              expect_error(exportBirds(SB,!!dimVar[s],!!timeResVar[t],!!varVar[v],!!methVar[m]),NA)
+              expect_error(exportBirds(SB, !!dimVar[s], !!timeResVar[t], !!varVar[v], !!methVar[m]), NA)
             }
           }else{
             if(timeResVar[t]=="NULL"){
-              expect_error(exportBirds(SB,!!dimVar[s],NULL,!!varVar[v],!!methVar[m]))
+              expect_error(exportBirds(SB, !!dimVar[s], NULL, !!varVar[v], !!methVar[m]))
             }else{
-              expect_error(exportBirds(SB,!!dimVar[s],!!timeResVar[t],!!varVar[v],!!methVar[m]))
+              expect_error(exportBirds(SB, !!dimVar[s], !!timeResVar[t], !!varVar[v], !!methVar[m]))
             }
           }
 

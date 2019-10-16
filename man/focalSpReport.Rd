@@ -4,7 +4,8 @@
 \alias{focalSpReport}
 \title{Summarise all records for a species}
 \usage{
-focalSpReport(x, focalSp = NULL, long = TRUE)
+focalSpReport(x, focalSp = NULL, long = TRUE, colVis = "grey",
+  colPres = "red", ...)
 }
 \arguments{
 \item{x}{an object of class \sQuote{SummarizeBirds}.}
@@ -12,6 +13,10 @@ focalSpReport(x, focalSp = NULL, long = TRUE)
 \item{focalSp}{the focal spp to look for.}
 
 \item{long}{whether the map should be long or wide.}
+
+\item{colVis}{color to plot visited gird cells}
+
+\item{colPres}{color to plot grid cells where species is present}
 }
 \value{
 a plot with a brief species summary

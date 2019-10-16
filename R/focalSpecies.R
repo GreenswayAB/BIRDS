@@ -86,6 +86,8 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param focalSp the focal spp to look for.
 #' @param long whether the map should be long or wide.
+#' @param colVis color to plot visited gird cells
+#' @param colPres color to plot grid cells where species is present
 #' @return a plot with a brief species summary
 #' @examples
 #' library(sp)
@@ -97,7 +99,7 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' focalSpReport(SB, focalSp=focal)
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-focalSpReport <- function(x, focalSp=NULL, long=TRUE){
+focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres = "red", ...){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
@@ -113,37 +115,37 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE){
   overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
-  yearRng <- range(yearsAll) 
+  yearRng <- range(yearsAll)
   yearMax <- max(yearsAll)
   yearMin <- min(yearsAll)
-  
+
   wNonEmptyFocal <- unname(which(unlist(lapply(overFocal, nrow))>0))
   nObs <- sum(unlist(lapply(overFocal[wNonEmptyFocal], nrow)))
-  visitsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], 
+  visitsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal],
                                       FUN=function(x) x[,visitCol]) ))
   nVis <- length(visitsFocal)
-  yearsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], 
+  yearsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal],
                               FUN=function(x) x[,"year"]) ))
-  yearsFocalTbl <- table( factor(yearsFocal, 
+  yearsFocalTbl <- table( factor(yearsFocal,
                              levels = yearsAll)
                         )
-  
-  monthsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], 
+
+  monthsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal],
                                       FUN=function(x) x[,"month"]) ))
-  monthsFocalTbl <- table( factor(monthsFocal, 
-                                  levels=1:12, 
+  monthsFocalTbl <- table( factor(monthsFocal,
+                                  levels=1:12,
                                   labels = month.abb[1:12])
                            )
-  
+
   reportStrg <- paste0("Number of observations: ", nObs)
 
   layout(matrix(c(1,2,1,3), nrow = 2, byrow = long))
   par(mar=c(1,1,1,1))
-  plot(x$spatial[wNonEmpty,], col="grey", border = NA, )
-  plot(x$spatial[wNonEmptyFocal,], col="red", border = NA, add=TRUE)
+  plot(x$spatial[wNonEmpty,], col = colVis, border = NA, ...)
+  plot(x$spatial[wNonEmptyFocal,], col = colPres, border = NA, add=TRUE)
   mtext(focalSp, side=3, font = 3, line = -.5)
   mtext(reportStrg, side=3, font = 1, line = -1.5, cex = .8)
-  legend("bottomleft", legend=c("visited", "present"), col = c("grey", "red"), pch = 15, bty="n")
+  legend("bottomleft", legend=c("visited", "present"), col = c(colVis, colPres), pch = 15, bty="n")
 
   par(mar=c(3,4,1,1))
   barplot(yearsFocalTbl, ylab = "n. visits", las=2)

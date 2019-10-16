@@ -41,11 +41,11 @@ relObs<-EBnObs/EBnVis
 
 ## ----figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."----
 par(mar=c(4,4,1,6), las=1)
-plot(names(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
+plot(time(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
      ylim=c(0, max(EBnObs)), xaxp=c(2000, 2018, 18))
-lines(names(EBnObs), EBnVis, lwd=3, lty=2)
-lines(names(EBnObs), relObs*max(EBnObs)/max(relObs), lwd=3, lty=1, col="#78D2EB")
-lines(names(EBnObs), EBavgSll*max(EBnObs)/max(EBavgSll), lwd=3, lty=1, col="#FFB3B5")
+lines(time(EBnObs), EBnVis, lwd=3, lty=2)
+lines(time(EBnObs), relObs * max(EBnObs) / max(relObs), lwd=3, lty=1, col="#78D2EB")
+lines(time(EBnObs), EBavgSll * max(EBnObs) / max(EBavgSll), lwd=3, lty=1, col="#FFB3B5")
 axis(4, at = seq(0, max(EBnObs), length.out = 5), 
      labels = round(seq(0,max(relObs), length.out = 5), 1), 
      lwd = 2, col = "#78D2EB", col.ticks = "#78D2EB")
@@ -60,7 +60,7 @@ legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell")
 ## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3--------------
 library(sp)
 wNonEmpty<-unname( which( unlist(lapply(SB$overlaid, nrow)) != 0) )
-EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
+EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 # because the dimension is "spatial", the result is a 'SpatialPolygonDataFrame'
 
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
@@ -74,6 +74,7 @@ mtext("Visited cells", 3, line=-1)
 plot(EB, col=palBW(EB@data$Jul), border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 mtext("Number of years for which \nJuly was sampled", 3, line=-2)
+
 plot(EB, col=palBW(EB@data$Dec), border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 mtext("Number of years for which \nDecember was sampled", 3, line=-2)
