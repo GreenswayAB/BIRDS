@@ -60,7 +60,7 @@ adding to each observation a unique identifier for the assumed visit (sampling e
 it belongs to, given some input parameters. The function `organizeBirds()` will interpret 
 the DarwinCore standard for column names as default, but other names can be specified 
 too. For more details on how a visit is defined and options for each function please
-refer to the [technical vignette](./vignettes/technical_details.pdf) and to 
+refer to the [technical vignette](https://greensway.github.io/BIRDS/articles/technical_details.html) and to 
 each function's help page.  
 
 Then, the function `summariseBirds()` will overlay the data with a given spatial

@@ -108,7 +108,7 @@ Hence, the quality (completeness) of the data can be judged by using information
 for each visit and information from a collection of visits. 
 
 You can examine this in the 
-[technical details](https://greensway.github.io/BIRDS/articles/technical-details.html)
+[technical details](https://greensway.github.io/BIRDS/articles/technical_details.html)
 vignette.
 
 ##### Spatial grid and spillover
@@ -119,7 +119,7 @@ Sometimes locations can be more accurate positions for individuals of species th
 
 If there is no common spatial identifier to define the visit extent, and the observer id is not enough to constrain observations spatially (e.g. group of observers from organisation where observer id = organisation name), then visits can be created *when* overlaying the observation data with the spatial grid. A visit is then defined as all the observations falling into the same grid cell. It is important to keep in mind to choose a grid with a cell size that corresponds to (or at least is not smaller than) the average spatial extent known (or assumed) to be typical for field visits for the reference species group (see below). This process can be repeated with a set of grids with different offset to explore the sensitivity of the results to the size of the grid cells. 
 
-You can examine this in the [technical details](https://greensway.github.io/BIRDS/articles/technical-details.html) vignette.
+You can examine this in the [technical details](https://greensway.github.io/BIRDS/articles/technical_details.html) vignette.
 
 
 ##### Reference species group

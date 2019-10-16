@@ -102,7 +102,7 @@
       <h1>Introduction to BIRDS</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2019-10-11</h4>
+            <h4 class="date">2019-10-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/BIRDS.Rmd"><code>vignettes/BIRDS.Rmd</code></a></small>
       <div class="hidden name"><code>BIRDS.Rmd</code></div>
@@ -138,7 +138,7 @@
 <li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>
 <li>date of the observation (either in one formatted column or three columns y-m-d)</li>
 </ol>
-<p>The function <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code><a href="../reference/organizeBirds.html">organizeBirds()</a></code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="./vignettes/technical_details.pdf">technical vignette</a> and to each function’s help page.</p>
+<p>The function <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code><a href="../reference/organizeBirds.html">organizeBirds()</a></code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="https://greensway.github.io/BIRDS/articles/technical_details.html">technical vignette</a> and to each function’s help page.</p>
 <p>Then, the function <code><a href="../reference/summarizeBirds.html">summariseBirds()</a></code> will overlay the data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, and spatio-temporally, and also provide other intermediate results useful for later analyses. Finally, the function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
 <p>We use as an example a data set consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The data set <code>bombusObs</code> is part of this package and its metadata can be found in the data set help page <code><a href="../reference/bombusObs.html">?bombusObs</a></code>.</p>
 <p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>
