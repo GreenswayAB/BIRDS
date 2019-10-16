@@ -182,4 +182,5 @@ A short introductory [video can be found here](https://www.dropbox.com/s/fxg1t9v
 ### In the TODO LIST
 Check [here](https://github.com/Greensway/BIRDS/projects/1) for a list of future features to be added, and don't hesitate sending your suggestions by [e-mail](mailto:alejandro@greensway.se) 
 
-
+### Acknowledgements
+The development of the BIRDS package is part of a project 'Using opportunistic citizen science data for evaluations of environmental change' financed by the Swedish Research Council Formas.
