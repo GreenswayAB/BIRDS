@@ -13,7 +13,7 @@
 
 <meta name="author" content="Alejandro Ruete and Debora Arlt" />
 
-<meta name="date" content="2019-10-14" />
+<meta name="date" content="2019-10-18" />
 
 <title>Introduction to BIRDS</title>
 
@@ -306,22 +306,16 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Introduction to BIRDS</h1>
 <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
-<h4 class="date">2019-10-14</h4>
+<h4 class="date">2019-10-18</h4>
 
 
 
 <div id="installing-birds" class="section level2">
 <h2>Installing <code>BIRDS</code></h2>
 <p>The package <code>BIRDS</code> is currently available on GitHub and you can freely download the source code here <a href="https://github.com/Greensway/BIRDS">BIRDS on GitHub</a></p>
-<p>The easiest option is to install the package directly from GitHub using the package <code>devtools</code>. Install <code>devtools</code> if you do not already have installed it. <code>devtools</code> may have some other dependencies. Please visits the following webpages to be sure you are on the right track:</p>
-<ul>
-<li><a href="https://www.r-project.org/nosvn/pandoc/devtools.html">devtools</a><br />
-</li>
-<li><a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></li>
-</ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">&#39;devtools&#39;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(devtools)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">install_github</span>(<span class="st">&#39;Greensway/BIRDS&#39;</span>)</span></code></pre></div>
+<p>The easiest option is to install the package directly from GitHub using the package <code>remotes</code>. Install <code>remotes</code> if you do not already have installed it.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">&#39;remotes&#39;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;Greensway/BIRDS&#39;</span>)</span></code></pre></div>
 <p>If you receive an error we would love to receive your bug report <a href="https://github.com/Greensway/BIRDS/issues">here</a></p>
 </div>
 <div id="basic-example-and-data-requirements" class="section level2">
@@ -333,7 +327,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>
 <li>date of the observation (either in one formatted column or three columns y-m-d)</li>
 </ol>
-<p>The function <code>organiseBirds()</code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code>organizeBirds()</code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="./vignettes/technical_details.pdf">technical vignette</a> and to each function’s help page.</p>
+<p>The function <code>organiseBirds()</code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code>organizeBirds()</code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="https://greensway.github.io/BIRDS/articles/technical_details.html">technical vignette</a> and to each function’s help page.</p>
 <p>Then, the function <code>summariseBirds()</code> will overlay the data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, and spatio-temporally, and also provide other intermediate results useful for later analyses. Finally, the function <code>exportBirds()</code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
 <p>We use as an example a data set consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The data set <code>bombusObs</code> is part of this package and its metadata can be found in the data set help page <code>?bombusObs</code>.</p>
 <p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>

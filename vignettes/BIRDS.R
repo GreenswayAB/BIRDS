@@ -5,9 +5,8 @@ knitr::opts_chunk$set(
 )
 
 ## ----install package, eval = F-------------------------------------------
-#  install.packages('devtools')
-#  library(devtools)
-#  install_github('Greensway/BIRDS')
+#  install.packages('remotes')
+#  remotes::install_github('Greensway/BIRDS')
 
 ## ----basic example, eval = TRUE------------------------------------------
 library(BIRDS)

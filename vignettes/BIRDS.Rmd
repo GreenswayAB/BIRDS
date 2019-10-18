@@ -28,7 +28,6 @@ package `remotes`.  Install `remotes` if you do not already have installed it.
 ```{r install package, eval = F}
 install.packages('remotes')
 remotes::install_github('Greensway/BIRDS')
-library(BIRDS)
 ```
 
 If you receive an error we would love to receive your bug report 
@@ -73,6 +72,7 @@ You can easily create a grid over a sample area (i.e. `gotaland`), organize and
 summarize the data, and export the variables you want to plot:
 
 ```{r basic example, eval = TRUE}
+library(BIRDS)
 # Create a grid for your sample area that will be used to summarise the data:
 grid <- makeGrid(gotaland, gridSize = 10)
 # The grid can be easily created in different ways. 
