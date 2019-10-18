@@ -49,26 +49,15 @@ how to install this package into R.
 ### How to install `BIRDS`
 
 This package is still not published in CRAN. Therefore the easiest option to 
-install it is directly from GitHub using the package `devtools`. 
+install it is directly from GitHub using the package `remotes`. 
 
-Install devtools if you do not already have installed it:
-```r
-install.packages('devtools')
-library(devtools)
-```
-`devtools` may have some other dependencies. Please visits the following webpages 
-to be sure you are on the right track:
-
-* [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html)  
-* [Rtools](https://cran.r-project.org/bin/windows/Rtools/) 
-
-Now you should be ready to go with the `BIRDS` install:
+Install `remotes` if you do not already have installed it:
 
 ```r
-devtools::install_github('Greensway/BIRDS')
+install.packages('remotes')
+remotes::install_github('Greensway/BIRDS')
 library(BIRDS)
 ```
-
 
 ### Concepts and methods
 
