@@ -72,11 +72,10 @@ organizeDate <- function(date, cols){
 #'
 #' Removes infraspecific epithets, authors and years from scientific names
 #'
-#' @param df A dataframe with at least the columns specified in cols
+#' @param df A dataframe with at least the column specified in sppCol
 #' @param sppCol A character vector with the column names for the species names.
 #' @return A vector vith data.frame with a scientific names up to specific names
 #' @export
-#' @keywords internal
 simplifySpp <- function(df, sppCol){
   splitLits<-strsplit(as.character(df[, sppCol]), "\ ")
 
@@ -298,6 +297,7 @@ obsData.OrganizedBirds<-function(x){
 #' @examples organizeBirds(bombusObs)
 #' @seealso \code{\link{createVisits}} to create unique visits IDs,
 #'  \code{\link{visits}} to get or set the visit IDs to this class,
+#'  \code{\link{simplifySpp}} to simplify species names,
 #'  \code{\link{obsData}} to retrieve the dataframe from this class.
 #' @aliases organiseBirds
 organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year", "Month"="month", "Day"="day"),
