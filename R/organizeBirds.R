@@ -332,25 +332,6 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
   # Simplify species names to reduce epitets and author names
   if (!is.null(simplifySppName) && simplifySppName == TRUE){
     df[, sppCol] <- simplifySpp(df, sppCol)
-
-    # splitLits<-strsplit(as.character(df[, sppCol]), "\ ")
-    #
-    # simpleNamesList<-lapply(splitLits, FUN=function(x){
-    #   if (length(x)==1){ # Only genus
-    #     return(x)
-    #   }
-    #   if (length(x)>=2){ # Genus and more
-    #   #   return(paste(x[1:2], collapse=" ")  )
-    #   # }
-    #   # if (length(x)==2){
-    #     if(grepl("(?!-)(?!/)[[:punct:]]|[A-Z]", x[2], perl = TRUE)){ # Genus and more (find punctuation except for - and /)
-    #       return(x[1])
-    #     } else {
-    #       return(paste(x[1:2], collapse=" ")  ) # only species
-    #     }
-    #   }
-    # } )
-    # df[, sppCol]<-unlist(simpleNamesList)
   }
 
 
