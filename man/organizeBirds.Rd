@@ -94,5 +94,6 @@ organizeBirds(bombusObs)
 \seealso{
 \code{\link{createVisits}} to create unique visits IDs,
  \code{\link{visits}} to get or set the visit IDs to this class,
+ \code{\link{simplifySpp}} to simplify species names,
  \code{\link{obsData}} to retrieve the dataframe from this class.
 }
