@@ -67,6 +67,36 @@ organizeDate <- function(date, cols){
 
 }
 
+
+#' Simplify species names
+#'
+#' Removes infraspecific epithets, authors and years from scientific names
+#'
+#' @param df A dataframe with at least the columns specified in cols
+#' @param sppCol A character vector with the column names for the species names.
+#' @return A vector vith data.frame with a scientific names up to specific names
+#' @export
+#' @keywords internal
+simplifySpp <- function(df, sppCol){
+  splitLits<-strsplit(as.character(df[, sppCol]), "\ ")
+
+  simpleNamesList<-lapply(splitLits, FUN=function(x){
+    if (length(x)==1){ # Only genus
+      return(x)
+    }
+    if (length(x)>=2){ # Genus and more
+      if(grepl("(?!-)(?!/)[[:punct:]]|[A-Z]", x[2], perl = TRUE)){ # Genus and more (find punctuation except for - and /)
+        return(x[1])
+      } else {
+        return(paste(x[1:2], collapse=" ")  ) # only species
+      }
+    }
+  } )
+  simpleSpp <- unlist(simpleNamesList)
+  return(simpleSpp)
+}
+
+
 ### HANDLE THE VISITS ###
 
 #' Create unique visits IDs
@@ -306,25 +336,27 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
   }
 
   # Simplify species names to reduce epitets and author names
-  if (!is.null(simplifySppName)){
-    splitLits<-strsplit(as.character(df[, sppCol]), "\ ")
+  if (!is.null(simplifySppName) && simplifySppName == TRUE){
+    df[, sppCol] <- simplifySpp(df, sppCol)
 
-    simpleNamesList<-lapply(splitLits, FUN=function(x){
-      if (length(x)==1){ # Only genus
-        return(x)
-      }
-      if (length(x)>=2){ # Genus and more
-      #   return(paste(x[1:2], collapse=" ")  )
-      # }
-      # if (length(x)==2){
-        if(grepl("(?!-)(?!/)[[:punct:]]|[A-Z]", x[2], perl = TRUE)){ # Genus and more (find punctuation except for - and /)
-          return(x[1])
-        } else {
-          return(paste(x[1:2], collapse=" ")  ) # only species
-        }
-      }
-    } )
-    df[, sppCol]<-unlist(simpleNamesList)
+    # splitLits<-strsplit(as.character(df[, sppCol]), "\ ")
+    #
+    # simpleNamesList<-lapply(splitLits, FUN=function(x){
+    #   if (length(x)==1){ # Only genus
+    #     return(x)
+    #   }
+    #   if (length(x)>=2){ # Genus and more
+    #   #   return(paste(x[1:2], collapse=" ")  )
+    #   # }
+    #   # if (length(x)==2){
+    #     if(grepl("(?!-)(?!/)[[:punct:]]|[A-Z]", x[2], perl = TRUE)){ # Genus and more (find punctuation except for - and /)
+    #       return(x[1])
+    #     } else {
+    #       return(paste(x[1:2], collapse=" ")  ) # only species
+    #     }
+    #   }
+    # } )
+    # df[, sppCol]<-unlist(simpleNamesList)
   }
 
 
