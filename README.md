@@ -2,7 +2,6 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-
 ### A set of tools for Biodiversity Informatics in R 
 This is the Biodiversity Information Review and Decision Support package for R!  
 **NB**: BIRDS is an acronym. This packages is not limited to birds' data (i.e. Aves) :smiley:  
@@ -10,6 +9,9 @@ This is the Biodiversity Information Review and Decision Support package for R!
 This repository hosts an R package that is being developed for systematizing biodiversity
 data review in order to evaluate whether a set of species observation data is 
 fit-for-use and help take decisions upon its use of for further analysis.  
+
+This R-package was awarded the Third Prize on the [2019 GBIF Ebbe Nielsen Challenge](https://www.gbif.org/en/news/2mixX9oDrJI2W3AqPFOxI3/wherenext-wins-2019-gbif-ebbe-nielsen-challenge#birds) 
+for which it was developed.
 
 The `BIRDS` package provides a set of tools to review biodiversity data in order 
 to understand data quality in terms of completeness, and the data generation 
