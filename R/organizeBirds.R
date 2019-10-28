@@ -343,13 +343,6 @@ organizeBirds<-function(x,
 
   time<-organizeDate(df, timeCol)
 
-  ## clean unreadable dates
-  wNA <- is.na(df$year)
-  if (sum(wNA)>1){
-    df <- df[-wNA,]
-    print(paste(length(wNA), " records deleted"))
-  }
-
   sp<-df[sppCol]
 
   visitUID<-createVisits(df, visitsIdentifier)
@@ -365,6 +358,13 @@ organizeBirds<-function(x,
   colnames(df)[1]<-"scientificName"
 
   x@data<-df
+
+  ## clean unreadable dates
+  wNA <- is.na(df$year)
+  if (sum(wNA)>1){
+    x <- x[-wNA,]
+    print(paste(length(wNA), " records deleted"))
+  }
 
   res<-list(x)
 
