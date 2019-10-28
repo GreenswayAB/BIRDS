@@ -108,8 +108,8 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
     }
   }
   visitStat$date <- as.Date(paste(visitStat$year, visitStat$month, visitStat$day, sep="-"), format = "%Y-%m-%d")
-  visitStat$monthAb <- as.factor(months(visitStat$date))
-  levels(visitStat$monthAb) <- month.name
+  visitStat$Month <- as.factor(months(visitStat$date))
+  levels(visitStat$Month) <- month.name
 
   cat(paste("Finished analysing", nUID, "visits."))
   return(visitStat)
