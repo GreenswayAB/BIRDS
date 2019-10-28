@@ -2,10 +2,10 @@
 #'
 #' Organize the date-column(s) in a dataframe to three columns
 #'
-#' @param date A dataframe with at least the columns specified in cols
+#' @param x A dataframe with at least the columns specified in cols
 #' @param cols A character vector with the column names for the dates specified.
 #'   It can either be one column formatted as "yyyy-mm-dd" or a vector of
-#'   length=3. If the vector is named as "year", "month", "day" it will take
+#'   length=3. If the column names are "year", "month" and "day" it will take
 #'   these column names. Otherwise, it will take the column names and interpret
 #'   the first as year, the second as month and the third as day.
 #'
@@ -15,50 +15,47 @@
 #' ymd<-as.Date(Sys.Date())+1:5
 #' organizeDate(as.data.frame(ymd), "ymd")
 #' @keywords internal
-organizeDate <- function(date, cols){
+organizeDate <- function(x, cols){
+  if (!length(cols) %in% c(1,3)) stop("Could not create date, please specify wither one or three column names")
+  stdTimeCols<-c("year", "month", "day")
 
-  names(cols)<-tolower(names(cols))
+  if (all(cols %in% colnames(x))){
+    x<-x[,cols]
+    cols<-tolower(cols)
+    colnames(x)<-tolower(colnames(x))
 
-  dateVector<-array(dim=c(nrow(date), 3), dimnames = list(c(),c("year", "month", "day")))
-
-  if(length(cols)==3){
-    if(any(names(cols) == "year", na.rm = TRUE) & any(names(cols) == "month", na.rm = TRUE) & any(names(cols) == "day", na.rm = TRUE)){
-      dateVector[,"year"]<-date[cols["year"]][[1]]
-      dateVector[,"month"]<-date[cols["month"]][[1]]
-      dateVector[,"day"]<-date[cols["day"]][[1]]
-    }else{
-      dateVector[,"year"]<-date[cols[1]][[1]]
-      dateVector[,"month"]<-date[cols[2]][[1]]
-      dateVector[,"day"]<-date[cols[3]][[1]]
-    }
-
-    date<-apply(dateVector, 1, paste0, collapse = "-")
-
-    date<-array(date, dim=c(length(date), 1), dimnames = list(c(),c("ymd")))
-
-    cols<-"ymd"
-  }
-
-  if(length(cols)==1){
-
-    res<-array(dim= c(0,3), dimnames = list(c(),c("year", "month", "day")))
-
-    for(i in 1:nrow(date)){
-
-      d<-tryCatch(as.Date(date[i,cols[1]]),
-                  error=function(e){
-                    stop(paste0("Could not create date for row: ",i))
-                  })
-      if(d==0){
-        stop("Could not create date")
+    if(length(cols)==3){
+      if(all(stdTimeCols %in% cols)){
+        print("just keep going")
+      } else if(any(stdTimeCols %in% cols)){
+        wColNot<-which(!(cols %in% stdTimeCols))
+        for(i in 1:length(wColNot)){
+          x$placeholder <- as.matrix(x[, cols[wColNot]])
+          names(x)[names(x) == "placeholder"] <- stdTimeCols[wColNot[i]]
+        }
+      } else { #if(!any(stdTimeCols %in% cols)){
+        x$year  <- x[,cols[1]]
+        x$month <- x[,cols[2]]
+        x$day   <- x[,cols[3]]
       }
-      res<-rbind(res,c(lubridate::year(d), lubridate::month(d), lubridate::day(d)))
-    }
-    return(res)
-  }else{
-    stop("Could not create date")
-  }
 
+      x$day<-ifelse(is.na(x$day), 1, x$day)
+      x$month<-ifelse(is.na(x$month), 1, x$month)
+      return(x)
+    }
+    if(length(cols) == 1){
+      dateVector<-array(dim=c(nrow(x), 3), dimnames = list(c(), stdTimeCols))
+      dateYMD <- as.Date(x[,cols])
+
+      x$year  <- lubridate::year(dateYMD)
+      x$month <- lubridate::month(dateYMD)
+      x$day   <- lubridate::day(dateYMD)
+
+      return(x)
+    }
+  } else {
+    stop("One or more specified column names are not present in the input data frame")
+  }
 }
 
 
@@ -259,9 +256,9 @@ obsData.OrganizedBirds<-function(x){
 #'  columns.
 #' @param sppCol A character string with the column name for the column for the
 #' species names. Default is the Darwin Core standard name \code{"scientificName"}.
-#'@param timeCol A character vector (named or not) of the names for the
-#'  column(s) which is holding the observation dates. Default is the Darwin Core
-#'  standard column names \code{c("Year"="year", "Month"="month", "Day"="day")}.
+#'@param timeCol A character vector with the names for the column(s) holding the
+#' observation dates. Default is the Darwin Core standard column names
+#' \code{c("year", "month", "day")}.
 #' @param visitsIdentifier A character vector of the names for the columns that
 #'  are holding the information that identifies a visit. Default is the Darwin
 #'  Core standard column names \code{c("locality", "day", "month", "year",
@@ -294,10 +291,16 @@ obsData.OrganizedBirds<-function(x){
 #'  \code{\link{simplifySpp}} to simplify species names,
 #'  \code{\link{obsData}} to retrieve the dataframe from this class.
 #' @aliases organiseBirds
-organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year", "Month"="month", "Day"="day"),
-                        visitsIdentifier = c("locality", "day", "month", "year", "recordedBy"), presenceCol=NULL,
-                        xyCols=c("decimalLongitude", "decimalLatitude"), dataCRS = "+init=epsg:4326",
-                        taxonRankCol=NULL, taxonRank=c("SPECIES","SUBSPECIES","VARIETY"), simplifySppName=FALSE){
+organizeBirds<-function(x,
+                        sppCol = "scientificName",
+                        timeCol = c("year", "month", "day"),
+                        visitsIdentifier = c("locality", "day", "month", "year", "recordedBy"),
+                        presenceCol=NULL,
+                        xyCols=c("decimalLongitude", "decimalLatitude"),
+                        dataCRS = "+init=epsg:4326",
+                        taxonRankCol=NULL,
+                        taxonRank=c("SPECIES","SUBSPECIES","VARIETY"),
+                        simplifySppName=FALSE){
 
   # Check the type of data
   if(any(class(x) == "data.frame")){
@@ -315,6 +318,10 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
   }
 
   df<-x@data
+
+  if (any(duplicated(colnames(df)))){
+    stop("There are duplicated column names in the dataset")
+  }
 
   # Check if user wants to leave a certain level
   if (!is.null(taxonRankCol)){
@@ -334,10 +341,16 @@ organizeBirds<-function(x, sppCol = "scientificName", timeCol = c("Year"="year",
     df[, sppCol] <- simplifySpp(df, sppCol)
   }
 
+  time<-organizeDate(df, timeCol)
+
+  ## clean unreadable dates
+  wNA <- is.na(df$year)
+  if (sum(wNA)>1){
+    df <- df[-wNA,]
+    print(paste(length(wNA), " records deleted"))
+  }
 
   sp<-df[sppCol]
-
-  time<-organizeDate(df[timeCol], timeCol)
 
   visitUID<-createVisits(df, visitsIdentifier)
 

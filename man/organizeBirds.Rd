@@ -5,17 +5,17 @@
 \alias{organiseBirds}
 \title{Organize a dataframe to a usable format}
 \usage{
-organizeBirds(x, sppCol = "scientificName", timeCol = c(Year = "year",
-  Month = "month", Day = "day"), visitsIdentifier = c("locality", "day",
-  "month", "year", "recordedBy"), presenceCol = NULL,
+organizeBirds(x, sppCol = "scientificName", timeCol = c("year",
+  "month", "day"), visitsIdentifier = c("locality", "day", "month",
+  "year", "recordedBy"), presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
   dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
   simplifySppName = FALSE)
 
-organiseBirds(x, sppCol = "scientificName", timeCol = c(Year = "year",
-  Month = "month", Day = "day"), visitsIdentifier = c("locality", "day",
-  "month", "year", "recordedBy"), presenceCol = NULL,
+organiseBirds(x, sppCol = "scientificName", timeCol = c("year",
+  "month", "day"), visitsIdentifier = c("locality", "day", "month",
+  "year", "recordedBy"), presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
   dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
@@ -30,9 +30,9 @@ columns.}
 \item{sppCol}{A character string with the column name for the column for the
 species names. Default is the Darwin Core standard name \code{"scientificName"}.}
 
-\item{timeCol}{A character vector (named or not) of the names for the
-column(s) which is holding the observation dates. Default is the Darwin Core
-standard column names \code{c("Year"="year", "Month"="month", "Day"="day")}.}
+\item{timeCol}{A character vector with the names for the column(s) holding the
+observation dates. Default is the Darwin Core standard column names
+\code{c("year", "month", "day")}.}
 
 \item{visitsIdentifier}{A character vector of the names for the columns that
 are holding the information that identifies a visit. Default is the Darwin
