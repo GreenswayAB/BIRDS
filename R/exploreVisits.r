@@ -84,6 +84,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
   visitStat$month<- summarise(datGBY, mon = as.character(unique(month)))$mon
   visitStat$year <- summarise(datGBY, yea = as.character(unique(year)))$yea
   rm(datGBY)
+
   ### TODO? can this lapply be done with dplyr?
   ctr <- lapply(uniqueUID, FUN = function(x){
     wVis <- which(dat[, visitCol] == x)
