@@ -57,7 +57,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
 
-  tbl <- table(dat[, visitCol])
+  # tbl <- table(dat[, visitCol])
   # identical(names(tbl), as.character(uniqueUID))
 
   visitStat <- data.frame("visitUID" = uniqueUID,
@@ -68,7 +68,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
                           "date" = NA,
                           "centroidX" = NA,
                           "centroidY" = NA,
-                          "nObs"= as.numeric(tbl), # number of records per visit, NOT species list length
+                          "nObs"= NA, # number of records per visit, NOT species list length  #as.numeric(tbl),
                           "SLL" = NA, # species list length, i.e. number of observed species
                           "effortDiam" = NA, # the diameter of the minumum circle that covers all points, in meters
                           "medianDist" = NA, # the median (Q2) of the distances between the centroid and all points
@@ -76,41 +76,90 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
                           "nOutliers" = NA) # number of observations estimated to be outliers
 
   cat(paste("Analysing", nUID, "visits..."))
+  datGBY <- group_by(dat, !!! rlang::syms(visitCol))
 
-  for(i in 1:nUID){
-    wVis <- which(dat[, visitCol] == uniqueUID[i])
-    visitStat$SLL[i]  <- length(unique(as.character(dat[wVis, sppCol])))
-    visitStat$day[i]  <- as.numeric(unique(dat[wVis, "day"]))
-    visitStat$month[i] <- as.numeric(unique(dat[wVis, "month"]))
-    visitStat$year[i] <- as.numeric(unique(dat[wVis, "year"]))
+  visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
+  visitStat$SLL  <- summarise(datGBY, nSpp= n_distinct(scientificName)  )$nSpp
+  visitStat$day  <- summarise(datGBY, day = as.character(unique(day)))$day
+  visitStat$month<- summarise(datGBY, mon = as.character(unique(month)))$mon
+  visitStat$year <- summarise(datGBY, yea = as.character(unique(year)))$yea
+  rm(datGBY)
+  ### TODO? can this lapply be done with dplyr?
+  ctr <- lapply(uniqueUID, FUN = function(x){
+    wVis <- which(dat[, visitCol] == x)
 
     coord <- sp::coordinates(spdf[wVis, ])
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
     ctr <- rgeos::gCentroid(spdf[wVis,])
-    visitStat$centroidX[i] <- ctr@coords[1]
-    visitStat$centroidY[i] <- ctr@coords[2]
+    centroidX <- ctr@coords[1]
+    centroidY <- ctr@coords[2]
 
     if (nrow(coordUnique) > 1) {
-      distances<-geosphere::distGeo(ctr, coordUnique)
+      distances<-geosphere::distGeo(ctr, coord)
 
       # That could be the diameter of the minumum circle that covers all points
-      visitStat$effortDiam[i] <- round(max(distances) * 2, 0)
-      visitStat$medianDist[i] <- round(median(distances), 2)
-      visitStat$iqrDist[i]    <- round(IQR(distances), 2)
-      visitStat$nOutliers[i]  <- length(boxplot.stats(distances)$out)
+      effortDiam <- round(max(distances) * 2, 0)
+      medianDist <- round(median(distances), 0)
+      iqrDist    <- round(IQR(distances), 0)
+      nOutliers  <- length(boxplot.stats(distances)$out)
     } else {
-      visitStat$effortDiam[i] <- 0
-      visitStat$medianDist[i] <- 0
-      visitStat$iqrDist[i]    <- 0
-      visitStat$nOutliers[i]  <- 0
+      effortDiam <- 1
+      medianDist <- 1
+      iqrDist    <- 0
+      nOutliers  <- 0
     }
-  }
+    return(list(centroidX, centroidY, effortDiam, medianDist, iqrDist,nOutliers))
+  } )
+
+  tmp<-matrix(unlist(ctr), ncol = 6, byrow = TRUE)
+
+  visitStat$centroidX <- tmp[,1]
+  visitStat$centroidY <- tmp[,2]
+  visitStat$effortDiam <- tmp[,3]
+  visitStat$medianDist <- tmp[,4]
+  visitStat$iqrDist    <- tmp[,5]
+  visitStat$nOutliers  <- tmp[,6]
+
+  {#
+  # for(i in 1:nUID){
+  #   wVis <- which(dat[, visitCol] == uniqueUID[i])
+  #   visitStat$SLL[i]  <- length(unique(as.character(dat[wVis, sppCol])))
+  #   visitStat$day[i]  <- as.numeric(unique(dat[wVis, "day"]))
+  #   visitStat$month[i] <- as.numeric(unique(dat[wVis, "month"]))
+  #   visitStat$year[i] <- as.numeric(unique(dat[wVis, "year"]))
+  #
+  #   coord <- sp::coordinates(spdf[wVis, ])
+  #   coordPaste <- apply(coord, 1, paste0, collapse = ",")
+  #   coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
+  #
+  #   ctr <- rgeos::gCentroid(spdf[wVis,])
+  #   visitStat$centroidX[i] <- ctr@coords[1]
+  #   visitStat$centroidY[i] <- ctr@coords[2]
+  #
+  #   if (nrow(coordUnique) > 1) {
+  #     distances<-geosphere::distGeo(ctr, coord)
+  #
+  #     # That could be the diameter of the minumum circle that covers all points
+  #     visitStat$effortDiam[i] <- round(max(distances) * 2, 0)
+  #     visitStat$medianDist[i] <- round(median(distances), 2)
+  #     visitStat$iqrDist[i]    <- round(IQR(distances), 2)
+  #     visitStat$nOutliers[i]  <- length(boxplot.stats(distances)$out)
+  #   } else {
+  #     visitStat$effortDiam[i] <- 0
+  #     visitStat$medianDist[i] <- 0
+  #     visitStat$iqrDist[i]    <- 0
+  #     visitStat$nOutliers[i]  <- 0
+  #   }
+  # }
+  } ### for loop is slower in this case
+
+
   visitStat$date <- as.Date(paste(visitStat$year, visitStat$month, visitStat$day, sep="-"), format = "%Y-%m-%d")
   visitStat$Month <- as.factor(months(visitStat$date))
   levels(visitStat$Month) <- month.name
 
-  cat(paste("Finished analysing", nUID, "visits."))
+  cat(paste("Finished analysing", nUID, "visits.\n"))
   return(visitStat)
 }
