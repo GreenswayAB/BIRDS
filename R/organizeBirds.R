@@ -119,7 +119,7 @@ createVisits<-function(x, columns=c("locality", "day", "month", "year", "recorde
 
   if(any(class(x)=="data.frame")){
     return(as.integer(factor(apply(x[columns], 1, paste0, collapse=""))))
-  }else if (class(x)=="OrganizedBirds-class"){
+  }else if (class(x)=="OrganizedBirds"){
     return(as.integer(factor(apply(x$spdf@data[columns], 1, paste0, collapse=""))))
   }else{
     stop("x must be a 'data.frame' or an 'OrganizedBirds'")
