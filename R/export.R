@@ -40,6 +40,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
   resRowNames <- rownames(spatial@data)
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
   visitCol <- attr(sb, "visitCol")
+  if (variable == "nCells") stop("This combination of variable and dimension is not defined")
 
   if(variable %in% c("nObs", "nVis","nSpp","nDays", "nYears")){
     if (is.null(timeRes)){
@@ -190,6 +191,15 @@ getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
   return(res)
 }
 
+## a function to count pixels with data
+countIfHigher <- function(x, thr, na.rm = TRUE) {
+
+  tmp <- ifelse(x>=thr, 1, 0)
+  tmp.sum <- sum(tmp, na.rm=na.rm)
+  return(tmp.sum)
+
+}
+
 
 exportTemporal <- function(sb, timeRes, variable, method){
   if(variable == "nYears" & timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
@@ -198,6 +208,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
   visitCol <- attr(sb, "visitCol")
   obsData <- deconstructOverlay(sb$overlaid, attr(sb, "visitCol"))
 
+  ## Grouping
   if(timeRes=="yearly"){
     gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll), .drop=FALSE)
   } else if(timeRes %in% c("monthly", "month")){
@@ -211,14 +222,16 @@ exportTemporal <- function(sb, timeRes, variable, method){
     stop(paste0("Unknown timeRes: ", timeRes ))
   }
 
-  res <- summarise(gby,
-                 nObs=n(),
-                 nVis=n_distinct(!!dplyr::sym(visitCol)),
-                 nSpp=n_distinct(scientificName),
-                 nDays=n_distinct(paste0(year,month,day)))
-  if(timeRes=="daily") res <- removeInexDays(res)
-
   if (variable %in% c("nObs", "nVis","nSpp","nDays")){
+    ## Summarising
+    res <- summarise(gby,
+                     nObs=n(),
+                     nVis=n_distinct(!!dplyr::sym(visitCol)),
+                     nSpp=n_distinct(scientificName),
+                     nDays=n_distinct(paste0(year,month,day)))
+
+    if(timeRes=="daily") res <- removeInexDays(res)
+
     if (timeRes %in% c("yearly", "monthly", "daily")){
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       resVar <- dplyr::pull(res, !!dplyr::sym(variable))
@@ -264,6 +277,40 @@ exportTemporal <- function(sb, timeRes, variable, method){
       resVar <- dplyr::pull(resMon, var)
       names(resVar) <- month.abb
     }
+  ## nCells
+  } else if (variable == "nCells"){
+    if(method != "sum" & timeRes != "month")  stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+
+    if (timeRes == c("yearly")){
+      resVar <- apply(sb$spatioTemporal[,,13,1], 2, countIfHigher, thr=1, na.rm = TRUE)
+      names(resVar) <- paste0(yearsAll, "-01-01")
+    }
+    if (timeRes %in% c("monthly", "month")){
+      ncellsM <- apply(sb$spatioTemporal[,,1:12,1], 2:3, countIfHigher, thr=1) # matrix
+      if (timeRes == "monthly"){
+        resVar <- as.vector(t(ncellsM))
+        names(resVar) <- paste0(rep(yearsAll, each=12), "-", 1:12, "-01")
+      } else {
+        resVar <- apply(ncellsM, 2, method)
+        names(resVar) <- month.abb
+      }
+    }
+    if (timeRes == c("daily")){
+      daygrid<-lapply(sb$overlaid, function(x) unique(paste0(x$year, "-", x$month, "-", x$day)))
+      dayGridP<-as.character(as.Date(unlist(daygrid)))
+
+      all.Days <- as.character(sort(as.Date(unique(unlist(daygrid)))))
+      resVar <- unlist(
+        lapply(all.Days, FUN=function(x){
+          #length(grep(pattern = x, as.Date(unlist(daygrid))))
+          sum(str_count(dayGridP, x), na.rm = TRUE)
+        })
+      )
+      names(resVar) <- all.Days
+    }
+
+    if (timeRes != "month") resVar <- xts::as.xts(resVar)
+
   } else {
     stop(paste0("variable = ", variable, " is not a valid input"))
   }
@@ -282,7 +329,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #'   or \code{"month"}. For temporal export the function accepts \code{"yearly",
 #'   "monthly", "daily"} or \code{"month"}.
 #' @param variable a character string indicating which variable should be
-#'   exported, \code{"nObs", "nvis", "nSpp", "nDays"} or \code{"avgSll" }.
+#'   exported, \code{"nObs", "nVis", "nSpp", "nDays", "nCells"} or \code{"avgSll" }.
 #'   For \code{timeRes = c(NULL, "month")} the function also accepts \code{"nYears"}.
 #' @param method Only applicable to \code{timeRes = "month"}. A variable specifying which
 #'   statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.
@@ -291,8 +338,9 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #' years and returns only 12 values aplying the method among years.
 #' For more details over the possible combinations of dimensions and variables
 #' please refer to the vignette "Technical details".
-#' @return an xts time series, a named vector (if dimension = "temporal" and timeRes = "month")
-#' or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial
+#' @return an xts time series (if dimension = "temporal"),
+#' a named vector (if dimension = "temporal" and timeRes = "month"),
+#' or a SpatialPolygonsDataFrame (if dimension = "spatial")
 #' @export
 #'
 #' @examples
