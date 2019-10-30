@@ -18,15 +18,16 @@ or \code{"month"}. For temporal export the function accepts \code{"yearly",
 "monthly", "daily"} or \code{"month"}.}
 
 \item{variable}{a character string indicating which variable should be
-exported, \code{"nObs", "nvis", "nSpp", "nDays"} or \code{"avgSll" }.
+exported, \code{"nObs", "nVis", "nSpp", "nDays", "nCells"} or \code{"avgSll" }.
 For \code{timeRes = c(NULL, "month")} the function also accepts \code{"nYears"}.}
 
 \item{method}{Only applicable to \code{timeRes = "month"}. A variable specifying which
 statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.}
 }
 \value{
-an xts time series, a named vector (if dimension = "temporal" and timeRes = "month")
-or a SpatialPolygonsDataFrame depending on the dimension, temporal or spatial
+an xts time series (if dimension = "temporal"),
+a named vector (if dimension = "temporal" and timeRes = "month"),
+or a SpatialPolygonsDataFrame (if dimension = "spatial")
 }
 \description{
 Export single variables from SummarisedBirds objects

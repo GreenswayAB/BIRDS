@@ -19,7 +19,8 @@ PBD<-bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
 # PBD <- read.csv(file="path/to/your/file.csv)
 
-# Convert the data from an observation-based to a visit-based format, adding a unique identifier for each visit:
+# Convert the data from an observation-based to a visit-based format, adding a 
+# unique identifier for each visit:
 OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 
 # Summarise the data:
@@ -32,11 +33,12 @@ EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
 # Number of visits
 EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", 
                       variable = "nVis", method = "sum")
-# Average species list length (SLL) per year (a double-average, i.e. the mean over cell values
-# for the median SLL from all visits per year and cell) 
-EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 # The ratio of number of observations over number of visits
 relObs<-EBnObs/EBnVis
+
+# Average species list length (SLL) per year (a double-average, i.e. the mean 
+# over cell values for the median SLL from all visits per year and cell) 
+EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 
 ## ----figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."----
 par(mar=c(4,4,1,6), las=1)

@@ -20,9 +20,10 @@ organizeDate <- function(x, cols){
   stdTimeCols<-c("year", "month", "day")
 
   if (all(cols %in% colnames(x))){
-    x<-x[,cols]
-    cols<-tolower(cols)
+    if(ncol(x)>1) x<-x[,cols]
     colnames(x)<-tolower(colnames(x))
+
+    cols<-tolower(cols)
 
     if(length(cols)==3){
       if(all(stdTimeCols %in% cols)){

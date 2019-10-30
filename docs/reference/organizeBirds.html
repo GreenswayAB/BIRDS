@@ -157,17 +157,17 @@ visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>organizeBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
-  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
-  <span class='st'>"month"</span>, <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>organizeBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"year"</span>,
+  <span class='st'>"month"</span>, <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>,
+  <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
   <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
   <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='fu'>organiseBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Year</span> <span class='kw'>=</span> <span class='st'>"year"</span>,
-  <span class='kw'>Month</span> <span class='kw'>=</span> <span class='st'>"month"</span>, <span class='kw'>Day</span> <span class='kw'>=</span> <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>,
-  <span class='st'>"month"</span>, <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>organiseBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>timeCol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"year"</span>,
+  <span class='st'>"month"</span>, <span class='st'>"day"</span>), <span class='kw'>visitsIdentifier</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>,
+  <span class='st'>"year"</span>, <span class='st'>"recordedBy"</span>), <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
   <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
@@ -190,9 +190,9 @@ species names. Default is the Darwin Core standard name <code>"scientificName"</
     </tr>
     <tr>
       <th>timeCol</th>
-      <td><p>A character vector (named or not) of the names for the
-column(s) which is holding the observation dates. Default is the Darwin Core
-standard column names <code><a href='https://rdrr.io/r/base/c.html'>c("Year"="year", "Month"="month", "Day"="day")</a></code>.</p></td>
+      <td><p>A character vector with the names for the column(s) holding the
+observation dates. Default is the Darwin Core standard column names
+<code><a href='https://rdrr.io/r/base/c.html'>c("year", "month", "day")</a></code>.</p></td>
     </tr>
     <tr>
       <th>visitsIdentifier</th>
@@ -266,7 +266,7 @@ as "yyyy-mm-dd".</p>
  <code><a href='obsData.html'>obsData</a></code> to retrieve the dataframe from this class.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>organizeBirds</span>(<span class='no'>bombusObs</span>)</div><div class='output co'>#&gt; $spdf
+    <pre class="examples"><div class='input'><span class='fu'>organizeBirds</span>(<span class='no'>bombusObs</span>)</div><div class='output co'>#&gt; [1] "just keep going"</div><div class='output co'>#&gt; $spdf
 #&gt;                coordinates                             scientificName year
 #&gt; 3     (13.86842, 58.31686)       Bombus subterraneus (Linnaeus, 1758) 2018
 #&gt; 4     (13.79621, 55.65374)         Bombus terrestris (Linnaeus, 1758) 2018

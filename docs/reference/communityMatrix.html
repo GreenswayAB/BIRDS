@@ -180,8 +180,7 @@ species observations are counted in more than one grid cell.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summarizeBirds</a></span>(<span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>), <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)
-<span class='no'>CM</span> <span class='kw'>&lt;-</span> <span class='fu'>communityMatrix</span>(<span class='no'>SB</span>, <span class='kw'>sampleUnit</span><span class='kw'>=</span><span class='st'>"visit"</span>)</div></pre>
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summarizeBirds</a></span>(<span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>), <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; [1] "just keep going"</div><div class='input'><span class='no'>CM</span> <span class='kw'>&lt;-</span> <span class='fu'>communityMatrix</span>(<span class='no'>SB</span>, <span class='kw'>sampleUnit</span><span class='kw'>=</span><span class='st'>"visit"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
