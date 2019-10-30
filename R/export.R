@@ -357,7 +357,7 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }
 
   variable <- tolower(variable)
-  if (any(variable == c("nobs", "nvis", "nspp", "nyears", "ndays"))){
+  if (any(variable == c("nobs", "nvis", "nspp", "nyears", "ndays", "ncells"))){
     variable <- paste0(substr(variable,1,1), toupper(substr(variable,2,2)), substr(variable, 3, nchar(variable)))
   } else if (variable == "avgsll"){
     variable <- "avgSll"
