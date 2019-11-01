@@ -198,15 +198,16 @@ getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
 
 ## a function to count pixels with data
 countIfHigher <- function(x, thr, na.rm = TRUE) {
-
   tmp <- ifelse(x>=thr, 1, 0)
   tmp.sum <- sum(tmp, na.rm=na.rm)
   return(tmp.sum)
-
 }
 
 
 exportTemporal <- function(sb, timeRes, variable, method){
+  if (variable == "nYears" & timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
+  if (is.null(timeRes)) stop("Time resolution ('timeRes') needs to be defined for dimension 'Temporal'")
+
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
   visitCol <- attr(sb, "visitCol")
   obsData <- deconstructOverlay(sb$overlaid, attr(sb, "visitCol"))
@@ -282,14 +283,30 @@ exportTemporal <- function(sb, timeRes, variable, method){
     }
   ## nCells
   } else if (variable == "nCells"){
+    ## actually this doesnt require the deconstrucOverlay from the begining
     if(method != "sum" & timeRes != "month")  stop("This combination of variable and time resolution only accepts 'sum' as summary method")
 
+    resRowNames <- rownames(sb$spatial@data)
+    singleGrid <- ifelse(length(resRowNames)==1, TRUE, FALSE)
+
     if (timeRes == c("yearly")){
-      resVar <- apply(sb$spatioTemporal[,,13,1], 2, countIfHigher, thr=1, na.rm = TRUE)
+      if (singleGrid) {
+        resVar <- countIfHigher(sb$spatioTemporal[,,13,1], thr=1)
+      } else {
+        resVar <- apply(sb$spatioTemporal[,,13,1], 2, countIfHigher, thr=1)}
       names(resVar) <- paste0(yearsAll, "-01-01")
     }
+
     if (timeRes %in% c("monthly", "month")){
-      ncellsM <- apply(sb$spatioTemporal[,,1:12,1], 2:3, countIfHigher, thr=1) # matrix
+      if (singleGrid) {
+        if(length(yearsAll)==1){
+          ncellsM <- ifelse(sb$spatioTemporal[,,1:12,1]>=1, 1, 0)
+        } else {
+          ncellsM <- countIfHigher(sb$spatioTemporal[,,1:12,1], thr=1)
+        }
+      } else {
+        ncellsM <- apply(sb$spatioTemporal[,,1:12,1], 2:3, countIfHigher, thr=1)} # matrix
+
       if (timeRes == "monthly"){
         resVar <- as.vector(t(ncellsM))
         names(resVar) <- paste0(rep(yearsAll, each=12), "-", 1:12, "-01")
@@ -298,6 +315,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
         names(resVar) <- month.abb
       }
     }
+
     if (timeRes == c("daily")){
       daygrid<-lapply(sb$overlaid, function(x) unique(paste0(x$year, "-", x$month, "-", x$day)))
       dayGridP<-as.character(as.Date(unlist(daygrid)))
@@ -306,7 +324,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
       resVar <- unlist(
         lapply(all.Days, FUN=function(x){
           #length(grep(pattern = x, as.Date(unlist(daygrid))))
-          sum(str_count(dayGridP, x), na.rm = TRUE)
+          sum(stringr::str_count(dayGridP, x), na.rm = TRUE)
         })
       )
       names(resVar) <- all.Days
@@ -377,8 +395,6 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
     res <- exportSpatial(x, timeRes, variable, method)
     return(res)
   }else if(dimension == "temporal"){
-    if (variable == "nYears" & timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
-    if (is.null(timeRes)) stop("Time resolution ('timeRes') needs to be defined for dimension 'Temporal'")
     res <- exportTemporal(x, timeRes, variable, method)
     return(res)
   }else{
