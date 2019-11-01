@@ -38,6 +38,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
 
   spatial <- sb$spatial
   resRowNames <- rownames(spatial@data)
+  singleGrid <- ifelse(length(resRowNames)==1, TRUE, FALSE)
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
   visitCol <- attr(sb, "visitCol")
   if (variable == "nCells") stop("This combination of variable and dimension is not defined")
@@ -52,33 +53,37 @@ exportSpatial <- function(sb, timeRes, variable, method){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       tmp<-data.frame(sb$spatioTemporal[,,13, variable])## Already added accordingly
-      colnames(tmp)<-yearsAll
-      spatial@data<- tmp
+      colnames(tmp)<-ifelse(!singleGrid, yearsAll, variable)
+      spatial@data <- tmp
 
     } else if(timeRes == "monthly"){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       dat <- sb$spatioTemporal[,, 1:12, variable]
-      nyears<-dim(dat)[2]
+      nyears<-ifelse(!singleGrid, dim(dat)[2], dim(dat)[1])
+      spatial@data<-data.frame(matrix(NA, nrow=length(resRowNames), ncol=nyears*12))
+      colnames(spatial@data) <- paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12))
+
       for(i in 1:nyears){
         start <- (i - 1) * 12 + 1
         stop <- i * 12
-        spatial@data[,start:stop] <- data.frame(dat[,i,])
+        spatial@data[,start:stop] <- ifelse(!singleGrid, data.frame(dat[,i,]), data.frame(dat[i,]) )[[1]]
       }
-      colnames(spatial@data) <- paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12))
 
     } else if(timeRes == "month"){
+      sumDim<-if (singleGrid) 2 else c(1,3)
+
       if(variable == "nYears"){
         if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-        tmp <- apply(sb$spatioTemporal[,,1:12, "nObs"], c(1,3), function(x) sum(!is.na(x) & x!=0))
-        spatial@data <- data.frame(round(tmp, 2))
+        tmp <- apply(sb$spatioTemporal[,,1:12, "nObs"], sumDim, function(x) sum(!is.na(x) & x!=0))
       } else {
         if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
-        tmp <- apply(sb$spatioTemporal[,,1:12, variable], c(1,3), method)
-        spatial@data <- data.frame(round(tmp, 2))
+        tmp <- apply(sb$spatioTemporal[,,1:12, variable], sumDim, method)
       }
+      spatial@data <- data.frame("V1"=round(tmp, 2))
+      colnames(spatial@data)<-ifelse(!singleGrid, month.abb, variable)
     }else{
-      stop("Wrong input for variable timeRes Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
+      stop("Wrong input for variable timeRes. Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
     }
   }
 
@@ -170,22 +175,22 @@ removeInexDays<-function(x){
 
 getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
   if(timeRes=="yearly"){
-    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+    gby<-group_by(obsData, year=factor(year, levels = yearsAll),
                          !!dplyr::sym(visitCol), .drop=FALSE)
   } else if(timeRes %in% c("monthly", "month")){
-    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+    gby<-group_by(obsData, year=factor(year, levels = yearsAll),
                          month=factor(month, levels = 1:12),
                          !!dplyr::sym(visitCol), .drop=FALSE)
   } else if(timeRes=="daily"){
-    gby<-dplyr::group_by(obsData, year=factor(year, levels = yearsAll),
+    gby<-group_by(obsData, year=factor(year, levels = yearsAll),
                          month=factor(month, levels = 1:12),
                          day=factor(day, levels = 1:31),
                          !!dplyr::sym(visitCol), .drop=FALSE)
   } else {
     stop(paste0("Unknown timeRes: ", timeRes ))
   }
-  resSLL <- dplyr::summarise(gby, SLL=n_distinct(scientificName))
-  res <- dplyr::summarise(resSLL, avgSll=median(SLL))
+  resSLL <- summarise(gby, SLL=n_distinct(scientificName))
+  res <- summarise(resSLL, avgSll=median(SLL))
 
   if(timeRes=="daily") res <- removeInexDays(res)
   return(res)
