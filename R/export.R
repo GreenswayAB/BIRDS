@@ -205,7 +205,7 @@ countIfHigher <- function(x, thr, na.rm = TRUE) {
 
 
 exportTemporal <- function(sb, timeRes, variable, method){
-  if (variable == "nYears" & timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
+  if (variable == "nYears" && timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
   if (is.null(timeRes)) stop("Time resolution ('timeRes') needs to be defined for dimension 'Temporal'")
 
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
@@ -257,6 +257,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
   } else if (variable == "nYears"){
     ## only valid for month, prohibition set at the begining
+    if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
     tmp <- summarise(gby, nYear=n_distinct(year))
     resMon <-  summarise(group_by(tmp, month), var=sum(nYear))
     resVar <- dplyr::pull(resMon, var)
@@ -284,7 +285,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
   ## nCells
   } else if (variable == "nCells"){
     ## actually this doesnt require the deconstrucOverlay from the begining
-    if(method != "sum" & timeRes != "month")  stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+    if(method != "sum" && timeRes != "month")  stop("This combination of variable and time resolution only accepts 'sum' as summary method")
 
     resRowNames <- rownames(sb$spatial@data)
     singleGrid <- ifelse(length(resRowNames)==1, TRUE, FALSE)
@@ -299,11 +300,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
     if (timeRes %in% c("monthly", "month")){
       if (singleGrid) {
-        if(length(yearsAll)==1){
           ncellsM <- ifelse(sb$spatioTemporal[,,1:12,1]>=1, 1, 0)
-        } else {
-          ncellsM <- countIfHigher(sb$spatioTemporal[,,1:12,1], thr=1)
-        }
       } else {
         ncellsM <- apply(sb$spatioTemporal[,,1:12,1], 2:3, countIfHigher, thr=1)} # matrix
 
@@ -375,6 +372,9 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
   if (!is.null(timeRes)){
     timeRes <- tolower(timeRes)
+    if(!any(timeRes==c("yearly", "month", "monthly", "daily"))){
+      stop("Not a valid timeRes")
+    }
   }
 
   variable <- tolower(variable)
@@ -391,6 +391,7 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }
 
 
+
   if(dimension == "spatial"){
     res <- exportSpatial(x, timeRes, variable, method)
     return(res)
@@ -398,7 +399,6 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
     res <- exportTemporal(x, timeRes, variable, method)
     return(res)
   }else{
-    return(NULL)
     stop("Wrong input for variable dimension. Try 'spatial' or 'temporal'.")
   }
 
