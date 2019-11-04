@@ -20,35 +20,39 @@ relObsTrends<-function(x, timeRes, focalSp){
   yearsAll <- as.numeric(dimnames(x$spatioTemporal)[[2]])
 
   spData<-deconstructOverlay(x$overlaid, attr(x, "visitCol"))
+  
+  spData$dates<-as.Date(switch(timeRes,
+                     "yearly" = paste0(spData$year, "-01-01"),
+                     "monthly"= paste0(spData$year, "-", sprintf("%02d", spData$month), "-01"),
+                     "daily"  = paste0(spData$year, "-", sprintf("%02d", spData$month), "-", sprintf("%02d", spData$day))))
 
-  spData$group<-if(timeRes=="yearly"){
-    spData$year
+  res<-if(timeRes=="yearly"){
+    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="year"))), 
+             seq(min(spData$dates), max(spData$dates), by="year"))
   }else if (timeRes=="monthly"){
-    paste0(spData$year,"-",spData$month)
+    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="month"))), 
+             seq(min(spData$dates), max(spData$dates), by="month"))
   }else if(timeRes=="daily"){
-    paste0(spData$year,"-",spData$month,"-",spData$day)
+    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="day"))), 
+             seq(min(spData$dates), max(spData$dates), by="day"))
   }else{
     stop("Unknown time resolution")
   }
+  
 
-  allN<-summarise(group_by(spData,group),all=n())
-  spN<-summarise(group_by(spData[spData$scientificName==focalSp,],group),sp=n())
-  res<-merge(allN, spN, by="group", all.x=TRUE)
-
-  groupYMD<-strsplit(res$group,split = "-")
-  year<-as.numeric(unlist(lapply(groupYMD, function(x) x[1])))
-  month<-as.numeric(unlist(lapply(groupYMD, function(x) x[2])))
-  day<-as.numeric(unlist(lapply(groupYMD, function(x) x[3])))
-
-  rownames(res) <- switch(timeRes,
-                          "yearly" = paste0(year, "-01-01"),
-                          "monthly"= paste0(year, "-", sprintf("%02d", month), "-01"),
-                          "daily"  = paste0(year, "-", sprintf("%02d", month), "-", sprintf("%02d", spData$day)))
-
+  allN<-summarise(group_by(spData,dates),all=n())
+  spN<-summarise(group_by(spData[spData$scientificName==focalSp,],dates),sp=n())
+  
+  allN<-xts::xts(allN$all, allN$dates)
+  spN<-xts::xts(spN$sp, spN$dates)
+  
+  res<-merge(res,allN,join='left')
+  res<-merge(res,spN,join='left', fill=0)
+  
   res<-res[,-1]
-  res$relObs<-res$sp/res$all
+  
+  res$relObs<-res$spN/res$allN
 
-  res <- xts::as.xts(res)
   return(res)
 
 }
