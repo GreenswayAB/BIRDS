@@ -40,6 +40,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
   resRowNames <- rownames(spatial@data)
   singleGrid <- ifelse(length(resRowNames)==1, TRUE, FALSE)
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
+  nyears <- length(yearsAll)
   visitCol <- attr(sb, "visitCol")
   if (variable == "nCells") stop("This combination of variable and dimension is not defined")
 
@@ -60,26 +61,34 @@ exportSpatial <- function(sb, timeRes, variable, method){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       dat <- sb$spatioTemporal[,, 1:12, variable]
-      nyears<-ifelse(!singleGrid, dim(dat)[2], dim(dat)[1])
-      spatial@data<-data.frame(matrix(NA, nrow=length(resRowNames), ncol=nyears*12))
+      spatial@data <- data.frame(matrix(NA, nrow=length(resRowNames), ncol=nyears*12))
       colnames(spatial@data) <- paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12))
 
       for(i in 1:nyears){
         start <- (i - 1) * 12 + 1
         stop <- i * 12
-        spatial@data[,start:stop] <- ifelse(!singleGrid, data.frame(dat[,i,]), data.frame(dat[i,]) )[[1]]
+        spatial@data[,start:stop] <- ifelse(!singleGrid, 
+                                            data.frame(dat[,i,]),
+                                            ifelse(nyears==1, 
+                                                   data.frame(dat), 
+                                                   data.frame(dat[i,]) 
+                                            ))[[1]]
       }
 
     } else if(timeRes == "month"){
       sumDim<-if (singleGrid) 2 else c(1,3)
-
-      if(variable == "nYears"){
-        if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-        tmp <- apply(sb$spatioTemporal[,,1:12, "nObs"], sumDim, function(x) sum(!is.na(x) & x!=0))
+      tmp <- if(nyears==1){
+        sb$spatioTemporal[,,1:12, "nObs"]
       } else {
-        if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
-        tmp <- apply(sb$spatioTemporal[,,1:12, variable], sumDim, method)
+        if(variable == "nYears"){
+          if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+          apply(sb$spatioTemporal[,,1:12, "nObs"], sumDim, function(x) sum(!is.na(x) & x!=0))
+        } else {
+          if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
+          apply(sb$spatioTemporal[,,1:12, variable], sumDim, method)
+        }
       }
+      
       spatial@data <- data.frame("V1"=round(tmp, 2))
       colnames(spatial@data)<-ifelse(!singleGrid, month.abb, variable)
     }else{
