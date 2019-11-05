@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-relObsTrends<-function(x, timeRes, focalSp){
+relObsTrends<-function(x, timeRes, focalSp=NULL){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
