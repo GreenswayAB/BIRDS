@@ -90,16 +90,6 @@ overlayBirds <- function(x, grid, spillOver = TRUE){
 #' to the visits inside the gridcell (identified by visit UID) in the entire dataset and includes
 #' all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
 #'
-#' @return The output is a OverlaidBirds-class object, which is a list
-#'   containing three objects;
-#'   \describe{
-#'     \item{\code{observationsInGrid}}{Is
-#'       basically the data in the OrganizedBirds object split by each grid cell
-#'       (\emph{n.b.} the use of \code{spillOver = TRUE} discussed under "Usage")}
-#'     \item{\code{grid}}{The SpatialPolygonsDataFrame from the input, but cleared
-#'       of data to not waste unnecessary memory}
-#'    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
-#'   }
 #' @export
 #' @rdname overlayBirds
 #' @examples ob<-organizeBirds(bombusObs)

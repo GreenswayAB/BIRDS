@@ -2,6 +2,7 @@
 ###This takes the overlay reconstruct it as an data.frame and removes duplicate visits in other gridcells.
 deconstructOverlay <- function(overlay, visitCol){
 
+  #Add a grid id to every enlement (grid) in the overlay-list
   for(i in 1:length(overlay)){
     if(nrow(overlay[[i]])==0){
       overlay[[i]]$grid <- integer(0)
@@ -10,32 +11,33 @@ deconstructOverlay <- function(overlay, visitCol){
     }
   }
 
+  #Deconstruct the list
   overlay <- data.frame(data.table::rbindlist(overlay))
+  #Result DF
   res <- overlay[,]
+  #A to be array with visits where spillover has been removed from.
   visitList <- integer(0)
 
   for(r in 1:nrow(overlay)){
     visit <- overlay[r,visitCol]
     if(any(visit==visitList)){
+      #If the visit has been removed from spillovers
       next()
     }
     visitList <- c(visitList, visit)
     grid <- overlay[r,"grid"]
+    #Removes the observations with the same visitID but with different grid.
     res <- res[!(res[,visitCol] == visit & res[,"grid"]!=grid),]
   }
 
   res <-res
   cols <- c("scientificName", "year", "month", "day", visitCol)
-## TODO if there is spill over and duplicates have created they have to be removed from this result
-  ### Delete duplicated observations
-  ## maybe with help from SB$spatial@data$visitsUID
 
   return(res[,cols])
 }
 
 
 exportSpatial <- function(sb, timeRes, variable, method){
-
   spatial <- sb$spatial
   resRowNames <- rownames(spatial@data)
   singleGrid <- ifelse(length(resRowNames)==1, TRUE, FALSE)
