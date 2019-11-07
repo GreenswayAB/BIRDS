@@ -38,7 +38,6 @@ deconstructOverlay <- function(overlay, visitCol){
 
 
 exportSpatial <- function(sb, timeRes, variable, method){
-
   spatial <- sb$spatial
   resRowNames <- rownames(spatial@data)
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
