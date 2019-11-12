@@ -104,7 +104,7 @@
       <h1>Introduction to BIRDS</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2019-11-06</h4>
+            <h4 class="date">2019-11-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/BIRDS.Rmd"><code>vignettes/BIRDS.Rmd</code></a></small>
       <div class="hidden name"><code>BIRDS.Rmd</code></div>
@@ -150,27 +150,26 @@
 <span id="cb2-11"><a href="#cb2-11"></a><span class="co"># Convert the data from an observation-based to a visit-based format, adding a </span></span>
 <span id="cb2-12"><a href="#cb2-12"></a><span class="co"># unique identifier for each visit:</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a>OB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/organizeBirds.html">organizeBirds</a></span>(PBD, <span class="dt">sppCol =</span> <span class="st">"scientificName"</span>, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="co">#&gt; [1] "just keep going"</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="co"># Summarise the data:</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a>SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summarizeBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; Registered S3 method overwritten by 'xts':</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt;   method     from</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="co">#&gt;   as.zoo.xts zoo</span></span>
-<span id="cb2-21"><a href="#cb2-21"></a></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co"># Look at some summarised variables:</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="co"># Number of observations</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a>EBnObs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
-<span id="cb2-25"><a href="#cb2-25"></a>                      <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="co"># Number of visits</span></span>
-<span id="cb2-27"><a href="#cb2-27"></a>EBnVis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
-<span id="cb2-28"><a href="#cb2-28"></a>                      <span class="dt">variable =</span> <span class="st">"nVis"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
-<span id="cb2-29"><a href="#cb2-29"></a><span class="co"># The ratio of number of observations over number of visits</span></span>
-<span id="cb2-30"><a href="#cb2-30"></a>relObs&lt;-EBnObs<span class="op">/</span>EBnVis</span>
-<span id="cb2-31"><a href="#cb2-31"></a></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co"># over cell values for the median SLL from all visits per year and cell) </span></span>
-<span id="cb2-34"><a href="#cb2-34"></a>EBavgSll &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co"># Summarise the data:</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summarizeBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; Registered S3 method overwritten by 'xts':</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt;   method     from</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt;   as.zoo.xts zoo</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co"># Look at some summarised variables:</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co"># Number of observations</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>EBnObs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
+<span id="cb2-24"><a href="#cb2-24"></a>                      <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co"># Number of visits</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a>EBnVis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
+<span id="cb2-27"><a href="#cb2-27"></a>                      <span class="dt">variable =</span> <span class="st">"nVis"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="co"># The ratio of number of observations over number of visits</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a>relObs&lt;-EBnObs<span class="op">/</span>EBnVis</span>
+<span id="cb2-30"><a href="#cb2-30"></a></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="co"># over cell values for the median SLL from all visits per year and cell) </span></span>
+<span id="cb2-33"><a href="#cb2-33"></a>EBavgSll &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>Then, with functions you already know, plot this into a time series.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="dt">mar=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">6</span>), <span class="dt">las=</span><span class="dv">1</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/time.html">time</a></span>(EBnObs), EBnObs, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">lwd =</span> <span class="dv">3</span>, <span class="dt">xlab =</span> <span class="st">"Year"</span>, <span class="dt">ylab =</span> <span class="st">"Number"</span>, </span>

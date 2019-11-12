@@ -20,14 +20,14 @@ obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
   timeRes <- tolower(timeRes)
   yearsAll <- as.numeric(dimnames(x$spatioTemporal)[[2]])
 
-  spData<-deconstructOverlay(x$overlaid, attr(x, "visitCol"))
+  spData <- deconstructOverlay(x$overlaid, attr(x, "visitCol"))
 
-  spData$dates<-as.Date(switch(timeRes,
+  spData$dates <- as.Date(switch(timeRes,
                      "yearly" = paste0(spData$year, "-01-01"),
                      "monthly"= paste0(spData$year, "-", sprintf("%02d", spData$month), "-01"),
                      "daily"  = paste0(spData$year, "-", sprintf("%02d", spData$month), "-", sprintf("%02d", spData$day))))
 
-  res<-if(timeRes=="yearly"){
+  res <- if(timeRes=="yearly"){
     xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="year"))),
              seq(min(spData$dates), max(spData$dates), by="year"))
   }else if (timeRes=="monthly"){
@@ -41,8 +41,17 @@ obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
   }
 
 
-  allN<-summarise(group_by(spData,dates),all=n())
-  spN<-summarise(group_by(spData[spData$scientificName==focalSp,],dates),sp=n())
+  allN<-summarise(group_by(spData, dates), all=n())
+  spNgby<-group_by(spData[spData$scientificName==focalSp,], dates)
+
+  ## if there is a column for presence then remove absences
+  if("presence" %in% colnames(spNgby) ) {
+    wNotPres <- which(spNgby$presence != 1 | is.na(spNgby$presence))
+    if(length(wNotPres)>1){
+      spNgby <- spNgby[-wNotPres,]
+    }
+  }
+  spN<-summarise(spNgby, sp=n())
 
   allN<-xts::xts(allN$all, allN$dates)
   spN<-xts::xts(spN$sp, spN$dates)

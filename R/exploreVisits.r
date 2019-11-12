@@ -108,7 +108,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
     } else {
       effortDiam <- 1
       medianDist <- 1
-      iqrDist    <- 0
+      iqrDist    <- 1
       nOutliers  <- 0
     }
     return(list(centroidX, centroidY, effortDiam, medianDist, iqrDist,nOutliers))
@@ -123,44 +123,69 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
   visitStat$iqrDist    <- tmp[,5]
   visitStat$nOutliers  <- tmp[,6]
 
-  {#
-  # for(i in 1:nUID){
-  #   wVis <- which(dat[, visitCol] == uniqueUID[i])
-  #   visitStat$SLL[i]  <- length(unique(as.character(dat[wVis, sppCol])))
-  #   visitStat$day[i]  <- as.numeric(unique(dat[wVis, "day"]))
-  #   visitStat$month[i] <- as.numeric(unique(dat[wVis, "month"]))
-  #   visitStat$year[i] <- as.numeric(unique(dat[wVis, "year"]))
-  #
-  #   coord <- sp::coordinates(spdf[wVis, ])
-  #   coordPaste <- apply(coord, 1, paste0, collapse = ",")
-  #   coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
-  #
-  #   ctr <- rgeos::gCentroid(spdf[wVis,])
-  #   visitStat$centroidX[i] <- ctr@coords[1]
-  #   visitStat$centroidY[i] <- ctr@coords[2]
-  #
-  #   if (nrow(coordUnique) > 1) {
-  #     distances<-geosphere::distGeo(ctr, coord)
-  #
-  #     # That could be the diameter of the minumum circle that covers all points
-  #     visitStat$effortDiam[i] <- round(max(distances) * 2, 0)
-  #     visitStat$medianDist[i] <- round(median(distances), 2)
-  #     visitStat$iqrDist[i]    <- round(IQR(distances), 2)
-  #     visitStat$nOutliers[i]  <- length(boxplot.stats(distances)$out)
-  #   } else {
-  #     visitStat$effortDiam[i] <- 0
-  #     visitStat$medianDist[i] <- 0
-  #     visitStat$iqrDist[i]    <- 0
-  #     visitStat$nOutliers[i]  <- 0
-  #   }
-  # }
-  } ### for loop is slower in this case
-
-
   visitStat$date <- as.Date(paste(visitStat$year, visitStat$month, visitStat$day, sep="-"), format = "%Y-%m-%d")
   visitStat$Month <- as.factor(months(visitStat$date))
   levels(visitStat$Month) <- month.name
 
   cat(paste("Finished analysing", nUID, "visits.\n"))
   return(visitStat)
+}
+
+
+#' A function to make the exploreVisits Spatial
+#'
+#' A function to
+#' @param x an object of class \sQuote{data.frame}.
+#' @param xyCols a character vector with the column names for the coordinates.
+#' Default to \code{c("centroidX","centroidY")}
+#' @param dataCRS a character string with the proj4 description of the original
+#' coordinate projeciton system (CRS). Default to \code{"+init=epsg:4326"}
+#' @param radius either a character string with the name of the column
+#' containing the radius of the visit circle, or a numeric vector with its value
+#' in meters. Default to \code{"medianDist"}
+#'
+#' @return a list with a \code{SpatialPointsDataFrame} (the centroids) and a
+#' \code{ "SpatialPolygonsDataFrame"} (the effort circles). Note that when plotted
+#' directly effort circles may not look like circles in the returned
+#' (Pseudo-Mercator) projection.
+#'
+#' @examples
+#' # create a visit-based data object from the original observation-based data
+#' OB<-organizeBirds(bombusObs)
+#' visitStats<-exploreVisits(OB)
+#' spV<-spatialVisits(visitStats)
+#' plot(spV$effort)
+#' @export
+#' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
+spatialVisits <- function(x,
+                          xyCols=c("centroidX","centroidY"),
+                          dataCRS="+init=epsg:4326",
+                          radius="medianDist"){
+  if (class(x) == "data.frame") {
+    sp::coordinates(x) <- xyCols
+    sp::proj4string(x) <- dataCRS ## because I know where it comes from
+  } else {
+    stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
+  }
+
+  if(radius=="" | is.na(radius) | is.null(radius)){
+    radiusVal<- rep(1, nrow(x@data))
+  } else if(radius %in% colnames(x@data)){
+    radiusVal<-x@data[,radius]
+    ## convert meters to degrees?
+  } else if(is.numeric(radius) & length(radius)==nrow(x@data)){
+    radiusVal<-radius
+  } else {
+    stop("The parameter 'radius' needs to be one od the column names or a numeric
+         vector of length equal to the number of visits")
+  }
+
+  # xTrans <- spTransform(x, CRSobj = "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54012
+  xTrans <- spTransform(x, CRSobj = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54009  #
+  # xTrans <- spTransform(x, CRSobj = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs") ##https://epsg.io/3857
+  buff <- rgeos::gBuffer(xTrans,  byid=TRUE, id=x@data$visitUID, width=radiusVal)
+  buff <- spTransform(buff, CRSobj = dataCRS)
+
+  return(list("points"=x, "effort"=buff))
+
 }

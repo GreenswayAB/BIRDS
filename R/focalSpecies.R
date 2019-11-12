@@ -52,6 +52,16 @@ focalSpSummary <- function(x, focalSp=NULL){
 
   overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
 
+  ## if there is a column for presence then remove absences
+  if("presence" %in% colnames(overFocal[[1]]) ) {
+    overFocal <- lapply(overFocal, FUN=function(x){
+      wNotPres <- which(x$presence != 1 | is.na(x$presence))
+      if(length(wNotPres)>1){
+        return(x[-wNotPres,])
+      } else { return(x) }
+    })
+  }
+
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
   yearRng <- range(yearsAll) # range(unname(unlist(lapply(x$overlaid, FUN=function(x) x$year) )))
   yearMax <- max(yearsAll)
@@ -62,8 +72,8 @@ focalSpSummary <- function(x, focalSp=NULL){
   nObs <- sum(unlist(lapply(overFocal[wNonEmptyFocal], nrow)))
   visitsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,visitCol]) ))
   nVis <- length(visitsFocal)
-  yearsFocal<- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"year"]) )))
-  monthsFocal<-sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"month"]) )))
+  yearsFocal <- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"year"]) )))
+  monthsFocal <- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"month"]) )))
 
   return(data.frame("species"=focalSp,
                     "nCells"=nCells,
@@ -111,7 +121,8 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
   allSpecies <- listSpecies(x)
 
   wFocal <- match(focalSp, allSpecies)
-
+  if(!(focalSp %in% allSpecies)) stop(paste0("The focal species ", focalSp,
+                                             " was not faound among the species names in the data set."))
   overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
@@ -122,7 +133,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
   wNonEmptyFocal <- unname(which(unlist(lapply(overFocal, nrow))>0))
   nObs <- sum(unlist(lapply(overFocal[wNonEmptyFocal], nrow)))
   visitsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal],
-                                      FUN=function(x) x[,visitCol]) ))
+                                      FUN=function(x) x[, visitCol]) ))
   nVis <- length(visitsFocal)
   yearsFocal <- unname(unlist(lapply(overFocal[wNonEmptyFocal],
                               FUN=function(x) x[,"year"]) ))
@@ -151,7 +162,6 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
   barplot(yearsFocalTbl, ylab = "n. visits", las=2)
   par(mar=c(4,4,1,1))
   barplot(monthsFocalTbl, ylab = "n. visits", las=2)
-
 }
 
 

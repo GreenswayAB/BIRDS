@@ -27,7 +27,7 @@ organizeDate <- function(x, cols){
 
     if(length(cols)==3){
       if(all(stdTimeCols %in% cols)){
-        print("just keep going")
+        # print("just keep going")
       } else if(any(stdTimeCols %in% cols)){
         wColNot<-which(!(cols %in% stdTimeCols))
         for(i in 1:length(wColNot)){
@@ -296,8 +296,8 @@ organizeBirds<-function(x,
                         sppCol = "scientificName",
                         timeCol = c("year", "month", "day"),
                         visitsIdentifier = c("locality", "day", "month", "year", "recordedBy"),
-                        presenceCol=NULL,
-                        xyCols=c("decimalLongitude", "decimalLatitude"),
+                        presenceCol = NULL,
+                        xyCols = c("decimalLongitude", "decimalLatitude"),
                         dataCRS = "+init=epsg:4326",
                         taxonRankCol=NULL,
                         taxonRank=c("SPECIES","SUBSPECIES","VARIETY"),
@@ -351,9 +351,9 @@ organizeBirds<-function(x,
   if (is.null(presenceCol)){
     df<-cbind(sp, time, visitUID)
   } else {
-    presence<-df[, presenceCol]
-
-    df<-cbind(sp, time, visitUID, presence)
+    presence <- df[, presenceCol]
+    presence <- ifelse(presence>=1, 1, 0)
+    df <- cbind(sp, time, visitUID, presence)
   }
 
   colnames(df)[1]<-"scientificName"
