@@ -170,6 +170,18 @@ walk through the package tools using an example data set.
 A short introductory [video can be found here](https://www.dropbox.com/s/fxg1t9vl4ainipy/BirdsLR.mp4?dl=0).
 
 
+### What is new - latest changes and additions
+We continuously update and improve the BIRDS package.
+
+##### Latest changes:
+
+##### Latest additions: 
+
+function exportBirds() - add number of spatial units with observations (grid cells nCells) as variable to temporal exports
+
+new function to plot the size of the visits
+
+
 ### In the TODO LIST
 Check [here](https://github.com/Greensway/BIRDS/projects/1) for a list of future features to be added, and don't hesitate sending your suggestions by [e-mail](mailto:alejandro@greensway.se) 
 
