@@ -5,17 +5,17 @@
 \alias{organiseBirds}
 \title{Organize a dataframe to a usable format}
 \usage{
-organizeBirds(x, sppCol = "scientificName", timeCol = c("year",
-  "month", "day"), visitsIdentifier = c("locality", "day", "month",
-  "year", "recordedBy"), presenceCol = NULL,
+organizeBirds(x, sppCol = "scientificName", idCols = c("locality",
+  "recordedBy"), timeCols = c("year", "month", "day"),
+  timeInVisits = "day", grid = NULL, presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
   dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
   simplifySppName = FALSE)
 
-organiseBirds(x, sppCol = "scientificName", timeCol = c("year",
-  "month", "day"), visitsIdentifier = c("locality", "day", "month",
-  "year", "recordedBy"), presenceCol = NULL,
+organiseBirds(x, sppCol = "scientificName", idCols = c("locality",
+  "recordedBy"), timeCols = c("year", "month", "day"),
+  timeInVisits = "day", grid = NULL, presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
   dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
@@ -30,14 +30,23 @@ columns.}
 \item{sppCol}{A character string with the column name for the column for the
 species names. Default is the Darwin Core standard name \code{"scientificName"}.}
 
-\item{timeCol}{A character vector with the names for the column(s) holding the
-observation dates. Default is the Darwin Core standard column names
-\code{c("year", "month", "day")}.}
-
-\item{visitsIdentifier}{A character vector of the names for the columns that
+\item{idCols}{A character vector of the names for the columns that
 are holding the information that identifies a visit. Default is the Darwin
 Core standard column names \code{c("locality", "day", "month", "year",
 "recordedBy")}.}
+
+\item{timeCols}{A character vector with the names for the column(s) holding the
+observation dates. Default is the Darwin Core standard column names
+\code{c("year", "month", "day")}.}
+
+\item{timeInVisits}{A flag indicating whether visits are defined by
+the time definition or not, and to which resolution. Default is 'day'.
+Alternatives are \code{c("day", "month", "year", NULL)}. Time is anyhow
+organised into three columns year, month, day.}
+
+\item{grid}{Either \code{NULL} to be ignored or an object of class
+\code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} as indetifier of
+the visits spatial extent.}
 
 \item{presenceCol}{A character string with the column name for the column for the
 precense status. Default is \code{NULL}.}
@@ -89,7 +98,7 @@ is of only length one it will interpret the column as a date column formatted
 as "yyyy-mm-dd".
 }
 \examples{
-organizeBirds(bombusObs)
+OB<-organizeBirds(bombusObs)
 }
 \seealso{
 \code{\link{createVisits}} to create unique visits IDs,

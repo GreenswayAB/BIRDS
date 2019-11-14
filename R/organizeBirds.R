@@ -1,9 +1,42 @@
+#' Find a text among column names
+#'
+#' Finds a text among column names and return it as it is
+#'
+#' @param pattern character string containing a string or regular expression
+#' to be matched in the given character vector
+#' @param df A data.frame among whichs column names to look for the pattern
+#' @param exact A logical flag whether to return all matches or just that text.
+#' This is always case insensitive.
+#' @param value A logical flag (to be passed to grep()). If FALSE, a vector
+#' containing the (integer) indices of the matches determined by grep is returned,
+#' and if TRUE, a vector containing the matching elements themselves is returned.
+#'
+#' @return A vector with the column names that match the pattern
+#' @export
+#' @keywords internal
+
+findCols <- function(pattern, df, exact=FALSE, value = TRUE){
+  if(missing(pattern)) stop("The argument 'pattern'ä must be supplied.")
+  if(missing(df)) stop("The argument 'df' must be supplied.")
+
+  patternE <-if (exact) paste("^", pattern, "$", sep="") else pattern
+
+  if(length(patternE) == 1){
+    res <- grep(patternE, names(df), ignore.case=TRUE, value=value)
+  }
+  if(length(patternE) > 1){
+    res<- lapply(patternE, grep, names(df), ignore.case=TRUE, value=value)
+  }
+  # if(length(res)==0) stop(paste0("There is no column called ", pattern))
+  return(res)
+}
+
 #' Organize the date-column(s)
 #'
 #' Organize the date-column(s) in a dataframe to three columns
 #'
-#' @param x A dataframe with at least the columns specified in cols
-#' @param cols A character vector with the column names for the dates specified.
+#' @param x A dataframe with at least the columns specified in 'columns'
+#' @param columns A character vector with the column names for the dates specified.
 #'   It can either be one column formatted as "yyyy-mm-dd" or a vector of
 #'   length=3. If the column names are "year", "month" and "day" it will take
 #'   these column names. Otherwise, it will take the column names and interpret
@@ -15,38 +48,42 @@
 #' ymd<-as.Date(Sys.Date())+1:5
 #' organizeDate(as.data.frame(ymd), "ymd")
 #' @keywords internal
-organizeDate <- function(x, cols){
-  if (!length(cols) %in% c(1,3)) stop("Could not create date, please specify wither one or three column names")
-  stdTimeCols<-c("year", "month", "day")
+organizeDate <- function(x, columns){
+  if (!length(columns) %in% c(1,3)) stop("Could not create date, please specify either one or three column names")
+  stdTimeCols <- c("year", "month", "day")
 
-  if (all(cols %in% colnames(x))){
-    if(ncol(x)>1) x<-x[,cols]
+  cols.df <- findCols(columns, x)
+
+  if(all(lengths(cols.df) > 0)){
+    cols.df <- unlist(cols.df)
+
+    if(ncol(x)>1) x<-x[,cols.df]
     colnames(x)<-tolower(colnames(x))
 
-    cols<-tolower(cols)
+    cols.df<-tolower(cols.df)
 
-    if(length(cols)==3){
-      if(all(stdTimeCols %in% cols)){
+    if(length(cols.df)==3){
+      if(all(stdTimeCols %in% cols.df)){
         # print("just keep going")
-      } else if(any(stdTimeCols %in% cols)){
-        wColNot<-which(!(cols %in% stdTimeCols))
+      } else if(any(stdTimeCols %in% cols.df)){
+        wColNot<-which(!(cols.df %in% stdTimeCols))
         for(i in 1:length(wColNot)){
-          x$placeholder <- as.matrix(x[, cols[wColNot]])
+          x$placeholder <- as.matrix(x[, cols.df[wColNot]])
           names(x)[names(x) == "placeholder"] <- stdTimeCols[wColNot[i]]
         }
       } else { #if(!any(stdTimeCols %in% cols)){
-        x$year  <- x[,cols[1]]
-        x$month <- x[,cols[2]]
-        x$day   <- x[,cols[3]]
+        x$year  <- x[,cols.df[1]]
+        x$month <- x[,cols.df[2]]
+        x$day   <- x[,cols.df[3]]
       }
 
       x$day<-ifelse(is.na(x$day), 1, x$day)
       x$month<-ifelse(is.na(x$month), 1, x$month)
       return(x)
     }
-    if(length(cols) == 1){
+    if(length(cols.df) == 1){
       dateVector<-array(dim=c(nrow(x), 3), dimnames = list(c(), stdTimeCols))
-      dateYMD <- as.Date(x[,cols])
+      dateYMD <- as.Date(x[,cols.df])
 
       x$year  <- lubridate::year(dateYMD)
       x$month <- lubridate::month(dateYMD)
@@ -55,7 +92,7 @@ organizeDate <- function(x, cols){
       return(x)
     }
   } else {
-    stop("One or more specified column names are not present in the input data frame")
+    stop("One or more specified column names are not present in the input data set.")
   }
 }
 
@@ -89,6 +126,38 @@ simplifySpp <- function(df, sppCol){
 
 
 ### HANDLE THE VISITS ###
+#' Create unique IDs based on a grid
+#'
+#' Takes a dataframe and a grid .
+#'
+#' @param x a ... .
+#'  be a SpatialPointsDataFrame (useful when inside 'organizeBirds()') or an OrganizedBirds.
+#' @param grid A a SpatialPolygon object (a grid is expected) defining the
+#' maximum extent of visits effort.
+#'
+#' @return A vector of the same length as the number of rows (observations) as x
+#'   with a unique number corresponding to the grid's ID.
+#'
+#' @export
+#' @examples
+#'
+#'
+getGridIDs <- function(x, grid){
+  if(class(x) == "SpatialPointsDataFrame"){
+    if(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons")){
+      #### Rename grid
+      if (any(duplicated(names(grid)))){
+        grid <- renameGrid(grid)
+        warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
+      All results will use this nomenclature, but the order of the cells will remain unaltered.")
+      }
+
+      return( sp::over(x, grid, returnList=FALSE) )
+    }else stop("The argument 'grid' can only be of class SpatialPolygonsDataFrame or SpatialPolygons")
+  } else stop("The argument 'x' can only be of class SpatialPointsDataFrame")
+}
+
+
 
 #' Create unique visits IDs
 #'
@@ -96,17 +165,24 @@ simplifySpp <- function(df, sppCol){
 #' dataframe based on the combination of values in the specified columns.
 #'
 #' What a visit should be is not always clearly defined and extractable in a
-#' dataset. A reasonable assumption is that a visit could be identified from the records
-#' made by one person on a certain day and at a specific location or site. The
-#' default value for the variable column is therefore that a visit is identified
+#' dataset. A reasonable assumption is that a visit could be identified from the
+#' records made by one person on a certain day and at a specific location or site.
+#' The default value for the variable column is therefore that a visit is identified
 #' by the Darwin Core variables \code{c("locality", "day", "month", "year",
 #' "recordedBy")}.
 #'
-#' @param x a dataframe or OrganizedBirds-class including at least the
-#'   specified columns that are used to identify a visit.
-#' @param columns A vector with the names of the columns that are used to identify a visit.
-#'   Default is the Darwin Core variables \code{c("locality", "day", "month",
-#'   "year", "recordedBy")}.
+#' @param x An object of class \code{data.frame} or \code{SpatialPointsDataFrame}
+#' including at least the columns specified that are used to identify a visit.
+#' @param idCols A vector with the names of the columns other (than time columns)
+#' that are used to identify a visit. This variable cannot be empty. At least the
+#' recorders name or any other ID must be provided. Default is the Darwin Core
+#' variables \code{c("locality", "recordedBy")}.
+#' @param timeCols A vector with the names of the time columns that are used to
+#' identify a visit.  If timeCols=NULL then time is ignored to create a visit ID.
+#' Default is the Darwin Core variables \code{c("day", "month", "year")}.
+#' @param grid Either \code{NULL} to be ignored or an object of class
+#' \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining the maximum
+#'  extent of visits effort. Then x must be an object of class SpatialPointsDataFrame
 #'
 #' @return A vector of the same length as the number of rows as the dataframe
 #'   with a unique number for each combination of the values in the specified
@@ -114,17 +190,57 @@ simplifySpp <- function(df, sppCol){
 #' @export
 #' @examples
 #' OB <- organizeBirds(bombusObs)
-#' tmp.vis <- createVisits(bombusObs, columns=c("locality", "day", "month", "year"))
+#' tmp.vis <- createVisits(bombusObs,
+#'                         idCols=c("locality", "recordedBy"),
+#'                         timeCols=c("day", "month", "year"))
 #' visits(OB, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
-createVisits<-function(x, columns=c("locality", "day", "month", "year", "recordedBy")){
+createVisits<-function(x,
+                       idCols = c("locality", "recordedBy"),
+                       timeCols = c("day", "month", "year"),
+                       grid = NULL){
 
-  if(any(class(x)=="data.frame")){
-    return(as.integer(factor(apply(x[columns], 1, paste0, collapse=""))))
-  }else if (class(x)=="OrganizedBirds"){
-    return(as.integer(factor(apply(x$spdf@data[columns], 1, paste0, collapse=""))))
-  }else{
-    stop("x must be a 'data.frame' or an 'OrganizedBirds'")
+  if(any(class(x) %in% c("data.frame", "SpatialPointsDataFrame"))){
+    if(any(class(x)=="data.frame")){
+      df <- as.data.frame(x) ## in case it is a data.table or some other weird class
+      spdf <- NULL
+    }else if (class(x)=="SpatialPointsDataFrame"){
+      df <- x@data
+      spdf <- x
+    }
+
+    if(!is.null(grid)) {
+      if(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")  & !is.null(spdf)){
+        df[,"gridID"] <- getGridIDs(spdf, grid)
+      } else if(class(grid %in% c("character", "numeric"))){
+        if(length(grid) == nrow(df)) {
+          df[,"gridID"] <- grid
+        } else stop("If grid is a vector it should be as long as the number of observations.")
+      } else stop("The argument 'grid' should be a SpatialPolygon or a vector with IDs.")
+
+      gridID <- "gridID"
+
+    } else {
+      gridID <- NULL
+    }
+
+    if (all(idCols == "")) idCols <- NULL
+    if (all(timeCols=="")) timeCols <- NULL
+
+    columns <- c(gridID, idCols, timeCols)
+    if (length(columns)==0) stop("At least one of the arguments 'idCols','timeCols','grid' need to be defined.")
+
+    # cols.df <- lapply(columns, grep, names(df), ignore.case=TRUE, value=TRUE)
+    cols.df <- findCols(columns, df)
+
+    if(all(lengths(cols.df) > 0)){
+      cols.df <- unlist(cols.df)
+      return(as.integer(factor(apply(df[cols.df], 1, paste0, collapse=""))))
+    } else { stop("Some or none of the column names were not found in the data set.") }
+
+  } else {
+    stop("Argument 'x' must be a 'data.frame' or an 'OrganizedBirds'")
   }
+
 }
 
 
@@ -171,25 +287,25 @@ visits<-function(x, name=NULL){
 'visits<-'<-function(x, name=NULL, useAsDefault = TRUE, value){
 
   if(is.null(name)){
-    name<-"visitUID"
+    name <- "visitUID"
   }
 
   if(class(x)=="OrganizedBirds"){
 
-    x[[1]]@data[,name]<-value
+    x[[1]]@data[,name] <- value
 
     if(useAsDefault){
-      attr(x, "visitCol")<-name
+      attr(x, "visitCol") <- name
     }
 
   }else if(length(dim(x)) == 2){
-    if(any(colnames(x)==name)){
-      x[,name]<-value
+    if(any(colnames(x) == name)){
+      x[,name] <- value
     }else{
-      cName<-colnames(x)
-      cName<-c(cName, name)
-      x<-cbind(x, value)
-      colnames(x)<-cName
+      cName <- colnames(x)
+      cName <- c(cName, name)
+      x <- cbind(x, value)
+      colnames(x) <- cName
     }
 
     if(useAsDefault){
@@ -201,8 +317,10 @@ visits<-function(x, name=NULL){
   }
 
   return(x)
-
 }
+
+
+
 
 #' Extract observation data
 #'
@@ -226,8 +344,6 @@ obsData.OrganizedBirds<-function(x){
   return(x$spdf@data)
 
 }
-
-#TODO add an example to organizeBirds
 
 #'Organize a dataframe to a usable format
 #'
@@ -257,13 +373,20 @@ obsData.OrganizedBirds<-function(x){
 #'  columns.
 #' @param sppCol A character string with the column name for the column for the
 #' species names. Default is the Darwin Core standard name \code{"scientificName"}.
-#'@param timeCol A character vector with the names for the column(s) holding the
-#' observation dates. Default is the Darwin Core standard column names
-#' \code{c("year", "month", "day")}.
-#' @param visitsIdentifier A character vector of the names for the columns that
+#' @param idCols A character vector of the names for the columns that
 #'  are holding the information that identifies a visit. Default is the Darwin
 #'  Core standard column names \code{c("locality", "day", "month", "year",
 #'  "recordedBy")}.
+#' @param timeCols A character vector with the names for the column(s) holding the
+#' observation dates. Default is the Darwin Core standard column names
+#' \code{c("year", "month", "day")}.
+#' @param timeInVisits A flag indicating whether visits are defined by
+#' the time definition or not, and to which resolution. Default is 'day'.
+#' Alternatives are \code{c("day", "month", "year", NULL)}. Time is anyhow
+#' organised into three columns year, month, day.
+#' @param grid Either \code{NULL} to be ignored or an object of class
+#' \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} as indetifier of
+#' the visits spatial extent.
 #' @param presenceCol A character string with the column name for the column for the
 #' precense status. Default is \code{NULL}.
 #' @param xyCols A character vector of the names for the columns that are holding
@@ -286,16 +409,18 @@ obsData.OrganizedBirds<-function(x){
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 #' @export
 #'
-#' @examples organizeBirds(bombusObs)
+#' @examples OB<-organizeBirds(bombusObs)
 #' @seealso \code{\link{createVisits}} to create unique visits IDs,
 #'  \code{\link{visits}} to get or set the visit IDs to this class,
 #'  \code{\link{simplifySpp}} to simplify species names,
 #'  \code{\link{obsData}} to retrieve the dataframe from this class.
 #' @aliases organiseBirds
-organizeBirds<-function(x,
+organizeBirds <- function(x,
                         sppCol = "scientificName",
-                        timeCol = c("year", "month", "day"),
-                        visitsIdentifier = c("locality", "day", "month", "year", "recordedBy"),
+                        idCols = c("locality", "recordedBy"),
+                        timeCols = c("year", "month", "day"),
+                        timeInVisits = "day",
+                        grid = NULL,
                         presenceCol = NULL,
                         xyCols = c("decimalLongitude", "decimalLatitude"),
                         dataCRS = "+init=epsg:4326",
@@ -303,69 +428,101 @@ organizeBirds<-function(x,
                         taxonRank=c("SPECIES","SUBSPECIES","VARIETY"),
                         simplifySppName=FALSE){
 
+  stdTimeCols <- c("year", "month", "day")
+
   # Check the type of data
   if(any(class(x) == "data.frame")){
-    x<-as.data.frame(x)
-    sp::coordinates(x) <- xyCols
-    sp::proj4string(x) <- dataCRS
-  }else if(any(class(x) == "SpatialPointsDataFrame")){
+    x <- as.data.frame(x)
+
+    xyColsl.df <- unlist(findCols(xyCols, x))
+    if (length(xyColsl.df) > 0){
+      if (length(xyColsl.df) > 2){ ## if too many matchs try exact=TRUE
+        xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
+        if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
+      }
+      sp::coordinates(x) <- xyColsl.df
+  ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
+      sp::proj4string(x) <- dataCRS
+
+    } else { stop("The column names defined for the coordinates could not be found in the data set")}
+  } else if(any(class(x) == "SpatialPointsDataFrame")){
     ## Just continue... :)
-  }else{
-    stop("Unknown format for argument 'x'. The variable should be of class data.frame or SpatialPointsDataFrame.")
+  } else {
+    stop("The argument 'x' should be of class data.frame or SpatialPointsDataFrame.")
   }
 
-  if(sp::proj4string(x)!="+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"){
-    x<-sp::spTransform(x, sp::CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+  if(sp::proj4string(x) != "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"){
+    x <- sp::spTransform(x, sp::CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
   }
 
-  df<-x@data
-
-  if (any(duplicated(colnames(df)))){
-    stop("There are duplicated column names in the dataset")
+  ### Check the column names
+  if (any(duplicated(tolower(names(x@data))))){
+    stop("There are duplicated column names in the dataset (Note: case insensitive check).")
   }
 
   # Check if user wants to leave a certain level
   if (!is.null(taxonRankCol)){
-    if (taxonRankCol %in% colnames(df)){
-      wIn<-which(df[, taxonRankCol] %in% taxonRank)
-      nOut<-nrow(df)-length(wIn)
+    # TRCol.df <- grep(taxonRankCol, names(x@data), ignore.case=TRUE, value=TRUE)
+    TRCol.df <- findCols(taxonRankCol, x@data, exact = TRUE)
+    if (length(TRCol.df) > 0){
+      wIn <- unique(unlist(lapply(taxonRank, grep, x@data[, TRCol.df], ignore.case = TRUE, value = FALSE)))
+      nOut <- nrow(x@data) - length(wIn)
       if (length(wIn)>0){
         x<-x[wIn,]
-        df<-df[wIn,]
-      }
+      } else {stop(paste0("No observation match with the specified taxon rank(s).")) }
+
       message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
     } else { stop(paste0("Taxon Rank: there is no column called ", taxonRankCol))}
   }
 
   # Simplify species names to reduce epitets and author names
-  if (!is.null(simplifySppName) && simplifySppName == TRUE){
-    df[, sppCol] <- simplifySpp(df, sppCol)
-  }
+  sppCol.df <- findCols(sppCol, x@data)
+  if (length(sppCol.df) > 0){
+    if (!is.null(simplifySppName) && simplifySppName == TRUE){
+      x@data[, sppCol.df] <- simplifySpp(x@data, sppCol.df)
+    }
+  } else { stop(paste0("Species name: there is no column called ", sppCol))}
 
-  time<-organizeDate(df, timeCol)
-
-  sp<-df[sppCol]
-
-  visitUID<-createVisits(df, visitsIdentifier)
-
-  if (is.null(presenceCol)){
-    df<-cbind(sp, time, visitUID)
-  } else {
-    presence <- df[, presenceCol]
-    presence <- ifelse(presence>=1, 1, 0)
-    df <- cbind(sp, time, visitUID, presence)
-  }
-
-  colnames(df)[1]<-"scientificName"
-
-  x@data<-df
-
-  ## clean unreadable dates
-  wNA <- is.na(df$year)
+  ## column name control defined in the function organizeDate()
+  x@data[, stdTimeCols]<- organizeDate(x@data, timeCols)
+  ## clean unreadable dates (cleaning also the spatial points)
+  wNA <- is.na(x@data$year)
   if (sum(wNA)>1){
     x <- x[-wNA,]
-    print(paste(length(wNA), " records deleted"))
+    message(paste(length(wNA), " records deleted because the date was unreadable."))
   }
+
+  ## colum name control defined in the function visitUID()
+  ## Time is optional in the visits
+  if (is.null(timeInVisits)) {
+    timeColsVis <- timeInVisits
+  } else {
+    timeColsVis <- switch(timeInVisits,
+                          "day" = c("year", "month", "day"),
+                          "month" = c("year", "month"),
+                          "year" = "year") ## Else NULL
+  }
+
+  x@data[,"visitUID"] <- createVisits(x,
+                                      idCols=idCols,
+                                      timeCols=timeColsVis,
+                                      grid=grid)
+
+  #### Preparing the output as we want it
+  res.df <- x@data[,c(sppCol.df, stdTimeCols, "visitUID")]
+
+  if (!is.null(presenceCol)){
+    # presenceCol.df <- grep(presenceCol, names(x@data), ignore.case=TRUE, value=TRUE)
+    presenceCol.df <- findCols(presenceCol, x@data)
+    if (length(presenceCol.df) > 0){
+      presence <- x@data[, presenceCol.df]
+      presence <- ifelse(presence>=1, 1, 0)
+      res.df[,"presence"] <- presence
+    } else {stop(paste0("Presence: there is no column called ", presenceCol))}
+  }
+
+  colnames(res.df)[1] <- "scientificName"
+  x@data <- res.df
 
   res<-list(x)
 
@@ -375,8 +532,8 @@ organizeBirds<-function(x,
   attr(res, "visitCol")<-"visitUID"
 
   return(res)
-
 }
+
 #' @rdname organizeBirds
 #' @export
 organiseBirds<-organizeBirds ## To include the brits as well

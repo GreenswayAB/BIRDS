@@ -4,16 +4,25 @@
 \alias{createVisits}
 \title{Create unique visits IDs}
 \usage{
-createVisits(x, columns = c("locality", "day", "month", "year",
-  "recordedBy"))
+createVisits(x, idCols = c("locality", "recordedBy"),
+  timeCols = c("day", "month", "year"), grid = NULL)
 }
 \arguments{
-\item{x}{a dataframe or OrganizedBirds-class including at least the
-specified columns that are used to identify a visit.}
+\item{x}{An object of class \code{data.frame} or \code{SpatialPointsDataFrame}
+including at least the columns specified that are used to identify a visit.}
 
-\item{columns}{A vector with the names of the columns that are used to identify a visit.
-Default is the Darwin Core variables \code{c("locality", "day", "month",
-"year", "recordedBy")}.}
+\item{idCols}{A vector with the names of the columns other (than time columns)
+that are used to identify a visit. This variable cannot be empty. At least the
+recorders name or any other ID must be provided. Default is the Darwin Core
+variables \code{c("locality", "recordedBy")}.}
+
+\item{timeCols}{A vector with the names of the time columns that are used to
+identify a visit.  If timeCols=NULL then time is ignored to create a visit ID.
+Default is the Darwin Core variables \code{c("day", "month", "year")}.}
+
+\item{grid}{Either \code{NULL} to be ignored or an object of class
+\code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining the maximum
+ extent of visits effort. Then x must be an object of class SpatialPointsDataFrame}
 }
 \value{
 A vector of the same length as the number of rows as the dataframe
@@ -26,14 +35,16 @@ dataframe based on the combination of values in the specified columns.
 }
 \details{
 What a visit should be is not always clearly defined and extractable in a
-dataset. A reasonable assumption is that a visit could be identified from the records
-made by one person on a certain day and at a specific location or site. The
-default value for the variable column is therefore that a visit is identified
+dataset. A reasonable assumption is that a visit could be identified from the
+records made by one person on a certain day and at a specific location or site.
+The default value for the variable column is therefore that a visit is identified
 by the Darwin Core variables \code{c("locality", "day", "month", "year",
 "recordedBy")}.
 }
 \examples{
 OB <- organizeBirds(bombusObs)
-tmp.vis <- createVisits(bombusObs, columns=c("locality", "day", "month", "year"))
+tmp.vis <- createVisits(bombusObs,
+                        idCols=c("locality", "recordedBy"),
+                        timeCols=c("day", "month", "year"))
 visits(OB, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 }

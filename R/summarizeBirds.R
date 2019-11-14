@@ -261,46 +261,46 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
 
   if(!is.null(grid)){
     if(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons")){
-      bOver<-overlayBirds(x, grid=grid, spillOver = spillOver) # To use in the spatial analysis
+      bOver <- overlayBirds(x, grid=grid, spillOver = spillOver) # To use in the spatial analysis
 
-      areaGrid<-rgeos::gUnaryUnion(grid)
-      bTOver<-overlayBirds(x, grid=areaGrid, spillOver = spillOver) #To use in the temporal analysis where the entire area could be interpreted as a single grid cell
+      areaGrid <- rgeos::gUnaryUnion(grid)
+      bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver) #To use in the temporal analysis where the entire area could be interpreted as a single grid cell
 
-      useSpatial<-TRUE
+      useSpatial <- TRUE
     }else{
       stop("The variable grid can only be of class SpatialPolygonsDataFrame, or NULL")
     }
   }else{
 
-    areaGrid<-OB2Polygon(x)
-    bTOver<-overlayBirds(x, grid=areaGrid, spillOver = spillOver)
+    areaGrid <- OB2Polygon(x)
+    bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver)
 
     warning("To get the most out of summarizeBirds you should have a grid.")
   }
 
   #Here we use a modifyed version of bOver where the grid is only one single cell.
   #Either a dissolved version of the grid or a polygon from the extent of the organizedBirds
-  temporal<-getTemporal(bTOver)
+  temporal <- getTemporal(bTOver)
   if(useSpatial){
     #If we have spatial grid data:
-    spatial<-getSpatial(bOver)
-    spatioTemporal<-getSpatioTemporal(bOver,  visitCol=visitCol) #### Three elements in a list
+    spatial <- getSpatial(bOver)
+    spatioTemporal <- getSpatioTemporal(bOver,  visitCol=visitCol) #### Three elements in a list
   }else{
-    spatial<-getSpatial(bTOver)
-    spatioTemporal<-getSpatioTemporal(bTOver, visitCol=visitCol) #### Three elements in a list
+    spatial <- getSpatial(bTOver)
+    spatioTemporal <- getSpatioTemporal(bTOver, visitCol=visitCol) #### Three elements in a list
   }
 
-  res<-list("temporal"=temporal,
+  res <- list("temporal"=temporal,
             "spatial"=spatial,
             "spatioTemporal"= spatioTemporal$resYM,
             "spatioTemporalVisits" = spatioTemporal$resYMvisits,
             # "speciesLists" = spatioTemporal$resSpp,
             "overlaid" = if(useSpatial) bOver$observationsInGrid else bTOver$observationsInGrid
             )
-  class(res)<-"SummarizedBirds"
-  attr(res,"visitCol")<-visitCol #The column(s) that identify a visit
-  attr(res,"spillOver")<-spillOver #If spillover has been used
-  attr(res,"spatial")<-useSpatial #If there is a spatial grid in the object
+  class(res) <- "SummarizedBirds"
+  attr(res,"visitCol") <- visitCol #The column(s) that identify a visit
+  attr(res,"spillOver") <- spillOver #If spillover has been used
+  attr(res,"spatial") <- useSpatial #If there is a spatial grid in the object
 
   return(res)
 

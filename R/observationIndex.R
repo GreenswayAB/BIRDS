@@ -10,6 +10,12 @@
 #' @export
 #'
 #' @examples
+#' grid <- makeGrid(gotaland, gridSize = 10)
+#' PBD<-bombusObs
+#' OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
+#' SB <- summariseBirds(OB, grid=grid)
+#' spp <- listSpecies(SB)
+#' obsInd<-obsIndexTemporal(SB, "yearly", focalSp=spp[1])
 obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")

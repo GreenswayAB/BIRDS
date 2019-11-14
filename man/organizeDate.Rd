@@ -4,12 +4,12 @@
 \alias{organizeDate}
 \title{Organize the date-column(s)}
 \usage{
-organizeDate(x, cols)
+organizeDate(x, columns)
 }
 \arguments{
-\item{x}{A dataframe with at least the columns specified in cols}
+\item{x}{A dataframe with at least the columns specified in 'columns'}
 
-\item{cols}{A character vector with the column names for the dates specified.
+\item{columns}{A character vector with the column names for the dates specified.
 It can either be one column formatted as "yyyy-mm-dd" or a vector of
 length=3. If the column names are "year", "month" and "day" it will take
 these column names. Otherwise, it will take the column names and interpret

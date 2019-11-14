@@ -20,3 +20,11 @@ An xts timeseries
 This function extracts the proportion of observations for a focal species to
 the all observations (including the focal species) over time.
 }
+\examples{
+grid <- makeGrid(gotaland, gridSize = 10)
+PBD<-bombusObs
+OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
+SB <- summariseBirds(OB, grid=grid)
+spp <- listSpecies(SB)
+obsInd<-obsIndexTemporal(SB, "yearly", focalSp=spp[1])
+}

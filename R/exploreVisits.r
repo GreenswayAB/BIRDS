@@ -180,11 +180,11 @@ spatialVisits <- function(x,
          vector of length equal to the number of visits")
   }
 
-  # xTrans <- spTransform(x, CRSobj = "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54012
-  xTrans <- spTransform(x, CRSobj = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54009  #
-  # xTrans <- spTransform(x, CRSobj = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs") ##https://epsg.io/3857
+  # xTrans <- sp::spTransform(x, CRSobj = "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54012
+  xTrans <- sp::spTransform(x, CRSobj = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54009  #
+  # xTrans <- sp::spTransform(x, CRSobj = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs") ##https://epsg.io/3857
   buff <- rgeos::gBuffer(xTrans,  byid=TRUE, id=x@data$visitUID, width=radiusVal)
-  buff <- spTransform(buff, CRSobj = dataCRS)
+  buff <- sp::spTransform(buff, CRSobj = dataCRS)
 
   return(list("points"=x, "effort"=buff))
 

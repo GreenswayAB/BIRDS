@@ -155,22 +155,35 @@ dataframe based on the combination of values in the specified columns." />
 dataframe based on the combination of values in the specified columns.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>createVisits</span>(<span class='no'>x</span>, <span class='kw'>columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>,
-  <span class='st'>"recordedBy"</span>))</pre>
+    <pre class="usage"><span class='fu'>createVisits</span>(<span class='no'>x</span>, <span class='kw'>idCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"recordedBy"</span>),
+  <span class='kw'>timeCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>), <span class='kw'>grid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a dataframe or OrganizedBirds-class including at least the
-specified columns that are used to identify a visit.</p></td>
+      <td><p>An object of class <code>data.frame</code> or <code>SpatialPointsDataFrame</code>
+including at least the columns specified that are used to identify a visit.</p></td>
     </tr>
     <tr>
-      <th>columns</th>
-      <td><p>A vector with the names of the columns that are used to identify a visit.
-Default is the Darwin Core variables <code><a href='https://rdrr.io/r/base/c.html'>c("locality", "day", "month",
-"year", "recordedBy")</a></code>.</p></td>
+      <th>idCols</th>
+      <td><p>A vector with the names of the columns other (than time columns)
+that are used to identify a visit. This variable cannot be empty. At least the
+recorders name or any other ID must be provided. Default is the Darwin Core
+variables <code><a href='https://rdrr.io/r/base/c.html'>c("locality", "recordedBy")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>timeCols</th>
+      <td><p>A vector with the names of the time columns that are used to
+identify a visit.  If timeCols=NULL then time is ignored to create a visit ID.
+Default is the Darwin Core variables <code><a href='https://rdrr.io/r/base/c.html'>c("day", "month", "year")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>grid</th>
+      <td><p>Either <code>NULL</code> to be ignored or an object of class
+<code>SpatialPolygons</code> or <code>SpatialPolygonsDataFrame</code> defining the maximum
+ extent of visits effort. Then x must be an object of class SpatialPointsDataFrame</p></td>
     </tr>
     </table>
 
@@ -182,15 +195,17 @@ Default is the Darwin Core variables <code><a href='https://rdrr.io/r/base/c.htm
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>What a visit should be is not always clearly defined and extractable in a
-dataset. A reasonable assumption is that a visit could be identified from the records
-made by one person on a certain day and at a specific location or site. The
-default value for the variable column is therefore that a visit is identified
+dataset. A reasonable assumption is that a visit could be identified from the
+records made by one person on a certain day and at a specific location or site.
+The default value for the variable column is therefore that a visit is identified
 by the Darwin Core variables <code><a href='https://rdrr.io/r/base/c.html'>c("locality", "day", "month", "year",
 "recordedBy")</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
-<span class='no'>tmp.vis</span> <span class='kw'>&lt;-</span> <span class='fu'>createVisits</span>(<span class='no'>bombusObs</span>, <span class='kw'>columns</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>))
+<span class='no'>tmp.vis</span> <span class='kw'>&lt;-</span> <span class='fu'>createVisits</span>(<span class='no'>bombusObs</span>,
+                        <span class='kw'>idCols</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"recordedBy"</span>),
+                        <span class='kw'>timeCols</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span>))
 <span class='fu'><a href='visits.html'>visits</a></span>(<span class='no'>OB</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"visNoRecorder"</span>, <span class='kw'>useAsDefault</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&lt;-</span> <span class='no'>tmp.vis</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
