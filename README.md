@@ -171,15 +171,7 @@ A short introductory [video can be found here](https://www.dropbox.com/s/fxg1t9v
 
 
 ### What is new - latest changes and additions
-We continuously update and improve the BIRDS package.
-
-##### Latest changes:
-
-##### Latest additions: 
-
-function exportBirds() - add number of spatial units with observations (grid cells nCells) as variable to temporal exports
-
-new function to plot the size of the visits
+We continuously update and improve the BIRDS package. Check the [changelog](https://greensway.github.io/BIRDS/news/index.html)
 
 
 ### In the TODO LIST

@@ -9,6 +9,10 @@
 
 * fix and simplify structure of exportBirds() function
 
+## Aditions
+* function exportBirds() - add number of spatial units with observations (grid cells nCells) as variable to temporal exports
+* new function spatialVisits() to plot the spatial representaion of the visits effort
+
 # BIRDS 0.0.1
 
 * This is the first release of BIRDS.
