@@ -322,3 +322,51 @@ gridAsString <- function(grid) {
     return(polyStrg)
 }
 
+
+
+# https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html
+#
+# library(dggridR)
+# #Grids
+#
+# # The following grids are available:
+# #
+# #   ISEA3H: Icosahedral Snyder Equal Area Aperture 3 Hexagonal Grid
+# # ISEA4H: Icosahedral Snyder Equal Area Aperture 4 Hexagonal Grid
+# # ISEA43H: Icosahedral Snyder Equal Area Mixed Aperture 4,3 Hexagonal Grid
+# # ISEA4T: Icosahedral Snyder Equal Area Aperture 4 Triangular Grid
+# # ISEA4D: Icosahedral Snyder Equal Area Aperture 4 Diamond Grid
+# # FULLER3H: Fuller Aperature 3 Hexagonal Grid
+# # FULLER4H: Fuller Aperature 4 Hexagonal Grid
+# # FULLER43H: Fuller Mixed Aperature 4,3 Hexagonal Grid
+# # FULLER4T: Fuller Aperature 4 Triganular Grid
+# # FULLER4D: Fuller Aperature 4 Diamond Grid
+#
+#
+# dggs <- dgconstruct(spacing=1000, metric=FALSE, resround='down')
+#
+# #Load included test data set
+# data(dgquakes)
+#
+# #Get the corresponding grid cells for each earthquake epicenter (lat-long pair)
+# dgquakes$cell <- dgGEO_to_SEQNUM(dggs,dgquakes$lon,dgquakes$lat)$seqnum
+#
+# #Converting SEQNUM to GEO gives the center coordinates of the cells
+# cellcenters   <- dgSEQNUM_to_GEO(dggs,dgquakes$cell)
+#
+# #Get the number of earthquakes in each cell
+# quakecounts   <- dgquakes %>% group_by(cell) %>% summarise(count=n())
+#
+# #Get the grid cell boundaries for cells which had quakes
+# grid          <- dgcellstogrid(dggs,quakecounts$cell,frame=TRUE,wrapcells=TRUE)
+#
+# #Update the grid cells' properties to include the number of earthquakes
+# #in each cell
+# grid          <- merge(grid,quakecounts,by.x="cell",by.y="cell")
+#
+# #Make adjustments so the output is more visually interesting
+# grid$count    <- log(grid$count)
+# cutoff        <- quantile(grid$count,0.9)
+# grid          <- grid %>% mutate(count=ifelse(count>cutoff,cutoff,count))
+#
+# plot(grid)
