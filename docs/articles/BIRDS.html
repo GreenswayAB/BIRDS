@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
       <h1>Introduction to BIRDS</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2019-11-14</h4>
+            <h4 class="date">2019-11-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/BIRDS.Rmd"><code>vignettes/BIRDS.Rmd</code></a></small>
       <div class="hidden name"><code>BIRDS.Rmd</code></div>
@@ -127,7 +127,7 @@
 <h2 class="hasAnchor">
 <a href="#basic-example-and-data-requirements" class="anchor"></a>Basic example and data requirements</h2>
 <p>Starting with a primary biodiversity data set (species observations) <code>BIRDS</code> employs three basic steps: organizing the data into a sampling event-based format, summarizing the data producing summary variables that inform about sampling effort and data completeness, and reviewing the summarized variables.</p>
-<p>This package works with <code>data.frame</code> tables containing raw species observations as rows (i.e. primary biodiversity data, PBD), with minimal information required for each observation in the following columns:</p>
+<p>This package works with <code>data.frame</code> and <code>data.table</code> tables containing raw species observations as rows (i.e. primary biodiversity data, PBD), with minimal information required for each observation in the following columns:</p>
 <ol style="list-style-type: decimal">
 <li>species identification</li>
 <li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>

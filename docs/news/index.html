@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -95,7 +95,7 @@
         <li>
   <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -107,7 +107,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Documents
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -127,16 +127,16 @@
         <li>
   <a href="https://github.com/greensway/BIRDS">
     <span class="fa fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -147,6 +147,24 @@
       <small>Source: <a href='https://github.com/greensway/BIRDS/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="birds-003" class="section level1">
+<h1 class="page-header">
+<a href="#birds-003" class="anchor"></a>BIRDS 0.0.3</h1>
+<div id="aditions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#additions" class="anchor"></a>Aditions</h2>
+<ul>
+<li>organizeBirds() now is more tolerant to casing in the column names and has better warning messages.</li>
+<li>organizeBirds() now has an argument that accepts a column names for the variable stating the presence status if there is such (useful for FocalSp* and Observation index)</li>
+<li>createVisits() and organizeBirds() can now make visits strictly spatially based on a grid and has the option to ignore time as a variable for making unique visits IDs.</li>
+<li>spatialVisits() we added this function to convert the visit statitics into a spatial object</li>
+<li>focalSpeciesReport() now shows all months and makes plots nicer and customizable.</li>
+<li>exportBirds() added number of cells (nCells) as variable to temporal exports</li>
+<li>obsIndexTemporal() we added a function to produce observation indices over time. Spatial is comming soon.</li>
+<li>we added a vignette about plotting XTS objects</li>
+</ul>
+</div>
+</div>
     <div id="birds-002" class="section level1">
 <h1 class="page-header">
 <a href="#birds-002" class="anchor"></a>BIRDS 0.0.2</h1>
@@ -155,6 +173,14 @@
 <a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li>fix and simplify structure of exportBirds() function</li>
+</ul>
+</div>
+<div id="aditions-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#additions-1" class="anchor"></a>Aditions</h2>
+<ul>
+<li>function exportBirds() - add number of spatial units with observations (grid cells nCells) as variable to temporal exports</li>
+<li>new function spatialVisits() to plot the spatial representaion of the visits effort</li>
 </ul>
 </div>
 </div>
@@ -171,6 +197,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#birds-003">0.0.3</a></li>
         <li><a href="#birds-002">0.0.2</a></li>
         <li><a href="#birds-001">0.0.1</a></li>
       </ul>
@@ -192,7 +219,7 @@
       </footer>
    </div>
 
-  
+
 
 
   </body>

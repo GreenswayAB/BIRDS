@@ -89,7 +89,7 @@ analyses with the BIRDS-package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -157,21 +157,35 @@ visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>organizeBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>idCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>,
-  <span class='st'>"recordedBy"</span>), <span class='kw'>timeCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"year"</span>, <span class='st'>"month"</span>, <span class='st'>"day"</span>),
-  <span class='kw'>timeInVisits</span> <span class='kw'>=</span> <span class='st'>"day"</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>organizeBirds</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>,
+  <span class='kw'>idCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"recordedBy"</span>),
+  <span class='kw'>timeCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"year"</span>, <span class='st'>"month"</span>, <span class='st'>"day"</span>),
+  <span class='kw'>timeInVisits</span> <span class='kw'>=</span> <span class='st'>"day"</span>,
+  <span class='kw'>grid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
-  <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>,
+  <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
-  <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)
 
-<span class='fu'>organiseBirds</span>(<span class='no'>x</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>idCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>,
-  <span class='st'>"recordedBy"</span>), <span class='kw'>timeCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"year"</span>, <span class='st'>"month"</span>, <span class='st'>"day"</span>),
-  <span class='kw'>timeInVisits</span> <span class='kw'>=</span> <span class='st'>"day"</span>, <span class='kw'>grid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+<span class='fu'>organiseBirds</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>,
+  <span class='kw'>idCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"locality"</span>, <span class='st'>"recordedBy"</span>),
+  <span class='kw'>timeCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"year"</span>, <span class='st'>"month"</span>, <span class='st'>"day"</span>),
+  <span class='kw'>timeInVisits</span> <span class='kw'>=</span> <span class='st'>"day"</span>,
+  <span class='kw'>grid</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>presenceCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xyCols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span>),
-  <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>, <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dataCRS</span> <span class='kw'>=</span> <span class='st'>"+init=epsg:4326"</span>,
+  <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span>),
-  <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
