@@ -4,8 +4,14 @@
 \alias{focalSpReport}
 \title{Summarise all records for a species}
 \usage{
-focalSpReport(x, focalSp = NULL, long = TRUE, colVis = "grey",
-  colPres = "red", ...)
+focalSpReport(
+  x,
+  focalSp = NULL,
+  long = TRUE,
+  colVis = "grey",
+  colPres = "red",
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \sQuote{SummarizeBirds}.}

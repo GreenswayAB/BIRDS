@@ -3,7 +3,6 @@
 \docType{package}
 \name{BIRDS}
 \alias{BIRDS}
-\alias{BIRDS-package}
 \title{BIRDS: A set of tools for Biodiversity Information Review and Decision Support.}
 \description{
 BIRDS: A set of tools for Biodiversity Information Review and Decision Support.

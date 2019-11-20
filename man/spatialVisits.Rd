@@ -4,8 +4,12 @@
 \alias{spatialVisits}
 \title{A function to make the exploreVisits Spatial}
 \usage{
-spatialVisits(x, xyCols = c("centroidX", "centroidY"),
-  dataCRS = "+init=epsg:4326", radius = "medianDist")
+spatialVisits(
+  x,
+  xyCols = c("centroidX", "centroidY"),
+  dataCRS = "+init=epsg:4326",
+  radius = "medianDist"
+)
 }
 \arguments{
 \item{x}{an object of class \sQuote{data.frame}.}

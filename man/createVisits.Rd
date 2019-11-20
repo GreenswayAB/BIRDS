@@ -4,8 +4,12 @@
 \alias{createVisits}
 \title{Create unique visits IDs}
 \usage{
-createVisits(x, idCols = c("locality", "recordedBy"),
-  timeCols = c("day", "month", "year"), grid = NULL)
+createVisits(
+  x,
+  idCols = c("locality", "recordedBy"),
+  timeCols = c("day", "month", "year"),
+  grid = NULL
+)
 }
 \arguments{
 \item{x}{An object of class \code{data.frame} or \code{SpatialPointsDataFrame}

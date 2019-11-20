@@ -40,7 +40,7 @@ three basic steps: organizing the data into a sampling event-based format, summa
 the data producing summary variables that inform about sampling effort and 
 data completeness, and reviewing the summarized variables.
 
-This package works with `data.frame` tables containing raw species observations 
+This package works with `data.frame` and `data.table` tables containing raw species observations 
 as rows (i.e. primary biodiversity data, PBD), with minimal information required
 for each observation in the following columns:
 
