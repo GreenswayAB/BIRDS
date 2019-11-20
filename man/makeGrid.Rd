@@ -4,8 +4,15 @@
 \alias{makeGrid}
 \title{Make a grid}
 \usage{
-makeGrid(polygon, gridSize, buffer = FALSE, hexGrid = TRUE,
-  offset = NULL, simplify = FALSE, tol = 0.01)
+makeGrid(
+  polygon,
+  gridSize,
+  buffer = FALSE,
+  hexGrid = TRUE,
+  offset = NULL,
+  simplify = FALSE,
+  tol = 0.01
+)
 }
 \arguments{
 \item{polygon}{an object of class \sQuote{SpatialPolygon} or

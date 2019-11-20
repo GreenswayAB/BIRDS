@@ -5,21 +5,35 @@
 \alias{organiseBirds}
 \title{Organize a dataframe to a usable format}
 \usage{
-organizeBirds(x, sppCol = "scientificName", idCols = c("locality",
-  "recordedBy"), timeCols = c("year", "month", "day"),
-  timeInVisits = "day", grid = NULL, presenceCol = NULL,
+organizeBirds(
+  x,
+  sppCol = "scientificName",
+  idCols = c("locality", "recordedBy"),
+  timeCols = c("year", "month", "day"),
+  timeInVisits = "day",
+  grid = NULL,
+  presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
-  dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
+  dataCRS = "+init=epsg:4326",
+  taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
-  simplifySppName = FALSE)
+  simplifySppName = FALSE
+)
 
-organiseBirds(x, sppCol = "scientificName", idCols = c("locality",
-  "recordedBy"), timeCols = c("year", "month", "day"),
-  timeInVisits = "day", grid = NULL, presenceCol = NULL,
+organiseBirds(
+  x,
+  sppCol = "scientificName",
+  idCols = c("locality", "recordedBy"),
+  timeCols = c("year", "month", "day"),
+  timeInVisits = "day",
+  grid = NULL,
+  presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
-  dataCRS = "+init=epsg:4326", taxonRankCol = NULL,
+  dataCRS = "+init=epsg:4326",
+  taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
-  simplifySppName = FALSE)
+  simplifySppName = FALSE
+)
 }
 \arguments{
 \item{x}{A dataframe or a SpatialPointsDataFrame containing at least a

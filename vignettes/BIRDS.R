@@ -1,14 +1,14 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----install package, eval = F-------------------------------------------
+## ----install package, eval = F------------------------------------------------
 #  install.packages('remotes')
 #  remotes::install_github('Greensway/BIRDS')
 
-## ----basic example, eval = TRUE------------------------------------------
+## ----basic example, eval = TRUE-----------------------------------------------
 library(BIRDS)
 # Create a grid for your sample area that will be used to summarise the data:
 grid <- makeGrid(gotaland, gridSize = 10)
@@ -58,7 +58,7 @@ legend("topleft", legend=c("n.observations","n.visits"),
 legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell"),
        lty = 1, lwd = 3, col = c("#78D2EB", "#FFB3B5"), bty = "n")
 
-## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3--------------
+## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3-------------------
 library(sp)
 wNonEmpty<-unname( which( unlist(lapply(SB$overlaid, nrow)) != 0) )
 EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
@@ -83,7 +83,7 @@ legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
       col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
       title = "Number of years", pch = 15, bty="n")
 
-## ----figure 3, fig.show='hold', fig.width= 7, fig.height= 4--------------
+## ----figure 3, fig.show='hold', fig.width= 7, fig.height= 4-------------------
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(SB$spatial@data$nVis, na.rm = TRUE)), 
