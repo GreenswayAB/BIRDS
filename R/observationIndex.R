@@ -72,3 +72,28 @@ obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
   return(res)
 
 }
+
+
+obsIndexSpatial<-function(x, focalSp=NULL){
+  if (class(x) != "SummarizedBirds") {
+    stop("The object 'x' must be of class SummarizedBirds.")
+  }
+  if (is.null(focalSp)) {
+    stop("Please, define the focal species to search for.")
+  }
+  
+  r<-lapply(x$overlaid, function(x){
+    nrow(x[x[,1]==focalSp,])/nrow(x)
+  })
+  
+  r<-data.frame(unlist(r))
+  
+  colnames(r)<-c("ObsIndex")
+  
+  res<-x$spatial
+  
+  res@data<-r
+  
+  return(res)  
+  
+}
