@@ -264,7 +264,7 @@ createVisits<-function(x,
 #' ob<-organizeBirds(bombusObs)
 #' attr(ob, "visitCol")
 #' vis<-visits(ob)
-#' tmp.vis <- createVisits(bombusObs, columns=c("locality", "day", "month", "year"))
+#' tmp.vis <- createVisits(bombusObs, idCols=c("locality"), timeCols = c("day", "month", "year"))
 #' visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 #' vis2<-visits(ob)
 #' attr(ob, "visitCol")
