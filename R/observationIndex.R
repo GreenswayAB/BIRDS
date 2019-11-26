@@ -1,3 +1,54 @@
+#' Observation Index
+#'
+#' This function extracts the proportion of observations for a focal species to
+#' all observations (including the focal species) over time or area.
+#'
+#' @param x an object of class \sQuote{SummarizeBirds}.
+#' @param dimension a character string indicating if the export should be
+#'   \code{"spatial"} or \code{"temporal"}
+#' @param timeRes the time resolution as a character string if \code{dimension = "temporal"}:  \code{"Yearly", "Monthly"} or \code{"Daily"}
+#' @param focalSp the focal species to look for.
+#'
+#' @return If \code{dimension = "spatial"} a \sQuote{SpatialPolygonsDataFrame} or a \sQuote{xts} timeseries if \code{dimension = "temporal"}.
+#' @export
+#'
+#' @examples
+#' grid <- makeGrid(gotaland, gridSize = 10)
+#' PBD<-bombusObs
+#' OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
+#' SB <- summariseBirds(OB, grid=grid)
+#' spp <- listSpecies(SB)
+#' obsInd<-obsIndex(SB, "temporal", "yearly", focalSp=spp[1])
+
+obsIndex<-function(x, dimension, timeRes = NULL, focalSp = NULL){
+  
+  dimension<-tolower(dimension)
+  
+  if(dimension=="spatial"){
+    if(! is.null(timeRes)){
+      warning("'timeRes' is not NULL. It will not be used in a spatial export")
+    }
+    return(obsIndexSpatial(x, focalSp))
+  }else if(dimension=="temporal"){
+    return(obsIndexTemporal(x, timeRes, focalSp))
+  }else{
+    stop("Unknown defenition of \"dimension\"")
+  }
+}
+
+extractPresence<-function(x){
+  
+  if("presence" %in% colnames(x) ) {
+    wNotPres <- which(x$presence != 1 | is.na(x$presence))
+    if(length(wNotPres) >= 1){
+      x <- x[-wNotPres,]
+    }
+  }
+  
+  return(x)
+  
+}
+
 #' Relative observation index (Temporal)
 #'
 #' This function extracts the proportion of observations for a focal species to
@@ -7,7 +58,6 @@
 #' @param focalSp the focal sp to look for.
 #'
 #' @return An xts timeseries
-#' @export
 #'
 #' @examples
 #' grid <- makeGrid(gotaland, gridSize = 10)
@@ -16,6 +66,8 @@
 #' SB <- summariseBirds(OB, grid=grid)
 #' spp <- listSpecies(SB)
 #' obsInd<-obsIndexTemporal(SB, "yearly", focalSp=spp[1])
+#' 
+#' @keywords internal
 obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
@@ -51,12 +103,8 @@ obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
   spNgby<-group_by(spData[spData$scientificName==focalSp,], dates)
 
   ## if there is a column for presence then remove absences
-  if("presence" %in% colnames(spNgby) ) {
-    wNotPres <- which(spNgby$presence != 1 | is.na(spNgby$presence))
-    if(length(wNotPres)>1){
-      spNgby <- spNgby[-wNotPres,]
-    }
-  }
+  spNgby<-extractPresence(spNgby)
+
   spN<-summarise(spNgby, sp=n())
 
   allN<-xts::xts(allN$all, allN$dates)
@@ -64,9 +112,18 @@ obsIndexTemporal<-function(x, timeRes, focalSp=NULL){
 
   res<-merge(res,allN,join='left')
   res<-merge(res,spN,join='left', fill=0)
-
+  
   res<-res[,-1]
 
+  if(! "allN" %in% colnames(res)){
+    res$spN<-NA
+  }
+  
+  
+  if(! "spN" %in% colnames(res)){
+    res$spN<-0
+  }
+  
   res$relObs<-res$spN/res$allN
 
   return(res)
@@ -83,12 +140,16 @@ obsIndexSpatial<-function(x, focalSp=NULL){
   }
   
   r<-lapply(x$overlaid, function(x){
-    nrow(x[x[,1]==focalSp,])/nrow(x)
+    c(nrow(x),nrow(extractPresence(x[x$scientificName==focalSp,])))
   })
   
-  r<-data.frame(unlist(r))
+  r<-data.frame(matrix(unlist(r), ncol = 2, byrow = TRUE))
   
-  colnames(r)<-c("ObsIndex")
+  colnames(r)<-c("allN", "spN")
+  
+  r[r$allN==0,"allN"]<-NA
+  
+  r$relObs<-r$spN/r$allN
   
   res<-x$spatial
   
