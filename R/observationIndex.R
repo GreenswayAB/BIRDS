@@ -26,7 +26,7 @@ obsIndex<-function(x, dimension, timeRes = NULL, focalSp = NULL){
   
   if(dimension=="spatial"){
     if(! is.null(timeRes)){
-      warning("'timeRes' is not NULL. It will not be used in a spatial export")
+      warning("'timeRes' is not NULL. It will not be used in a spatial export.")
     }
     return(obsIndexSpatial(x, focalSp))
   }else if(dimension=="temporal"){
@@ -158,3 +158,4 @@ obsIndexSpatial<-function(x, focalSp=NULL){
   return(res)  
   
 }
+
