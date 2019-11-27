@@ -83,19 +83,22 @@ overlayBirds <- function(x, grid, spillOver = TRUE){
 #' \code{\link{organizeBirds}}, and a polygon grid-layer, which could be created
 #' by \code{\link{makeGrid}} and splits the visits in the OrganizedBirds
 #' (i.e. data belonging to identified visits) to each grid cell.
-#' If \code{spillOver = FALSE} the splitting is done spatially according to the overlay of observations
+#' If \code{spillOver = NULL} the splitting is done spatially according to the overlay of observations
 #' and grid cells, without further consideration of coherence for visits (visit UID).
-#' If \code{spillOver = TRUE} the splitting will be done spatially in a first step,
+#' If \code{spillOver = "duplicate"} the splitting will be done spatially in a first step,
 #' but in the next step for each grid cell the function searches for other observations belonging
 #' to the visits inside the gridcell (identified by visit UID) in the entire dataset and includes
 #' all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
+#' If \code{spillOver = "unique"} the splitting will be done spatially in a first step, 
+#' but in the next step all observations from the same visit is are moved to the grid with most 
+#' observations from that specific visit. 
 #'
 #' @export
 #' @rdname overlayBirds
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' overlayBirds(ob, grid)
-overlayBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
+overlayBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
 
   spBird<-x$spdf
 
@@ -115,7 +118,7 @@ overlayBirds.OrganizedBirds<-function(x, grid, spillOver = TRUE){
   ObsInGridList <- sp::over(grid, spBird, returnList=TRUE)
   wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
 
-  if(spillOver){
+  if(spillOver=="duplicate"){
     tmp.spill <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
     ObsInGridList[wNonEmpty] <- tmp.spill
 
@@ -134,6 +137,12 @@ or your definition of a 'visit' is not properly defined to match your grid cell 
 Please, consider using 'exploreVisits()' to double check your assumptions.")
     }
     rm(tmp.spill, wSpill, diffSpill, porcSpill, nBigSpill)
+  }else if(spillOver=="unique"){
+    ##This is where the new code should go!
+  }else if(is.null(spillOver)){
+    ##Do nothing
+  }else{
+    stop("Unknown definition of spillOver")
   }
 
   if (class(grid) == "SpatialPolygonsDataFrame"){
@@ -146,7 +155,7 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
   res <- list("observationsInGrid" = ObsInGridList, "grid"= grid, "nonEmptyGridCells" = wNonEmpty)
 
   attr(res, "visitCol") <- visitCol ##An attribute to indicate which of the visits-column should be used in further analyses
-  attr(res, "spillOver") <- spillOver ##An attribute to indicate whether spillover observations should be included
+  attr(res, "spillOver") <- spillOver ##An attribute to indicate how spillover observations are included
 
   return(res)
 
