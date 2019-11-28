@@ -34,6 +34,39 @@ includeSpillover <- function(x, birdData, visitCol){
   return(res)
 }
 
+
+includeUniqueSpillover <- function(birdData, grid, visitCol){
+  
+  obs<-birdData@data
+  
+  visits<-unique(obs[,visitCol])
+  
+  visits<-cbind(visits, "grid"=NA)
+  
+  GridInObsList<-sp::over(birdData, grid, returnList=FALSE)
+  
+  obs$grid<-GridInObsList
+  
+  crossTab<-table("grid"=obs[!is.na(obs$grid),"grid"], "visits"=obs[!is.na(obs$grid),visitCol])
+  
+  for(v in dimnames(crossTab)$visits){
+    
+    visits[visits[,1]==as.integer(v),2]<- as.integer(dimnames(crossTab)$grid[nnet::which.is.max(crossTab[,v])])
+    ##nnet::which.is.max is good since if it's equal number it takes one on random. 
+    
+  }
+  
+  res<-list()
+  cols<-1:ncol(obs)-1 #Drop the grid-col
+  
+  for(g in 1:length(grid)){
+    res[[g]]<-obs[obs[,visitCol] %in% visits[visits[,2]==g,1],cols]
+  }
+  
+  return(res)
+  
+}
+
 #' Overlay BIRDS object and grid
 #'
 #' Make an overlay for an OrganizedBirds object and a grid to identify which
@@ -115,10 +148,11 @@ overlayBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
     All results will use this nomenclature, but the order of the cells will remain unaltered.")
   }
 
-  ObsInGridList <- sp::over(grid, spBird, returnList=TRUE)
-  wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
-
   if(spillOver=="duplicate"){
+    
+    ObsInGridList <- sp::over(grid, spBird, returnList=TRUE)
+    wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+    
     tmp.spill <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
     ObsInGridList[wNonEmpty] <- tmp.spill
 
@@ -138,9 +172,11 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
     }
     rm(tmp.spill, wSpill, diffSpill, porcSpill, nBigSpill)
   }else if(spillOver=="unique"){
-    ##This is where the new code should go!
+    ObsInGridList<-includeUniqueSpillover(spBird, grid, visitCol)
+    wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
   }else if(is.null(spillOver)){
-    ##Do nothing
+    ObsInGridList <- sp::over(grid, spBird, returnList=TRUE)
+    wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
   }else{
     stop("Unknown definition of spillOver")
   }
