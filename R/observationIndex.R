@@ -6,10 +6,14 @@
 #'
 #' @keywords internal
 normalize <- function(x) {
+<<<<<<< HEAD
   num <- (x - min(x, na.rm = TRUE))
   den <- (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
   norm <- num / den
   return (norm)
+=======
+  return ((x - min(x)) / (max(x) - min(x)))
+>>>>>>> adbd631642ad609a48c82622ba697380f10023e0
 }
 
 #' The actual observation idenx function
@@ -141,7 +145,6 @@ obsIndexTemporal<-function(x,
                         res$allN,
                         fs.rm=fs.rm,
                         norm=norm)
-
   return(res)
 }
 
@@ -182,7 +185,6 @@ obsIndexSpatial<-function(x,
                        norm=norm)
 
   r[r$allN==0, ]<-NA
-
   res <- x$spatial
   res@data <- r
 
@@ -248,6 +250,7 @@ obsIndex<-function(x,
                             focalSp,
                             fs.rm=fs.rm,
                             norm=norm))
+
   }else{
     stop("Unknown definition of \"dimension\"")
   }
