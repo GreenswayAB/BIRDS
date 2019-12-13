@@ -6,11 +6,11 @@
 \alias{summariseBirds}
 \title{Summarize the OrganizedBirds}
 \usage{
-summarizeBirds(x, grid, spillOver = TRUE)
+summarizeBirds(x, grid, spillOver = NULL)
 
-\method{summarizeBirds}{OrganizedBirds}(x, grid, spillOver = TRUE)
+\method{summarizeBirds}{OrganizedBirds}(x, grid, spillOver = NULL)
 
-summariseBirds(x, grid, spillOver = TRUE)
+summariseBirds(x, grid, spillOver = NULL)
 }
 \arguments{
 \item{x}{An OrgnanizedBirds-object created by \code{\link{organizeBirds}}}
@@ -21,9 +21,9 @@ NULL, which will treat the area for all observations as one single
 grid cell.}
 
 \item{spillOver}{Specifies if the function should search for observations done during
-the same visit (identified by visit UID) but that fall outside the grid cell. Default is \code{TRUE}.}
-
-\item{...}{additional parameters for \code{\link{summarizeBirds}}}
+the same visit (identified by visit UID) but that fall outside the grid cell.
+Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.
+See Details for more information on how to use this.}
 }
 \value{
 A SummarizedBirds-object
@@ -31,6 +31,21 @@ A SummarizedBirds-object
 \description{
 Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
 in spatial and  temporal dimensions.
+}
+\details{
+If \code{spillOver = NULL} the splitting is done spatially according to the
+overlay of observations and grid cells, without further consideration of
+coherence for visits (visit UID). If \code{spillOver = c("unique", "duplicate")}
+the splitting will be done spatially in a first step, and then:
+if \code{(spillOver = "unique")} assigns (and moves) all observations with same visitUID
+to the grid cell with most observations (or picks one grid cell at random if
+there is a tie); or if \code{(spillOver = "duplicate")} duplicates all
+observations with same visitUID across all grid cells containing at least one
+observation with that visitUID.
+
+The later approach is usefull when the amount of observations spilled over
+neighbouring cells is minimal and information over the spatial extent of the
+sampling effort is more important than sample independence.
 }
 \examples{
 ob<-organizeBirds(bombusObs)

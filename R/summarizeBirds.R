@@ -217,16 +217,20 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 #'
 #' Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
 #' in spatial and  temporal dimensions.
-#' 
-#' If \code{spillOver = NULL} the splitting is done spatially according to the overlay of observations
-#' and grid cells, without further consideration of coherence for visits (visit UID).
-#' If \code{spillOver = "duplicate"} the splitting will be done spatially in a first step,
-#' but in the next step for each grid cell the function searches for other observations belonging
-#' to the visits inside the gridcell (identified by visit UID) in the entire dataset and includes
-#' all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
-#' If \code{spillOver = "unique"} the splitting will be done spatially in a first step, 
-#' but in the next step all observations from the same visit is are moved to the grid with most 
-#' observations from that specific visit. 
+#'
+#' If \code{spillOver = NULL} the splitting is done spatially according to the
+#' overlay of observations and grid cells, without further consideration of
+#' coherence for visits (visit UID). If \code{spillOver = c("unique", "duplicate")}
+#' the splitting will be done spatially in a first step, and then:
+#' if \code{(spillOver = "unique")} assigns (and moves) all observations with same visitUID
+#' to the grid cell with most observations (or picks one grid cell at random if
+#' there is a tie); or if \code{(spillOver = "duplicate")} duplicates all
+#' observations with same visitUID across all grid cells containing at least one
+#' observation with that visitUID.
+#'
+#' The later approach is usefull when the amount of observations spilled over
+#' neighbouring cells is minimal and information over the spatial extent of the
+#' sampling effort is more important than sample independence.
 #'
 #' @param x An OrgnanizedBirds-object created by \code{\link{organizeBirds}}
 #' @param grid A SpatialPolygons or SpatialPolygonsDataFrame-object whith
@@ -234,18 +238,18 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 #'   NULL, which will treat the area for all observations as one single
 #'   grid cell.
 #' @param spillOver Specifies if the function should search for observations done during
-#'   the same visit (identified by visit UID) but that fall outside the grid cell. 
-#'   Default is \code{NULL}. See ‘Details’ for more information on how to use this.
+#'   the same visit (identified by visit UID) but that fall outside the grid cell.
+#'   Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.
+#'   See Details for more information on how to use this.
 #' @return A SummarizedBirds-object
 #' @export
-#' @rdname summarizeBirds
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' SB <- summarizeBirds(ob, grid)
 #' nObsG<-rowSums(SB$spatioTemporal[,,13,"nObs"], na.rm = FALSE)
 #' nObsG2<-SB$spatial@data$nObs
 #' any(nObsG != nObsG2, na.rm = TRUE) ## Check, two ways to obtain the same
-summarizeBirds<-function(x, grid, spillOver = TRUE){
+summarizeBirds<-function(x, grid, spillOver = NULL){
   UseMethod("summarizeBirds")
 }
 
@@ -253,7 +257,6 @@ summarizeBirds<-function(x, grid, spillOver = TRUE){
 
 ##TODO include an exclude variable in summarizeBirds that remove different parts of the results to save up memory?
 
-#' @param ... additional parameters for \code{\link{summarizeBirds}}
 #' @rdname summarizeBirds
 #' @export
 summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
@@ -275,7 +278,7 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
       bOver <- overlayBirds(x, grid=grid, spillOver = spillOver) # To use in the spatial analysis
 
       areaGrid <- rgeos::gUnaryUnion(grid)
-      bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver) #To use in the temporal analysis where the entire area could be interpreted as a single grid cell
+      suppressMessages(bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver)) #To use in the temporal analysis where the entire area could be interpreted as a single grid cell
 
       useSpatial <- TRUE
     }else{

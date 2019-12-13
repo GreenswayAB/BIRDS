@@ -27,4 +27,6 @@ OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 SB <- summariseBirds(OB, grid=grid)
 spp <- listSpecies(SB)
 obsInd<-obsIndexTemporal(SB, "yearly", focalSp=spp[1])
+
 }
+\keyword{internal}
