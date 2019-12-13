@@ -4,16 +4,19 @@
 \alias{makeCircle}
 \title{Create the minimum circle containing the points}
 \usage{
-makeCircle(spdf)
+makeCircle(spdf, projCRS = NULL)
 }
 \arguments{
-\item{spdf}{an object of class \sQuote{SpatialPointsDataFrame} with geodesic
-coordinates in WGS84 (ESPG:4326).}
+\item{spdf}{an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.}
+
+\item{projCRS}{a proj4-type string defining a projected CRS. It is very important
+that the selected CRS is accurate in the study area.}
 }
 \value{
-an object of class \sQuote{SpatialPolygon} with a polygon with geodesic
+a polygon object of class \sQuote{SpatialPolygon} with geodesic
 coordinates in WGS84 (ESPG:4326).
 }
 \description{
-Create the minimum circle containing the points
+This funciton is based on the function shotGroups::getMinCircle() that uses
+the Skyum algorithm based on the convex hull.
 }
