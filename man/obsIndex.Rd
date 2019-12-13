@@ -9,6 +9,7 @@ obsIndex(
   dimension,
   timeRes = NULL,
   focalSp = NULL,
+  visits = TRUE,
   fs.rm = TRUE,
   norm = TRUE
 )
@@ -24,6 +25,9 @@ obsIndex(
 
 \item{focalSp}{the focal species to look for}
 
+\item{visits}{if TRUE (default) the observation index is calculated over number
+of visits, else uses the number of observations}
+
 \item{fs.rm}{if TRUE, assumes that the observations for the focal species are
 included in 'group' and will remove them}
 
@@ -34,8 +38,16 @@ If \code{dimension = "spatial"} a \sQuote{SpatialPolygonsDataFrame}
 or a \sQuote{xts} timeseries if \code{dimension = "temporal"}.
 }
 \description{
-This function extracts the proportion of observations for a focal species to
-all observations (including the focal species) over time or area.
+This function extracts the proportion of visits (or observations) detecting
+a focal species to all visits (or observations) over time or space.
+}
+\note{
+It implements the following algorithm to calculate the observation index:
+OI = log ( (At / (At + Rt) ) / ( A / (A + R) ) )
+where At is the sum of observations of a focal species during time t (or gridcell),
+Rt is sum of observations of all species in reference group during t (or gridcell),
+A and R are the total sums for observations. If the ratio to log = 0 it adds
+0.1 to avoid -Inf results.
 }
 \examples{
 grid <- makeGrid(gotaland, gridSize = 10)
@@ -46,10 +58,10 @@ spp <- listSpecies(SB)
 tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3])
 plot(tempOI$relObs, main=spp[3])
 spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
-palRW <- leaflet::colorNumeric(c("white", "red"), c(0,1), na.color = "transparent")
-sp::plot(spatRes, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 minOI <- min(spatOI$relObs, na.rm=TRUE)
 maxOI <- max(spatOI$relObs, na.rm=TRUE)
+palRW <- leaflet::colorNumeric(c("white", "red"), c(minOI, maxOI), na.color = "transparent")
+sp::plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
 }

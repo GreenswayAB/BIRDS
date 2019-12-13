@@ -45,13 +45,14 @@ includeSpillover <- function(x, birdData, visitCol){
 #' @param visitCol A character string for specifying the columns that identify a visit.
 #'
 #' @return A  ObservationsInGrid list
+#' @importFrom sp over
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
   obs <- birdData@data
   visits <- unique(obs[, visitCol])
   visits <- cbind(visits, "grid"=NA)
 
-  obs$grid <- sp::over(birdData, grid, returnList=FALSE)
+  obs$grid <- over(birdData, grid, returnList=FALSE)
 
   wNA <- which(is.na(obs$grid))
   if(length(wNA)>0){
@@ -125,6 +126,7 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 #'    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
 #'   }
 #' @export
+#' @importFrom sp coordinates proj4string spTransform CRS over
 #' @rdname overlayBirds
 #' @examples ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
@@ -149,7 +151,7 @@ overlayBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
   nObs <- nrow(spBird)
 
   if(!spBird@proj4string@projargs==grid@proj4string@projargs){
-        grid <- sp::spTransform(grid, sp::CRS(spBird@proj4string@projargs))
+        grid <- spTransform(grid, CRS(spBird@proj4string@projargs))
   }
 
   #### Rename grid
@@ -161,7 +163,7 @@ All results will use this nomenclature, but the order of the cells will remain u
 
   #### SPILL OVER
   ### Generic overlay
-  ObsInGridList <- sp::over(grid, spBird, returnList=TRUE)
+  ObsInGridList <- over(grid, spBird, returnList=TRUE)
   wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
   if(length(wNonEmpty)==0) stop("Observations don't overlap any grid cell.")
   ### Check nObs

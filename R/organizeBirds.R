@@ -406,6 +406,7 @@ obsData.OrganizedBirds<-function(x){
 #' @param simplifySppName wheter to remove everything else that is not the species
 #' name (authors, years and intraspecific epithets). Default set to FALSE
 #'
+#' @importFrom sp coordinates proj4string spTransform CRS
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 #' @export
 #'
@@ -440,9 +441,9 @@ organizeBirds <- function(x,
         xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
-      sp::coordinates(x) <- xyColsl.df
+      coordinates(x) <- xyColsl.df
   ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
-      sp::proj4string(x) <- dataCRS
+      proj4string(x) <- dataCRS
 
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
@@ -451,8 +452,8 @@ organizeBirds <- function(x,
     stop("The argument 'x' should be of class data.frame or SpatialPointsDataFrame.")
   }
 
-  if(sp::proj4string(x) != "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"){
-    x <- sp::spTransform(x, sp::CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+  if(proj4string(x) != "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"){
+    x <- spTransform(x, CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
   }
 
   ### Check the column names
