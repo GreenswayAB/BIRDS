@@ -1,5 +1,14 @@
 
-###This takes the overlay reconstruct it as an data.frame and removes duplicate visits in other gridcells.
+#' Decosntruction of the overlay
+#'
+#' This takes the overlay element of a summarisedBirds, reconstruct it as a
+#' long data.frame and removes duplicate visits in other gridcells.
+#'
+#' @param overlay A list with an element by grid cell
+#' @param visitCol A character string specifying the columns that identify a visit.
+#'
+#' @return a long data.frame
+#' @keywords internal
 deconstructOverlay <- function(overlay, visitCol){
 
   #Add a grid id to every enlement (grid) in the overlay-list
@@ -69,11 +78,11 @@ exportSpatial <- function(sb, timeRes, variable, method){
       for(i in 1:nyears){
         start <- (i - 1) * 12 + 1
         stop <- i * 12
-        spatial@data[,start:stop] <- ifelse(!singleGrid, 
+        spatial@data[,start:stop] <- ifelse(!singleGrid,
                                             data.frame(dat[,i,]),
-                                            ifelse(nyears==1, 
-                                                   data.frame(dat), 
-                                                   data.frame(dat[i,]) 
+                                            ifelse(nyears==1,
+                                                   data.frame(dat),
+                                                   data.frame(dat[i,])
                                             ))[[1]]
       }
 
@@ -90,7 +99,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
           apply(sb$spatioTemporal[,,1:12, variable], sumDim, method)
         }
       }
-      
+
       spatial@data <- data.frame("V1"=round(tmp, 2))
       colnames(spatial@data)<-ifelse(!singleGrid, month.abb, variable)
     }else{

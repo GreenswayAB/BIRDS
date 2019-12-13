@@ -1,4 +1,4 @@
-#' NOrmalize
+#' Normalize
 #'
 #' This function nomalizes a vector to a 0-1 range
 #' @param x a numerical vector
@@ -42,7 +42,7 @@ logObsInd<-function(focal,
   groupS <- sum(group, na.rm=TRUE)
   res2log <- (focal / (focal + group)) / (focalS / (focalS + groupS))
 
-  res <- log( res2log + ifelse(res2log == 0, 0.1, 0) ) ##+0.368 if it is zero in the denominator it ends up -1
+  res <- log( res2log + ifelse(res2log == 0, 0.1, 0) )
   if (norm){
     res <- normalize(res)
   }
@@ -69,26 +69,33 @@ extractPresence<-function(x){
 
 #' Relative observation index (Temporal)
 #'
-#' This function extracts the proportion of observations for a focal species to
-#' the all observations (including the focal species) over time.
+#' This function extracts the proportion of visitis (or observations) detecting
+#' a focal species to all visits (or observations) over time.
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param timeRes the time resolution:  \code{"Yearly", "Monthly"} or \code{"Daily"}
 #' @param focalSp the focal sp to look for.
+#' @param visits if TRUE (default) the observation index is calculated over number
+#' of visits, else uses the number of observations.
+#' @param fs.rm if TRUE, assumes that the observations for the focal species are
+#' included in 'group' and will remove them
+#' @param norm if TRUE, the result is nomalized to a 0-1 range
 #'
 #' @return An xts timeseries
 #'
 #' @keywords internal
 obsIndexTemporal<-function(x,
                            timeRes,
-                           focalSp=NULL,
-                           fs.rm=TRUE,
-                           norm=TRUE){
+                           focalSp = NULL,
+                           visits = TRUE,
+                           fs.rm = TRUE,
+                           norm = TRUE){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
     stop("Please, define the focal species to search for.")
   }
+  visitCol <- attr(x, "visitCol")
   timeRes <- tolower(timeRes)
   yearsAll <- as.numeric(dimnames(x$spatioTemporal)[[2]])
 
@@ -112,13 +119,17 @@ obsIndexTemporal<-function(x,
     stop("Unknown time resolution")
   }
 
-  allN<-summarise(group_by(spData, dates), all=n())
   spNgby<-group_by(spData[spData$scientificName==focalSp,], dates)
-
   ## if there is a column for presence then remove absences
   spNgby<-extractPresence(spNgby)
 
-  spN<-summarise(spNgby, sp=n())
+  if (visits){
+    allN <- summarise(group_by(spData, dates), all= n_distinct(!!dplyr::sym(visitCol)))
+    spN <- summarise(spNgby, sp=n_distinct(!!dplyr::sym(visitCol)))
+  } else {
+    allN <- summarise(group_by(spData, dates), all=n())
+    spN <- summarise(spNgby, sp=n())
+  }
 
   allN<-xts::xts(allN$all, allN$dates)
   spN<-xts::xts(spN$sp, spN$dates)
@@ -146,30 +157,48 @@ obsIndexTemporal<-function(x,
 
 #' Relative observation index (Spatial)
 #'
-#' This function extracts the proportion of observations for a focal species to
-#' the all observations (including the focal species) over time.
+#' This function extracts the proportion of visits (or observations) detecting a
+#' focal species to all visits (or observations) over space.
 #' @param x an object of class \sQuote{SummarizeBirds}.
-#' @param focalSp the focal sp to look for.
+#' @param focalSp the focal sp to look for
+#' @param visits if TRUE (default) the observation index is calculated over number
+#' of visits, else uses the number of observations.
+#' @param fs.rm if TRUE, assumes that the observations for the focal species are
+#' included in 'group' and will remove them
+#' @param norm if TRUE, the result is nomalized to a 0-1 range
 #'
 #' @return A spatial object
 #'
 #' @keywords internal
 obsIndexSpatial<-function(x,
-                          focalSp=NULL,
-                          fs.rm=TRUE,
-                          norm=TRUE){
+                          focalSp = NULL,
+                          visits = TRUE,
+                          fs.rm = TRUE,
+                          norm = TRUE){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
     stop("Please, define the focal species to search for.")
   }
+  visitCol <- attr(x, "visitCol")
+  overlaid<-x$overlaid
 
-  r<-lapply(x$overlaid, function(x){
-    c(nrow(x),
-      nrow(extractPresence(x[x$scientificName==focalSp,]))
-    )
-  })
+  r<-lapply(overlaid, function(x){
+      spNgby<-group_by(x[x$scientificName==focalSp,])
+      ## if there is a column for presence then remove absences
+      spNgby<-extractPresence(spNgby)
+      if (visits){
+        allN <- summarise(group_by(x), n_distinct(!!dplyr::sym(visitCol)))
+        spN <- summarise(spNgby, n_distinct(!!dplyr::sym(visitCol)))
+      } else {
+        allN <- summarise(group_by(x), n())
+        spN <- summarise(spNgby, n())
+      }
+
+      return( unname(unlist( c(allN, spN) )) )
+    }
+  )
 
   r<-data.frame(matrix(unlist(r), ncol = 2, byrow = TRUE))
   colnames(r)<-c("allN", "spN")
@@ -180,7 +209,7 @@ obsIndexSpatial<-function(x,
                        fs.rm=fs.rm,
                        norm=norm)
 
-  r[r$allN==0, ]<-NA
+  r[r$allN==0, ] <- NA
   res <- x$spatial
   res@data <- r
 
@@ -190,8 +219,14 @@ obsIndexSpatial<-function(x,
 
 #' Observation Index
 #'
-#' This function extracts the proportion of observations for a focal species to
-#' all observations (including the focal species) over time or area.
+#' This function extracts the proportion of visits (or observations) detecting
+#' a focal species to all visits (or observations) over time or space.
+#' It implements the following algorithm to calculate the observation index:
+#' OI = log ( (At / (At + Rt) ) / ( A / (A + R) ) )
+#' where At is the sum of observations of a focal species during time t (or gridcell),
+#' Rt is sum of observations of all species in reference group during t (or gridcell),
+#' A and R are the total sums for observations. If the ratio to log = 0 it adds
+#' 0.1 to avoid -Inf results.
 #'
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param dimension a character string indicating if the export should be
@@ -199,6 +234,8 @@ obsIndexSpatial<-function(x,
 #' @param timeRes the time resolution as a character string if
 #' \code{dimension = "temporal"}:  \code{"Yearly", "Monthly"} or \code{"Daily"}
 #' @param focalSp the focal species to look for
+#' @param visits if TRUE (default) the observation index is calculated over number
+#' of visits, else uses the number of observations
 #' @param fs.rm if TRUE, assumes that the observations for the focal species are
 #' included in 'group' and will remove them
 #' @param norm if TRUE, the result is nomalized to a 0-1 range
@@ -217,10 +254,10 @@ obsIndexSpatial<-function(x,
 #' plot(tempOI$relObs, main=spp[3])
 
 #' spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
-#' palRW <- leaflet::colorNumeric(c("white", "red"), c(0,1), na.color = "transparent")
-#' sp::plot(spatRes, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 #' minOI <- min(spatOI$relObs, na.rm=TRUE)
 #' maxOI <- max(spatOI$relObs, na.rm=TRUE)
+#' palRW <- leaflet::colorNumeric(c("white", "red"), c(minOI, maxOI), na.color = "transparent")
+#' sp::plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 #' legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
 #'        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
 
@@ -228,24 +265,19 @@ obsIndex<-function(x,
                    dimension,
                    timeRes = NULL,
                    focalSp = NULL,
-                   fs.rm=TRUE,
-                   norm=TRUE){
+                   visits = TRUE,
+                   fs.rm = TRUE,
+                   norm = TRUE){
 
   dimension<-tolower(dimension)
   if (dimension=="spatial"){
     if(! is.null(timeRes)){
       warning("'timeRes' is not NULL. It will not be used in a spatial export.")
     }
-    return(obsIndexSpatial(x,
-                           focalSp,
-                           fs.rm=fs.rm,
-                           norm=norm))
+    return(obsIndexSpatial(x,focalSp, visits, fs.rm, norm))
+
   }else if (dimension=="temporal"){
-    return(obsIndexTemporal(x,
-                            timeRes,
-                            focalSp,
-                            fs.rm=fs.rm,
-                            norm=norm))
+    return(obsIndexTemporal(x, timeRes, focalSp, visits, fs.rm, norm))
 
   }else{
     stop("Unknown definition of \"dimension\"")

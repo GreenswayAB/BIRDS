@@ -4,7 +4,14 @@
 \alias{obsIndex}
 \title{Observation Index}
 \usage{
-obsIndex(x, dimension, timeRes = NULL, focalSp = NULL)
+obsIndex(
+  x,
+  dimension,
+  timeRes = NULL,
+  focalSp = NULL,
+  fs.rm = TRUE,
+  norm = TRUE
+)
 }
 \arguments{
 \item{x}{an object of class \sQuote{SummarizeBirds}.}
@@ -12,12 +19,19 @@ obsIndex(x, dimension, timeRes = NULL, focalSp = NULL)
 \item{dimension}{a character string indicating if the export should be
 \code{"spatial"} or \code{"temporal"}}
 
-\item{timeRes}{the time resolution as a character string if \code{dimension = "temporal"}:  \code{"Yearly", "Monthly"} or \code{"Daily"}}
+\item{timeRes}{the time resolution as a character string if
+\code{dimension = "temporal"}:  \code{"Yearly", "Monthly"} or \code{"Daily"}}
 
-\item{focalSp}{the focal species to look for.}
+\item{focalSp}{the focal species to look for}
+
+\item{fs.rm}{if TRUE, assumes that the observations for the focal species are
+included in 'group' and will remove them}
+
+\item{norm}{if TRUE, the result is nomalized to a 0-1 range}
 }
 \value{
-If \code{dimension = "spatial"} a \sQuote{SpatialPolygonsDataFrame} or a \sQuote{xts} timeseries if \code{dimension = "temporal"}.
+If \code{dimension = "spatial"} a \sQuote{SpatialPolygonsDataFrame}
+or a \sQuote{xts} timeseries if \code{dimension = "temporal"}.
 }
 \description{
 This function extracts the proportion of observations for a focal species to
@@ -29,5 +43,13 @@ PBD<-bombusObs
 OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 SB <- summariseBirds(OB, grid=grid)
 spp <- listSpecies(SB)
-obsInd<-obsIndex(SB, "temporal", "yearly", focalSp=spp[1])
+tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3])
+plot(tempOI$relObs, main=spp[3])
+spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
+palRW <- leaflet::colorNumeric(c("white", "red"), c(0,1), na.color = "transparent")
+sp::plot(spatRes, col=palRW(spatOI$relObs), border="grey", main=spp[3])
+minOI <- min(spatOI$relObs, na.rm=TRUE)
+maxOI <- max(spatOI$relObs, na.rm=TRUE)
+legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
+       col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
 }
