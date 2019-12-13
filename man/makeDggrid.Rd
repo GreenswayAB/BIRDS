@@ -45,12 +45,20 @@ an object of class \sQuote{SpatialPolygon} with a set of polygons
 conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
 }
 \description{
+<<<<<<< HEAD
 Construct a discrete global grid system (dggs) object over a preferred polygon.
 }
 \details{
 Note: This may generate odd results for very large rectangles, because putting rectangles on spheres is weird... as you should know, if you're using this package.
  Use the function \code{exploreVisits()} to assess if your definition of visit
  aligns with your grid size.
+=======
+Makes a grid adapted
+Note: This may generate odd results for very large rectangles, because putting rectangles on spheres is weird... as you should know, if you're using this package.
+ Use the function
+\code{exploreVisits()} to assess if your definition of visit aligns with your
+ grid size.
+>>>>>>> fa761ef4a0e024772bb21820addef60420ba0e2d
 }
 \note{
 Depending on the total number of grid cells the computations may take time.

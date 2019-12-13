@@ -18,5 +18,9 @@ coordinates in WGS84 (ESPG:4326).
 }
 \description{
 This funciton is based on the function shotGroups::getMinCircle() that uses
+<<<<<<< HEAD
 the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf
+=======
+the Skyum algorithm based on the convex hull.
+>>>>>>> fa761ef4a0e024772bb21820addef60420ba0e2d
 }
