@@ -98,6 +98,7 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' @param long whether the map should be long or wide.
 #' @param colVis color to plot visited gird cells
 #' @param colPres color to plot grid cells where species is present
+#' @param ... further plot parameters
 #' @return a plot with a brief species summary
 #' @examples
 #' library(sp)

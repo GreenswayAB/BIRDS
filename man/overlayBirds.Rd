@@ -5,17 +5,18 @@
 \alias{overlayBirds.OrganizedBirds}
 \title{Overlay BIRDS object and grid}
 \usage{
-overlayBirds(x, grid, spillOver = TRUE)
+overlayBirds(x, grid, spillOver = NULL)
 
-\method{overlayBirds}{OrganizedBirds}(x, grid, spillOver = TRUE)
+\method{overlayBirds}{OrganizedBirds}(x, grid, spillOver = NULL)
 }
 \arguments{
 \item{x}{An OrganizedBirds object}
 
-\item{grid}{A SpatialPolygonsDataFrame object of the grid in the study area}
+\item{grid}{A SpatialPolygonsDataFrame object of the grid over the study area}
 
-\item{spillOver}{Specifies if the function should search for observations belonging to the same
-visit (identified by visit UID) but fall outside of the grid cell. Default is \code{TRUE}.}
+\item{spillOver}{Specifies if the function should search for observations
+with the same visitUID over several grid cell, and what to do with them.
+ Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.}
 }
 \value{
 The output is a OverlaidBirds-class object, which is a list
@@ -32,34 +33,28 @@ The output is a OverlaidBirds-class object, which is a list
 \description{
 Make an overlay for an OrganizedBirds object and a grid to identify which
 observations that fall into which grid cell.
-
-This function takes an OrganizedBirds object, created by
-\code{\link{organizeBirds}}, and a polygon grid-layer, which could be created
-by \code{\link{makeGrid}} and splits the visits in the OrganizedBirds
-(i.e. data belonging to identified visits) to each grid cell.
-If \code{spillOver = FALSE} the splitting is done spatially according to the overlay of observations
-and grid cells, without further consideration of coherence for visits (visit UID).
-If \code{spillOver = TRUE} the splitting will be done spatially in a first step,
-but in the next step for each grid cell the function searches for other observations belonging
-to the visits inside the gridcell (identified by visit UID) in the entire dataset and includes
-all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
 }
 \details{
 This function takes an OrganizedBirds object, created by
 \code{\link{organizeBirds}}, and a polygon grid-layer, which could be created
 by \code{\link{makeGrid}} and splits the visits in the OrganizedBirds
 (i.e. data belonging to identified visits) to each grid cell.
-If \code{spillOver = FALSE} the splitting is done spatially according to the overlay of observations
-and grid cells, without further consideration of coherence for visits (visit UID).
-If \code{spillOver = TRUE} the splitting will be done spatially in a first step,
-but in the next step for each grid cell the function searches for other observations belonging
-to the visits inside the gridcell (identified by visit UID) in the entire dataset and includes
-all such observations found to the observations in the grid cell (i.e. keeping visits coherent).
+
+If \code{spillOver = NULL} the splitting is done spatially according to the
+overlay of observations and grid cells, without further consideration of
+coherence for visits (visit UID). If \code{spillOver = c("unique", "duplicate")}
+the splitting will be done spatially in a first step, and then:
+if \code{(spillOver = "unique")} assigns (and moves) all observations with same visitUID
+to the grid cell with most observations (or picks one grid cell at random if
+there is a tie); or if \code{(spillOver = "duplicate")} duplicates all
+observations with same visitUID across all grid cells containing at least one
+observation with that visitUID.
+
+The later approach is usefull when the amount of observations spilled over
+neighbouring cells is minimal and information over the spatial extent of the
+sampling effort is more important than sample independence.
 }
 \examples{
-ob<-organizeBirds(bombusObs)
-grid <- makeGrid(gotaland, gridSize = 10)
-overlayBirds(ob, grid)
 ob<-organizeBirds(bombusObs)
 grid <- makeGrid(gotaland, gridSize = 10)
 overlayBirds(ob, grid)

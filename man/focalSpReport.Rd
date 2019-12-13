@@ -23,6 +23,8 @@ focalSpReport(
 \item{colVis}{color to plot visited gird cells}
 
 \item{colPres}{color to plot grid cells where species is present}
+
+\item{...}{further plot parameters}
 }
 \value{
 a plot with a brief species summary

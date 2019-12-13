@@ -72,3 +72,9 @@
 #' @source \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
 "bombusObs"
 
+#' @title A simple empty summarisedBirds object.
+#'
+#' @description An empty summarisedBirds object used to dinamically test for validity
+#' of export parameter combinations \code{exportBirds()} in the sister package shinyBirds
+#' @format An object of class summarisedBirds
+'simpleSB'
