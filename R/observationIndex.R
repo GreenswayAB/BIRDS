@@ -221,7 +221,8 @@ obsIndexSpatial<-function(x,
 #'
 #' This function extracts the proportion of visits (or observations) detecting
 #' a focal species to all visits (or observations) over time or space.
-#' It implements the following algorithm to calculate the observation index:
+#'
+#' @note  It implements the following algorithm to calculate the observation index:
 #' OI = log ( (At / (At + Rt) ) / ( A / (A + R) ) )
 #' where At is the sum of observations of a focal species during time t (or gridcell),
 #' Rt is sum of observations of all species in reference group during t (or gridcell),

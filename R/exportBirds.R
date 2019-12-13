@@ -193,6 +193,7 @@ removeInexDays<-function(x){
   return(x)
 }
 
+### a function to get average species list over time
 getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
   if(timeRes=="yearly"){
     gby<-group_by(obsData, year=factor(year, levels = yearsAll),
