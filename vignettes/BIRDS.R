@@ -10,6 +10,7 @@ knitr::opts_chunk$set(
 
 ## ----basic example, eval = TRUE-----------------------------------------------
 library(BIRDS)
+library(sp)
 # Create a grid for your sample area that will be used to summarise the data:
 grid <- makeGrid(gotaland, gridSize = 10)
 # The grid can be easily created in different ways. 
@@ -59,7 +60,6 @@ legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell")
        lty = 1, lwd = 3, col = c("#78D2EB", "#FFB3B5"), bty = "n")
 
 ## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3-------------------
-library(sp)
 wNonEmpty<-unname( which( unlist(lapply(SB$overlaid, nrow)) != 0) )
 EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 # because the dimension is "spatial", the result is a 'SpatialPolygonDataFrame'
@@ -79,9 +79,10 @@ mtext("Number of years for which \nJuly was sampled", 3, line=-2)
 plot(EB, col=palBW(EB@data$Dec), border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 mtext("Number of years for which \nDecember was sampled", 3, line=-2)
-legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
-      col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
-      title = "Number of years", pch = 15, bty="n")
+legend("bottomleft", 
+       legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
+       col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
+       title = "Number of years", pch = 15, bty="n")
 
 ## ----figure 3, fig.show='hold', fig.width= 7, fig.height= 4-------------------
 par(mfrow=c(1,2), mar=c(1,1,1,1))

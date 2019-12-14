@@ -65,7 +65,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       tmp<-data.frame(sb$spatioTemporal[,,13, variable])## Already added accordingly
-      colnames(tmp)<-ifelse(!singleGrid, yearsAll, variable)
+      colnames(tmp)<-if(!singleGrid) yearsAll else variable
       spatial@data <- tmp
 
     } else if(timeRes == "monthly"){
@@ -78,12 +78,14 @@ exportSpatial <- function(sb, timeRes, variable, method){
       for(i in 1:nyears){
         start <- (i - 1) * 12 + 1
         stop <- i * 12
-        spatial@data[,start:stop] <- ifelse(!singleGrid,
-                                            data.frame(dat[,i,]),
-                                            ifelse(nyears==1,
-                                                   data.frame(dat),
-                                                   data.frame(dat[i,])
-                                            ))[[1]]
+        spatial@data[,start:stop] <- (if(!singleGrid) {
+                                                        data.frame(dat[,i,])
+                                                      } else {
+                                                        if(nyears==1)
+                                                          data.frame(dat)
+                                                        else
+                                                          data.frame(dat[i,])
+                                                      })[[1]]
       }
 
     } else if(timeRes == "month"){
@@ -101,7 +103,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
       }
 
       spatial@data <- data.frame("V1"=round(tmp, 2))
-      colnames(spatial@data)<-ifelse(!singleGrid, month.abb, variable)
+      colnames(spatial@data) <- if(!singleGrid) month.abb else variable
     }else{
       stop("Wrong input for variable timeRes. Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
     }

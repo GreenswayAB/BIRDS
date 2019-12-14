@@ -86,8 +86,8 @@ makeCircle<-function(spdf, projCRS=NULL){
       mincirc <- shotGroups::getMinCircle(coordUnique)
       mincircSP<-data.frame(mincirc$ctr[1], mincirc$ctr[2])
       colnames(mincircSP)<-c("X", "Y")
-      coordinates(mincircSP) <- ~X+Y
-      proj4string(mincircSP) <- projCRS
+      sp::coordinates(mincircSP) <- ~X+Y
+      sp::proj4string(mincircSP) <- projCRS
 
       circle <- rgeos::gBuffer(spgeom = mincircSP, width = mincirc$rad, quadsegs = 10)
       circle <- spTransform(circle, CRSobj = CRS("+init=epsg:4326"))

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relative observation index (Temporal) — obsIndexTemporal • BIRDS</title>
+<title>Observation Index — obsIndex • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,9 @@
 
 
 
-<meta property="og:title" content="Relative observation index (Temporal) — obsIndexTemporal" />
-<meta property="og:description" content="This function extracts the proportion of visitis (or observations) detecting
-a focal species to all visits (or observations) over time." />
+<meta property="og:title" content="Observation Index — obsIndex" />
+<meta property="og:description" content="This function extracts the proportion of visits (or observations) detecting
+a focal species to all visits (or observations) over time or space." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -145,19 +145,20 @@ a focal species to all visits (or observations) over time." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Relative observation index (Temporal)</h1>
+    <h1>Observation Index</h1>
     <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/observationIndex.R'><code>R/observationIndex.R</code></a></small>
-    <div class="hidden name"><code>obsIndexTemporal.Rd</code></div>
+    <div class="hidden name"><code>obsIndex.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function extracts the proportion of visitis (or observations) detecting
-a focal species to all visits (or observations) over time.</p>
+    <p>This function extracts the proportion of visits (or observations) detecting
+a focal species to all visits (or observations) over time or space.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>obsIndexTemporal</span>(
+    <pre class="usage"><span class='fu'>obsIndex</span>(
   <span class='no'>x</span>,
-  <span class='no'>timeRes</span>,
+  <span class='no'>dimension</span>,
+  <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>focalSp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>visits</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>fs.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -172,17 +173,23 @@ a focal species to all visits (or observations) over time.</p>
       <td><p>an object of class &#8216;SummarizeBirds&#8217;.</p></td>
     </tr>
     <tr>
+      <th>dimension</th>
+      <td><p>a character string indicating if the export should be
+<code>"spatial"</code> or <code>"temporal"</code></p></td>
+    </tr>
+    <tr>
       <th>timeRes</th>
-      <td><p>the time resolution:  <code>"Yearly", "Monthly"</code> or <code>"Daily"</code></p></td>
+      <td><p>the time resolution as a character string if
+<code>dimension = "temporal"</code>:  <code>"Yearly", "Monthly"</code> or <code>"Daily"</code></p></td>
     </tr>
     <tr>
       <th>focalSp</th>
-      <td><p>the focal sp to look for.</p></td>
+      <td><p>the focal species to look for</p></td>
     </tr>
     <tr>
       <th>visits</th>
       <td><p>if TRUE (default) the observation index is calculated over number
-of visits, else uses the number of observations.</p></td>
+of visits, else uses the number of observations</p></td>
     </tr>
     <tr>
       <th>fs.rm</th>
@@ -197,14 +204,37 @@ included in 'group' and will remove them</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An xts timeseries</p>
+    <p>If <code>dimension = "spatial"</code> a &#8216;SpatialPolygonsDataFrame&#8217;
+or a &#8216;xts&#8217; timeseries if <code>dimension = "temporal"</code>.</p>
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
+    <p>It implements the following algorithm to calculate the observation index:
+OI = log ( (At / (At + Rt) ) / ( A / (A + R) ) )
+where At is the sum of observations of a focal species during time t (or gridcell),
+Rt is sum of observations of all species in reference group during t (or gridcell),
+A and R are the total sums for observations. If the ratio to log = 0 it adds
+0.1 to avoid -Inf results.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='no'>PBD</span><span class='kw'>&lt;-</span><span class='no'>bombusObs</span>
+<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>PBD</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>2689 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.06 % of the visits spill over neighbouring grid cells.</span></div><div class='input'><span class='no'>spp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='listSpecies.html'>listSpecies</a></span>(<span class='no'>SB</span>)
+<span class='no'>tempOI</span> <span class='kw'>&lt;-</span> <span class='fu'>obsIndex</span>(<span class='no'>SB</span>, <span class='st'>"temporal"</span>, <span class='st'>"yearly"</span>, <span class='kw'>focalSp</span><span class='kw'>=</span><span class='no'>spp</span>[<span class='fl'>3</span>])
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>tempOI</span>$<span class='no'>relObs</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='no'>spp</span>[<span class='fl'>3</span>])</div><div class='img'><img src='obsIndex-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>spatOI</span> <span class='kw'>&lt;-</span> <span class='fu'>obsIndex</span>(<span class='no'>SB</span>, <span class='st'>"spatial"</span>, <span class='kw'>focalSp</span><span class='kw'>=</span><span class='no'>spp</span>[<span class='fl'>3</span>])
+<span class='no'>minOI</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>spatOI</span>$<span class='no'>relObs</span>, <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='no'>maxOI</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>spatOI</span>$<span class='no'>relObs</span>, <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='no'>palRW</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>leaflet</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/leaflet/man/colorNumeric.html'>colorNumeric</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"white"</span>, <span class='st'>"red"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>minOI</span>, <span class='no'>maxOI</span>), <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)
+<span class='kw pkg'>sp</span><span class='kw ns'>::</span><span class='fu'>plot</span>(<span class='no'>spatOI</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>palRW</span>(<span class='no'>spatOI</span>$<span class='no'>relObs</span>), <span class='kw'>border</span><span class='kw'>=</span><span class='st'>"grey"</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='no'>spp</span>[<span class='fl'>3</span>])</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span>(<span class='st'>"bottomleft"</span>, <span class='kw'>legend</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='no'>minOI</span>, <span class='no'>maxOI</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>5</span>),
+       <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>palRW</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='no'>minOI</span>, <span class='no'>maxOI</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>5</span>)), <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>bty</span><span class='kw'>=</span><span class='st'>"n"</span>)</div><div class='img'><img src='obsIndex-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#note">Note</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

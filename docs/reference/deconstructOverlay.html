@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Summarize the OrganizedBirds — summarizeBirds • BIRDS</title>
+<title>Decosntruction of the overlay — deconstructOverlay • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,9 @@
 
 
 
-<meta property="og:title" content="Summarize the OrganizedBirds — summarizeBirds" />
-<meta property="og:description" content="Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
-in spatial and  temporal dimensions." />
+<meta property="og:title" content="Decosntruction of the overlay — deconstructOverlay" />
+<meta property="og:description" content="This takes the overlay element of a summarisedBirds, reconstruct it as a
+long data.frame and removes duplicate visits in other gridcells." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -145,78 +145,41 @@ in spatial and  temporal dimensions." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Summarize the OrganizedBirds</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
-    <div class="hidden name"><code>summarizeBirds.Rd</code></div>
+    <h1>Decosntruction of the overlay</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/exportBirds.R'><code>R/exportBirds.R</code></a></small>
+    <div class="hidden name"><code>deconstructOverlay.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
-in spatial and  temporal dimensions.</p>
+    <p>This takes the overlay element of a summarisedBirds, reconstruct it as a
+long data.frame and removes duplicate visits in other gridcells.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>summarizeBirds</span>(<span class='no'>x</span>, <span class='no'>grid</span>, <span class='kw'>spillOver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-
-<span class='co'># S3 method for OrganizedBirds</span>
-<span class='fu'>summarizeBirds</span>(<span class='no'>x</span>, <span class='no'>grid</span>, <span class='kw'>spillOver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-
-<span class='fu'>summariseBirds</span>(<span class='no'>x</span>, <span class='no'>grid</span>, <span class='kw'>spillOver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>deconstructOverlay</span>(<span class='no'>overlay</span>, <span class='no'>visitCol</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An OrgnanizedBirds-object created by <code><a href='organizeBirds.html'>organizeBirds</a></code></p></td>
+      <th>overlay</th>
+      <td><p>A list with an element by grid cell</p></td>
     </tr>
     <tr>
-      <th>grid</th>
-      <td><p>A SpatialPolygons or SpatialPolygonsDataFrame-object whith
-grid cells for the study area. This variable is optional and can be set to
-NULL, which will treat the area for all observations as one single
-grid cell.</p></td>
-    </tr>
-    <tr>
-      <th>spillOver</th>
-      <td><p>Specifies if the function should search for observations done during
-the same visit (identified by visit UID) but that fall outside the grid cell.
-Default is <code>NULL</code>. It also accepts <code><a href='https://rdrr.io/r/base/c.html'>c("unique", "duplicate")</a></code>.
-See Details for more information on how to use this.</p></td>
+      <th>visitCol</th>
+      <td><p>A character string specifying the columns that identify a visit.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A SummarizedBirds-object</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>a long data.frame</p>
 
-    <p>If <code>spillOver = NULL</code> the splitting is done spatially according to the
-overlay of observations and grid cells, without further consideration of
-coherence for visits (visit UID). If <code>spillOver = c("unique", "duplicate")</code>
-the splitting will be done spatially in a first step, and then:
-if <code>(spillOver = "unique")</code> assigns (and moves) all observations with same visitUID
-to the grid cell with most observations (or picks one grid cell at random if
-there is a tie); or if <code>(spillOver = "duplicate")</code> duplicates all
-observations with same visitUID across all grid cells containing at least one
-observation with that visitUID.</p>
-<p>The later approach is usefull when the amount of observations spilled over
-neighbouring cells is minimal and information over the spatial extent of the
-sampling effort is more important than sample independence.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ob</span><span class='kw'>&lt;-</span><span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
-<span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'>summarizeBirds</span>(<span class='no'>ob</span>, <span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>2689 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.06 % of the visits spill over neighbouring grid cells.</span></div><div class='input'><span class='no'>nObsG</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span>(<span class='no'>SB</span>$<span class='no'>spatioTemporal</span>[,,<span class='fl'>13</span>,<span class='st'>"nObs"</span>], <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>nObsG2</span><span class='kw'>&lt;-</span><span class='no'>SB</span>$<span class='no'>spatial</span>@<span class='kw'>data</span>$<span class='no'>nObs</span>
-<span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span>(<span class='no'>nObsG</span> <span class='kw'>!=</span> <span class='no'>nObsG2</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'>## Check, two ways to obtain the same</span></div><div class='output co'>#&gt; [1] FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

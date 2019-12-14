@@ -441,9 +441,9 @@ organizeBirds <- function(x,
         xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
-      coordinates(x) <- xyColsl.df
+      sp::coordinates(x) <- xyColsl.df
   ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
-      proj4string(x) <- dataCRS
+      sp::proj4string(x) <- dataCRS
 
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
