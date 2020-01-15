@@ -79,7 +79,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
   datGBY <- group_by(dat, !!! rlang::syms(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
-  visitStat$SLL  <- summarise(datGBY, nSpp= n_distinct(scientificName)  )$nSpp
+  visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(scientificName)  )$SLL
   visitStat$day  <- summarise(datGBY, day = as.character(unique(day)))$day
   visitStat$month<- summarise(datGBY, mon = as.character(unique(month)))$mon
   visitStat$year <- summarise(datGBY, yea = as.character(unique(year)))$yea
@@ -135,7 +135,7 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
 #' A function to make the exploreVisits Spatial
 #'
 #' A function to
-#' @param x an object of class \sQuote{data.frame}.
+#' @param x an object of class \sQuote{data.frame} from exploreVistis.
 #' @param xyCols a character vector with the column names for the coordinates.
 #' Default to \code{c("centroidX","centroidY")}
 #' @param dataCRS a character string with the proj4 description of the original

@@ -523,6 +523,13 @@ organizeBirds <- function(x,
   }
 
   colnames(res.df)[1] <- "scientificName"
+
+  #### Add the visists SLL to each visits
+  # SLLs <- res.df %>% group_by(visitUID) %>% summarise("SLL"=n_distinct(scientificName))
+  # wSLL <- match(res.df$visitUID, SLLs$visitUID)
+  # res.df$SLL <- SLLs$SLL[wSLL]
+  # rm(SLLs)
+
   x@data <- res.df
 
   res<-list(x)
