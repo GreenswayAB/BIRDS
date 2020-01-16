@@ -12,7 +12,7 @@ spatialVisits(
 )
 }
 \arguments{
-\item{x}{an object of class \sQuote{data.frame}.}
+\item{x}{an object of class \sQuote{data.frame} from exploreVistis.}
 
 \item{xyCols}{a character vector with the column names for the coordinates.
 Default to \code{c("centroidX","centroidY")}}
