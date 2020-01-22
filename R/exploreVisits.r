@@ -192,6 +192,7 @@ spatialVisits <- function(x,
 
 getUTMzone <- function(points){
   
+  ##Find which UTM-zones that have the most points
   utmZone <- sp::over(points, utmZones)
   
   freqZones <- table(utmZone$ZONE)
@@ -201,6 +202,8 @@ getUTMzone <- function(points){
   alternatives <- rep(FALSE, length(maxZones))
   
   names(alternatives) <- maxZones
+  
+  ##Goes though the zones with most points and checks if other points are to far away.
   
   for(a in names(alternatives)){
     
@@ -213,15 +216,18 @@ getUTMzone <- function(points){
   
   }
   
+  ##Results
   res <- list("zone" = NULL, "msg" = NULL)
   
   if(sum(alternatives) == 0){
+    ##No acceptebel zones found
     
     res$msg <- "No UTM zone with all points in it or in its adjacent zones was found"
     
     return(res)
     
   }else if (sum(alternatives) == 1){
+    ## One zone found with points only in adjecent zone found. 
     
     res$zone <- as.integer(names(alternatives)[alternatives])
     res$msg <- "Success!"
@@ -229,13 +235,14 @@ getUTMzone <- function(points){
     return(res)
     
   }else{
+    ## Two adjacent zones with same number of points were found. 
     
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points), proj4string = points@proj4string)
     
     utmMeanZone <- sp::over(meanPoint, utmZones)
     
     res$zone <- as.integer(utmMeanZone$ZONE)
-    res$msg <- "The points are split over two UTM-zones. The zone with the centroid for the points was chosen."
+    res$msg <- "The points are split over two UTM-zones. The zone with the centroid for all the points was chosen."
     
     return(res)
     
