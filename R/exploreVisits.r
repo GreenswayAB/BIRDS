@@ -189,3 +189,56 @@ spatialVisits <- function(x,
   return(list("points"=x, "effort"=buff))
 
 }
+
+getUTMzone <- function(points){
+  
+  utmZone <- sp::over(points, utmZones)
+  
+  freqZones <- table(utmZone$ZONE)
+  
+  maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
+  
+  alternatives <- rep(FALSE, length(maxZones))
+  
+  names(alternatives) <- maxZones
+  
+  for(a in names(alternatives)){
+    
+    nZonesOver <- length(which(as.integer(names(freqZones)) > as.integer(a)))
+    nZonesUnder <- length(which(as.integer(names(freqZones)) < as.integer(a)))
+    
+    if(nZonesOver <= 1 && nZonesUnder <= 1){
+      alternatives[a]<-TRUE
+    }
+  
+  }
+  
+  res <- list("zone" = NULL, "msg" = NULL)
+  
+  if(sum(alternatives) == 0){
+    
+    res$msg <- "No UTM zone with all points in it or in its adjacent zones was found"
+    
+    return(res)
+    
+  }else if (sum(alternatives) == 1){
+    
+    res$zone <- as.integer(names(alternatives)[alternatives])
+    res$msg <- "Success!"
+    
+    return(res)
+    
+  }else{
+    
+    meanPoint <- sp::SpatialPoints(geosphere::geomean(points), proj4string = points@proj4string)
+    
+    utmMeanZone <- sp::over(meanPoint, utmZones)
+    
+    res$zone <- as.integer(utmMeanZone$ZONE)
+    res$msg <- "The points are split over two UTM-zones. The zone with the centroid for the points was chosen."
+    
+    return(res)
+    
+  }
+  
+}
