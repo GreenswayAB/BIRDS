@@ -191,61 +191,69 @@ spatialVisits <- function(x,
 }
 
 getUTMzone <- function(points){
-  
+
   ##Find which UTM-zones that have the most points
   utmZone <- sp::over(points, utmZones)
-  
+  # Error in .local(x, y, returnList, fn, ...) :
+  # identicalCRS(x, y) is not TRUE
+  # organiseBirds() returns "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+  # and it is interpreted as not identical of "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+
+  # sp::proj4string(utmZones) <- proj4string(points) ## because I know where it comes from
+
   freqZones <- table(utmZone$ZONE)
-  
-  maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
-  
+
+  # maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
+  maxZones <- names(which.max(freqZones))
+
   alternatives <- rep(FALSE, length(maxZones))
-  
+
   names(alternatives) <- maxZones
-  
+
   ##Goes though the zones with most points and checks if other points are to far away.
-  
+
   for(a in names(alternatives)){
-    
+
     nZonesOver <- length(which(as.integer(names(freqZones)) > as.integer(a)))
     nZonesUnder <- length(which(as.integer(names(freqZones)) < as.integer(a)))
-    
+
     if(nZonesOver <= 1 && nZonesUnder <= 1){
       alternatives[a]<-TRUE
     }
-  
+
   }
-  
+
   ##Results
   res <- list("zone" = NULL, "msg" = NULL)
-  
+
   if(sum(alternatives) == 0){
-    ##No acceptebel zones found
-    
-    res$msg <- "No UTM zone with all points in it or in its adjacent zones was found"
-    
+    ##No acceptable zones found
+
+    res$msg <- "There is no UTM zone where all points overlap with or with its adjacent zones"
+
     return(res)
-    
+
   }else if (sum(alternatives) == 1){
-    ## One zone found with points only in adjecent zone found. 
-    
+    ## One zone found with points only in adjecent zone found.
+
     res$zone <- as.integer(names(alternatives)[alternatives])
     res$msg <- "Success!"
-    
+
     return(res)
-    
+
   }else{
-    ## Two adjacent zones with same number of points were found. 
-    
+    ## Two adjacent zones with same number of points were found.
+## OR MORE than two?
+
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points), proj4string = points@proj4string)
-    
+
     utmMeanZone <- sp::over(meanPoint, utmZones)
-    
+
     res$zone <- as.integer(utmMeanZone$ZONE)
     res$msg <- "The points are split over two UTM-zones. The zone with the centroid for all the points was chosen."
-    
+
     return(res)
-    
+
   }
-  
+
 }
