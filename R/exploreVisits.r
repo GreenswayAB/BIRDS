@@ -46,7 +46,10 @@
 #' # plot(visitStat$day, visitStat$nObs)
 #' @export
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
-exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"){
+exploreVisits<-function(x, 
+                        visitCol=attr(x, "visitCol"), 
+                        sppCol="scientificName"){
+  
   if (class(x) == "OrganizedBirds") {
     spdf<- x$spdf
     dat <- spdf@data
@@ -85,28 +88,63 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
   visitStat$year <- summarise(datGBY, yea = as.character(unique(year)))$yea
   rm(datGBY)
 
+  utmZone <- getUTMzone(spdf)
+  singleUTM <- ifelse(!is.null(utmZone$zone), TRUE, FALSE)
+  if(singleUTM){
+    projCRS <- paste0("+proj=utm +zone=", utmZone$zone," +datum=WGS84")
+    spdfTrans <- spTransform(spdf, CRS(projCRS) ) 
+  }
+ 
   ### TODO? can this lapply be done with dplyr?
-  ctr <- lapply(uniqueUID, FUN = function(x){
+  ctrList <- lapply(uniqueUID, FUN = function(x){
     wVis <- which(dat[, visitCol] == x)
-
-    coord <- sp::coordinates(spdf[wVis, ])
+    spdfTmp <- spdfTrans[wVis, ]
+    
+    ## If there is no single UTM zone that fits all visits, then find one for each
+    if(!singleUTM){
+      utmZone <- getUTMzone(spdfTmp)
+      UTMok <- ifelse(!is.null(utmZone$zone), TRUE, FALSE)
+      if(UTMok){
+        projCRS <- paste0("+proj=utm +zone=", utmZone$zone," +datum=WGS84")
+        spdfTmp <- spTransform(spdfTmp, CRS(projCRS) )
+      } else stop("No UTM zone found")
+    } ## already transformed then
+    
+    coord <- sp::coordinates(spdfTmp)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
-    ctr <- rgeos::gCentroid(spdf[wVis,])
-    centroidX <- ctr@coords[1]
-    centroidY <- ctr@coords[2]
-
     if (nrow(coordUnique) > 1) {
-      distances<-geosphere::distGeo(ctr, coord)
+      # ctr <- rgeos::gCentroid(spdfTmp) ## still valid if two points
+if uses rgeos::gCentroid(spdfTmp) should be over unique coords?
+      # the minumum circle that covers all points
+      mincirc <- shotGroups::getMinCircle(coord)
 
-      # That could be the diameter of the minumum circle that covers all points
-      effortDiam <- round(max(distances) * 2, 0)
+returns Inf values
+      ctr <- data.frame("centroidX"=mincirc$ctr[1], 
+                        "centroidY" = mincirc$ctr[2])
+      # make ctr a spatial point()
+      sp::coordinates(ctr) <- ~ centroidX + centroidY
+      sp::proj4string(ctr) <- projCRS 
+
+      ## transform ctr to wgs84
+      ctr <- spTransform(ctr, CRSobj = CRS("+init=epsg:4326"))
+      centroidX <- ctr@coords[1]
+      centroidY <- ctr@coords[2]
+      distances<-geosphere::distGeo(ctr, sp::coordinates(spdf[wVis, ])) ## the unstransformed spdf
+
+      # The minumum circle that covers all points
+      effortDiam <- round(mincirc$rad * 2, 0) # already in meters round(max(distances) * 2, 0)  #   
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
       nOutliers  <- length(boxplot.stats(distances)$out)
     } else {
-      effortDiam <- 1
+      # Back transform!!!
+      ctr <- rgeos::gCentroid(spdf[wVis,])
+      ctr <- spTransform(ctr, CRSobj = CRS("+init=epsg:4326"))
+      centroidX <- ctr@coords[1]
+      centroidY <- ctr@coords[2]
+      effortDiam <- 1 # 1m
       medianDist <- 1
       iqrDist    <- 1
       nOutliers  <- 0
@@ -114,16 +152,20 @@ exploreVisits<-function(x, visitCol=attr(x, "visitCol"), sppCol="scientificName"
     return(list(centroidX, centroidY, effortDiam, medianDist, iqrDist,nOutliers))
   } )
 
-  tmp<-matrix(unlist(ctr), ncol = 6, byrow = TRUE)
+  tmp<-matrix(unlist(ctrList), ncol = 6, byrow = TRUE)
 
-  visitStat$centroidX <- tmp[,1]
-  visitStat$centroidY <- tmp[,2]
+  visitStat$centroidX  <- tmp[,1]
+  visitStat$centroidY  <- tmp[,2]
   visitStat$effortDiam <- tmp[,3]
   visitStat$medianDist <- tmp[,4]
   visitStat$iqrDist    <- tmp[,5]
   visitStat$nOutliers  <- tmp[,6]
 
-  visitStat$date <- as.Date(paste(visitStat$year, visitStat$month, visitStat$day, sep="-"), format = "%Y-%m-%d")
+  visitStat$date <- as.Date(paste(visitStat$year, 
+                                  visitStat$month, 
+                                  visitStat$day, 
+                                  sep="-"), 
+                            format = "%Y-%m-%d")
   visitStat$Month <- as.factor(months(visitStat$date))
   levels(visitStat$Month) <- month.name
 
