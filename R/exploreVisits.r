@@ -190,16 +190,13 @@ spatialVisits <- function(x,
 
 }
 
+
 getUTMzone <- function(points){
 
   ##Find which UTM-zones that have the most points
-  utmZone <- sp::over(points, utmZones)
-  # Error in .local(x, y, returnList, fn, ...) :
-  # identicalCRS(x, y) is not TRUE
-  # organiseBirds() returns "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-  # and it is interpreted as not identical of "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-
-  # sp::proj4string(utmZones) <- proj4string(points) ## because I know where it comes from
+  utmZonesTr <- sp::spTransform(utmZones, points@proj4string) #To accept all reference systems for points. 
+  
+  utmZone <- sp::over(points, utmZonesTr)
 
   freqZones <- table(utmZone$ZONE)
 
@@ -213,12 +210,35 @@ getUTMzone <- function(points){
   ##Goes though the zones with most points and checks if other points are to far away.
 
   for(a in names(alternatives)){
+    
+    if(as.integer(a)>0){
+      ##If not in polar regions
+      if(a != "1" && a != "60"){
+          ##If not at the "edge" of the world
+          upperZones <- as.integer(names(freqZones[which(as.integer(names(freqZones)) > as.integer(a))]))
+          lowerZones <- as.integer(names(freqZones[which(as.integer(names(freqZones)) < as.integer(a))]))
+          
+          aint <- as.integer(a)
+         
+          alternatives[a] <- all(as.integer(names(freqZones)) %in%  c(aint-1, aint, aint+1, 0))
+        
+      }else{
+          ##We're at the edge of the world, or at least the edge of the UTM world map
+        
+          if(a == "1"){
+            alternatives[a] <- all(names(freqZones) %in%  c("60", "1", "2", "0")) ##These are the zones we accept
+          }else{
+            alternatives[a] <- all(names(freqZones) %in%  c("59", "60", "1", "0")) ##These are the zones we accept
+          }
+        }
+    }else{
+      ## We are in the polar regions!
+      
+      alternatives[a] <- any(
+        all(utmZone$ROW_ %in%  c("X", "Y", "Z")), ## We're in the nothern hemisphere!
+        all(names(freqZones) %in%  c("A", "B", "C")) ## Now we're down south!
+      )
 
-    nZonesOver <- length(which(as.integer(names(freqZones)) > as.integer(a)))
-    nZonesUnder <- length(which(as.integer(names(freqZones)) < as.integer(a)))
-
-    if(nZonesOver <= 1 && nZonesUnder <= 1){
-      alternatives[a]<-TRUE
     }
 
   }
@@ -243,7 +263,6 @@ getUTMzone <- function(points){
 
   }else{
     ## Two adjacent zones with same number of points were found.
-## OR MORE than two?
 
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points), proj4string = points@proj4string)
 
