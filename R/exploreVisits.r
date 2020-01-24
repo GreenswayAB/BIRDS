@@ -243,7 +243,7 @@ getUTMzone <- function(points){
   
   utmZone <- sp::over(points, utmZonesTr)
 
-  freqZones <- table(utmZone$ZONE)
+  freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
 
   # maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
   maxZones <- names(which.max(freqZones))
@@ -251,6 +251,29 @@ getUTMzone <- function(points){
   alternatives <- rep(FALSE, length(maxZones))
 
   names(alternatives) <- maxZones
+  
+  ## To check on zone 0 points we need to check row A, B, Y and Z
+  freqRows <- table(utmZone$ROW_)
+  
+  if(is.null(maxZones)){
+    ##First we need to check if there is points in any other zone.
+    ##If not we accept anything more than zero
+    if(any(sum(freqRows[c("A", "B")]) > 0, sum(freqRows[c("Y", "Z")]) > 0)){
+      alternatives<-c("0" = FALSE)
+    }
+    
+  }else{
+    ##Else we check if there is more or as many points in zone 0 as in any other zone. 
+    if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones], sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
+      
+      alternatives<-c("0" = FALSE)
+      
+    }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones], sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
+      alternatives["0"]<-FALSE
+    }
+  }
+  
+    
 
   ##Goes though the zones with most points and checks if other points are to far away.
 
@@ -260,8 +283,6 @@ getUTMzone <- function(points){
       ##If not in polar regions
       if(a != "1" && a != "60"){
           ##If not at the "edge" of the world
-          upperZones <- as.integer(names(freqZones[which(as.integer(names(freqZones)) > as.integer(a))]))
-          lowerZones <- as.integer(names(freqZones[which(as.integer(names(freqZones)) < as.integer(a))]))
           
           aint <- as.integer(a)
          
@@ -281,7 +302,7 @@ getUTMzone <- function(points){
       
       alternatives[a] <- any(
         all(utmZone$ROW_ %in%  c("X", "Y", "Z")), ## We're in the nothern hemisphere!
-        all(names(freqZones) %in%  c("A", "B", "C")) ## Now we're down south!
+        all(utmZone$ROW_ %in%  c("A", "B", "C")) ## Now we're down south!
       )
 
     }
@@ -308,6 +329,16 @@ getUTMzone <- function(points){
 
   }else{
     ## Two adjacent zones with same number of points were found.
+    ## If one of them is zone 0 the other must be in row X or Z, hence we choose zone 0
+    
+    if("0" %in% names(alternatives)){
+      
+      res$zone <- 0
+      res$msg <- "The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen."
+      
+      return(res)
+      
+    }
 
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points), 
                                    proj4string = points@proj4string)
