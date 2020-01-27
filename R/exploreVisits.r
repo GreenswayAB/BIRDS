@@ -245,8 +245,8 @@ getUTMzone <- function(points){
 
   freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
 
-  # maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
-  maxZones <- names(which.max(freqZones))
+  maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
+  ##maxZones <- names(which.max(freqZones)) Does only return the first zone if many with same value
 
   alternatives <- rep(FALSE, length(maxZones))
 
@@ -321,8 +321,19 @@ getUTMzone <- function(points){
 
   }else if (sum(alternatives) == 1){
     ## One zone found with points only in adjecent zone found.
+    
+    if(all(names(alternatives) == "0")){
+      if(all(utmZone$ROW_ %in%  c("X", "Y", "Z"))){
+        res$zone <- "0N"
+      }else{
+        res$zone <- "0S"
+      }
+    }else{
+      
+      res$zone <- as.integer(names(alternatives)[alternatives])
+      
+    }
 
-    res$zone <- as.integer(names(alternatives)[alternatives])
     res$msg <- "Success!"
 
     return(res)
@@ -333,7 +344,12 @@ getUTMzone <- function(points){
     
     if("0" %in% names(alternatives)){
       
-      res$zone <- 0
+      if(all(utmZone$ROW_ %in%  c("X", "Y", "Z"))){
+        res$zone <- "0N"
+      }else{
+        res$zone <- "0S"
+      }
+      
       res$msg <- "The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen."
       
       return(res)
