@@ -14,14 +14,16 @@
 #'   \item \dQuote{year}
 #'   \item \dQuote{nObs}: number of species observations
 #'   \item \dQuote{SLL}: species list length (i.e. the number of observed species)
-#'   \item \dQuote{effortDiam}: the diameter of the minumum circle that covers all points (i.e. locations for
-#'   species observations), in meters. This is calculated as two times the maximum distance between
+#'   \item \dQuote{effortDiam}: the 2 times the maximum of the distances between
 #'   the centroid of all observation points and any individual observation.
-#'   \item \dQuote{medianDist}: the median (Q2) of the distances between the centroid and the observations, in meters.
-#'   \item \dQuote{iqrDist}: the interquartile range of the distances between the centroid the observations, in meters.
-#'   \item \dQuote{nOutliers}: the number of observations whose distance to the centroid is considered an outlier.
-#'   Ouliers are defined as distances grater than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as
-#'   all distances are positive).
+#'   \item \dQuote{medianDist}: the median (Q2) of the distances between the
+#'   centroid and the observations, in meters.
+#'   \item \dQuote{iqrDist}: the interquartile range of the distances between the
+#'    centroid the observations, in meters.
+#'   \item \dQuote{nOutliers}: the number of observations whose distance to the
+#'   centroid are considered an outlier. Ouliers are defined as distances grater
+#'   than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as all
+#'   distances are positive).
 #'}
 #' @examples
 #'\donttest{
@@ -46,10 +48,10 @@
 #' # plot(visitStat$day, visitStat$nObs)
 #' @export
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
-exploreVisits<-function(x, 
-                        visitCol=attr(x, "visitCol"), 
+exploreVisits<-function(x,
+                        visitCol=attr(x, "visitCol"),
                         sppCol="scientificName"){
-  
+
   if (class(x) == "OrganizedBirds") {
     spdf<- x$spdf
     dat <- spdf@data
@@ -88,62 +90,28 @@ exploreVisits<-function(x,
   visitStat$year <- summarise(datGBY, yea = as.character(unique(year)))$yea
   rm(datGBY)
 
-  utmZone <- getUTMzone(spdf)
-  singleUTM <- ifelse(!is.null(utmZone$zone), TRUE, FALSE)
-  if(singleUTM){
-    projCRS <- paste0("+proj=utm +zone=", utmZone$zone," +datum=WGS84")
-    spdfTrans <- spTransform(spdf, CRS(projCRS) ) 
-  }
- 
   ### TODO? can this lapply be done with dplyr?
   ctrList <- lapply(uniqueUID, FUN = function(x){
     wVis <- which(dat[, visitCol] == x)
-    spdfTmp <- spdfTrans[wVis, ]
-    
-    ## If there is no single UTM zone that fits all visits, then find one for each
-    if(!singleUTM){
-      utmZone <- getUTMzone(spdfTmp)
-      UTMok <- ifelse(!is.null(utmZone$zone), TRUE, FALSE)
-      if(UTMok){
-        projCRS <- paste0("+proj=utm +zone=", utmZone$zone," +datum=WGS84")
-        spdfTmp <- spTransform(spdfTmp, CRS(projCRS) )
-      } else stop("No UTM zone found")
-    } ## already transformed then
-    
+    spdfTmp <- spdf[wVis, ]
+
     coord <- sp::coordinates(spdfTmp)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
+    ctr <- rgeos::gCentroid(spdfTmp) ## still valid if two points
+    centroidX <- ctr@coords[1]
+    centroidY <- ctr@coords[2]
+
     if (nrow(coordUnique) > 1) {
-      # ctr <- rgeos::gCentroid(spdfTmp) ## still valid if two points
-if uses rgeos::gCentroid(spdfTmp) should be over unique coords?
-      # the minumum circle that covers all points
-      mincirc <- shotGroups::getMinCircle(coord)
-
-returns Inf values
-      ctr <- data.frame("centroidX"=mincirc$ctr[1], 
-                        "centroidY" = mincirc$ctr[2])
-      # make ctr a spatial point()
-      sp::coordinates(ctr) <- ~ centroidX + centroidY
-      sp::proj4string(ctr) <- projCRS 
-
-      ## transform ctr to wgs84
-      ctr <- spTransform(ctr, CRSobj = CRS("+init=epsg:4326"))
-      centroidX <- ctr@coords[1]
-      centroidY <- ctr@coords[2]
-      distances<-geosphere::distGeo(ctr, sp::coordinates(spdf[wVis, ])) ## the unstransformed spdf
+      distances<-geosphere::distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
 
       # The minumum circle that covers all points
-      effortDiam <- round(mincirc$rad * 2, 0) # already in meters round(max(distances) * 2, 0)  #   
+      effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
       nOutliers  <- length(boxplot.stats(distances)$out)
     } else {
-      # Back transform!!!
-      ctr <- rgeos::gCentroid(spdf[wVis,])
-      ctr <- spTransform(ctr, CRSobj = CRS("+init=epsg:4326"))
-      centroidX <- ctr@coords[1]
-      centroidY <- ctr@coords[2]
       effortDiam <- 1 # 1m
       medianDist <- 1
       iqrDist    <- 1
@@ -161,10 +129,10 @@ returns Inf values
   visitStat$iqrDist    <- tmp[,5]
   visitStat$nOutliers  <- tmp[,6]
 
-  visitStat$date <- as.Date(paste(visitStat$year, 
-                                  visitStat$month, 
-                                  visitStat$day, 
-                                  sep="-"), 
+  visitStat$date <- as.Date(paste(visitStat$year,
+                                  visitStat$month,
+                                  visitStat$day,
+                                  sep="-"),
                             format = "%Y-%m-%d")
   visitStat$Month <- as.factor(months(visitStat$date))
   levels(visitStat$Month) <- month.name
@@ -222,75 +190,58 @@ spatialVisits <- function(x,
          vector of length equal to the number of visits")
   }
 
-  utmCRS<-CRS(paste0("+proj=utm +zone=", getUTMzone(x)$zone," +datum=WGS84")) 
+  utmCRS <- CRS(paste0("+proj=utm +zone=", getUTMzone(x)$zone," +datum=WGS84"))
   # xTrans <- sp::spTransform(x, CRSobj = "+proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54012
   # xTrans <- sp::spTransform(x, CRSobj = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") ##https://epsg.io/54009  #
   # xTrans <- sp::spTransform(x, CRSobj = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs") ##https://epsg.io/3857
   xTrans <- sp::spTransform(x, CRSobj = utmCRS)
-  
-  buff <- rgeos::gBuffer(xTrans,  byid=TRUE, id=x@data$visitUID, width=radiusVal)
+
+  buff <- rgeos::gBuffer(xTrans,  byid = TRUE, id=x@data$visitUID, width=radiusVal)
   buff <- sp::spTransform(buff, CRSobj = dataCRS)
 
   return(list("points"=x, "effort"=buff))
 
 }
 
-
+## internal function. Depends on the polygon object utmZones
 getUTMzone <- function(points){
-
   ##Find which UTM-zones that have the most points
-  utmZonesTr <- sp::spTransform(utmZones, points@proj4string) #To accept all reference systems for points. 
-  
+  utmZonesTr <- sp::spTransform(utmZones, points@proj4string) #To accept all reference systems for points.
   utmZone <- sp::over(points, utmZonesTr)
-
   freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
-
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
-  ##maxZones <- names(which.max(freqZones)) Does only return the first zone if many with same value
 
   alternatives <- rep(FALSE, length(maxZones))
-
   names(alternatives) <- maxZones
-  
+
   ## To check on zone 0 points we need to check row A, B, Y and Z
   freqRows <- table(utmZone$ROW_)
-  
+
   if(is.null(maxZones)){
     ##First we need to check if there is points in any other zone.
     ##If not we accept anything more than zero
     if(any(sum(freqRows[c("A", "B")]) > 0, sum(freqRows[c("Y", "Z")]) > 0)){
       alternatives<-c("0" = FALSE)
     }
-    
   }else{
-    ##Else we check if there is more or as many points in zone 0 as in any other zone. 
+    ##Else we check if there is more or as many points in zone 0 as in any other zone.
     if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones], sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
-      
       alternatives<-c("0" = FALSE)
-      
     }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones], sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
       alternatives["0"]<-FALSE
     }
   }
-  
-    
 
-  ##Goes though the zones with most points and checks if other points are to far away.
-
+  ##Goes through the zones with most points and checks if other points are to far away.
   for(a in names(alternatives)){
-    
     if(as.integer(a)>0){
       ##If not in polar regions
       if(a != "1" && a != "60"){
           ##If not at the "edge" of the world
-          
           aint <- as.integer(a)
-         
           alternatives[a] <- all(as.integer(names(freqZones)) %in%  c(aint-1, aint, aint+1, 0))
-        
       }else{
           ##We're at the edge of the world, or at least the edge of the UTM world map
-        
           if(a == "1"){
             alternatives[a] <- all(names(freqZones) %in%  c("60", "1", "2", "0")) ##These are the zones we accept
           }else{
@@ -299,29 +250,22 @@ getUTMzone <- function(points){
         }
     }else{
       ## We are in the polar regions!
-      
       alternatives[a] <- any(
         all(utmZone$ROW_ %in%  c("X", "Y", "Z")), ## We're in the nothern hemisphere!
         all(utmZone$ROW_ %in%  c("A", "B", "C")) ## Now we're down south!
       )
-
     }
-
   }
 
   ##Results
-  res <- list("zone" = NULL, "msg" = NULL)
-
+  res <- list("zone" = NULL) #, "msg" = NULL)
   if(sum(alternatives) == 0){
     ##No acceptable zones found
-
-    res$msg <- "There is no UTM zone where all points overlap with or with its adjacent zones"
-
-    return(res)
-
+    # res$msg <- "There is no UTM zone where all points overlap with or with its adjacent zones"
+    cat("There is no UTM zone where all points overlap with or with its adjacent zones.\n")
+    # return(res)
   }else if (sum(alternatives) == 1){
     ## One zone found with points only in adjecent zone found.
-    
     if(all(names(alternatives) == "0")){
       if(all(utmZone$ROW_ %in%  c("X", "Y", "Z"))){
         res$zone <- "0N"
@@ -329,43 +273,76 @@ getUTMzone <- function(points){
         res$zone <- "0S"
       }
     }else{
-      
       res$zone <- as.integer(names(alternatives)[alternatives])
-      
     }
-
-    res$msg <- "Success!"
-
-    return(res)
-
+    # res$msg <- "Success!"
+    # cat("Success!\n")
+    # return(res)
   }else{
     ## Two adjacent zones with same number of points were found.
     ## If one of them is zone 0 the other must be in row X or Z, hence we choose zone 0
-    
     if("0" %in% names(alternatives)){
-      
       if(all(utmZone$ROW_ %in%  c("X", "Y", "Z"))){
         res$zone <- "0N"
       }else{
         res$zone <- "0S"
       }
-      
-      res$msg <- "The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen."
-      
-      return(res)
-      
+      # res$msg <- "The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen."
+      cat("The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen.\n")
+      # return(res)
     }
 
-    meanPoint <- sp::SpatialPoints(geosphere::geomean(points), 
+    meanPoint <- sp::SpatialPoints(geosphere::geomean(points),
                                    proj4string = points@proj4string)
-
     utmMeanZone <- sp::over(meanPoint, utmZones)
-
     res$zone <- as.integer(utmMeanZone$ZONE)
-    res$msg <- "The points are split over two UTM-zones. The zone with the centroid for all the points was chosen."
+    # res$msg <- "The points are split over two UTM-zones. The zone with the centroid for all the points was chosen."
+    cat("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")
+    # return(res)
+  }
+  return(res$zone)
+}
 
-    return(res)
+#' A wrapper around getUTMzone and produce a proj4 string
+#'
+#' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}
+#' @return a proj4 character string for an apropiate UTM zone
+#' @export
+#' @examples
+#' OB <- organizeBirds(bombusObs)
+#' getUTMproj(OB)
+getUTMproj<-function(x){
 
+  if (class(x) == "OrganizedBirds") {
+    spdf <- x$spdf
+  } else {
+    if(class(x) == "SpatialPointsDataFrame"){
+      spdf <- x
+      spdf <- spTransform(spdf, CRSobj = CRS("+init=epsg:4326"))
+    } else {
+      stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
+    }
   }
 
+  ## error no CRS
+  if (is.na(proj4string(spdf))) {
+    stop("The polygon has no coordinate projection system (CRS) associated")
+  }
+
+  utmZone <- getUTMzone(spdf)
+  if(!is.null(utmZone)){
+    if(utmZone == "0N"){
+      #"+init=epsg:5041"
+      proj4 <- "+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs" #"+init=epsg:5041"
+    }
+    if(utmZone == "0S"){
+      #"+init=epsg:5042"
+      proj4 <- "+proj=stere +lat_0=-90 +lat_ts=-90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
+    }
+    if(is.integer(utmZone)){
+      proj4 <- paste0("+proj=utm +zone=", utmZone," +datum=WGS84")
+    }
+  }
+  return(proj4)
 }
+

@@ -22,14 +22,16 @@ a \code{data.frame} with summarized data per visit:
   \item \dQuote{year}
   \item \dQuote{nObs}: number of species observations
   \item \dQuote{SLL}: species list length (i.e. the number of observed species)
-  \item \dQuote{effortDiam}: the diameter of the minumum circle that covers all points (i.e. locations for
-  species observations), in meters. This is calculated as two times the maximum distance between
+  \item \dQuote{effortDiam}: the 2 times the maximum of the distances between
   the centroid of all observation points and any individual observation.
-  \item \dQuote{medianDist}: the median (Q2) of the distances between the centroid and the observations, in meters.
-  \item \dQuote{iqrDist}: the interquartile range of the distances between the centroid the observations, in meters.
-  \item \dQuote{nOutliers}: the number of observations whose distance to the centroid is considered an outlier.
-  Ouliers are defined as distances grater than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as
-  all distances are positive).
+  \item \dQuote{medianDist}: the median (Q2) of the distances between the
+  centroid and the observations, in meters.
+  \item \dQuote{iqrDist}: the interquartile range of the distances between the
+   centroid the observations, in meters.
+  \item \dQuote{nOutliers}: the number of observations whose distance to the
+  centroid are considered an outlier. Ouliers are defined as distances grater
+  than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as all
+  distances are positive).
 }
 }
 \description{

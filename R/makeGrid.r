@@ -57,9 +57,12 @@ drawPolygon <- function(lat = 0,
 #'
 #' @param spdf an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.
 #' @param projCRS a proj4-type string defining a projected CRS. It is very important
-#' that the selected CRS is accurate in the study area.
+#' that the selected CRS is accurate in the study area. This is not the CRS for
+#' the argument 'spdf' which should be defined internally. This is the CRS used to
+#' make a flat circle. Some UTM variant is recommended. See \link{getUTMproj()}
 #' @return a polygon object of class \sQuote{SpatialPolygon} with geodesic
 #' coordinates in WGS84 (ESPG:4326).
+#' @seealso \link{getUTMproj}
 #' @export
 makeCircle<-function(spdf, projCRS=NULL){
     # error not a SpatialPolygon
@@ -74,7 +77,7 @@ makeCircle<-function(spdf, projCRS=NULL){
 
     spdf <- spTransform(spdf, CRS(projCRS) )
 
-    if (!is.na(is.projected(spdf)) && !is.projected(spdf))
+    if (!is.na(sp::is.projected(spdf)) && !sp::is.projected(spdf))
       warning("Spatial object is not projected; this function expects planar coordinates")
 
     coord <- coordinates(spdf)
@@ -91,13 +94,7 @@ makeCircle<-function(spdf, projCRS=NULL){
 
       circle <- rgeos::gBuffer(spgeom = mincircSP, width = mincirc$rad, quadsegs = 10)
       circle <- spTransform(circle, CRSobj = CRS("+init=epsg:4326"))
-      # plot(circle, add=TRUE, border=5)
-      # drawCircle(mincirc)
-        # ctr <- rgeos::gCentroid(spdf[!duplicated(coordPaste),]) # center over unique positions
-        # dist <- max(geosphere::distGeo(ctr, coordUnique)) # diagonal to the corner
-        # ctrProj<- sp::spTransform(ctr, sp::CRS("+init=epsg:3857"))
-        # circle <- rgeos::gBuffer(spgeom = ctrProj, width = dist*2, quadsegs = 10)
-        # circle <- sp::spTransform(circle, CRSobj = sp::CRS("+init=epsg:4326"))
+
     } else {
         stop("More than one unique set of coordinates is needed to make a minimum circle polygon.")
     }
@@ -189,7 +186,8 @@ OB2Polygon <- function(df, shape="bBox") {
     }
 
     if (shape %in% c("buffCircle", "buffer circle")) {
-        polygon<-makeCircle(spdf)
+      proj4UTM <- getUTMproj(spdf)
+      polygon <- makeCircle(spdf, projCRS = proj4UTM)
     } # end shape conditions
 
     # polygon <- spTransform(polygon, CRSobj = CRS("+init=epsg:4326"))
