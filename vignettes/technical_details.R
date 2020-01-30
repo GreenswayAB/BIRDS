@@ -1,16 +1,16 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  ?organiseBirds()
 #  OB <- organizeBirds(bombusObs, simplifySppName = TRUE)
 #  OB <- organizeBirds(bombusObs, sppCol = "species", simplifySppName = FALSE,
 #                       taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  visitStats <- exploreVisits(OB)
 #  # open an interactive data explorer
 #  esquisse::esquisser(visitStats)
@@ -19,14 +19,14 @@ knitr::opts_chunk$set(
 #  # to see the distribution of distances covered on each visit
 #  # hist(visitStat$effortDiam)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  visits(OB)<-createVisits(x, columns = c("locality", "day", "month", "year", "recordedBy"))
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  grid <- makeGrid(searchPolygon, gridSize = 10) # grid size in kilometers!
 #  SB <- summariseBirds(OB, grid=grid)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
 #  # this is equivalent to
 #  
@@ -43,13 +43,13 @@ knitr::opts_chunk$set(
 #  
 #  exportBirds(SB, dimension = "spatial", timeRes = "NULL", variable = "nYears", method = "sum")@data
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  focalSpSummary(SB, "Bombus humilis")
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  focalSpReport(SB, "Bombus humilis")
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  par(mfrow=c(1,2), mar=c(1,1,1,1))
 #  palBW <- leaflet::colorNumeric(c("white", "navyblue"),
 #                                 c(0, max(SB$spatial@data$nVis, na.rm = TRUE)),
@@ -70,7 +70,7 @@ knitr::opts_chunk$set(
 #        col = c(palBWR(seq(0, 1, length.out = 5)), "grey90"),
 #        title = "Ignorance \nnVis, \nO0.5=5", pch = 15, bty="n")
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  ## Community analysis -->
 #  CM <- communityMatrix(SB, sampleUnit="visit")
 #  sp1 <- vegan::specaccum(CM, method = "exact")

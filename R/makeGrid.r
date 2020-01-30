@@ -107,7 +107,7 @@ makeCircle<-function(spdf, projCRS=NULL){
 
 #' Create the polygon for the study area from a dataset of class \sQuote{OrganizedBirds}
 #'
-#' @param df an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}
+#' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}
 #' @param shape which type of polygon should be made from the data:
 #' \itemize{
 #'   \item a bounding box (\dQuote{bBox} or \dQuote{bounding box}; i.e. the smallest bounding rectangle
@@ -123,12 +123,12 @@ makeCircle<-function(spdf, projCRS=NULL){
 #' orgDf <- organizeBirds(bombusObs)
 #' polygon <- OB2Polygon(orgDf, shape = "cHull")
 #' @export
-OB2Polygon <- function(df, shape="bBox") {
-    if (class(df) == "OrganizedBirds") {
-        spdf <- df$spdf
+OB2Polygon <- function(x, shape="bBox") {
+    if (class(x) == "OrganizedBirds") {
+        spdf <- x$spdf
     } else {
-        if(class(df) == "SpatialPointsDataFrame"){
-            spdf <- df
+        if(class(x) == "SpatialPointsDataFrame"){
+            spdf <- x
             spdf <- spTransform(spdf, CRSobj = CRS("+init=epsg:4326"))
         } else {
             stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
@@ -190,7 +190,6 @@ OB2Polygon <- function(df, shape="bBox") {
       polygon <- makeCircle(spdf, projCRS = proj4UTM)
     } # end shape conditions
 
-    # polygon <- spTransform(polygon, CRSobj = CRS("+init=epsg:4326"))
     return(polygon)
 }
 
@@ -200,6 +199,7 @@ OB2Polygon <- function(df, shape="bBox") {
 #' @param grid an object of class \sQuote{SpatialPolygon-class} or
 #' \sQuote{SpatialPolygonDataFrame-class}.
 #' @return the same input object with known names
+#' @keywords internal
 renameGrid<-function(grid){
     for(i in 1:length(grid)){
       # grid@polygons[[i]]@ID <- gsub("ID", "", grid@polygons[[i]]@ID)
@@ -354,7 +354,7 @@ makeGrid <- function(polygon,
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
-#' @importFrom dggridR dgconstruct dgcellstogrid
+#' @importFrom dggridR dgconstruct dgcellstogrid dgrectgrid
 #' @export
 makeDggrid <- function(polygon,
                      gridSize,
@@ -404,8 +404,6 @@ makeDggrid <- function(polygon,
         ID=strsplit(as.character(unique(.x$group)),"[.]")[[1]][1])
     })
   gridPol <- SpatialPolygons(gridPolList, proj4string=CRS("+init=epsg:4326"))
-  # plot(polygonGeod)
-  # plot(gridPol, add=TRUE)
   gridPolInt <- vector()
   for(i in 1:length(gridPol)){
     gridPolInt[i] <-rgeos::gIntersects(polygonGeod, gridPol[i,])

@@ -16,7 +16,7 @@
 #' @keywords internal
 
 findCols <- function(pattern, df, exact=FALSE, value = TRUE){
-  if(missing(pattern)) stop("The argument 'pattern'ä must be supplied.")
+  if(missing(pattern)) stop("The argument 'pattern' must be supplied.")
   if(missing(df)) stop("The argument 'df' must be supplied.")
 
   patternE <-if (exact) paste("^", pattern, "$", sep="") else pattern
@@ -463,7 +463,6 @@ organizeBirds <- function(x,
 
   # Check if user wants to leave a certain level
   if (!is.null(taxonRankCol)){
-    # TRCol.df <- grep(taxonRankCol, names(x@data), ignore.case=TRUE, value=TRUE)
     TRCol.df <- findCols(taxonRankCol, x@data, exact = TRUE)
     if (length(TRCol.df) > 0){
       wIn <- unique(unlist(lapply(taxonRank, grep, x@data[, TRCol.df], ignore.case = TRUE, value = FALSE)))
@@ -525,11 +524,6 @@ organizeBirds <- function(x,
   colnames(res.df)[1] <- "scientificName"
 
   #### Add the visists SLL to each visits
-  # SLLs <- res.df %>% group_by(visitUID) %>% summarise("SLL"=n_distinct(scientificName))
-  # wSLL <- match(res.df$visitUID, SLLs$visitUID)
-  # res.df$SLL <- SLLs$SLL[wSLL]
-  # rm(SLLs)
-
   x@data <- res.df
 
   res<-list(x)
@@ -544,4 +538,4 @@ organizeBirds <- function(x,
 
 #' @rdname organizeBirds
 #' @export
-organiseBirds<-organizeBirds ## To include the brits as well
+organiseBirds<-organizeBirds ## To include the Brits as well

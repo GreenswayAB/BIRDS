@@ -2,6 +2,20 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+# BIRDS 0.1
+
+## Breaking changes
+* in this version have we thouth...
+
+## Additions
+*removeObs() a function to remove observations from OrganisedBirds dataset based on the visits effort (measured with exploreVisits())
+*Relative Reporting Frequency Index (obsIndex) add a function for focal species time trends: overlaid-->get the species-->convert back to Organized (attention to spillover)-->yearly summary-->compare to the whole group Jag har döpat om funcitonen to obsIndexTemporal för att: det handlar om ett Observation Index, och jag har diskuterad med Debora att det kan också finnas ett spatial function (ingen time resolution, bara ett enda karta), och en funktion som samlar båda (som för export).  Också: vi kan sätta som ett parameter nObs eller nVis
+*SpillOver option not repeating visits but moving them to the grid cells that have most observations . Function deconstructOverlay (in export.r) if there is spill over and duplicates have been created they have to be removed from this result
+*integrate the makeGrid function with dggridR package: https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html
+*makeGrid.r changed the makeCircle function to use the Skyums algorithm as implemented in the shotGroup package
+*getUTMzones and getUTMproj: we added functions to find a projected UTM zone and its corresponding proj4 string for your data. This is useful when making buffers and circles that should be geometrically correct.
+
+## Bug Fixes  
 
 # BIRDS 0.0.3
 

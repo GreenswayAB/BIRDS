@@ -16,3 +16,4 @@ the same input object with known names
 \description{
 Takes a SpatialPolygon* and renames it to "ID1":"IDn".
 }
+\keyword{internal}
