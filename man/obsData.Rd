@@ -20,5 +20,5 @@ Extract the observation data from a OrganizedBirds-object
 }
 \examples{
 ob<-organizeBirds(bombusObs)
-obsData(ob)
+head(obsData(ob))
 }

@@ -43,7 +43,7 @@
 
 
 <meta property="og:title" content="Create unique IDs based on a grid — getGridIDs" />
-<meta property="og:description" content="Takes a dataframe and a grid ." />
+<meta property="og:description" content="Takes a spatial points dataframe and a grid and gets the overlay IDs." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -150,7 +150,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Takes a dataframe and a grid .</p>
+    <p>Takes a spatial points dataframe and a grid and gets the overlay IDs.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getGridIDs</span>(<span class='no'>x</span>, <span class='no'>grid</span>)</pre>
@@ -160,8 +160,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a ... .
-be a SpatialPointsDataFrame (useful when inside 'organizeBirds()') or an OrganizedBirds.</p></td>
+      <td><p>a SpatialPointsDataFrame .</p></td>
     </tr>
     <tr>
       <th>grid</th>
@@ -175,17 +174,12 @@ maximum extent of visits effort.</p></td>
     <p>A vector of the same length as the number of rows (observations) as x
   with a unique number corresponding to the grid's ID.</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

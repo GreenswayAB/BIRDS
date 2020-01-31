@@ -112,7 +112,7 @@ is of only length one it will interpret the column as a date column formatted
 as "yyyy-mm-dd".
 }
 \examples{
-OB<-organizeBirds(bombusObs)
+OB <- organizeBirds(bombusObs)
 }
 \seealso{
 \code{\link{createVisits}} to create unique visits IDs,

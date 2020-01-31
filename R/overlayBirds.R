@@ -126,10 +126,10 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 #'   }
 #' @export
 #' @importFrom sp coordinates proj4string spTransform CRS over
-#' @rdname overlayBirds
-#' @examples ob<-organizeBirds(bombusObs)
+#' @examples
+#' ob <- organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
-#' overlayBirds(ob, grid)
+#' ovB <- overlayBirds(ob, grid)
 overlayBirds <- function(x, grid, spillOver = NULL){
   if(!is.null(spillOver)){
     ### Bad spill over definition

@@ -33,7 +33,7 @@ listSpecies<-function(x){
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
-#' focal<-"Zygodon viridissimus Bridel, 1826"
+#' focal<-"Zygodon viridissimus"
 #' focalSpSummary(SB, focalSp=focal)
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
@@ -175,7 +175,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
 #'\donttest{
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
-#' speciesSummary(SB)
+#' summSB <- speciesSummary(SB)
 #' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}

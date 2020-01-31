@@ -23,7 +23,7 @@ OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = T
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
 allSpp <- listSpecies(SB)
-focal<-"Zygodon viridissimus Bridel, 1826"
+focal<-"Zygodon viridissimus"
 focalSpSummary(SB, focalSp=focal)
 }
 \seealso{

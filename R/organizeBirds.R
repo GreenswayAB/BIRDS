@@ -128,10 +128,9 @@ simplifySpp <- function(df, sppCol){
 ### HANDLE THE VISITS ###
 #' Create unique IDs based on a grid
 #'
-#' Takes a dataframe and a grid .
+#' Takes a spatial points dataframe and a grid and gets the overlay IDs.
 #'
-#' @param x a ... .
-#'  be a SpatialPointsDataFrame (useful when inside 'organizeBirds()') or an OrganizedBirds.
+#' @param x a SpatialPointsDataFrame .
 #' @param grid A a SpatialPolygon object (a grid is expected) defining the
 #' maximum extent of visits effort.
 #'
@@ -139,9 +138,6 @@ simplifySpp <- function(df, sppCol){
 #'   with a unique number corresponding to the grid's ID.
 #'
 #' @export
-#' @examples
-#'
-#'
 getGridIDs <- function(x, grid){
   if(class(x) == "SpatialPointsDataFrame"){
     if(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons")){
@@ -259,7 +255,6 @@ createVisits<-function(x,
 #'   column (\code{visitUID}) and that column will be set to default.
 #'
 #' @export
-#' @rdname visits
 #' @examples
 #' ob<-organizeBirds(bombusObs)
 #' attr(ob, "visitCol")
@@ -332,7 +327,7 @@ visits<-function(x, name=NULL){
 #'
 #' @examples
 #' ob<-organizeBirds(bombusObs)
-#' obsData(ob)
+#' head(obsData(ob))
 obsData<-function(x){
   UseMethod("obsData")
 }
@@ -410,7 +405,7 @@ obsData.OrganizedBirds<-function(x){
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 #' @export
 #'
-#' @examples OB<-organizeBirds(bombusObs)
+#' @examples OB <- organizeBirds(bombusObs)
 #' @seealso \code{\link{createVisits}} to create unique visits IDs,
 #'  \code{\link{visits}} to get or set the visit IDs to this class,
 #'  \code{\link{simplifySpp}} to simplify species names,
