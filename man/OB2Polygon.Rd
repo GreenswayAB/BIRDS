@@ -4,10 +4,10 @@
 \alias{OB2Polygon}
 \title{Create the polygon for the study area from a dataset of class \sQuote{OrganizedBirds}}
 \usage{
-OB2Polygon(df, shape = "bBox")
+OB2Polygon(x, shape = "bBox")
 }
 \arguments{
-\item{df}{an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}}
+\item{x}{an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}}
 
 \item{shape}{which type of polygon should be made from the data:
 \itemize{
@@ -15,7 +15,7 @@ OB2Polygon(df, shape = "bBox")
   that contains all points),
   \item a convex hull (\dQuote{cHull} or \dQuote{convex hull}; i.e. the smallest
   convex set that contains all the points).
-  \item the minimum circle (\dQuote{buffCircle} or \dQuote{buffer circle}; i.e. the smallest
+  \item the minimum circle (\dQuote{minCircle} or \dQuote{min circle}; i.e. the smallest
   circle that covers all the points).
 }}
 }

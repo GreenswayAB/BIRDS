@@ -1,11 +1,8 @@
-### TEMPORAL PART ###
-
-#' Create spillover overlay for specific grid
+#' Collect temporal data
 #'
-#' An internal function. Takes the dataframe resulting from the spatial overlay
-#' for a specific grid and searches for spillover visits (i.e. visits that are split by grid cell boundaries).
+#' An internal function. Takes the dataframe resulting from the temporal overlay
+#' for a specific grid and summarises basic variables as a time series
 #'
-#' @param data A dataframe for a specific grid without spillover.
 #' @param birdData An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.
 #' @param visitCol A character string for specifying the columns that identify a visit.
 #'
@@ -27,28 +24,28 @@ getTemporal<-function(birdData, visitCol=NULL){
     return(c("nObs" = length(x[,1]),
              "nVis" = length(unique(x[, visitCol])),
              "nSpp" = length(unique(x[, "scientificName"]))#,
-             # "avgSll" = median(dplyr::summarise(dplyr::group_by(data, !!dplyr::sym(visitCol)), avgSLL=dplyr::n_distinct(scientificName))$avgSLL)
              ))
-
   })
 
   return(tempData)
-
 }
 
-### SPATIAL PART ###
-
+#' Collect spatial data
+#'
+#' An internal function. Takes the dataframe resulting from the spatial overlay
+#' for a specific grid and summarises basic variables as a polygon spatial layer
+#'
+#' @param birdData An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.
+#' @param visitCol A character string for specifying the columns that identify a visit.
+#'
+#' @return The a SpatialPolygonsDataFrame over the overlay gris with a dataframe
 #' @importFrom dplyr summarise n n_distinct
 #' @keywords internal
-getSpatial<-function(birdDataOL){
+getSpatial<-function(birdData){
 
-  dataList<-birdDataOL$observationsInGrid
-
+  dataList<-birdData$observationsInGrid
   nCells<-length(dataList)
-
-  visitCol<-attr(birdDataOL, "visitCol")
-
-  #res<-matrix(nrow = length(dataList), ncol = 6, dimnames = list(c(), c("nObs", "nVis", "nSpp", "avgSll", "nYears", "visitsUID")))
+  visitCol<-attr(birdData, "visitCol")
 
   res<-data.frame("nObs"=as.numeric(rep(NA,nCells)),
                   "nVis"=as.numeric(rep(NA,nCells)),
@@ -61,20 +58,20 @@ getSpatial<-function(birdDataOL){
 
   cols2use<-c("scientificName", "year", "month", "day", visitCol)
 
-  dataRes<-lapply(dataList[birdDataOL$nonEmptyGridCells], function(x){
+  dataRes<-lapply(dataList[birdData$nonEmptyGridCells], function(x){
 
     x<-x[,cols2use]
     colnames(x)<-c("scientificName", "year", "month", "day", "visitCol")
 
-      return(c("nObs"=length(x[,"scientificName"]),
-               "nVis"=length(unique(x[,"visitCol"])),
-               "nSpp"=length(unique(x[,"scientificName"])),
-               "avgSll"=median(summarise(group_by(x, visitCol), avgSLL=n_distinct(scientificName))$avgSLL),
-               "nDays"=length(unique( paste0(x[,"year"],"-", as.numeric(x[,"month"]), "-", as.numeric(x[,"day"]))) ),
-               "nYears"=length(unique(x[,"year"])),
-               "visitsUID"= paste0(unique(x[,"visitCol"]), collapse = ",")
-               ))
-      })
+    return(c("nObs"=length(x[,"scientificName"]),
+             "nVis"=length(unique(x[,"visitCol"])),
+             "nSpp"=length(unique(x[,"scientificName"])),
+             "avgSll"=median(summarise(group_by(x, visitCol), avgSLL=n_distinct(scientificName))$avgSLL),
+             "nDays"=length(unique( paste0(x[,"year"],"-", as.numeric(x[,"month"]), "-", as.numeric(x[,"day"]))) ),
+             "nYears"=length(unique(x[,"year"])),
+             "visitsUID"= paste0(unique(x[,"visitCol"]), collapse = ",")
+             ))
+  })
 
   dataRes<-data.frame(matrix(unlist(dataRes), nrow=length(dataRes), byrow=TRUE), stringsAsFactors = FALSE)
 
@@ -85,19 +82,20 @@ getSpatial<-function(birdDataOL){
   dataRes$X5<-as.numeric(dataRes$X5)
   dataRes$X6<-as.numeric(dataRes$X6)
 
-  res[birdDataOL$nonEmptyGridCells,]<-dataRes
+  res[birdData$nonEmptyGridCells,]<-dataRes
 
-  rownames(res)<-row.names(birdDataOL$grid)
+  rownames(res)<-row.names(birdData$grid)
 
-  resSp<-sp::SpatialPolygonsDataFrame(birdDataOL$grid, res)
+  resSp<-sp::SpatialPolygonsDataFrame(birdData$grid, res)
 
   return(resSp)
 
 }
 
-### SPATIOTEMPORAL PART ###
-
-## Auxiliary function for getSpatioTemporal()
+#' Internal function for getSpatiotemporal()
+#'
+#' An internal function to be applied in a lapply
+#'
 #' @importFrom dplyr group_by summarise n n_distinct
 #' @keywords internal
 countsYearMonth<-function(x, yearsAll, visitCol){
@@ -163,8 +161,16 @@ countsYearMonth<-function(x, yearsAll, visitCol){
   return(list("resYM"=resYM, "resYMvisits"=resYMvisits))
 }
 
-### Actual function
-#' @importFrom dplyr summarise group_by
+#' Collect spatiotemporal data
+#'
+#' An internal function. Takes the dataframe resulting from the spatial overlay
+#' for a specific grid and summarises basic variables as a list of arrays
+#'
+#' @param birdData An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.
+#' @param visitCol A character string for specifying the columns that identify a visit.
+#'
+#' @return A list with two arrays
+#' @importFrom dplyr group_by summarise n n_distinct
 #' @keywords internal
 getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 
@@ -187,7 +193,7 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
   wNonEmpty <- birdOverlay$nonEmptyGridCells
   gridLength <- length(dataList)
 
-  visitsAll<-sort(as.character(
+  visitsAll <- sort(as.character(
     unique(unlist(lapply(dataList, FUN=function(x)return(x[, visitCol]))))
   ))
 
@@ -201,7 +207,6 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 
   for(g in wNonEmpty){
     x<-dataList[[g]]
-    # cellName<-gsub("ID", "", names(dataList[wNonEmpty[i]]))
     tmpYM<-countsYearMonth(x, yearsAll, visitCol)
     resYM[g,,,]  <- tmpYM$resYM
     resYMvisits[g,,]  <- tmpYM$resYMvisits
@@ -270,8 +275,6 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
   spatial<-NULL
   spatioTemporal<-NULL
   visits<-NULL
-  # speciesLists<-NULL
-  #The grid is exported in the spatial variable
 
   if(!is.null(grid)){
     if(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons")){
@@ -293,23 +296,22 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
   }
 
   #Here we use a modifyed version of bOver where the grid is only one single cell.
-  #Either a dissolved version of the grid or a polygon from the extent of the organizedBirds
   temporal <- getTemporal(bTOver)
+
   if(useSpatial){
     #If we have spatial grid data:
     spatial <- getSpatial(bOver)
-    spatioTemporal <- getSpatioTemporal(bOver,  visitCol=visitCol) #### Three elements in a list
+    spatioTemporal <- getSpatioTemporal(bOver,  visitCol=visitCol)
   }else{
     spatial <- getSpatial(bTOver)
-    spatioTemporal <- getSpatioTemporal(bTOver, visitCol=visitCol) #### Three elements in a list
+    spatioTemporal <- getSpatioTemporal(bTOver, visitCol=visitCol)
   }
 
-  res <- list("temporal"=temporal,
-            "spatial"=spatial,
-            "spatioTemporal"= spatioTemporal$resYM,
-            "spatioTemporalVisits" = spatioTemporal$resYMvisits,
-            # "speciesLists" = spatioTemporal$resSpp,
-            "overlaid" = if(useSpatial) bOver$observationsInGrid else bTOver$observationsInGrid
+  res <- list("temporal" = temporal,
+              "spatial" = spatial,
+              "spatioTemporal" = spatioTemporal$resYM,
+              "spatioTemporalVisits" = spatioTemporal$resYMvisits,
+              "overlaid" = if(useSpatial) bOver$observationsInGrid else bTOver$observationsInGrid
             )
   class(res) <- "SummarizedBirds"
   attr(res,"visitCol") <- visitCol #The column(s) that identify a visit
@@ -323,4 +325,4 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
 #' @rdname summarizeBirds
 #' @aliases summarizeBirds
 #' @export
-summariseBirds <- summarizeBirds  ## To include the brits as well
+summariseBirds <- summarizeBirds  ## To include the Brits as well

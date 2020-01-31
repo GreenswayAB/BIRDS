@@ -56,7 +56,6 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 
   wNA <- which(is.na(obs$grid))
   if(length(wNA)>0){
-    # message(paste0(length(wNA), " observations did not overlap with the grid."))
     obs <- obs[-wNA,]
   }
 
@@ -72,7 +71,7 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
     visits <- visits[-wNAvis,]
   }
 
-  colsExc <- which(colnames(obs) == "grid") #1:(ncol(obs)-1) #Drop the grid-col
+  colsExc <- which(colnames(obs) == "grid")
 
   res <- list()
   for(g in 1:length(grid)){
@@ -198,10 +197,6 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
       ObsInGridList[wNonEmpty] <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
     }
   }
-  # if spillOver=NULL {
-  #### NO SPILLOVER
-  #### Nothing changes
-  # }
 
   if (class(grid) == "SpatialPolygonsDataFrame"){
     grid@data <- grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribut data from the input grid, if there is any

@@ -86,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -147,12 +147,37 @@
       <small>Source: <a href='https://github.com/greensway/BIRDS/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="birds-01" class="section level1">
+<h1 class="page-header">
+<a href="#birds-01" class="anchor"></a>BIRDS 0.1</h1>
+<div id="breaking-changes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#breaking-changes" class="anchor"></a>Breaking changes</h3>
+<ul>
+<li>changed parameters the argument ‘spillover’ on summaryBirds() and overlayBirds()</li>
+<li>changed parameters the argument ‘shape’ on OB2Polygon()</li>
+</ul>
+</div>
+<div id="additions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additions" class="anchor"></a>Additions</h3>
+<ul>
+<li>removeObs() a function to remove observations from an OrganisedBirds dataset based on the visits effort (measured with exploreVisits())</li>
+<li>obsIndex() a function retrieving the Relative Reporting Frequency Index (obsIndex). This retrieves both spatial and temporal observation patterns for a focal species compared to a group of species.</li>
+<li>[BREAKING CHANGE] the argument ‘spillOver’ in summariseBirds() and overlayBirds() now accepts NULL, ‘unique’ and ‘duplicate’. Before, TRUE would duplicate the observations belonging to a visit overlaying two or more gridcells. That is now ‘duplicate’. The new optio is ‘unique’ where observations are assigned a single gridcell (the one with most observations). FALSE is now replaced by NULL.</li>
+<li>makeDggrid() a function making Discrete Global Grids using function in the dggridR package: <a href="https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html" class="uri">https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html</a>
+</li>
+<li>makeCircle() now uses the Skyums algorithm implemented in the shotGroup package to make the minimum encompassing circle.</li>
+<li>getUTMproj() a function to find the UTM zone that best represents the observations and returns its corresponding proj4 string. This is useful when making buffers and circles that should be geometrically correct (e.g. OB2Polygon(, shape=“minCircle”) or makeCircle()).</li>
+</ul>
+</div>
+</div>
     <div id="birds-003" class="section level1">
 <h1 class="page-header">
 <a href="#birds-003" class="anchor"></a>BIRDS 0.0.3</h1>
-<div id="additions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#additions" class="anchor"></a>Additions</h2>
+<div id="additions-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additions-1" class="anchor"></a>Additions</h3>
 <ul>
 <li>organizeBirds() now is more tolerant to casing in the column names and has better warning messages.</li>
 <li>organizeBirds() now has an argument that accepts a column names for the variable stating the presence status if there is such (useful for FocalSp* and Observation index)</li>
@@ -168,16 +193,16 @@
     <div id="birds-002" class="section level1">
 <h1 class="page-header">
 <a href="#birds-002" class="anchor"></a>BIRDS 0.0.2</h1>
-<div id="bug-fixes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h3>
 <ul>
 <li>fix and simplify structure of exportBirds() function</li>
 </ul>
 </div>
-<div id="additions-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#additions-1" class="anchor"></a>Additions</h2>
+<div id="additions-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additions-2" class="anchor"></a>Additions</h3>
 <ul>
 <li>function exportBirds() - add number of spatial units with observations (grid cells nCells) as variable to temporal exports</li>
 <li>new function spatialVisits() to plot the spatial representaion of the visits effort</li>
@@ -197,6 +222,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#birds-01">0.1</a></li>
         <li><a href="#birds-003">0.0.3</a></li>
         <li><a href="#birds-002">0.0.2</a></li>
         <li><a href="#birds-001">0.0.1</a></li>

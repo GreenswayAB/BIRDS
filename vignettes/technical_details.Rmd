@@ -67,7 +67,9 @@ sampling units allows separation of sampling effort into the effort that can be
 expressed through the number of visits by different observers and the effort per
 visit (e.g. species list length, or when available the time spent during a visit). 
 Hence, the quality (completeness) of the data can be judged by using information 
-for each visit and information from a collection of visits. 
+for each visit and information from a collection of visits. Note that the term
+'checklists' has also been used for this purpose although it is often confused 
+with the 'potential species list' that a visitor may find. 
 
 #### First exploration  
 Once you have organised your data, we highly recommend to explore the data to see if the definition of the visits that you applied matches your expectations. The `exploreVisits()` function will summarize some statistics for each visit and return a `data.frame` with the following columns:  
