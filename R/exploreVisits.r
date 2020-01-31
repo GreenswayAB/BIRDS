@@ -187,7 +187,7 @@ spatialVisits <- function(x,
          vector of length equal to the number of visits")
   }
 
-  utmCRS <- CRS(paste0("+proj=utm +zone=", getUTMzone(x)$zone," +datum=WGS84"))
+  utmCRS <- CRS(getUTMproj(x))
   xTrans <- sp::spTransform(x, CRSobj = utmCRS)
 
   buff <- rgeos::gBuffer(xTrans,  byid = TRUE, id=x@data$visitUID, width=radiusVal)

@@ -87,7 +87,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -153,13 +153,13 @@
     <p>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217;</p>
     </div>
 
-    <pre class="usage"><span class='fu'>OB2Polygon</span>(<span class='no'>df</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"bBox"</span>)</pre>
+    <pre class="usage"><span class='fu'>OB2Polygon</span>(<span class='no'>x</span>, <span class='kw'>shape</span> <span class='kw'>=</span> <span class='st'>"bBox"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>df</th>
+      <th>x</th>
       <td><p>an object of class &#8216;OrganizedBirds&#8217; or &#8216;SpatialPointsDataFrame&#8217;</p></td>
     </tr>
     <tr>
@@ -169,7 +169,7 @@
   that contains all points),</p></li>
 <li><p>a convex hull (&#8220;cHull&#8221; or &#8220;convex hull&#8221;; i.e. the smallest
   convex set that contains all the points).</p></li>
-<li><p>the minimum circle (&#8220;buffCircle&#8221; or &#8220;buffer circle&#8221;; i.e. the smallest
+<li><p>the minimum circle (&#8220;minCircle&#8221; or &#8220;min circle&#8221;; i.e. the smallest
   circle that covers all the points).</p></li>
 </ul></td>
     </tr>

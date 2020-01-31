@@ -164,7 +164,7 @@ test_that("Test correct export results",{
                length(unique(SB$overlaid[[!!sampleGridCell]][SB$overlaid[[sampleGridCell]]$month==lubridate::month(sampleDate),"year"])))
 
   test<-SB$overlaid[[!!sampleGridCell]]
-  test$ymd<-apply(test, 1, function(x) paste0(as.numeric(x[2]),"-",as.numeric(x[3]),"-",as.numeric(x[4])))
+  test$ymd<-apply(test, 1, function(x) paste0(as.numeric(x[2]), "-", as.numeric(x[3]), "-", as.numeric(x[4])))
   test<-dplyr::group_by(test, year, month)
   test<-dplyr::summarise(test, res=n_distinct(ymd))
   test<-dplyr::summarise(dplyr::group_by(test, month), sum=sum(res), mean=mean(res), median=median(res))

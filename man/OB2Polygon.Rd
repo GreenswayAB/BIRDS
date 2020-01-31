@@ -15,7 +15,7 @@ OB2Polygon(x, shape = "bBox")
   that contains all points),
   \item a convex hull (\dQuote{cHull} or \dQuote{convex hull}; i.e. the smallest
   convex set that contains all the points).
-  \item the minimum circle (\dQuote{buffCircle} or \dQuote{buffer circle}; i.e. the smallest
+  \item the minimum circle (\dQuote{minCircle} or \dQuote{min circle}; i.e. the smallest
   circle that covers all the points).
 }}
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a grid — makeGrid • BIRDS</title>
+<title>A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors — removeInexDays • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,13 +42,8 @@
 
 
 
-<meta property="og:title" content="Make a grid — makeGrid" />
-<meta property="og:description" content="Makes a grid adapted to the purpose of this package and simplifing options
-from the  sp package. The central concept of the BIRDS package is the
-definition of the field visit, and most likely, your grid size will define the
-maximum area a person can explore during a day. Use the function
-exploreVisits() to assess if your definition of visit aligns with your
- grid size." />
+<meta property="og:title" content="A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors — removeInexDays" />
+<meta property="og:description" content="A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -149,99 +144,23 @@ exploreVisits() to assess if your definition of visit aligns with your
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a grid</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/makeGrid.r'><code>R/makeGrid.r</code></a></small>
-    <div class="hidden name"><code>makeGrid.Rd</code></div>
+    <h1>A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/exportBirds.R'><code>R/exportBirds.R</code></a></small>
+    <div class="hidden name"><code>removeInexDays.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Makes a grid adapted to the purpose of this package and simplifing options
-from the  <code>sp</code> package. The central concept of the BIRDS package is the
-definition of the field visit, and most likely, your grid size will define the
-maximum area a person can explore during a day. Use the function
-<code><a href='exploreVisits.html'>exploreVisits()</a></code> to assess if your definition of visit aligns with your
- grid size.</p>
+    <p>A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors</p>
     </div>
 
-    <pre class="usage"><span class='fu'>makeGrid</span>(
-  <span class='no'>polygon</span>,
-  <span class='no'>gridSize</span>,
-  <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>hexGrid</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>offset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>0.01</span>
-)</pre>
+    <pre class="usage"><span class='fu'>removeInexDays</span>(<span class='no'>x</span>)</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>polygon</th>
-      <td><p>an object of class &#8216;SpatialPolygon&#8217; or
-&#8216;SpatialPolygonDataFrame&#8217;</p></td>
-    </tr>
-    <tr>
-      <th>gridSize</th>
-      <td><p>width of the cells in Km. It defines the central assumption
-of this package that is the maximum area a person can explore during a day.
-Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
-Maximum recomended for this package 10 km if there is no reliable definition
-for the spatial extent for visits.</p></td>
-    </tr>
-    <tr>
-      <th>buffer</th>
-      <td><p>shall the grid cells include the polygon border? Then <code>TRUE</code>
-(default = <code>FALSE</code>).</p></td>
-    </tr>
-    <tr>
-      <th>hexGrid</th>
-      <td><p>shall the grid cells be hexagonal? Then <code>TRUE</code> (default).
-Else squared grid cells.</p></td>
-    </tr>
-    <tr>
-      <th>offset</th>
-      <td><p>the offset (position) of the grid (from <code>spsample</code> methods).
-If it is left empty (<code>NULL</code>, default), then takes default values.
-For squared grid cells the default is set to <code><a href='https://rdrr.io/r/base/c.html'>c(0.5,0.5)</a></code> ("centric systematic").
-For hexagonal grid cells the default is set to <code><a href='https://rdrr.io/r/base/c.html'>c(0,0)</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>simplify</th>
-      <td><p>simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
-Complicated polygons (those with much detail) make this function run slower.</p></td>
-    </tr>
-    <tr>
-      <th>tol</th>
-      <td><p>numerical tolerance value for the simplification algorith. Set to 0.01 as default.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>an object of class &#8216;SpatialPolygon&#8217; with a set of polygons
-conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).</p>
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>Depending on the total number of grid cells the computations may take time.
-If there are more than 100 cells on any dimension a warning message will be displayed.
-Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
-an error message will be displayed.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='drawPolygon.html'>drawPolygon</a></code>, <code><a href='renameGrid.html'>renameGrid</a></code>, <code><a href='OB2Polygon.html'>OB2Polygon</a></code>, <code><a href='exploreVisits.html'>exploreVisits</a></code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'>makeGrid</span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#note">Note</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
