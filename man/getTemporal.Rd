@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarizeBirds.R
 \name{getTemporal}
 \alias{getTemporal}
-\title{Create spillover overlay for specific grid}
+\title{Collect temporal data}
 \usage{
 getTemporal(birdData, visitCol = NULL)
 }
@@ -10,14 +10,12 @@ getTemporal(birdData, visitCol = NULL)
 \item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}
 
 \item{visitCol}{A character string for specifying the columns that identify a visit.}
-
-\item{data}{A dataframe for a specific grid without spillover.}
 }
 \value{
 The overlay dataframe for a specific grid, including the spillover visits.
 }
 \description{
-An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and searches for spillover visits (i.e. visits that are split by grid cell boundaries).
+An internal function. Takes the dataframe resulting from the temporal overlay
+for a specific grid and summarises basic variables as a time series
 }
 \keyword{internal}

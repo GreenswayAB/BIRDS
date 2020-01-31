@@ -45,7 +45,7 @@ deconstructOverlay <- function(overlay, visitCol){
   return(res[,cols])
 }
 
-
+#' @keywords internal
 exportSpatial <- function(sb, timeRes, variable, method){
   spatial <- sb$spatial
   resRowNames <- rownames(spatial@data)
@@ -183,9 +183,8 @@ exportSpatial <- function(sb, timeRes, variable, method){
   return(spatial)
 }
 
-####### Temporal
-
-### a funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors
+#' A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors
+#' @keywords internal
 removeInexDays<-function(x){
   if (!all(c("year", "month", "day") %in% colnames(x) )) stop("Input data must have the columns 'year', 'month' and 'day'")
 
@@ -219,14 +218,15 @@ getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
   return(res)
 }
 
-## a function to count pixels with data
+#' A function to count pixels with data
+#' @keywords internal
 countIfHigher <- function(x, thr, na.rm = TRUE) {
   tmp <- ifelse(x>=thr, 1, 0)
   tmp.sum <- sum(tmp, na.rm=na.rm)
   return(tmp.sum)
 }
 
-
+#' @keywords internal
 exportTemporal <- function(sb, timeRes, variable, method){
   if (variable == "nYears" && timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
   if (is.null(timeRes)) stop("Time resolution ('timeRes') needs to be defined for dimension 'Temporal'")
@@ -343,7 +343,6 @@ exportTemporal <- function(sb, timeRes, variable, method){
       all.Days <- as.character(sort(as.Date(unique(unlist(daygrid)))))
       resVar <- unlist(
         lapply(all.Days, FUN=function(x){
-          #length(grep(pattern = x, as.Date(unlist(daygrid))))
           sum(stringr::str_count(dayGridP, x), na.rm = TRUE)
         })
       )
@@ -388,7 +387,6 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(organizeBirds(bombusObs), grid=grid)
 #' EB <- exportBirds(SB, "spatial", "month", "nDays", "median")
-
 exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
   dimension <- tolower(dimension)
@@ -413,8 +411,6 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
     stop("Not a valid method")
   }
 
-
-
   if(dimension == "spatial"){
     res <- exportSpatial(x, timeRes, variable, method)
     return(res)
@@ -424,6 +420,4 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
   }else{
     stop("Wrong input for variable dimension. Try 'spatial' or 'temporal'.")
   }
-
-
 }

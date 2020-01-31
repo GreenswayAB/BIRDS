@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create spillover overlay for specific grid — getTemporal • BIRDS</title>
+<title>Collect temporal data — getTemporal • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,9 @@
 
 
 
-<meta property="og:title" content="Create spillover overlay for specific grid — getTemporal" />
-<meta property="og:description" content="An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and searches for spillover visits (i.e. visits that are split by grid cell boundaries)." />
+<meta property="og:title" content="Collect temporal data — getTemporal" />
+<meta property="og:description" content="An internal function. Takes the dataframe resulting from the temporal overlay
+for a specific grid and summarises basic variables as a time series" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -88,7 +88,7 @@ for a specific grid and searches for spillover visits (i.e. visits that are spli
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -145,14 +145,14 @@ for a specific grid and searches for spillover visits (i.e. visits that are spli
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create spillover overlay for specific grid</h1>
+    <h1>Collect temporal data</h1>
     <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
     <div class="hidden name"><code>getTemporal.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and searches for spillover visits (i.e. visits that are split by grid cell boundaries).</p>
+    <p>An internal function. Takes the dataframe resulting from the temporal overlay
+for a specific grid and summarises basic variables as a time series</p>
     </div>
 
     <pre class="usage"><span class='fu'>getTemporal</span>(<span class='no'>birdData</span>, <span class='kw'>visitCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -167,10 +167,6 @@ for a specific grid and searches for spillover visits (i.e. visits that are spli
     <tr>
       <th>visitCol</th>
       <td><p>A character string for specifying the columns that identify a visit.</p></td>
-    </tr>
-    <tr>
-      <th>data</th>
-      <td><p>A dataframe for a specific grid without spillover.</p></td>
     </tr>
     </table>
 

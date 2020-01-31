@@ -10,7 +10,9 @@ makeCircle(spdf, projCRS = NULL)
 \item{spdf}{an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.}
 
 \item{projCRS}{a proj4-type string defining a projected CRS. It is very important
-that the selected CRS is accurate in the study area.}
+that the selected CRS is accurate in the study area. This is not the CRS for
+the argument 'spdf' which should be defined internally. This is the CRS used to
+make a flat circle. Some UTM variant is recommended. See \link{getUTMproj()}}
 }
 \value{
 a polygon object of class \sQuote{SpatialPolygon} with geodesic
@@ -19,4 +21,7 @@ coordinates in WGS84 (ESPG:4326).
 \description{
 This funciton is based on the function shotGroups::getMinCircle() that uses
 the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf
+}
+\seealso{
+\link{getUTMproj}
 }
