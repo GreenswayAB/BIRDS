@@ -18,7 +18,7 @@ A function that counts the number of observations, number of visits and number o
 \examples{
 \donttest{
 grid <- makeGrid(searchPolygon, gridSize = 10)
-SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
+SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 summSB <- speciesSummary(SB)
 }
 }

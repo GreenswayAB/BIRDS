@@ -41,6 +41,6 @@ please refer to the vignette "Technical details".
 }
 \examples{
 grid <- makeGrid(searchPolygon, gridSize = 10)
-SB <- summariseBirds(organizeBirds(bombusObs), grid=grid)
+SB <- summariseBirds(organizeBirds(bombusObsShort), grid=grid)
 EB <- exportBirds(SB, "spatial", "month", "nDays", "median")
 }

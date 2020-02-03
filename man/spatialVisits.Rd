@@ -36,7 +36,7 @@ A function to
 \examples{
 # create a visit-based data object from the original observation-based data
 library(sp)
-OB<-organizeBirds(bombusObs)
+OB<-organizeBirds(bombusObsShort)
 visitStats<-exploreVisits(OB)
 spV<-spatialVisits(visitStats)
 plot(spV$effort)

@@ -21,10 +21,10 @@ three basic steps: organise data, summarise data, review data.
 
 \examples{
 # Organise the data
-OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 
-OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
- taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
+#OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
+#      taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
 
 # Make a grid that can be used by summariseBirds()
 grid <- makeGrid(gotaland, gridSize = 10)

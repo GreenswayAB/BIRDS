@@ -257,11 +257,11 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 #' @return A SummarizedBirds-object
 #' @export
 #' @examples
-#' ob<-organizeBirds(bombusObs)
+#' ob <- organizeBirds(bombusObsShort)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' SB <- summarizeBirds(ob, grid)
-#' nObsG<-rowSums(SB$spatioTemporal[,,13,"nObs"], na.rm = FALSE)
-#' nObsG2<-SB$spatial@data$nObs
+#' nObsG <- rowSums(SB$spatioTemporal[,,13,"nObs"], na.rm = FALSE)
+#' nObsG2 <- SB$spatial@data$nObs
 #' any(nObsG != nObsG2, na.rm = TRUE) ## Check, two ways to obtain the same
 summarizeBirds<-function(x, grid, spillOver = NULL){
   UseMethod("summarizeBirds")

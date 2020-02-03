@@ -35,8 +35,8 @@ logObsInd<-function(focal,
     group <- group - focal
     ## check: if group is negative after removing, then the focal specis
     if(any(group < 0)) stop("Some of the observations for the group are negative
-                            \nafter removing the focal species. Maybe they were
-                            \nalready removed? Try with 'fs.rm=FALSE'")
+                            after removing the focal species. Maybe they were
+                            already removed? Try with 'fs.rm=FALSE'")
   }
   focalS <- sum(focal, na.rm=TRUE)
   groupS <- sum(group, na.rm=TRUE)
@@ -247,12 +247,13 @@ obsIndexSpatial<-function(x,
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' grid <- makeGrid(gotaland, gridSize = 10)
-#' PBD<-bombusObs
+#' PBD <- bombusObsShort
 #' OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 #' SB <- summariseBirds(OB, grid=grid)
 #' spp <- listSpecies(SB)
-#' tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3])
+#' tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3], fs.rm = FALSE)
 #' plot(tempOI$relObs, main=spp[3])
 
 #' spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
@@ -262,6 +263,7 @@ obsIndexSpatial<-function(x,
 #' sp::plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 #' legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
 #'        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
+#'}
 
 obsIndex<-function(x,
                    dimension,

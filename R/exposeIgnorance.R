@@ -13,21 +13,17 @@
 #' @param h the half ignorance parameter value.
 #' @return a \code{data.frame} with ignorance scores
 #' @examples
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' ignorance <- exposeIgnorance(nObs=SB$spatial@data$nObs)
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 exposeIgnorance<-function(nObs, nSpp=NULL, h=1){
-  ## make them vectors
-
   if (!is.null(nSpp)){
     ObsInd<-nObs/nSpp
     Ign<-h/(h + ObsInd)
   } else {
     Ign<-h/(h + nObs)
   }
-
-  # IgnCom<-IgnComb(ObsInd, Nobs, input$obs50,input$obs50spp)
 }

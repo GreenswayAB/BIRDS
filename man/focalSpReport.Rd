@@ -36,11 +36,11 @@ and bar charts with number of records per year and month.
 }
 \examples{
 library(sp)
-OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
 allSpp <- listSpecies(SB)
-focal<-"Zygodon viridissimus"
+focal <- allSpp[2]
 focalSpReport(SB, focalSp=focal)
 }
 \seealso{

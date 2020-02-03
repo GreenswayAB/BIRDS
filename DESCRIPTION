@@ -1,12 +1,12 @@
 Package: BIRDS
 Type: Package
-Title: A set of tools for Biodiversity Information Review and Decision Support 
+Title: A Set of Tools for Biodiversity Information Review and Decision Support 
 Version: 0.1
 URL: https://github.com/greensway/BIRDS
 Authors@R: c(
     person("Debora", "Arlt", email = "debora.arlt@slu.se", role = "aut",
             comment = c(ORCID = "0000-0003-0874-4250")),
-    person("Alejandro", "Ruete", email = "alejandro@greensway.se", role = c("aut","cre"),
+    person("Alejandro", "Ruete", email = "aleruete@gmail.com", role = c("aut","cre"),
             comment = c(ORCID = "0000-0001-7681-2812")),
     person("Anton", "Hammarström", email = "anton@greensway.se", role = "aut"))
 Description: A set of tools to review and make decisions upon the use of
@@ -25,7 +25,7 @@ Description: A set of tools to review and make decisions upon the use of
    “true” state). Primary biodiversity data (PBD) combining data from different 
    data sets, like e.g. GBIF mediated data, commonly vary in the ways data has 
    been generated - containing opportunistically collected presence-only data 
-   toghether with and data from systematic monitoring programs. The set of tools
+   together with and data from systematic monitoring programs. The set of tools
    provided is aimed at understanding the process that generated the data (i.e. 
    observing, recording and reporting species into databases).
 License: GPL-3 + file LICENSE

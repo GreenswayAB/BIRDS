@@ -22,7 +22,7 @@ A function that counts the number of observations or visits per grid cell for al
 }
 \examples{
 grid <- makeGrid(searchPolygon, gridSize = 10)
-SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
+SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 CM <- communityMatrix(SB, sampleUnit="visit")
 }
 \seealso{

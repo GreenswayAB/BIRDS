@@ -29,7 +29,7 @@ listSpecies<-function(x){
 #' @param focalSp the focal sp to look for.
 #' @return a \code{data.frame} with summary data for the focal species
 #' @examples
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
@@ -102,11 +102,11 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' @return a plot with a brief species summary
 #' @examples
 #' library(sp)
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
-#' focal<-"Zygodon viridissimus"
+#' focal <- allSpp[2]
 #' focalSpReport(SB, focalSp=focal)
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
@@ -174,7 +174,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
 #' @examples
 #'\donttest{
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
-#' SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
+#' SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 #' summSB <- speciesSummary(SB)
 #' }
 #' @export
@@ -214,7 +214,7 @@ speciesSummary <- function(x){
 #' @return a \code{matrix} with counts of observations or visits for each species on each non-empty grid cell.
 #' @examples
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
-#' SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
+#' SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 #' CM <- communityMatrix(SB, sampleUnit="visit")
 #' @export
 #' @importFrom rlang .data

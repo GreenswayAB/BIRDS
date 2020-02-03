@@ -54,7 +54,7 @@ Grid cells must be smaller than the sampling area. If the grid cell size is wide
 an error message will be displayed.
 }
 \examples{
-grid <- makeDggrid(gotaland, gridSize = 10)
+\dontrun{grid <- makeDggrid(gotaland, gridSize = 10)}
 }
 \seealso{
 \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}

@@ -72,6 +72,14 @@
 #' @source \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
 "bombusObs"
 
+#' @title A short version of bombusObs dataset for faster examples.
+#'
+#' @description A random sample of 1,000 observations for the genus \emph{Bombus} spp.
+#' @format A data frame with 1,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}
+#' @source \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
+#' @seealso \code{\link{bombusObs}}
+"bombusObsShort"
+
 #' @title A simple empty summarisedBirds object.
 #'
 #' @description An empty summarisedBirds object used to dinamically test for validity
