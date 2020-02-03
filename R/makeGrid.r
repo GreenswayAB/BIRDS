@@ -59,10 +59,11 @@ drawPolygon <- function(lat = 0,
 #' @param projCRS a proj4-type string defining a projected CRS. It is very important
 #' that the selected CRS is accurate in the study area. This is not the CRS for
 #' the argument 'spdf' which should be defined internally. This is the CRS used to
-#' make a flat circle. Some UTM variant is recommended. See \link{getUTMproj()}
+#' make a flat circle. Some UTM variant is recommended. See \code{\link{getUTMproj}}
 #' @return a polygon object of class \sQuote{SpatialPolygon} with geodesic
 #' coordinates in WGS84 (ESPG:4326).
-#' @seealso \link{getUTMproj}
+#' @seealso \code{\link{getUTMproj}}
+#' @importFrom shotGroups getMinCircle
 #' @export
 makeCircle<-function(spdf, projCRS=NULL){
     # error not a SpatialPolygon
@@ -86,7 +87,7 @@ makeCircle<-function(spdf, projCRS=NULL){
 
     if (nrow(coordUnique) > 1) {
       # the minumum circle that covers all points
-      mincirc <- shotGroups::getMinCircle(coordUnique)
+      mincirc <- getMinCircle(coordUnique)
       mincircSP<-data.frame(mincirc$ctr[1], mincirc$ctr[2])
       colnames(mincircSP)<-c("X", "Y")
       sp::coordinates(mincircSP) <- ~X+Y
@@ -337,10 +338,6 @@ makeGrid <- function(polygon,
 #' @param topology Shape of cell. shall the grid cells be hexagonal, diamonds or
 #' triangular? Options are: \dQuote{hexagon}, \dQuote{diamond}, \dQuote{tirangle}.
 #' Default: \dQuote{hexagon}.
-#' @param offset the offset (position) of the grid (from \code{spsample} methods).
-#' If it is left empty (\code{NULL}, default), then takes default values.
-#' For squared grid cells the default is set to \code{c(0.5,0.5)} ("centric systematic").
-#' For hexagonal grid cells the default is set to \code{c(0,0)}.
 #' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 #' Complicated polygons (those with much detail) make this function run slower.
 #' @param tol numerical tolerance value for the simplification algorith. Set to 0.01 as default.
@@ -351,10 +348,12 @@ makeGrid <- function(polygon,
 #' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
 #' an error message will be displayed.
 #' @examples
-#' grid <- makeGrid(gotaland, gridSize = 10)
+#' grid <- makeDggrid(gotaland, gridSize = 10)
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @importFrom dggridR dgconstruct dgcellstogrid dgrectgrid
+#' @importFrom dplyr group_map
+#' @importFrom rlang .data
 #' @export
 makeDggrid <- function(polygon,
                      gridSize,
@@ -397,7 +396,7 @@ makeDggrid <- function(polygon,
   grid <- dgrectgrid(dggs, extent[2,1], extent[1,1], extent[2,2], extent[1,2])
 
   gridPolList <- grid %>%
-    group_by(cell) %>%
+    group_by(.data$cell) %>%
     group_map(.f=function(.x,...){
       Polygons(
         list(Polygon(cbind(.x$long, .x$lat))),

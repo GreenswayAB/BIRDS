@@ -217,6 +217,7 @@ speciesSummary <- function(x){
 #' SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
 #' CM <- communityMatrix(SB, sampleUnit="visit")
 #' @export
+#' @importFrom rlang .data
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 communityMatrix<-function(x, sampleUnit="observation"){
   if (class(x) != "SummarizedBirds") {
@@ -232,7 +233,7 @@ communityMatrix<-function(x, sampleUnit="observation"){
 
   if (sampleUnit == "visit"){
     for(i in wNonEmpty){
-      tmp.vis <- summarise(group_by(x$overlaid[[i]], scientificName, !!! rlang::syms(visitCol)))
+      tmp.vis <- summarise(group_by(x$overlaid[[i]], .data$scientificName, !!! rlang::syms(visitCol)))
       tmp <- rowSums(table(tmp.vis))
       wSp<- match( names(tmp), allSpecies)
       res[i, wSp] <- tmp
@@ -240,7 +241,7 @@ communityMatrix<-function(x, sampleUnit="observation"){
   }
   if (sampleUnit == "observation"){
     for(i in wNonEmpty){
-      tmp <- summarise(group_by(x$overlaid[[i]], scientificName), n=n())
+      tmp <- summarise(group_by(x$overlaid[[i]], .data$scientificName), n=n())
       wSp<- match( tmp$scientificName, allSpecies)
       res[i, wSp] <- tmp$n
     }

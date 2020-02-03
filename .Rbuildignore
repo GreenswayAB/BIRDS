@@ -5,3 +5,6 @@ createSampleData.R
 ^docs$
 ^pkgdown$
 data-raw/
+.github/
+cran-comments.md
+CODE_OF_CONDUCT.md

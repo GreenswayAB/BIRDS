@@ -47,9 +47,10 @@
 #' # to see the ditributions of observations along the days of the month
 #' # plot(visitStat$day, visitStat$nObs)
 #' @export
+#' @importFrom rlang .data
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 exploreVisits<-function(x,
-                        visitCol=attr(x, "visitCol"),
+                        visitCol=NULL, #visitCol=attr(x, "visitCol"),
                         sppCol="scientificName"){
 
   if (class(x) == "OrganizedBirds") {
@@ -58,6 +59,11 @@ exploreVisits<-function(x,
   } else {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
+  if (is.null(visitCol)){
+    visitCol<-attr(x, "visitCol")
+  }
+  if (!(visitCol %in% colnames(dat))) stop(paste("There is not column called", visitCol, "in your organised dataset."))
+
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
@@ -81,10 +87,10 @@ exploreVisits<-function(x,
   datGBY <- group_by(dat, !!! rlang::syms(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
-  visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(scientificName)  )$SLL
-  visitStat$day  <- summarise(datGBY, day = as.character(unique(day)))$day
-  visitStat$month<- summarise(datGBY, mon = as.character(unique(month)))$mon
-  visitStat$year <- summarise(datGBY, yea = as.character(unique(year)))$yea
+  visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName)  )$SLL
+  visitStat$day  <- summarise(datGBY, day = as.character(unique(.data$day)))$day
+  visitStat$month<- summarise(datGBY, mon = as.character(unique(.data$month)))$mon
+  visitStat$year <- summarise(datGBY, yea = as.character(unique(.data$year)))$yea
   rm(datGBY)
 
   ### TODO? can this lapply be done with dplyr?
@@ -158,6 +164,7 @@ exploreVisits<-function(x,
 #'
 #' @examples
 #' # create a visit-based data object from the original observation-based data
+#' library(sp)
 #' OB<-organizeBirds(bombusObs)
 #' visitStats<-exploreVisits(OB)
 #' spV<-spatialVisits(visitStats)
@@ -198,6 +205,7 @@ spatialVisits <- function(x,
 }
 
 ## internal function. Depends on the polygon object utmZones
+#' @keywords internal
 getUTMzone <- function(points){
   ##Find which UTM-zones that have the most points
   utmZonesTr <- sp::spTransform(utmZones, points@proj4string) #To accept all reference systems for points.

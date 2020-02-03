@@ -46,6 +46,7 @@ includeSpillover <- function(x, birdData, visitCol){
 #'
 #' @return A  ObservationsInGrid list
 #' @importFrom sp over
+#' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
   obs <- birdData@data

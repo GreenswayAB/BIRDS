@@ -34,9 +34,10 @@ grid <- makeGrid(gotaland, gridSize = 10)
 
 # Summarise the data (using the grid to overlay with the organised data)
 SB <- summariseBirds(OB, grid=grid)
-EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
-EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "sum")
-EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE) ## to be implemented in export
+EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
+variable = "nObs", method = "sum")
+EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
+variable = "nVis", method = "sum")
 
 
 \donttest{
@@ -57,7 +58,8 @@ legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE),length.out = 5),
 CM <- communityMatrix(SB, sampleUnit="visit")
 library(vegan)
 sp1 <- specaccum(CM)
-plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue", xlab="Grid cells")
+plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue",
+xlab="Grid cells")
 specslope(sp1, at=50)
 expectedRich<-specpool(CM, smallsample = TRUE)
 specpool(CM, pool = rownames(CM), smallsample = FALSE)

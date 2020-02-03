@@ -401,7 +401,11 @@ obsData.OrganizedBirds<-function(x){
 #' @param simplifySppName wheter to remove everything else that is not the species
 #' name (authors, years and intraspecific epithets). Default set to FALSE
 #'
-#' @importFrom sp coordinates proj4string spTransform CRS
+#' @importFrom sp coordinates proj4string spTransform CRS plot
+#' @importFrom stats IQR median na.omit  quantile var
+#' @importFrom grDevices boxplot.stats
+#' @importFrom graphics barplot layout legend mtext par plot
+#' @importFrom methods as
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
 #' @export
 #'

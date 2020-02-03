@@ -35,6 +35,7 @@ A function to
 }
 \examples{
 # create a visit-based data object from the original observation-based data
+library(sp)
 OB<-organizeBirds(bombusObs)
 visitStats<-exploreVisits(OB)
 spV<-spatialVisits(visitStats)

@@ -4,7 +4,7 @@
 \alias{getSpatial}
 \title{Collect spatial data}
 \usage{
-getSpatial(birdData)
+getSpatial(birdData, visitCol = NULL)
 }
 \arguments{
 \item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}

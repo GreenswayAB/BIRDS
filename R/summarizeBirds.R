@@ -17,7 +17,8 @@ getTemporal<-function(birdData, visitCol=NULL){
     visitCol<-attr(birdData, "visitCol")
   }
 
-  ts<-xts::xts(data[, ! names(data) %in% c("year", "month", "day")], order.by=as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-")))
+  ts<-xts::xts(data[, ! names(data) %in% c("year", "month", "day")],
+               order.by=as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-")))
 
   tempData<-xts::apply.daily(ts, function(x){
 
@@ -40,12 +41,15 @@ getTemporal<-function(birdData, visitCol=NULL){
 #'
 #' @return The a SpatialPolygonsDataFrame over the overlay gris with a dataframe
 #' @importFrom dplyr summarise n n_distinct
+#' @importFrom rlang .data
 #' @keywords internal
-getSpatial<-function(birdData){
+getSpatial<-function(birdData, visitCol=NULL){
 
   dataList<-birdData$observationsInGrid
   nCells<-length(dataList)
-  visitCol<-attr(birdData, "visitCol")
+  if (is.null(visitCol)){
+    visitCol<-attr(birdData, "visitCol")
+  }
 
   res<-data.frame("nObs"=as.numeric(rep(NA,nCells)),
                   "nVis"=as.numeric(rep(NA,nCells)),
@@ -61,19 +65,22 @@ getSpatial<-function(birdData){
   dataRes<-lapply(dataList[birdData$nonEmptyGridCells], function(x){
 
     x<-x[,cols2use]
-    colnames(x)<-c("scientificName", "year", "month", "day", "visitCol")
+    colnames(x) <- c("scientificName", "year", "month", "day", "visitCol")
 
     return(c("nObs"=length(x[,"scientificName"]),
              "nVis"=length(unique(x[,"visitCol"])),
              "nSpp"=length(unique(x[,"scientificName"])),
-             "avgSll"=median(summarise(group_by(x, visitCol), avgSLL=n_distinct(scientificName))$avgSLL),
+             "avgSll"= median(summarise(group_by(x, visitCol),
+                                       avgSLL=n_distinct(.data$scientificName))$avgSLL),
              "nDays"=length(unique( paste0(x[,"year"],"-", as.numeric(x[,"month"]), "-", as.numeric(x[,"day"]))) ),
              "nYears"=length(unique(x[,"year"])),
              "visitsUID"= paste0(unique(x[,"visitCol"]), collapse = ",")
              ))
   })
 
-  dataRes<-data.frame(matrix(unlist(dataRes), nrow=length(dataRes), byrow=TRUE), stringsAsFactors = FALSE)
+  dataRes<-data.frame(matrix(unlist(dataRes),
+                             nrow=length(dataRes), byrow=TRUE),
+                      stringsAsFactors = FALSE)
 
   dataRes$X1<-as.numeric(dataRes$X1)
   dataRes$X2<-as.numeric(dataRes$X2)
@@ -97,6 +104,7 @@ getSpatial<-function(birdData){
 #' An internal function to be applied in a lapply
 #'
 #' @importFrom dplyr group_by summarise n n_distinct
+#' @importFrom rlang .data
 #' @keywords internal
 countsYearMonth<-function(x, yearsAll, visitCol){
   ## Yearly Monthly
@@ -108,21 +116,21 @@ countsYearMonth<-function(x, yearsAll, visitCol){
   resYMvisits<-array(NA, dim = c(length(yearsAll), 13),
                dimnames = list(as.character(yearsAll), c(month.abb,"Year")))
 
-  xGBYM <- group_by(x, year, month)
+  xGBYM <- group_by(x, .data$year, .data$month)
   tmp <- summarise(xGBYM,
                           nObs=n(),
                           nVis=n_distinct(!!! rlang::syms(visitCol)),
-                          nSpp=n_distinct(scientificName),
+                          nSpp=n_distinct(.data$scientificName),
                           avgSll=NA,
-                          nDays=n_distinct(day),
+                          nDays=n_distinct(.data$day),
                           visitUID=paste0(unique(!!! rlang::syms(visitCol)), collapse = ",")) ## a string with all cell_visit names
 
   wYears<-sort(match( tmp$year, yearsAll))
   wMonths<-tmp$month
 
-  xGBYMV <- group_by(x, year, month, !!! rlang::syms(visitCol))
-  tmpSLL <- summarise(xGBYMV, SLL=n_distinct(scientificName))
-  tmp$avgSll <- (summarise(tmpSLL, avgSLL=median(SLL)))$avgSLL
+  xGBYMV <- group_by(x, .data$year, .data$month, !!! rlang::syms(visitCol))
+  tmpSLL <- summarise(xGBYMV, SLL=n_distinct(.data$scientificName))
+  tmp$avgSll <- (summarise(tmpSLL, avgSLL=median(.data$SLL)))$avgSLL
 
   for(i in 1:nrow(tmp)){
     resYM[wYears[i], wMonths[i], ] <- as.numeric(tmp[i, (1:length(vars))+2 ])
@@ -140,15 +148,15 @@ countsYearMonth<-function(x, yearsAll, visitCol){
     resYM[,13,"nDays"] <- rowSums(resYM[,1:12,"nDays"] , na.rm = TRUE)
   }
 
-  xGBY <- group_by(x, year)
+  xGBY <- group_by(x, .data$year)
 
-  tmp <- summarise(xGBY, nSpp=n_distinct(scientificName)  )
+  tmp <- summarise(xGBY, nSpp=n_distinct(.data$scientificName)  )
   wYears<-sort(match( tmp$year, yearsAll))
   resYM[wYears, 13, "nSpp"] <- as.matrix(tmp)[, 2]
 
-  xGBYV <- group_by(x, year, !!! rlang::syms(visitCol))
-  tmpSLL <- summarise(xGBYV, SLL=n_distinct(scientificName))
-  tmp <- summarise(tmpSLL, avgSLL=median(SLL))
+  xGBYV <- group_by(x, .data$year, !!! rlang::syms(visitCol))
+  tmpSLL <- summarise(xGBYV, SLL=n_distinct(.data$scientificName))
+  tmp <- summarise(tmpSLL, avgSLL=median(.data$SLL))
 
   resYM[wYears, 13, "avgSll"] <- tmp$avgSLL
 
@@ -248,7 +256,8 @@ getSpatioTemporal<-function(birdOverlay, visitCol=NULL){
 #'   See Details for more information on how to use this.
 #' @return A SummarizedBirds-object
 #' @export
-#' @examples ob<-organizeBirds(bombusObs)
+#' @examples
+#' ob<-organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' SB <- summarizeBirds(ob, grid)
 #' nObsG<-rowSums(SB$spatioTemporal[,,13,"nObs"], na.rm = FALSE)

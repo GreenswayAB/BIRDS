@@ -34,11 +34,6 @@ Default: \dQuote{hexagon}.}
 Complicated polygons (those with much detail) make this function run slower.}
 
 \item{tol}{numerical tolerance value for the simplification algorith. Set to 0.01 as default.}
-
-\item{offset}{the offset (position) of the grid (from \code{spsample} methods).
-If it is left empty (\code{NULL}, default), then takes default values.
-For squared grid cells the default is set to \code{c(0.5,0.5)} ("centric systematic").
-For hexagonal grid cells the default is set to \code{c(0,0)}.}
 }
 \value{
 an object of class \sQuote{SpatialPolygon} with a set of polygons
@@ -59,7 +54,7 @@ Grid cells must be smaller than the sampling area. If the grid cell size is wide
 an error message will be displayed.
 }
 \examples{
-grid <- makeGrid(gotaland, gridSize = 10)
+grid <- makeDggrid(gotaland, gridSize = 10)
 }
 \seealso{
 \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}

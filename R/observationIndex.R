@@ -83,6 +83,7 @@ extractPresence<-function(x){
 #' @return An xts timeseries
 #'
 #' @keywords internal
+#' @importFrom rlang .data
 obsIndexTemporal<-function(x,
                            timeRes,
                            focalSp = NULL,
@@ -119,15 +120,15 @@ obsIndexTemporal<-function(x,
     stop("Unknown time resolution")
   }
 
-  spNgby<-group_by(spData[spData$scientificName==focalSp,], dates)
+  spNgby<-group_by(spData[spData$scientificName==focalSp,], .data$dates)
   ## if there is a column for presence then remove absences
   spNgby<-extractPresence(spNgby)
 
   if (visits){
-    allN <- summarise(group_by(spData, dates), all= n_distinct(!!dplyr::sym(visitCol)))
+    allN <- summarise(group_by(spData, .data$dates), all= n_distinct(!!dplyr::sym(visitCol)))
     spN <- summarise(spNgby, sp=n_distinct(!!dplyr::sym(visitCol)))
   } else {
-    allN <- summarise(group_by(spData, dates), all=n())
+    allN <- summarise(group_by(spData, .data$dates), all=n())
     spN <- summarise(spNgby, sp=n())
   }
 

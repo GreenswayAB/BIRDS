@@ -4,7 +4,7 @@
 \alias{exploreVisits}
 \title{A function to explore the definition of field visits}
 \usage{
-exploreVisits(x, visitCol = attr(x, "visitCol"), sppCol = "scientificName")
+exploreVisits(x, visitCol = NULL, sppCol = "scientificName")
 }
 \arguments{
 \item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial Dataframe).
