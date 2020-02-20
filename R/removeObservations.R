@@ -37,9 +37,11 @@
 #' @note If both 'percent' and 'minCrit' are defined then 'percent' prevails.
 #' @return An updated OrganisedBirds dataset
 #' @examples
+#' \donttest{
 #' OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = TRUE)
 #' EV <- exploreVisits(OB)
 #' OBshorter <- removeObs(OB, EV, percent = 75)
+#' }
 #' @export
 
 removeObs <- function(x, ev, criteria = "SLL", percent=75,  minCrit = NULL, stepChunk=0.05){

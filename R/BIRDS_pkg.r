@@ -14,6 +14,7 @@
 #' @docType package
 #' @name BIRDS
 #' @examples
+#' \donttest{
 #' # Organise the data
 #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #'
@@ -33,9 +34,7 @@
 #' variable = "nObs", method = "sum")
 #' EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
 #' variable = "nVis", method = "sum")
-#'
-#'
-#' \donttest{
+
 #' EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 #' palBW <- leaflet::colorNumeric(c("white", "navyblue"),
 #' c(0, max(EB@data, na.rm = TRUE)), na.color = "transparent")

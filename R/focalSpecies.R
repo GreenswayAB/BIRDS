@@ -217,10 +217,12 @@ speciesSummary <- function(x){
 #' species observations are counted in more than one grid cell.
 #' @return a \code{matrix} with counts of observations or visits for each species on each non-empty grid cell.
 #' @examples
+#' \donttest{
 #' #grid <- makeGrid(searchPolygon, gridSize = 10)
 #' #SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 #' SB
 #' CM <- communityMatrix(SB, sampleUnit="visit")
+#' }
 #' @export
 #' @importFrom rlang .data
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
