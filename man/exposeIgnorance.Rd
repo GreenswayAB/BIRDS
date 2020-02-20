@@ -27,10 +27,12 @@ taxonomy, time and space
 Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
 }
 \examples{
+\donttest{
 OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
 ignorance <- exposeIgnorance(nObs=SB$spatial@data$nObs)
+}
 }
 \seealso{
 \code{\link{summarizeBirds}}, \code{\link{exportBirds}}

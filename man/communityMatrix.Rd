@@ -21,8 +21,9 @@ a \code{matrix} with counts of observations or visits for each species on each n
 A function that counts the number of observations or visits per grid cell for all species.
 }
 \examples{
-grid <- makeGrid(searchPolygon, gridSize = 10)
-SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
+#grid <- makeGrid(searchPolygon, gridSize = 10)
+#SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
+SB
 CM <- communityMatrix(SB, sampleUnit="visit")
 }
 \seealso{

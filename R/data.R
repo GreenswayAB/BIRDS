@@ -80,6 +80,14 @@
 #' @seealso \code{\link{bombusObs}}
 "bombusObsShort"
 
+#' @title A simple summarisedBirds object.
+#'
+#' @description A summarisedBirds object based on bombusObsShort for faster examples
+#' grid <- makeGrid(searchPolygon, gridSize = 10)
+#' SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
+#' @format An object of class summarisedBirds
+'SB'
+
 #' @title A simple empty summarisedBirds object.
 #'
 #' @description An empty summarisedBirds object used to dinamically test for validity

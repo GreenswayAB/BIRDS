@@ -388,9 +388,11 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(organizeBirds(bombusObsShort), grid=grid)
 #' EB <- exportBirds(SB, "spatial", "month", "nDays", "median")
+#' }
 exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
   dimension <- tolower(dimension)
