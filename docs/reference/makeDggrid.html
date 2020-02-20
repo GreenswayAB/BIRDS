@@ -198,13 +198,6 @@ Complicated polygons (those with much detail) make this function run slower.</p>
       <th>tol</th>
       <td><p>numerical tolerance value for the simplification algorith. Set to 0.01 as default.</p></td>
     </tr>
-    <tr>
-      <th>offset</th>
-      <td><p>the offset (position) of the grid (from <code>spsample</code> methods).
-If it is left empty (<code>NULL</code>, default), then takes default values.
-For squared grid cells the default is set to <code><a href='https://rdrr.io/r/base/c.html'>c(0.5,0.5)</a></code> ("centric systematic").
-For hexagonal grid cells the default is set to <code><a href='https://rdrr.io/r/base/c.html'>c(0,0)</a></code>.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -227,7 +220,7 @@ an error message will be displayed.</p>
     <div class='dont-index'><p><code><a href='drawPolygon.html'>drawPolygon</a></code>, <code><a href='renameGrid.html'>renameGrid</a></code>, <code><a href='OB2Polygon.html'>OB2Polygon</a></code>, <code><a href='exploreVisits.html'>exploreVisits</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) <span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'>makeDggrid</span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
