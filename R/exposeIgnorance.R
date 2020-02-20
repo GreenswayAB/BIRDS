@@ -13,10 +13,12 @@
 #' @param h the half ignorance parameter value.
 #' @return a \code{data.frame} with ignorance scores
 #' @examples
+#' \donttest{
 #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' ignorance <- exposeIgnorance(nObs=SB$spatial@data$nObs)
+#' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 exposeIgnorance<-function(nObs, nSpp=NULL, h=1){
