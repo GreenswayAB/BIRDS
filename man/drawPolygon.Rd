@@ -28,6 +28,6 @@ Create the polygon for the study area by drawing into a world map
 }
 \examples{
 \donttest{
-# polygon <- drawPolygon()
+polygon <- drawPolygon()
 }
 }

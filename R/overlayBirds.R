@@ -78,8 +78,6 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
   for(g in 1:length(grid)){
     res[[g]] <- obs[obs[, visitCol] %in% unique(visits[visits[, "grid"] == g, "visits"]), -colsExc]
   }
-  # #alternativelly
-  # res<-lapply(1:length(grid), function(x)obs[obs[, visitCol] %in% unique(visits[visits[, "grid"] == x, "visits"]), -colsExc])
 
   return(res)
 }

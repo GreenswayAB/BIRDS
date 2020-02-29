@@ -15,7 +15,7 @@
 #' @export
 #' @examples
 #' \donttest{
-#' # polygon <- drawPolygon()
+#' polygon <- drawPolygon()
 #' }
 #' @importFrom magrittr %>%
 drawPolygon <- function(lat = 0,
@@ -40,7 +40,7 @@ drawPolygon <- function(lat = 0,
     if ("POLYGON" %in% areaTypes) {
         wPoly <- which(areaTypes == "POLYGON")
         if (length(wPoly) > 1)
-            cat("Only the first polygon will go through")  ## Is this necesary?
+            warning("Only the first polygon will go through")
         polygon <- as(area[wPoly[1]], "Spatial")
         polygon <- spTransform(polygon, CRSobj = CRS("+init=epsg:4326"))
     } else {
@@ -203,7 +203,6 @@ OB2Polygon <- function(x, shape="bBox") {
 #' @keywords internal
 renameGrid<-function(grid){
     for(i in 1:length(grid)){
-      # grid@polygons[[i]]@ID <- gsub("ID", "", grid@polygons[[i]]@ID)
       grid@polygons[[i]]@ID <- paste0("ID", i)
     }
   return(grid)
@@ -378,7 +377,7 @@ makeDggrid <- function(polygon,
 
   ## simplify if takes too long to make the grid
   if (simplify) {
-    ##TODO apply tryCatch()
+    ##TODO use tryCatch()
     polygon <- rgeos::gSimplify(polygon, tol = tol)
   }
 
@@ -409,7 +408,6 @@ makeDggrid <- function(polygon,
   }
   gridPol <- gridPol[gridPolInt, ]
 
-  # plot(gridPol, add=TRUE, border=2)
   return(gridPol)
 }
 

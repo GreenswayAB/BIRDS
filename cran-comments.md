@@ -8,5 +8,9 @@ There where no ERRORs, WARNINGs or NOTEs
 CRAN incoming feasibility ... NOTE
 Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
 
+ File
+    LICENSE
+  is not mentioned in the DESCRIPTION file.
+
 ## Downstream dependencies
 There are currently no downstream dependencies for this package

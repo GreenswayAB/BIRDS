@@ -25,7 +25,7 @@ normalize <- function(x) {
 #' included in 'group' and will remove them
 #' @param norm if TRUE, the result is nomalized to a 0-1 range
 #' @return a positive observation index
-#'
+#' @references Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 #' @keywords internal
 logObsInd<-function(focal,
                     group,
@@ -241,7 +241,8 @@ obsIndexSpatial<-function(x,
 #' @param fs.rm if TRUE, assumes that the observations for the focal species are
 #' included in 'group' and will remove them
 #' @param norm if TRUE, the result is nomalized to a 0-1 range
-#'
+
+#' @references Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 #' @return If \code{dimension = "spatial"} a \sQuote{SpatialPolygonsDataFrame}
 #' or a \sQuote{xts} timeseries if \code{dimension = "temporal"}.
 #' @export
@@ -264,7 +265,6 @@ obsIndexSpatial<-function(x,
 #' legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
 #'        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
 #'}
-
 obsIndex<-function(x,
                    dimension,
                    timeRes = NULL,

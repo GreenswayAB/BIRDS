@@ -163,7 +163,8 @@ countsYearMonth<-function(x, yearsAll, visitCol){
   if(is.null(nrow(resYMvisits[, 1:12]))){
     resYMvisits[, 13] <- paste0(na.omit(resYMvisits[, 1:12]), collapse = ",")
   }else{
-    resYMvisits[, 13] <- apply(resYMvisits[, 1:12] ,1, FUN=function(x) paste0(na.omit(x), collapse = ",") )
+    resYMvisits[, 13] <- apply(resYMvisits[, 1:12] ,1,
+                               FUN=function(x) paste0(na.omit(x), collapse = ",") )
   }
 
   return(list("resYM"=resYM, "resYMvisits"=resYMvisits))
@@ -290,7 +291,8 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
       bOver <- overlayBirds(x, grid=grid, spillOver = spillOver) # To use in the spatial analysis
 
       areaGrid <- rgeos::gUnaryUnion(grid)
-      suppressMessages(bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver)) #To use in the temporal analysis where the entire area could be interpreted as a single grid cell
+      suppressMessages(bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver))
+      #To use in the temporal analysis where the entire area could be interpreted as a single grid cell
 
       useSpatial <- TRUE
     }else{

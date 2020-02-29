@@ -27,11 +27,11 @@ column (\code{visitUID}) and that column will be set to default.}
 Gets or sets the visits identifier for a OrganizedBirds-class.
 }
 \examples{
-ob<-organizeBirds(bombusObs)
+ob <- organizeBirds(bombusObs)
 attr(ob, "visitCol")
-vis<-visits(ob)
+vis <- visits(ob)
 tmp.vis <- createVisits(bombusObs, idCols=c("locality"), timeCols = c("day", "month", "year"))
 visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
-vis2<-visits(ob)
+vis2 <- visits(ob)
 attr(ob, "visitCol")
 }

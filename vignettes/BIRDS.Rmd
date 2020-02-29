@@ -17,16 +17,15 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-## Installing `BIRDS`
+## Installing 'BIRDS'
 
-The package `BIRDS` is currently available on GitHub and you can freely download 
+The package 'BIRDS' is currently available on GitHub and you can freely download 
 the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
 
 The easiest option is to install the package directly from GitHub using the 
-package `remotes`.  Install `remotes` if you do not already have installed it.
+package 'remotes'.  Install 'remotes as usual `install.packages('remotes')` if you do not already have installed it. 
 
 ```{r install package, eval = F}
-install.packages('remotes')
 remotes::install_github('Greensway/BIRDS')
 ```
 
@@ -81,7 +80,6 @@ grid <- makeGrid(gotaland, gridSize = 10)
 # Import the species observation data:
 PBD<-bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
-# PBD <- read.csv(file="path/to/your/file.csv)
 
 # Convert the data from an observation-based to a visit-based format, adding a 
 # unique identifier for each visit:
@@ -197,21 +195,3 @@ legend("bottomleft", legend=c(seq(0, 1, length.out = 5), "NA"),
   
 The ignorance scores are highlighting where we have little information and hence cannot be 
 confident about the lack of reports implying an absence of the species. 
-
-<!-- Or we could connect to other packages like `vegan` to continue with community analyses. -->
-<!-- In this case, we create a community matrix using the visits as sampling units,  -->
-<!-- summarizing for each grid cell the number of visits a species was observed (i.e.  -->
-<!-- ignoring replicates within visits). -->
-
-<!-- ```{r community richness, fig.show='hold', fig.width=7, message=FALSE} -->
-<!-- ## Community analysis -->
-<!-- CM <- communityMatrix(SB, sampleUnit="visit") -->
-<!-- library(vegan) -->
-<!-- sp1 <- specaccum(CM, method = "exact") -->
-<!-- par(mar=c(4,4,1,1), xlog=TRUE, las=1) -->
-<!-- plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0,  -->
-<!--      ci.col="lightblue", log="x",   -->
-<!--      xlab="Number of grid cells sampled",  -->
-<!--      ylab="Species richness",  -->
-<!--      main="Species accumulation curve") -->
-<!-- ``` -->

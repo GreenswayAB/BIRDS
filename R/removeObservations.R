@@ -44,7 +44,12 @@
 #' }
 #' @export
 
-removeObs <- function(x, ev, criteria = "SLL", percent=75,  minCrit = NULL, stepChunk=0.05){
+removeObs <- function(x,
+                      ev,
+                      criteria = "SLL",
+                      percent=75,
+                      minCrit = NULL,
+                      stepChunk=0.05){
   #check x class = Organised birds
   if (class(x) == "OrganizedBirds") {
     obs <- x$spdf@data
@@ -107,25 +112,20 @@ removeObs <- function(x, ev, criteria = "SLL", percent=75,  minCrit = NULL, step
           while(round(percLeft, 3) < percent){ # while 2
             i=i+1
             if(i > length(nextVisitSample)){
-      # print("break?")
               break() # nothing left to add, lets look at the next class
             }
             wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[i])
             nObs2keep <- length(wKeep) + length(wKeepSample)
             percLeft.tmp <- nObs2keep / nrow(obs)
-      # print(percLeft.tmp)
             if(percLeft.tmp <= percent){
               wKeep <- c(wKeep, wKeepSample)
               percLeft <- length(wKeep) / nrow(obs)
-      # print(percLeft)
             } else {
-              cat("Chunks too big, next...\n")
+              message("Chunks too big, next...\n")
               next()
             }
-      # print(i)
           } ## end while 2
         }
-        # print(sum(duplicated(wKeep)))
         percLeft <- length(wKeep) / nrow(obs)
         nextStep <- nextStep - 1
       } # end of while 1
@@ -141,6 +141,6 @@ removeObs <- function(x, ev, criteria = "SLL", percent=75,  minCrit = NULL, step
   }else{stop("Either 'percent' or 'minCrit' must be supplied")}
 
   x$spdf <- x$spdf[wKeep,]
-  cat(paste0("The result is ", round(percLeft*100, 2), "% of the original observations set"))
+  message(paste0("The result is ", round(percLeft*100, 2), "% of the original observations set"))
   return(x)
 }

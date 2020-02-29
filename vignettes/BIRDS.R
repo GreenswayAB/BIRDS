@@ -5,7 +5,6 @@ knitr::opts_chunk$set(
 )
 
 ## ----install package, eval = F------------------------------------------------
-#  install.packages('remotes')
 #  remotes::install_github('Greensway/BIRDS')
 
 ## ----basic example, eval = TRUE-----------------------------------------------
@@ -18,7 +17,6 @@ grid <- makeGrid(gotaland, gridSize = 10)
 # Import the species observation data:
 PBD<-bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
-# PBD <- read.csv(file="path/to/your/file.csv)
 
 # Convert the data from an observation-based to a visit-based format, adding a 
 # unique identifier for each visit:
