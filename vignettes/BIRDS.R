@@ -5,7 +5,6 @@ knitr::opts_chunk$set(
 )
 
 ## ----install package, eval = F------------------------------------------------
-#  install.packages('remotes')
 #  remotes::install_github('Greensway/BIRDS')
 
 ## ----basic example, eval = TRUE-----------------------------------------------
@@ -18,7 +17,6 @@ grid <- makeGrid(gotaland, gridSize = 10)
 # Import the species observation data:
 PBD<-bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
-# PBD <- read.csv(file="path/to/your/file.csv)
 
 # Convert the data from an observation-based to a visit-based format, adding a 
 # unique identifier for each visit:
@@ -67,6 +65,7 @@ EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(EB@data, na.rm = TRUE)), 
                                na.color = "transparent")
+oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,3), mar=c(1,1,1,1))
 plot(SB$spatial[wNonEmpty,], col="grey", border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
@@ -83,8 +82,10 @@ legend("bottomleft",
        legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
        col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
        title = "Number of years", pch = 15, bty="n")
+par(oldpar)
 
 ## ----figure 3, fig.show='hold', fig.width= 7, fig.height= 4-------------------
+oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(SB$spatial@data$nVis, na.rm = TRUE)), 
@@ -104,4 +105,5 @@ plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 legend("bottomleft", legend=c(seq(0, 1, length.out = 5), "NA"),
       col = c(palBWR(seq(0, 1, length.out = 5)), "grey90"),
       title = "Ignorance \nnVis, \nO0.5=5", pch = 15, bty="n")
+par(oldpar)
 

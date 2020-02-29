@@ -6,7 +6,7 @@
 #' the Half-ignorance approach). The algorithm behind the Ignorance Score is
 #' designed for comparison of bias and gaps in primary biodiversity data across
 #' taxonomy, time and space
-#' Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
+#' @references Ruete (2015) <doi:10.3897/BDJ.3.e5361>
 #' @param nObs an object of any class (mainly resulting from \code{summariseBirds} or
 #' \code{exportBirds} with  the number of observations, or visits in your desired analysis unit.
 #' @param nSpp the number of unique species observed

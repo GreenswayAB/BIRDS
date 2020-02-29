@@ -45,21 +45,20 @@ definition of visit aligns with your grid size, you must explore the spatial ext
 OB<-organizeBirds(bombusObs)
 visitStats<-exploreVisits(OB)
 # open an interactive data explorer
-# esquisse::esquisser(visitStats)
-}
-
+esquisse::esquisser(visitStats)
 # alternativelly, plot the variable you want, e.g.:
 # to see the distribution of distances covered on each visit
-# hist(visitStat$effortDiam)
+hist(visitStats$effortDiam)
 # to see the distribution of species list lengths of each visit
-# hist(visitStat$SLL)
+hist(visitStats$SLL)
 # to identify suspicious visits reported the first day of each month or year
-# hist(visitStat$day)
+hist(visitStats$day)
 # to see correlations
-# plot(visitStat$nObs, visitStat$effortDiam)
-# plot(visitStat$SLL, visitStat$effortDiam)
+plot(visitStats$nObs, visitStats$effortDiam)
+plot(visitStats$SLL, visitStats$effortDiam)
 # to see the ditributions of observations along the days of the month
-# plot(visitStat$day, visitStat$nObs)
+plot(visitStats$day, visitStats$nObs)
+}
 }
 \seealso{
 \code{\link{createVisits}}, \code{\link{organiseBirds}}

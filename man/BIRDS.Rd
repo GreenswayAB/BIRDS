@@ -3,9 +3,9 @@
 \docType{package}
 \name{BIRDS}
 \alias{BIRDS}
-\title{BIRDS: A set of tools for Biodiversity Information Review and Decision Support.}
+\title{BIRDS: Biodiversity Information Review and Decision Support.}
 \description{
-BIRDS: A set of tools for Biodiversity Information Review and Decision Support.
+BIRDS: Biodiversity Information Review and Decision Support.
 }
 \section{About}{
 
@@ -15,22 +15,23 @@ in order to understand the specis information data and decide about what analyse
 we can perform and draw approriate conclusions. For this we need to understand
 the data generation process. With this R package we want to take the
 user a step closer to understanding the observers’ behaviour.
-The BIRDS packages provides a workflow for reproducable data review, involving
+The 'BIRDS' packages provides a workflow for reproducable data review, involving
 three basic steps: organise data, summarise data, review data.
 }
 
 \examples{
+\donttest{
 # Organise the data
 OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 
-#OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
-#      taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
+OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
+      taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
 
 # Make a grid that can be used by summariseBirds()
 grid <- makeGrid(gotaland, gridSize = 10)
 # alternatively:
-# polygon <- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")
-# grid <- makeGrid(polygon, gridSize = 10)
+polygon <- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")
+grid <- makeGrid(polygon, gridSize = 10)
 
 # Summarise the data (using the grid to overlay with the organised data)
 SB <- summariseBirds(OB, grid=grid)
@@ -38,9 +39,6 @@ EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
 variable = "nObs", method = "sum")
 EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
 variable = "nVis", method = "sum")
-
-
-\donttest{
 EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 palBW <- leaflet::colorNumeric(c("white", "navyblue"),
 c(0, max(EB@data, na.rm = TRUE)), na.color = "transparent")

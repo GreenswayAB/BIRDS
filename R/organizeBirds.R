@@ -27,7 +27,6 @@ findCols <- function(pattern, df, exact=FALSE, value = TRUE){
   if(length(patternE) > 1){
     res<- lapply(patternE, grep, names(df), ignore.case=TRUE, value=value)
   }
-  # if(length(res)==0) stop(paste0("There is no column called ", pattern))
   return(res)
 }
 
@@ -64,14 +63,13 @@ organizeDate <- function(x, columns){
 
     if(length(cols.df)==3){
       if(all(stdTimeCols %in% cols.df)){
-        # print("just keep going")
       } else if(any(stdTimeCols %in% cols.df)){
         wColNot<-which(!(cols.df %in% stdTimeCols))
         for(i in 1:length(wColNot)){
           x$placeholder <- as.matrix(x[, cols.df[wColNot]])
           names(x)[names(x) == "placeholder"] <- stdTimeCols[wColNot[i]]
         }
-      } else { #if(!any(stdTimeCols %in% cols)){
+      } else {
         x$year  <- x[,cols.df[1]]
         x$month <- x[,cols.df[2]]
         x$day   <- x[,cols.df[3]]
@@ -225,7 +223,6 @@ createVisits<-function(x,
     columns <- c(gridID, idCols, timeCols)
     if (length(columns)==0) stop("At least one of the arguments 'idCols','timeCols','grid' need to be defined.")
 
-    # cols.df <- lapply(columns, grep, names(df), ignore.case=TRUE, value=TRUE)
     cols.df <- findCols(columns, df)
 
     if(all(lengths(cols.df) > 0)){
@@ -256,12 +253,12 @@ createVisits<-function(x,
 #'
 #' @export
 #' @examples
-#' ob<-organizeBirds(bombusObs)
+#' ob <- organizeBirds(bombusObs)
 #' attr(ob, "visitCol")
-#' vis<-visits(ob)
+#' vis <- visits(ob)
 #' tmp.vis <- createVisits(bombusObs, idCols=c("locality"), timeCols = c("day", "month", "year"))
 #' visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
-#' vis2<-visits(ob)
+#' vis2 <- visits(ob)
 #' attr(ob, "visitCol")
 visits<-function(x, name=NULL){
 
@@ -326,7 +323,7 @@ visits<-function(x, name=NULL){
 #' @export
 #'
 #' @examples
-#' ob<-organizeBirds(bombusObs)
+#' ob <- organizeBirds(bombusObs)
 #' head(obsData(ob))
 obsData<-function(x){
   UseMethod("obsData")
@@ -483,7 +480,7 @@ organizeBirds <- function(x,
   } else { stop(paste0("Species name: there is no column called ", sppCol))}
 
   ## column name control defined in the function organizeDate()
-  x@data[, stdTimeCols]<- organizeDate(x@data, timeCols)
+  x@data[, stdTimeCols] <- organizeDate(x@data, timeCols)
   ## clean unreadable dates (cleaning also the spatial points)
   wNA <- is.na(x@data$year)
   if (sum(wNA)>1){
@@ -511,7 +508,6 @@ organizeBirds <- function(x,
   res.df <- x@data[,c(sppCol.df, stdTimeCols, "visitUID")]
 
   if (!is.null(presenceCol)){
-    # presenceCol.df <- grep(presenceCol, names(x@data), ignore.case=TRUE, value=TRUE)
     presenceCol.df <- findCols(presenceCol, x@data)
     if (length(presenceCol.df) > 0){
       presence <- x@data[, presenceCol.df]
@@ -537,4 +533,4 @@ organizeBirds <- function(x,
 
 #' @rdname organizeBirds
 #' @export
-organiseBirds<-organizeBirds ## To include the Brits as well
+organiseBirds <- organizeBirds ## To include the Brits as well

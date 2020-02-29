@@ -31,21 +31,20 @@
 #' OB<-organizeBirds(bombusObs)
 #' visitStats<-exploreVisits(OB)
 #' # open an interactive data explorer
-#' # esquisse::esquisser(visitStats)
-#' }
-#'
+#' esquisse::esquisser(visitStats)
 #' # alternativelly, plot the variable you want, e.g.:
 #' # to see the distribution of distances covered on each visit
-#' # hist(visitStat$effortDiam)
+#' hist(visitStats$effortDiam)
 #' # to see the distribution of species list lengths of each visit
-#' # hist(visitStat$SLL)
+#' hist(visitStats$SLL)
 #' # to identify suspicious visits reported the first day of each month or year
-#' # hist(visitStat$day)
+#' hist(visitStats$day)
 #' # to see correlations
-#' # plot(visitStat$nObs, visitStat$effortDiam)
-#' # plot(visitStat$SLL, visitStat$effortDiam)
+#' plot(visitStats$nObs, visitStats$effortDiam)
+#' plot(visitStats$SLL, visitStats$effortDiam)
 #' # to see the ditributions of observations along the days of the month
-#' # plot(visitStat$day, visitStat$nObs)
+#' plot(visitStats$day, visitStats$nObs)
+#' }
 #' @export
 #' @importFrom rlang .data
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
@@ -83,7 +82,7 @@ exploreVisits<-function(x,
                           "iqrDist" = NA, # the interquartile range of the distances between the centroid and all points
                           "nOutliers" = NA) # number of observations estimated to be outliers
 
-  cat(paste("Analysing", nUID, "visits..."))
+  message(paste("Analysing", nUID, "visits..."))
   datGBY <- group_by(dat, !!! rlang::syms(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
@@ -140,7 +139,7 @@ exploreVisits<-function(x,
   visitStat$Month <- as.factor(months(visitStat$date))
   levels(visitStat$Month) <- month.name
 
-  cat(paste("Finished analysing", nUID, "visits.\n"))
+  message(paste("Finished analysing", nUID, "visits.\n"))
   return(visitStat)
 }
 
@@ -263,8 +262,7 @@ getUTMzone <- function(points){
   res <- list("zone" = NULL) #, "msg" = NULL)
   if(sum(alternatives) == 0){
     ##No acceptable zones found
-    # res$msg <- "There is no UTM zone where all points overlap with or with its adjacent zones"
-    cat("There is no UTM zone where all points overlap with or with its adjacent zones.\n")
+    message("There is no UTM zone where all points overlap with or with its adjacent zones.\n")
     # return(res)
   }else if (sum(alternatives) == 1){
     ## One zone found with points only in adjecent zone found.
@@ -277,9 +275,6 @@ getUTMzone <- function(points){
     }else{
       res$zone <- as.integer(names(alternatives)[alternatives])
     }
-    # res$msg <- "Success!"
-    # cat("Success!\n")
-    # return(res)
   }else{
     ## Two adjacent zones with same number of points were found.
     ## If one of them is zone 0 the other must be in row X or Z, hence we choose zone 0
@@ -289,18 +284,14 @@ getUTMzone <- function(points){
       }else{
         res$zone <- "0S"
       }
-      # res$msg <- "The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen."
-      cat("The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen.\n")
-      # return(res)
+      message("The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen.\n")
     }
 
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points),
                                    proj4string = points@proj4string)
     utmMeanZone <- sp::over(meanPoint, utmZones)
     res$zone <- as.integer(utmMeanZone$ZONE)
-    # res$msg <- "The points are split over two UTM-zones. The zone with the centroid for all the points was chosen."
-    cat("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")
-    # return(res)
+    message("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")
   }
   return(res$zone)
 }
@@ -314,7 +305,6 @@ getUTMzone <- function(points){
 #' OB <- organizeBirds(bombusObs)
 #' getUTMproj(OB)
 getUTMproj<-function(x){
-
   if (class(x) == "OrganizedBirds") {
     spdf <- x$spdf
   } else {
@@ -322,7 +312,7 @@ getUTMproj<-function(x){
       spdf <- x
       spdf <- spTransform(spdf, CRSobj = CRS("+init=epsg:4326"))
     } else {
-      stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
+      stop("Input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
     }
   }
 

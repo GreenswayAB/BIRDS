@@ -67,3 +67,6 @@ legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
 }
 }
+\references{
+Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
+}

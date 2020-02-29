@@ -62,7 +62,9 @@ samller datasets.
 If both 'percent' and 'minCrit' are defined then 'percent' prevails.
 }
 \examples{
+\donttest{
 OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = TRUE)
 EV <- exploreVisits(OB)
 OBshorter <- removeObs(OB, EV, percent = 75)
+}
 }
