@@ -22,7 +22,7 @@ Description: This R package helps making the evaluation and preparation
    collected and reported in various ways and therefore varying in sampling effort 
    and data completeness (i.e. how well the reported observations describe the 
    true state). Primary biodiversity data (PBD) combining data from different 
-   data sets, like e.g. Glogal Biodiversity Information Facility (GBIF) mediated
+   data sets, like e.g. Global Biodiversity Information Facility (GBIF) mediated
    data, commonly vary in the ways data has been generated - containing 
    opportunistically collected presence-only data together with and data from 
    systematic monitoring programs. The set of tools provided is aimed at 

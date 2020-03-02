@@ -12,7 +12,7 @@
 
 <meta name="author" content="Alejandro Ruete and Debora Arlt" />
 
-<meta name="date" content="2020-01-30" />
+<meta name="date" content="2020-03-02" />
 
 <title>BIRDS technical details</title>
 
@@ -303,7 +303,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">BIRDS technical details</h1>
 <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
-<h4 class="date">2020-01-30</h4>
+<h4 class="date">2020-03-02</h4>
 
 
 
@@ -404,7 +404,7 @@ If there is no common spatial identifier to define the visit extent, and the obs
 <ul>
 <li><code>spatial</code> is a <code>SpatialPolygonDataFrame</code> object with variables summarized per grid cell. As usual for an SPDF the values are stored in the slot <span class="citation">@data</span>, e.g. <a href="mailto:SB$Spatial@data" class="email">SB$Spatial@data</a><br />
 </li>
-<li><code>temporal</code> is an <code>xts</code> object with variables summarized per day. Read more about specific functions for extended time series <a href="https://cran.r-project.org/web/packages/xts/index.html">here</a><br />
+<li><code>temporal</code> is an <code>xts</code> object with variables summarized per day. Read more about specific functions for extended time series <a href="https://CRAN.R-project.org/package=xts">here</a><br />
 </li>
 <li><code>spatioTemporal</code> is an array with four dimensions:
 <ul>
@@ -485,7 +485,7 @@ It takes as parameters:</p>
 </div>
 <div id="exposeignorance" class="section level5">
 <h5><code>exposeIgnorance()</code></h5>
-<p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code>exposeIgnorance()</code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete 2015 Biodiv Data J 3:e5361, <a href="doi:10.3897/BDJ.3.e5361" class="uri">doi:10.3897/BDJ.3.e5361</a></p>
+<p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code>exposeIgnorance()</code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete (2015) Biodiv Data J 3:e5361 .</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
 <span id="cb8-2"><a href="#cb8-2"></a>palBW &lt;-<span class="st"> </span>leaflet<span class="op">::</span><span class="kw">colorNumeric</span>(<span class="kw">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;navyblue&quot;</span>), </span>
 <span id="cb8-3"><a href="#cb8-3"></a>                               <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), </span>

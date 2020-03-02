@@ -11,6 +11,8 @@ Only during r-devel build I get a Note regarding my email, but it is the one I u
   Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
 
 We did the following changes based on the package reviewrs recommendations:   
+* We Fixed Rd markup for DOIs and canonical URLs for packages.
+
 * We removed the redundant 'A Set of Tools or' from your title and
   description.
   
