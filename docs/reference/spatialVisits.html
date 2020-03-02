@@ -199,7 +199,7 @@ directly effort circles may not look like circles in the returned
     <pre class="examples"><div class='input'><span class='co'># create a visit-based data object from the original observation-based data</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
 <span class='no'>OB</span><span class='kw'>&lt;-</span><span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObsShort</span>)
-<span class='no'>visitStats</span><span class='kw'>&lt;-</span><span class='fu'><a href='exploreVisits.html'>exploreVisits</a></span>(<span class='no'>OB</span>)</div><div class='output co'>#&gt; Analysing 765 visits...Finished analysing 765 visits.</div><div class='input'><span class='no'>spV</span><span class='kw'>&lt;-</span><span class='fu'>spatialVisits</span>(<span class='no'>visitStats</span>)
+<span class='no'>visitStats</span><span class='kw'>&lt;-</span><span class='fu'><a href='exploreVisits.html'>exploreVisits</a></span>(<span class='no'>OB</span>)</div><div class='output co'>#&gt; <span class='message'>Analysing 765 visits...</span></div><div class='output co'>#&gt; <span class='message'>Finished analysing 765 visits.</span></div><div class='input'><span class='no'>spV</span><span class='kw'>&lt;-</span><span class='fu'>spatialVisits</span>(<span class='no'>visitStats</span>)
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>spV</span>$<span class='no'>effort</span>)</div><div class='img'><img src='spatialVisits-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

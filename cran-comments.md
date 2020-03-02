@@ -1,12 +1,14 @@
 ## Test environment
 * local Windows 10,  R version 3.6.1 (2019-07-05)
 * local Ubuntu 18.04.3 LTS, R version 3.6.1 (2019-07-05)
+* remote win-builder.r-project.org (/wfjJw9QWLsmf/)
 
 ## R CMF check results
 There where no ERRORs, WARNINGs or NOTEs
-1 NOTE: regarding my email, but it is the one I use.
-CRAN incoming feasibility ... NOTE
-Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
+
+Only during r-devel build I get a Note regarding my email, but it is the one I use.
+  CRAN incoming feasibility ... NOTE
+  Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
 
 We did the following changes based on the package reviewrs recommendations:   
 * We removed the redundant 'A Set of Tools or' from your title and
@@ -18,7 +20,7 @@ We did the following changes based on the package reviewrs recommendations:
   
 * We now explain the all acronyms in the description text. e.g. GBIF
   
-* We cite the references when needed following the recommended stantards.
+* We cite the references when needed following the recommended stantards. Although they cant be added as a list in the Description file.
   
 * We now removed "+ file LICENSE" and add the LICENSE file to .rbuildignore as there is no modification to it.
   

@@ -232,8 +232,10 @@ samller datasets.</p>
     <p>If both 'percent' and 'minCrit' are defined then 'percent' prevails.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>EV</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exploreVisits.html'>exploreVisits</a></span>(<span class='no'>OB</span>)</div><div class='output co'>#&gt; Analysing 6721 visits...Finished analysing 6721 visits.</div><div class='input'><span class='no'>OBshorter</span> <span class='kw'>&lt;-</span> <span class='fu'>removeObs</span>(<span class='no'>OB</span>, <span class='no'>EV</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>75</span>)</div><div class='output co'>#&gt; The result is 74.95% of the original observations set</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>EV</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exploreVisits.html'>exploreVisits</a></span>(<span class='no'>OB</span>)</div><div class='output co'>#&gt; <span class='message'>Analysing 6721 visits...</span></div><div class='output co'>#&gt; <span class='message'>Finished analysing 6721 visits.</span></div><div class='input'><span class='no'>OBshorter</span> <span class='kw'>&lt;-</span> <span class='fu'>removeObs</span>(<span class='no'>OB</span>, <span class='no'>EV</span>, <span class='kw'>percent</span> <span class='kw'>=</span> <span class='fl'>75</span>)</div><div class='output co'>#&gt; <span class='message'>The result is 74.95% of the original observations set</span></div><div class='input'># }
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

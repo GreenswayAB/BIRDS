@@ -27,11 +27,9 @@ Description: This R package helps making the evaluation and preparation
    opportunistically collected presence-only data together with and data from 
    systematic monitoring programs. The set of tools provided is aimed at 
    understanding the process that generated the data (i.e. observing, recording 
-   and reporting species into databases).
-   References:
-   Ruete (2015) <doi:10.3897/BDJ.3.e5361>
-   Szabo, Vesk, Baxter & Possingham (2010) <doi:10.1890/09-0877.1>
-   Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
+   and reporting species into databases). References: Ruete (2015) <doi:10.3897/BDJ.3.e5361>;
+   Szabo, Vesk, Baxter & Possingham (2010) <doi:10.1890/09-0877.1>;
+   Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -40,6 +40,7 @@ relObs<-EBnObs/EBnVis
 EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 
 ## ----figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."----
+oldpar <- par(no.readonly =TRUE)
 par(mar=c(4,4,1,6), las=1)
 plot(time(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
      ylim=c(0, max(EBnObs)), xaxp=c(2000, 2018, 18))
@@ -56,6 +57,7 @@ legend("topleft", legend=c("n.observations","n.visits"),
        lty = c(1,2), lwd = 3, bty = "n")
 legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell"),
        lty = 1, lwd = 3, col = c("#78D2EB", "#FFB3B5"), bty = "n")
+par(oldpar)
 
 ## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3-------------------
 wNonEmpty<-unname( which( unlist(lapply(SB$overlaid, nrow)) != 0) )

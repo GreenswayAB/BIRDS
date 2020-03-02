@@ -14,8 +14,10 @@
 #' (only the first one drawn) with geodesic coordinates in WGS84 (ESPG:4326).
 #' @export
 #' @examples
-#' \donttest{
-#' polygon <- drawPolygon()
+#' \dontrun{
+#' if(interactive()){
+#'  polygon <- drawPolygon()
+#' }
 #' }
 #' @importFrom magrittr %>%
 drawPolygon <- function(lat = 0,

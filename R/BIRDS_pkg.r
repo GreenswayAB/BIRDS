@@ -22,10 +22,8 @@
 #'       taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
 #'
 #' # Make a grid that can be used by summariseBirds()
+#' # gotaland is a SpatialPolygonDataFrame provided as an example
 #' grid <- makeGrid(gotaland, gridSize = 10)
-#' # alternatively:
-#' polygon <- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")
-#' grid <- makeGrid(polygon, gridSize = 10)
 #'
 #' # Summarise the data (using the grid to overlay with the organised data)
 #' SB <- summariseBirds(OB, grid=grid)
@@ -48,15 +46,5 @@
 #' legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE),length.out = 5),
 #'        col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
 #'        title = "Number of years", pch = 15, bty="n")
-
-#' #### Community analysis
-#' CM <- communityMatrix(SB, sampleUnit="visit")
-#' library(vegan)
-#' sp1 <- specaccum(CM)
-#' plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue",
-#' xlab="Grid cells")
-#' specslope(sp1, at=50)
-#' expectedRich<-specpool(CM, smallsample = TRUE)
-#' specpool(CM, pool = rownames(CM), smallsample = FALSE)
 #' }
 NULL
