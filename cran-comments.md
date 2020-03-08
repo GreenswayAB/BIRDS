@@ -4,36 +4,26 @@
 * remote win-builder.r-project.org (/wfjJw9QWLsmf/)
 
 ## R CMF check results
-There where no ERRORs, WARNINGs or NOTEs
+There where no ERRORs, WARNINGs or NOTEs on local RMD check
 
 Only during r-devel build I get a Note regarding my email, but it is the one I use.
   CRAN incoming feasibility ... NOTE
   Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
 
-We did the following changes based on the package reviewrs recommendations:   
-* We Fixed Rd markup for DOIs and canonical URLs for packages.
+We did the following changes based on the package reviewers recommendations:   
+* we changed the beginning of the description so that it does not start with "This package".
 
-* We removed the redundant 'A Set of Tools or' from your title and
-  description.
-  
-* We now only use single, undirected quotes to mark packages
-  
-* We now only use double quotes to mark paper titles
-  
-* We now explain the all acronyms in the description text. e.g. GBIF
-  
-* We cite the references when needed following the recommended stantards. Although they cant be added as a list in the Description file.
-  
-* We now removed "+ file LICENSE" and add the LICENSE file to .rbuildignore as there is no modification to it.
-  
-* We changed all print()/cat() messages to the appropriate message()/warning()
-  
-* We either uncommented or removed commented lines in the examples.
-  
-* We now explain how to instead of intalling packages for the user.
-  
-* we now reset the par() setting at the end of your examples if otherwise changed
-  
+* we now are careful to reset user option on the examples using 
+  oldpar <- par(no.readonly = TRUE)
+  ...
+  par(oldpar)
+
+and in functions that so require via 
+  oldpar <- par(no.readonly = TRUE)       # code line i
+  on.exit(par(oldpar))                    # code line i + 1
+
+* we now avoid \dontrun{} (replaced with \donttest{}) as it is not adequate on our case, and  removed both \dontrun{} and \donttest{} when we use instead if(interactive())
+
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package

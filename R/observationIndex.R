@@ -248,7 +248,7 @@ obsIndexSpatial<-function(x,
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' PBD <- bombusObsShort
 #' OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)

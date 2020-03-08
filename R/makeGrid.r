@@ -14,10 +14,8 @@
 #' (only the first one drawn) with geodesic coordinates in WGS84 (ESPG:4326).
 #' @export
 #' @examples
-#' \dontrun{
 #' if(interactive()){
 #'  polygon <- drawPolygon()
-#' }
 #' }
 #' @importFrom magrittr %>%
 drawPolygon <- function(lat = 0,
@@ -349,7 +347,7 @@ makeGrid <- function(polygon,
 #' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
 #' an error message will be displayed.
 #' @examples
-#' \dontrun{grid <- makeDggrid(gotaland, gridSize = 10)}
+#' \donttest{grid <- makeDggrid(gotaland, gridSize = 10)}
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @importFrom dggridR dgconstruct dgcellstogrid dgrectgrid

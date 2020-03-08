@@ -50,7 +50,7 @@ A and R are the total sums for observations. If the ratio to log = 0 it adds
 0.1 to avoid -Inf results.
 }
 \examples{
-\dontrun{
+\donttest{
 grid <- makeGrid(gotaland, gridSize = 10)
 PBD <- bombusObsShort
 OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)

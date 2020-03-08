@@ -26,13 +26,11 @@
 #'   distances are positive).
 #'}
 #' @examples
-#'\dontrun{
+#'\donttest{
 #' # create a visit-based data object from the original observation-based data
 #' OB<-organizeBirds(bombusObs)
 #' visitStats<-exploreVisits(OB)
-#' if(interactive()){
-#'   esquisse::esquisser(visitStats)
-#' }
+#'  esquisse::esquisser(visitStats)
 #' # alternatively, plot the variable you want, e.g.:
 #' # to see the distribution of distances covered on each visit
 #' hist(visitStats$effortDiam)

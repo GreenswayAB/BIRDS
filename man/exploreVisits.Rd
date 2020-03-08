@@ -40,13 +40,11 @@ in the approach to species observation data used by the BIRDS package. In order 
 definition of visit aligns with your grid size, you must explore the spatial extent of visits.
 }
 \examples{
-\dontrun{
+\donttest{
 # create a visit-based data object from the original observation-based data
 OB<-organizeBirds(bombusObs)
 visitStats<-exploreVisits(OB)
-if(interactive()){
-  esquisse::esquisser(visitStats)
-}
+ esquisse::esquisser(visitStats)
 # alternatively, plot the variable you want, e.g.:
 # to see the distribution of distances covered on each visit
 hist(visitStats$effortDiam)
