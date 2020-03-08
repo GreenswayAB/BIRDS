@@ -153,6 +153,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
 
   reportStrg <- paste0("Number of observations: ", nObs)
   oldpar <- par(no.readonly =TRUE)
+  on.exit(par(oldpar)) 
   layout(matrix(c(1,2,1,3), nrow = 2, byrow = long))
   par(mar=c(1,1,1,1))
   plot(x$spatial[wNonEmpty,], col = colVis, border = NA, ...)
@@ -165,7 +166,6 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
   barplot(yearsFocalTbl, ylab = "n. visits", las=2)
   par(mar=c(4,4,1,1))
   barplot(monthsFocalTbl, ylab = "n. visits", las=2)
-  par(oldpar)
 }
 
 
