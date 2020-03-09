@@ -104,7 +104,7 @@
       <h1>Introduction to BIRDS</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2020-03-02</h4>
+            <h4 class="date">2020-03-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/BIRDS.Rmd"><code>vignettes/BIRDS.Rmd</code></a></small>
       <div class="hidden name"><code>BIRDS.Rmd</code></div>
@@ -137,37 +137,36 @@
 <p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(BIRDS)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(sp)</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt; Warning: package 'sp' was built under R version 3.6.2</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>grid &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeGrid.html">makeGrid</a></span>(gotaland, <span class="dt">gridSize =</span> <span class="dv">10</span>)</span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># The grid can be easily created in different ways. </span></span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># Import the species observation data:</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a>PBD&lt;-bombusObs</span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
-<span id="cb2-11"><a href="#cb2-11"></a></span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># Convert the data from an observation-based to a visit-based format, adding a </span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co"># unique identifier for each visit:</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a>OB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/organizeBirds.html">organizeBirds</a></span>(PBD, <span class="dt">sppCol =</span> <span class="st">"scientificName"</span>, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb2-15"><a href="#cb2-15"></a></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="co"># Summarise the data:</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a>SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summarizeBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; 2635 observations did not overlap with the grid and will be discarded.</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt; 0.06 % of the visits spill over neighbouring grid cells.</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="co"># Look at some summarised variables:</span></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co"># Number of observations</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a>EBnObs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
-<span id="cb2-24"><a href="#cb2-24"></a>                      <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="co"># Number of visits</span></span>
-<span id="cb2-26"><a href="#cb2-26"></a>EBnVis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
-<span id="cb2-27"><a href="#cb2-27"></a>                      <span class="dt">variable =</span> <span class="st">"nVis"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
-<span id="cb2-28"><a href="#cb2-28"></a><span class="co"># The ratio of number of observations over number of visits</span></span>
-<span id="cb2-29"><a href="#cb2-29"></a>relObs&lt;-EBnObs<span class="op">/</span>EBnVis</span>
-<span id="cb2-30"><a href="#cb2-30"></a></span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co"># over cell values for the median SLL from all visits per year and cell) </span></span>
-<span id="cb2-33"><a href="#cb2-33"></a>EBavgSll &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>grid &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeGrid.html">makeGrid</a></span>(gotaland, <span class="dt">gridSize =</span> <span class="dv">10</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># The grid can be easily created in different ways. </span></span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Import the species observation data:</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>PBD&lt;-bombusObs</span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
+<span id="cb2-10"><a href="#cb2-10"></a></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co"># Convert the data from an observation-based to a visit-based format, adding a </span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># unique identifier for each visit:</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>OB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/organizeBirds.html">organizeBirds</a></span>(PBD, <span class="dt">sppCol =</span> <span class="st">"scientificName"</span>, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co"># Summarise the data:</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>SB &lt;-<span class="st"> </span><span class="kw"><a href="../reference/summarizeBirds.html">summariseBirds</a></span>(OB, <span class="dt">grid=</span>grid)</span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; 2635 observations did not overlap with the grid and will be discarded.</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; 0.06 % of the visits spill over neighbouring grid cells.</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co"># Look at some summarised variables:</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co"># Number of observations</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>EBnObs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
+<span id="cb2-23"><a href="#cb2-23"></a>                      <span class="dt">variable =</span> <span class="st">"nObs"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co"># Number of visits</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>EBnVis &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exportBirds.html">exportBirds</a></span>(SB, <span class="dt">dimension =</span> <span class="st">"temporal"</span>, <span class="dt">timeRes =</span> <span class="st">"yearly"</span>, </span>
+<span id="cb2-26"><a href="#cb2-26"></a>                      <span class="dt">variable =</span> <span class="st">"nVis"</span>, <span class="dt">method =</span> <span class="st">"sum"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="co"># The ratio of number of observations over number of visits</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a>relObs&lt;-EBnObs<span class="op">/</span>EBnVis</span>
+<span id="cb2-29"><a href="#cb2-29"></a></span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co"># over cell values for the median SLL from all visits per year and cell) </span></span>
+<span id="cb2-32"><a href="#cb2-32"></a>EBavgSll &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>Then, with functions you already know, plot this into a time series.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>oldpar &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="dt">no.readonly =</span><span class="ot">TRUE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="dt">mar=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">6</span>), <span class="dt">las=</span><span class="dv">1</span>)</span>
@@ -221,7 +220,7 @@ We can see that over the years there are on average more observations, more visi
 <span id="cb4-24"><a href="#cb4-24"></a>       <span class="dt">title =</span> <span class="st">"Number of years"</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">"n"</span>)</span>
 <span id="cb4-25"><a href="#cb4-25"></a><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(oldpar)</span></code></pre></div>
 <p><img src="BIRDS_files/figure-html/figure%202-1.png" width="672"></p>
-<p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete 2015 Biodiv Data J 3:e5361, <a href="doi:10.3897/BDJ.3.e5361" class="uri">doi:10.3897/BDJ.3.e5361</a></p>
+<p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete (2015) Biodiv Data J 3:e5361 .</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>oldpar &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="dt">no.readonly =</span><span class="ot">TRUE</span>)</span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="dt">mfrow=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
 <span id="cb5-3"><a href="#cb5-3"></a>palBW &lt;-<span class="st"> </span>leaflet<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/leaflet/man/colorNumeric.html">colorNumeric</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"white"</span>, <span class="st">"navyblue"</span>), </span>

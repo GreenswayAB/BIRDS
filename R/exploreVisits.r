@@ -26,7 +26,7 @@
 #'   distances are positive).
 #'}
 #' @examples
-#'\donttest{
+#' if(interactive())
 #' # create a visit-based data object from the original observation-based data
 #' OB<-organizeBirds(bombusObs)
 #' visitStats<-exploreVisits(OB)
@@ -43,7 +43,6 @@
 #' plot(visitStats$SLL, visitStats$effortDiam)
 #' # to see the ditributions of observations along the days of the month
 #' plot(visitStats$day, visitStats$nObs)
-#' }
 #' @export
 #' @importFrom rlang .data
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}

@@ -202,26 +202,16 @@ See <code><a href='organizeBirds.html'>organizeBirds</a></code>.</p></td>
     <div class='dont-index'><p><code><a href='createVisits.html'>createVisits</a></code>, <code><a href='organizeBirds.html'>organiseBirds</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>())
 <span class='co'># create a visit-based data object from the original observation-based data</span>
 <span class='no'>OB</span><span class='kw'>&lt;-</span><span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>)
-<span class='no'>visitStats</span><span class='kw'>&lt;-</span><span class='fu'>exploreVisits</span>(<span class='no'>OB</span>)
-<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
-  <span class='kw pkg'>esquisse</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/esquisse/man/esquisser.html'>esquisser</a></span>(<span class='no'>visitStats</span>)
-}
-<span class='co'># alternatively, plot the variable you want, e.g.:</span>
+<span class='no'>visitStats</span><span class='kw'>&lt;-</span><span class='fu'>exploreVisits</span>(<span class='no'>OB</span>)</div><div class='output co'>#&gt; <span class='error'>Error in exploreVisits(OB): object 'OB' not found</span></div><div class='input'> <span class='kw pkg'>esquisse</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/esquisse/man/esquisser.html'>esquisser</a></span>(<span class='no'>visitStats</span>)</div><div class='output co'>#&gt; <span class='error'>Error in get_data(data, name = deparse(substitute(data))): object 'visitStats' not found</span></div><div class='input'><span class='co'># alternatively, plot the variable you want, e.g.:</span>
 <span class='co'># to see the distribution of distances covered on each visit</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>visitStats</span>$<span class='no'>effortDiam</span>)
-<span class='co'># to see the distribution of species list lengths of each visit</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>visitStats</span>$<span class='no'>SLL</span>)
-<span class='co'># to identify suspicious visits reported the first day of each month or year</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>visitStats</span>$<span class='no'>day</span>)
-<span class='co'># to see correlations</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>visitStats</span>$<span class='no'>nObs</span>, <span class='no'>visitStats</span>$<span class='no'>effortDiam</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>visitStats</span>$<span class='no'>SLL</span>, <span class='no'>visitStats</span>$<span class='no'>effortDiam</span>)
-<span class='co'># to see the ditributions of observations along the days of the month</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>visitStats</span>$<span class='no'>day</span>, <span class='no'>visitStats</span>$<span class='no'>nObs</span>)
-}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>visitStats</span>$<span class='no'>effortDiam</span>)</div><div class='output co'>#&gt; <span class='error'>Error in hist(visitStats$effortDiam): object 'visitStats' not found</span></div><div class='input'><span class='co'># to see the distribution of species list lengths of each visit</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>visitStats</span>$<span class='no'>SLL</span>)</div><div class='output co'>#&gt; <span class='error'>Error in hist(visitStats$SLL): object 'visitStats' not found</span></div><div class='input'><span class='co'># to identify suspicious visits reported the first day of each month or year</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>visitStats</span>$<span class='no'>day</span>)</div><div class='output co'>#&gt; <span class='error'>Error in hist(visitStats$day): object 'visitStats' not found</span></div><div class='input'><span class='co'># to see correlations</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>visitStats</span>$<span class='no'>nObs</span>, <span class='no'>visitStats</span>$<span class='no'>effortDiam</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(visitStats$nObs, visitStats$effortDiam): object 'visitStats' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>visitStats</span>$<span class='no'>SLL</span>, <span class='no'>visitStats</span>$<span class='no'>effortDiam</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(visitStats$SLL, visitStats$effortDiam): object 'visitStats' not found</span></div><div class='input'><span class='co'># to see the ditributions of observations along the days of the month</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>visitStats</span>$<span class='no'>day</span>, <span class='no'>visitStats</span>$<span class='no'>nObs</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(visitStats$day, visitStats$nObs): object 'visitStats' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
