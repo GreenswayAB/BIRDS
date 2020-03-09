@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a dggrid — makeDggrid • BIRDS</title>
+<title>Make a discrete global grid — makeDggrid • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,7 +42,7 @@
 
 
 
-<meta property="og:title" content="Make a dggrid — makeDggrid" />
+<meta property="og:title" content="Make a discrete global grid — makeDggrid" />
 <meta property="og:description" content="Construct a discrete global grid system (dggs) object over a preferred polygon." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -144,7 +144,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a dggrid</h1>
+    <h1>Make a discrete global grid</h1>
     <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/makeGrid.r'><code>R/makeGrid.r</code></a></small>
     <div class="hidden name"><code>makeDggrid.Rd</code></div>
     </div>
@@ -206,7 +206,10 @@ Complicated polygons (those with much detail) make this function run slower.</p>
 conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note: This may generate odd results for very large rectangles, because putting rectangles on spheres is weird... as you should know, if you're using this package.
+    <p>Note: This function depends on a package that is no longer on CRAN. you can find it
+https://github.com/r-barnes/dggridR.
+Also, this may generate odd results for very large rectangles, because putting
+rectangles on spheres is weird... as you should know, if you're using this package.
  Use the function <code><a href='exploreVisits.html'>exploreVisits()</a></code> to assess if your definition of visit
  aligns with your grid size.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
@@ -220,7 +223,22 @@ an error message will be displayed.</p>
     <div class='dont-index'><p><code><a href='drawPolygon.html'>drawPolygon</a></code>, <code><a href='renameGrid.html'>renameGrid</a></code>, <code><a href='OB2Polygon.html'>OB2Polygon</a></code>, <code><a href='exploreVisits.html'>exploreVisits</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'>makeDggrid</span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; Resolution: 12, Area (km^2): 95.9778454662114, Spacing (km): 9.67579208698331, CLS (km): 11.0545373458563</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dggridR</span>) <span class='co'>## Not anylonger on CRAN</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: rgdal</span></div><div class='output co'>#&gt; <span class='message'>rgdal: version: 1.4-8, (SVN revision 845)</span>
+#&gt; <span class='message'> Geospatial Data Abstraction Library extensions to R successfully loaded</span>
+#&gt; <span class='message'> Loaded GDAL runtime: GDAL 2.2.3, released 2017/11/20</span>
+#&gt; <span class='message'> Path to GDAL shared files: E:/Alejandro/Documents/R/win-library/3.6/sf/gdal</span>
+#&gt; <span class='message'> GDAL binary built with GEOS: TRUE </span>
+#&gt; <span class='message'> Loaded PROJ.4 runtime: Rel. 4.9.3, 15 August 2016, [PJ_VERSION: 493]</span>
+#&gt; <span class='message'> Path to PROJ.4 shared files: E:/Alejandro/Documents/R/win-library/3.6/sf/proj</span>
+#&gt; <span class='message'> Linking to sp version: 1.3-2 </span></div><div class='output co'>#&gt; <span class='message'>Loading required package: ggplot2</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: dplyr</span></div><div class='output co'>#&gt; <span class='warning'>Warning: package 'dplyr' was built under R version 3.6.2</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: 'dplyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:testthat':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:stats':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:base':</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'>makeDggrid</span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)<span class='co'># }</span></div><div class='output co'>#&gt; Resolution: 12, Area (km^2): 95.9778454662114, Spacing (km): 9.67579208698331, CLS (km): 11.0545373458563</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
