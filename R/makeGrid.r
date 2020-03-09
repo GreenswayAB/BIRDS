@@ -318,11 +318,14 @@ makeGrid <- function(polygon,
 }
 
 
-#' Make a dggrid
+#' Make a discrete global grid
 #'
 #' Construct a discrete global grid system (dggs) object over a preferred polygon.
 #'
-#' Note: This may generate odd results for very large rectangles, because putting rectangles on spheres is weird... as you should know, if you're using this package.
+#' Note: This function depends on a package that is no longer on CRAN. you can find it
+#' https://github.com/r-barnes/dggridR.
+#' Also, this may generate odd results for very large rectangles, because putting
+#' rectangles on spheres is weird... as you should know, if you're using this package.
 #'  Use the function \code{exploreVisits()} to assess if your definition of visit
 #'  aligns with your grid size.
 #' @param polygon an object of class \sQuote{SpatialPolygon} or
@@ -347,10 +350,11 @@ makeGrid <- function(polygon,
 #' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
 #' an error message will be displayed.
 #' @examples
-#' \donttest{grid <- makeDggrid(gotaland, gridSize = 10)}
+#' \donttest{
+#' library(dggridR) ## Not anylonger on CRAN
+#' grid <- makeDggrid(gotaland, gridSize = 10)}
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
-#' @importFrom dggridR dgconstruct dgcellstogrid dgrectgrid
 #' @importFrom dplyr group_map
 #' @importFrom rlang .data
 #' @export
@@ -362,7 +366,7 @@ makeDggrid <- function(polygon,
                      tol=0.01) {
   #Construct a global grid with cells approximately 1000 m across
   topology <- toupper(topology)
-  dggs <- dgconstruct(spacing=gridSize, metric=TRUE, precision=10,
+  dggs <- dggridR::dgconstruct(spacing=gridSize, metric=TRUE, precision=10,
                       resround='nearest', topology = topology)
 
   # error not a SpatialPolygon
@@ -392,7 +396,7 @@ makeDggrid <- function(polygon,
 
   extent <- polygonGeod@bbox
   #Get the grid cell boundaries for cells on the polygon extent
-  grid <- dgrectgrid(dggs, extent[2,1], extent[1,1], extent[2,2], extent[1,2])
+  grid <- dggridR::dgrectgrid(dggs, extent[2,1], extent[1,1], extent[2,2], extent[1,2])
 
   gridPolList <- grid %>%
     group_by(.data$cell) %>%

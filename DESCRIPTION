@@ -37,7 +37,6 @@ Depends: R (>= 3.5.0)
 SystemRequirements: GDAL (>= 2.0.1)
 Imports:
     data.table, 
-    dggridR, 
     dplyr,
     esquisse,
     geosphere (>= 1.5),
@@ -61,6 +60,7 @@ Suggests:
     biogeo,
     CoordinateCleaner, 
     covr, 
+    dggridR, 
     knitr, 
     KnowBR, 
     leaflet.extras,

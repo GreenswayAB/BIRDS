@@ -24,6 +24,8 @@ and in functions that so require via
 
 * we now avoid \dontrun{} (replaced with \donttest{}) as it is not adequate on our case, and  removed both \dontrun{} and \donttest{} when we use instead if(interactive())
 
+* package dggridR was moved to Suggested in Description as it is no nolger available on CRAN
+
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
