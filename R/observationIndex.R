@@ -25,7 +25,7 @@ normalize <- function(x) {
 #' included in 'group' and will remove them
 #' @param norm if TRUE, the result is nomalized to a 0-1 range
 #' @return a positive observation index
-#' @references Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
+#' @references Telfer, Preston & Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 #' @keywords internal
 logObsInd<-function(focal,
                     group,

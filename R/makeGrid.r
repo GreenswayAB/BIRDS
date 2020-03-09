@@ -322,8 +322,8 @@ makeGrid <- function(polygon,
 #'
 #' Construct a discrete global grid system (dggs) object over a preferred polygon.
 #'
-#' Note: This function depends on a package that is no longer on CRAN. you can find it
-#' https://github.com/r-barnes/dggridR.
+#' This function depends on a package that is no longer on CRAN. You can 
+#' find it in its GitHub repository \url{https://github.com/r-barnes/dggridR}.
 #' Also, this may generate odd results for very large rectangles, because putting
 #' rectangles on spheres is weird... as you should know, if you're using this package.
 #'  Use the function \code{exploreVisits()} to assess if your definition of visit

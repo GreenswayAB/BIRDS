@@ -23,7 +23,8 @@ The package 'BIRDS' is currently available on GitHub and you can freely download
 the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
 
 The easiest option is to install the package directly from GitHub using the 
-package 'remotes'.  Install 'remotes as usual `install.packages('remotes')` if you do not already have installed it. 
+package 'remotes'.  Install 'remotes as usual `install.packages('remotes')` 
+if you do not already have installed it. 
 
 ```{r install package, eval = F}
 remotes::install_github('Greensway/BIRDS')

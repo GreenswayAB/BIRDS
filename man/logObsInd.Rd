@@ -27,6 +27,6 @@ Rt is sum of observations of all species in reference group during t,
 A and R are the total sums for observations.
 }
 \references{
-Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
+Telfer, Preston & Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 }
 \keyword{internal}
