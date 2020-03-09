@@ -53,10 +53,9 @@ how to install this package into R.
 This package is still not published in CRAN. Therefore the easiest option to 
 install it is directly from GitHub using the package `remotes`. 
 
-Install `remotes` if you do not already have installed it:
+Install `remotes` if you do not already have installed it (`install.packages('remotes')`):
 
 ```r
-install.packages('remotes')
 remotes::install_github('Greensway/BIRDS')
 library(BIRDS)
 ```

@@ -40,7 +40,7 @@ in the approach to species observation data used by the BIRDS package. In order 
 definition of visit aligns with your grid size, you must explore the spatial extent of visits.
 }
 \examples{
-if(interactive())
+if(interactive()){
 # create a visit-based data object from the original observation-based data
 OB<-organizeBirds(bombusObs)
 visitStats<-exploreVisits(OB)
@@ -57,6 +57,7 @@ plot(visitStats$nObs, visitStats$effortDiam)
 plot(visitStats$SLL, visitStats$effortDiam)
 # to see the ditributions of observations along the days of the month
 plot(visitStats$day, visitStats$nObs)
+}
 }
 \seealso{
 \code{\link{createVisits}}, \code{\link{organiseBirds}}

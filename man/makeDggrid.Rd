@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{makeDggrid}
 \alias{makeDggrid}
-\title{Make a dggrid}
+\title{Make a discrete global grid}
 \usage{
 makeDggrid(
   polygon,
@@ -43,7 +43,10 @@ conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ES
 Construct a discrete global grid system (dggs) object over a preferred polygon.
 }
 \details{
-Note: This may generate odd results for very large rectangles, because putting rectangles on spheres is weird... as you should know, if you're using this package.
+Note: This function depends on a package that is no longer on CRAN. you can find it
+https://github.com/r-barnes/dggridR.
+Also, this may generate odd results for very large rectangles, because putting
+rectangles on spheres is weird... as you should know, if you're using this package.
  Use the function \code{exploreVisits()} to assess if your definition of visit
  aligns with your grid size.
 }
@@ -54,7 +57,9 @@ Grid cells must be smaller than the sampling area. If the grid cell size is wide
 an error message will be displayed.
 }
 \examples{
-\donttest{grid <- makeDggrid(gotaland, gridSize = 10)}
+\donttest{
+library(dggridR) ## Not anylonger on CRAN
+grid <- makeDggrid(gotaland, gridSize = 10)}
 }
 \seealso{
 \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
