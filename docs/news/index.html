@@ -156,6 +156,7 @@
 <ul>
 <li>changed parameters the argument ‘spillover’ on summaryBirds() and overlayBirds()</li>
 <li>changed parameters the argument ‘shape’ on OB2Polygon()</li>
+<li>as of 2020-03-03 dggridR is no longer available in CRAN. To use the function makeDggrid() you need to get the packages from here <a href="https://github.com/r-barnes/dggridR/" class="uri">https://github.com/r-barnes/dggridR/</a>.</li>
 </ul>
 </div>
 <div id="additions" class="section level3">
@@ -165,8 +166,7 @@
 <li>removeObs() a function to remove observations from an OrganisedBirds dataset based on the visits effort (measured with exploreVisits())</li>
 <li>obsIndex() a function retrieving the Relative Reporting Frequency Index (obsIndex). This retrieves both spatial and temporal observation patterns for a focal species compared to a group of species.</li>
 <li>[BREAKING CHANGE] the argument ‘spillOver’ in summariseBirds() and overlayBirds() now accepts NULL, ‘unique’ and ‘duplicate’. Before, TRUE would duplicate the observations belonging to a visit overlaying two or more gridcells. That is now ‘duplicate’. The new optio is ‘unique’ where observations are assigned a single gridcell (the one with most observations). FALSE is now replaced by NULL.</li>
-<li>makeDggrid() a function making Discrete Global Grids using function in the dggridR package: <a href="https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html" class="uri">https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html</a>
-</li>
+<li>makeDggrid() a function making Discrete Global Grids using function in the dggridR package: <a href="https://cran.r-project.org/package=dggridR" class="uri">https://cran.r-project.org/package=dggridR</a> <strong>UPDATE v0.1</strong> as of 2020-03-03 dggridR is no longer available in CRAN. You need to get the packages from here <a href="https://github.com/r-barnes/dggridR/" class="uri">https://github.com/r-barnes/dggridR/</a>.</li>
 <li>makeCircle() now uses the Skyums algorithm implemented in the shotGroup package to make the minimum encompassing circle.</li>
 <li>getUTMproj() a function to find the UTM zone that best represents the observations and returns its corresponding proj4 string. This is useful when making buffers and circles that should be geometrically correct (e.g. OB2Polygon(, shape=“minCircle”) or makeCircle()).</li>
 </ul>

@@ -13,6 +13,8 @@ Only during r-devel build I get a Note regarding my email, but it is the one I u
 We did the following changes based on the package reviewers recommendations:   
 * we changed the beginning of the description so that it does not start with "This package".
 
+* package dggridR was moved to Suggested in Description as it is no longer available on CRAN, and its source is now linked in the description 
+
 * we now are careful to reset user option on the examples using 
   oldpar <- par(no.readonly = TRUE)
   ...
@@ -23,9 +25,6 @@ and in functions that so require via
   on.exit(par(oldpar))                    # code line i + 1
 
 * we now avoid \dontrun{} (replaced with \donttest{}) as it is not adequate on our case, and  removed both \dontrun{} and \donttest{} when we use instead if(interactive())
-
-* package dggridR was moved to Suggested in Description as it is no longer available on CRAN
-
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
