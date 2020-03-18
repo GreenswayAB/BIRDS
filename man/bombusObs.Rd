@@ -4,7 +4,9 @@
 \name{bombusObs}
 \alias{bombusObs}
 \title{Species observations for the genus \emph{Bombus} spp. in Götaland, Sweden.}
-\format{A data frame with 10,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}}
+\format{
+A data frame with 10,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}
+}
 \source{
 \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
 }

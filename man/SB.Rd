@@ -4,7 +4,9 @@
 \name{SB}
 \alias{SB}
 \title{A simple summarisedBirds object.}
-\format{An object of class summarisedBirds}
+\format{
+An object of class summarisedBirds
+}
 \usage{
 SB
 }

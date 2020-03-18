@@ -4,9 +4,6 @@
 \name{BIRDS}
 \alias{BIRDS}
 \title{BIRDS: Biodiversity Information Review and Decision Support.}
-\description{
-BIRDS: Biodiversity Information Review and Decision Support.
-}
 \section{About}{
 
 

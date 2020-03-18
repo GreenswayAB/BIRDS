@@ -4,7 +4,9 @@
 \name{searchPolygon}
 \alias{searchPolygon}
 \title{Searching polygon covering Götaland, Sweden.}
-\format{A SpatialPolygonsDataFrame with 1 polygon with CRS(\dQuote{+init=epsg:4326})}
+\format{
+A SpatialPolygonsDataFrame with 1 polygon with CRS(\dQuote{+init=epsg:4326})
+}
 \usage{
 searchPolygon
 }

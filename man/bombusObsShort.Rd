@@ -4,7 +4,9 @@
 \name{bombusObsShort}
 \alias{bombusObsShort}
 \title{A short version of bombusObs dataset for faster examples.}
-\format{A data frame with 1,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}}
+\format{
+A data frame with 1,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}
+}
 \source{
 \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
 }

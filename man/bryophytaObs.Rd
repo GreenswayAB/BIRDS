@@ -4,7 +4,9 @@
 \name{bryophytaObs}
 \alias{bryophytaObs}
 \title{Species observations of bryophytes in Götaland, Sweden}
-\format{A data frame with 10,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}.}
+\format{
+A data frame with 10,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}.
+}
 \source{
 \url{https://www.gbif.org/occurrence/download/0007732-190320150433242}
 }
