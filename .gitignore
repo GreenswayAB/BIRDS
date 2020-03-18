@@ -5,3 +5,7 @@
 .Rproj
 BIRDS.Rproj
 createSampleData.R
+BIRDS.Rcheck/
+BIRDS*.tar.gz
+BIRDS*.tgz
+project.Rproj

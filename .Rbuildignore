@@ -4,3 +4,6 @@ createSampleData.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^BIRDS\.Rcheck$
+^BIRDS.*\.tar\.gz$
+^BIRDS.*\.tgz$
