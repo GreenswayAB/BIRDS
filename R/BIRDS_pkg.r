@@ -1,8 +1,6 @@
 #' BIRDS: Biodiversity Information Review and Decision Support.
 #'
-#' @section About:
-#'
-#' The primary aim of this package is to provide tools for Biodiversity Informatics
+#' @description The primary aim of this package is to provide tools for Biodiversity Informatics
 #' in order to understand the specis information data and decide about what analyses
 #' we can perform and draw approriate conclusions. For this we need to understand
 #' the data generation process. With this R package we want to take the

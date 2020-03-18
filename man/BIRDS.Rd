@@ -4,9 +4,7 @@
 \name{BIRDS}
 \alias{BIRDS}
 \title{BIRDS: Biodiversity Information Review and Decision Support.}
-\section{About}{
-
-
+\description{
 The primary aim of this package is to provide tools for Biodiversity Informatics
 in order to understand the specis information data and decide about what analyses
 we can perform and draw approriate conclusions. For this we need to understand
@@ -15,7 +13,6 @@ user a step closer to understanding the observers’ behaviour.
 The 'BIRDS' packages provides a workflow for reproducable data review, involving
 three basic steps: organise data, summarise data, review data.
 }
-
 \examples{
 \donttest{
 # Organise the data
