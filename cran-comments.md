@@ -10,7 +10,9 @@ Only during r-devel build I get a Note regarding my email, but it is the one I u
   CRAN incoming feasibility ... NOTE
   Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
 
-We did the following changes based on the package reviewers recommendations:   
+We did the following changes based on the package reviewers recommendations: 
+* We use '' only for package names but not for function names
+
 * we changed the beginning of the description so that it does not start with "This package".
 
 * package dggridR was moved to Suggested in Description as it is no longer available on CRAN, and its source is now linked in the description 
