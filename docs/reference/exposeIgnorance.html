@@ -48,8 +48,7 @@ the number of observations relative to a reference number of observations that
 is considered to be enough to reduce the ignorance score by half (henceforth
 the Half-ignorance approach). The algorithm behind the Ignorance Score is
 designed for comparison of bias and gaps in primary biodiversity data across
-taxonomy, time and space
-Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361" />
+taxonomy, time and space" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -93,7 +92,7 @@ Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -161,8 +160,7 @@ the number of observations relative to a reference number of observations that
 is considered to be enough to reduce the ignorance score by half (henceforth
 the Half-ignorance approach). The algorithm behind the Ignorance Score is
 designed for comparison of bias and gaps in primary biodiversity data across
-taxonomy, time and space
-Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361</p>
+taxonomy, time and space</p>
     </div>
 
     <pre class="usage"><span class='fu'>exposeIgnorance</span>(<span class='no'>nObs</span>, <span class='kw'>nSpp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>h</span> <span class='kw'>=</span> <span class='fl'>1</span>)</pre>
@@ -188,20 +186,26 @@ Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a <code>data.frame</code> with ignorance scores</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Ruete (2015) &lt;doi:10.3897/BDJ.3.e5361&gt;</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='summarizeBirds.html'>summarizeBirds</a></code>, <code><a href='exportBirds.html'>exportBirds</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObsShort</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>42 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.605 % of the visits spill over neighbouring grid cells.</span></div><div class='input'><span class='no'>ignorance</span> <span class='kw'>&lt;-</span> <span class='fu'>exposeIgnorance</span>(<span class='kw'>nObs</span><span class='kw'>=</span><span class='no'>SB</span>$<span class='no'>spatial</span>@<span class='kw'>data</span>$<span class='no'>nObs</span>)</div></pre>
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>8 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='no'>ignorance</span> <span class='kw'>&lt;-</span> <span class='fu'>exposeIgnorance</span>(<span class='kw'>nObs</span><span class='kw'>=</span><span class='no'>SB</span>$<span class='no'>spatial</span>@<span class='kw'>data</span>$<span class='no'>nObs</span>)
+<span class='co'># }</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>

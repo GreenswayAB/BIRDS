@@ -50,12 +50,13 @@ A and R are the total sums for observations. If the ratio to log = 0 it adds
 0.1 to avoid -Inf results.
 }
 \examples{
+\donttest{
 grid <- makeGrid(gotaland, gridSize = 10)
-PBD<-bombusObs
+PBD <- bombusObsShort
 OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 SB <- summariseBirds(OB, grid=grid)
 spp <- listSpecies(SB)
-tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3])
+tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3], fs.rm = FALSE)
 plot(tempOI$relObs, main=spp[3])
 spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
 minOI <- min(spatOI$relObs, na.rm=TRUE)
@@ -64,4 +65,8 @@ palRW <- leaflet::colorNumeric(c("white", "red"), c(minOI, maxOI), na.color = "t
 sp::plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
+}
+}
+\references{
+Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 }

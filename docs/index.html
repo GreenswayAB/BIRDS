@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A set of tools for Biodiversity Information Review and Decision Support  • BIRDS</title>
+<title>Biodiversity Information Review and Decision Support  • BIRDS</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -16,26 +16,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="A set of tools for Biodiversity Information Review and Decision Support ">
-<meta property="og:description" content="A set of tools to review and make decisions upon the use of
-   biodiversity data. This R package helps making the evaluation and preparation 
-   of biodiversity data easy, systematic and reproducible. It also helps the users
-   to overlay the point observations into a custom grid that is useful for further
-   analysis. The review summarise statistics that helps evaluate whether a set 
-   of species observations is fit-for-use and take decisions upon its use of on
-   further analyses. It does so by quantifying the sampling effort (amount of 
-   effort expended during an event) and data completeness (data gaps) to help 
-   judge whether the data is representative, valid and fit for any intended 
-   purpose. The `BIRDS` package is most useful when working with heterogeneous 
-   data sets with variation in the sampling process, i.e. where data have been 
-   collected and reported in various ways and therefore varying in sampling effort 
+<script src="pkgdown.js"></script><meta property="og:title" content="Biodiversity Information Review and Decision Support ">
+<meta property="og:description" content="It helps making the evaluation and preparation of biodiversity data
+   easy, systematic and reproducible. It also helps the users to overlay the 
+   point observations into a custom grid that is useful for further analysis. 
+   The review summarise statistics that helps evaluate whether a set of species 
+   observations is fit-for-use and take decisions upon its use of on further 
+   analyses. It does so by quantifying the sampling effort (amount of effort
+   expended during an event) and data completeness (data gaps) to help judge 
+   whether the data is representative, valid and fit for any intended purpose. 
+   The BIRDS package is most useful when working with heterogeneous data sets 
+   with variation in the sampling process, i.e. where data have been collected 
+   and reported in various ways and therefore varying in sampling effort 
    and data completeness (i.e. how well the reported observations describe the 
-   “true” state). Primary biodiversity data (PBD) combining data from different 
-   data sets, like e.g. GBIF mediated data, commonly vary in the ways data has 
-   been generated - containing opportunistically collected presence-only data 
-   toghether with and data from systematic monitoring programs. The set of tools
-   provided is aimed at understanding the process that generated the data (i.e. 
-   observing, recording and reporting species into databases).">
+   true state). Primary biodiversity data (PBD) combining data from different 
+   data sets, like e.g. Global Biodiversity Information Facility (GBIF) mediated
+   data, commonly vary in the ways data has been generated - containing 
+   opportunistically collected presence-only data together with and data from 
+   systematic monitoring programs. The set of tools provided is aimed at 
+   understanding the process that generated the data (i.e. observing, recording 
+   and reporting species into databases). There is a non-vital function on this 
+   package (makeDggrid()) that depends the package dggridR that is no longer on CRAN. 
+   You can find it here &lt;https://github.com/r-barnes/dggridR&gt;. References: 
+   Ruete (2015) &lt;doi:10.3897/BDJ.3.e5361&gt;; Szabo, Vesk, Baxter &amp; Possingham (2010) 
+   &lt;doi:10.1890/09-0877.1&gt;; Telfer, Preston 6 Rothery (2002) &lt;doi:10.1016/S0006-3207(02)00050-2&gt;.">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -62,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -127,9 +131,9 @@
 <h3 class="hasAnchor">
 <a href="#a-set-of-tools-for-biodiversity-informatics-in-r" class="anchor"></a>A set of tools for Biodiversity Informatics in R</h3>
 <p>This is the Biodiversity Information Review and Decision Support package for R!<br><strong>NB</strong>: BIRDS is an acronym. This packages is not limited to birds’ data (i.e. Aves) <span class="emoji" data-emoji="smiley">😃</span></p>
-<p>This repository hosts an R package that is being developed for systematizing biodiversity data review in order to evaluate whether a set of species observation data is fit-for-use and help take decisions upon its use of for further analysis.</p>
+<p>This set of tools has been developed for systematizing biodiversity data review in order to evaluate whether a set of species observation are fit-for-use and help take decisions upon its use on further analysis.</p>
 <p>This R-package was awarded the Third Prize on the <a href="https://www.gbif.org/en/news/2mixX9oDrJI2W3AqPFOxI3/wherenext-wins-2019-gbif-ebbe-nielsen-challenge#birds">2019 GBIF Ebbe Nielsen Challenge</a> for which it was developed.</p>
-<p>The <code>BIRDS</code> package provides a set of tools to review biodiversity data in order to understand data quality in terms of completeness, and the data generation process (i.e. the observers’ sampling behavior). The <code>BIRDS</code> package provides a systematic approach to evaluate biodiversity data – to enhance reproducibility and facilitate the review of data. The <code>BIRDS</code> package intends to provide the data user with knowledge about sampling effort (amount of effort expended during an event) and data completeness (data gaps) to help judge whether the data is representative, valid and fit for the purpose of its intended use – and hence support for making decisions upon the use and further analysis of biodiversity data.</p>
+<p>The set of tools provided are aimed to review and understand biodiversity data quality in terms of completeness, and the data generation process (i.e. the observers’ sampling behavior). The <code>BIRDS</code> package provides a systematic approach to evaluate biodiversity data – to enhance reproducibility and facilitate the review of data. The <code>BIRDS</code> package intends to provide the data user with knowledge about sampling effort (amount of effort expended during an event) and data completeness (data gaps) to help judge whether the data is representative, valid and fit for the purpose of its intended use – and hence support for making decisions upon the use and further analysis of biodiversity data.</p>
 <p>The <code>BIRDS</code> package is most useful for heterogeneous data sets with variation in the sampling process, i.e. where data have been collected and reported in variable ways, not conforming to the same sampling protocol and therefore varying in sampling effort, leading to variation in data completeness (i.e. how well the reported observations describe the “true” state). Primary biodiversity data (PBD) combining data from different data sets, like e.g. GBIF mediated data, commonly vary in the ways data has been generated - containing opportunistically collected presence-only data (no sampling protocol, no or inconsistent information about absences, high sampling variability between observers), and data sets that have been collected using different sampling protocols. The set of tools provided by the <code>BIRDS</code> package is aimed at illuminating and understanding the process that generated the data (i.e. observing, recording and reporting species into databases). It does this by a systematic approach, and providing summaries that inform about sampling effort and data completeness (or data gaps).</p>
 <p>The <code>BIRDS</code> package is <strong>not</strong> concerned with data accuracy, which can be evaluated and improved using other existing packages (as outlined in the <a href="https://greensway.github.io/BIRDS/articles/technical_details.html">technical details</a> vignette), before processing the data using <code>BIRDS</code>.</p>
 <p>The concepts and methods, and examples are described after a short description on how to install this package into R.</p>
@@ -139,10 +143,9 @@
 <a href="#how-to-install-birds" class="anchor"></a>How to install <code>BIRDS</code>
 </h3>
 <p>This package is still not published in CRAN. Therefore the easiest option to install it is directly from GitHub using the package <code>remotes</code>.</p>
-<p>Install <code>remotes</code> if you do not already have installed it:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">'remotes'</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">'Greensway/BIRDS'</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(BIRDS)</span></code></pre></div>
+<p>Install <code>remotes</code> if you do not already have installed it (<code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages('remotes')</a></code>):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>remotes<span class="op">::</span><span class="kw"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">'Greensway/BIRDS'</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(BIRDS)</span></code></pre></div>
 </div>
 <div id="concepts-and-methods" class="section level3">
 <h3 class="hasAnchor">
@@ -236,6 +239,8 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐co
 <h2>Links</h2>
 <ul class="list-unstyled">
 <li>Browse source code at <br><a href="https://github.com/greensway/BIRDS">https://​github.com/​greensway/​BIRDS</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/Greensway/BIRDS/issues">https://​github.com/​Greensway/​BIRDS/​issues</a>
 </li>
 </ul>
 </div>

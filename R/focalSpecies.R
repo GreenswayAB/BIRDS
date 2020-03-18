@@ -29,12 +29,14 @@ listSpecies<-function(x){
 #' @param focalSp the focal sp to look for.
 #' @return a \code{data.frame} with summary data for the focal species
 #' @examples
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' \donttest{
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
-#' focal<-"Zygodon viridissimus Bridel, 1826"
+#' focal<-"Zygodon viridissimus"
 #' focalSpSummary(SB, focalSp=focal)
+#' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 focalSpSummary <- function(x, focalSp=NULL){
@@ -80,8 +82,6 @@ focalSpSummary <- function(x, focalSp=NULL){
                     "nObs"=nObs,
                     "nVis"=nVis,
                     "visitsUID"=paste(visitsFocal, collapse = ","),
-                    # "years"=paste(yearsFocal, collapse = ","),
-                    # "months"=paste(monthsFocal, collapse = ","),
                     "nYears"=length(yearsFocal),
                     "nMonths"=length(monthsFocal),
                     stringsAsFactors = FALSE))
@@ -101,13 +101,15 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' @param ... further plot parameters
 #' @return a plot with a brief species summary
 #' @examples
+#' \donttest{
 #' library(sp)
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
-#' focal<-"Zygodon viridissimus"
+#' focal <- allSpp[2]
 #' focalSpReport(SB, focalSp=focal)
+#' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres = "red", ...){
@@ -123,7 +125,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
 
   wFocal <- match(focalSp, allSpecies)
   if(!(focalSp %in% allSpecies)) stop(paste0("The focal species ", focalSp,
-                                             " was not faound among the species names in the data set."))
+                                             " was not found among the species names in the data set."))
   overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
@@ -150,7 +152,8 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
                            )
 
   reportStrg <- paste0("Number of observations: ", nObs)
-
+  oldpar <- par(no.readonly =TRUE)
+  on.exit(par(oldpar)) 
   layout(matrix(c(1,2,1,3), nrow = 2, byrow = long))
   par(mar=c(1,1,1,1))
   plot(x$spatial[wNonEmpty,], col = colVis, border = NA, ...)
@@ -174,8 +177,8 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, colVis = "grey", colPres =
 #' @examples
 #'\donttest{
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
-#' SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
-#' speciesSummary(SB)
+#' SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
+#' summSB <- speciesSummary(SB)
 #' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
@@ -189,15 +192,13 @@ speciesSummary <- function(x){
                   "nObs"=numeric(0),
                   "nVis"=numeric(0),
                   "visitsUID"=character(0),
-                  # "years"=character(0),
-                  # "months"=character(0),
                   "nYears"=numeric(0),
                   "nMonths"=numeric(0),
                   stringsAsFactors = FALSE)
 
   for(s in allSpecies){
     res<-rbind(res, focalSpSummary(x, focalSp = s))
-    cat(s,"\n")
+    message(s,"\n")
   }
 
   return(res)
@@ -213,10 +214,13 @@ speciesSummary <- function(x){
 #' species observations are counted in more than one grid cell.
 #' @return a \code{matrix} with counts of observations or visits for each species on each non-empty grid cell.
 #' @examples
+#' \donttest{
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
-#' SB <- summarizeBirds(organizeBirds(bombusObs), grid=grid)
+#' SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 #' CM <- communityMatrix(SB, sampleUnit="visit")
+#' }
 #' @export
+#' @importFrom rlang .data
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 communityMatrix<-function(x, sampleUnit="observation"){
   if (class(x) != "SummarizedBirds") {
@@ -232,7 +236,7 @@ communityMatrix<-function(x, sampleUnit="observation"){
 
   if (sampleUnit == "visit"){
     for(i in wNonEmpty){
-      tmp.vis <- summarise(group_by(x$overlaid[[i]], scientificName, !!! rlang::syms(visitCol)))
+      tmp.vis <- summarise(group_by(x$overlaid[[i]], .data$scientificName, !!! rlang::syms(visitCol)))
       tmp <- rowSums(table(tmp.vis))
       wSp<- match( names(tmp), allSpecies)
       res[i, wSp] <- tmp
@@ -240,7 +244,7 @@ communityMatrix<-function(x, sampleUnit="observation"){
   }
   if (sampleUnit == "observation"){
     for(i in wNonEmpty){
-      tmp <- summarise(group_by(x$overlaid[[i]], scientificName), n=n())
+      tmp <- summarise(group_by(x$overlaid[[i]], .data$scientificName), n=n())
       wSp<- match( tmp$scientificName, allSpecies)
       res[i, wSp] <- tmp$n
     }

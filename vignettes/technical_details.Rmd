@@ -67,7 +67,9 @@ sampling units allows separation of sampling effort into the effort that can be
 expressed through the number of visits by different observers and the effort per
 visit (e.g. species list length, or when available the time spent during a visit). 
 Hence, the quality (completeness) of the data can be judged by using information 
-for each visit and information from a collection of visits. 
+for each visit and information from a collection of visits. Note that the term
+'checklists' has also been used for this purpose although it is often confused 
+with the 'potential species list' that a visitor may find. 
 
 #### First exploration  
 Once you have organised your data, we highly recommend to explore the data to see if the definition of the visits that you applied matches your expectations. The `exploreVisits()` function will summarize some statistics for each visit and return a `data.frame` with the following columns:  
@@ -141,7 +143,7 @@ The `SummarisedBirds` object, here called SB, is then a set of objects with diff
 The objects within SB can be called with `SB$x` where x is the object name described below: 
 
 * `spatial` is a `SpatialPolygonDataFrame` object with variables summarized per grid cell. As usual for an SPDF the values are stored in the slot @data, e.g. SB$Spatial@data  
-* `temporal` is an `xts` object with variables summarized per day. Read more about specific functions for extended time series [here](https://cran.r-project.org/web/packages/xts/index.html)  
+* `temporal` is an `xts` object with variables summarized per day. Read more about specific functions for extended time series [here](https://CRAN.R-project.org/package=xts)  
 * `spatioTemporal` is an array with four dimensions:
     + grid cell (as many as your grid and in the same order)
     + year (as many as there are in your data set)
@@ -218,7 +220,7 @@ relative to a reference number of observations that is considered to be enough t
 reduce the ignorance score by half (henceforth the Half-ignorance approach).
 The algorithm behind the Ignorance Score is designed for comparison of bias and 
 gaps in primary biodiversity data across taxonomy, time and space
- Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
+ Read more here: Ruete (2015) Biodiv Data J 3:e5361 \doi{10.3897/BDJ.3.e5361}.
  
 ```{r, eval=FALSE}
 par(mfrow=c(1,2), mar=c(1,1,1,1))

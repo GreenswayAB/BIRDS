@@ -6,22 +6,22 @@
 This is the Biodiversity Information Review and Decision Support package for R!  
 **NB**: BIRDS is an acronym. This packages is not limited to birds' data (i.e. Aves) :smiley:  
 
-This repository hosts an R package that is being developed for systematizing biodiversity
-data review in order to evaluate whether a set of species observation data is 
-fit-for-use and help take decisions upon its use of for further analysis.  
+This set of tools has been developed for systematizing biodiversity data review 
+in order to evaluate whether a set of species observation are fit-for-use and 
+help take decisions upon its use on further analysis.  
 
 This R-package was awarded the Third Prize on the [2019 GBIF Ebbe Nielsen Challenge](https://www.gbif.org/en/news/2mixX9oDrJI2W3AqPFOxI3/wherenext-wins-2019-gbif-ebbe-nielsen-challenge#birds) 
 for which it was developed.
 
-The `BIRDS` package provides a set of tools to review biodiversity data in order 
-to understand data quality in terms of completeness, and the data generation 
-process (i.e. the observers’ sampling behavior). The `BIRDS` package provides 
-a systematic approach to evaluate biodiversity data – to enhance reproducibility
-and facilitate the review of data. The `BIRDS` package intends to provide the data
-user with knowledge about sampling effort (amount of effort expended during an event) 
-and data completeness (data gaps) to help judge whether the data is representative, 
-valid and fit for the purpose of its intended use – and hence support for making 
-decisions upon the use and further analysis of biodiversity data.  
+The set of tools provided are aimed to review and understand biodiversity data
+quality in terms of completeness, and the data generation process (i.e. the 
+observers’ sampling behavior). The `BIRDS` package provides a systematic approach 
+to evaluate biodiversity data – to enhance reproducibility and facilitate the 
+review of data. The `BIRDS` package intends to provide the data user with knowledge 
+about sampling effort (amount of effort expended during an event) and data 
+completeness (data gaps) to help judge whether the data is representative, valid 
+and fit for the purpose of its intended use – and hence support for making decisions 
+upon the use and further analysis of biodiversity data.  
 
 The `BIRDS` package is most useful for heterogeneous data sets with variation in 
 the sampling process, i.e. where data have been collected and reported in variable
@@ -53,10 +53,9 @@ how to install this package into R.
 This package is still not published in CRAN. Therefore the easiest option to 
 install it is directly from GitHub using the package `remotes`. 
 
-Install `remotes` if you do not already have installed it:
+Install `remotes` if you do not already have installed it (`install.packages('remotes')`):
 
 ```r
-install.packages('remotes')
 remotes::install_github('Greensway/BIRDS')
 library(BIRDS)
 ```

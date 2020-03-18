@@ -4,6 +4,8 @@ createSampleData.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^BIRDS\.Rcheck$
-^BIRDS.*\.tar\.gz$
-^BIRDS.*\.tgz$
+data-raw/
+.github/
+cran-comments.md
+CODE_OF_CONDUCT.md
+LICENSE

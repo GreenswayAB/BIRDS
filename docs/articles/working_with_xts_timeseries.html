@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
       <h1>Working with xts time series</h1>
                         <h4 class="author">Alejandro Ruete</h4>
             
-            <h4 class="date">2019-12-14</h4>
+            <h4 class="date">2020-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/greensway/BIRDS/blob/master/vignettes/working_with_xts_timeseries.Rmd"><code>vignettes/working_with_xts_timeseries.Rmd</code></a></small>
       <div class="hidden name"><code>working_with_xts_timeseries.Rmd</code></div>
@@ -139,15 +139,16 @@
 <p>we see that SB contains an element called <code>SB$temporal</code> that contains a daily time series with time specific rows when there is information. <code>xts</code> also supports time, but dating below day resolution is not yet implemented in the <code>BIRDS</code> package.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>sb.xts&lt;-SB<span class="op">$</span>temporal</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(sb.xts)</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt; 2000-04-21    1    1    1</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; 2000-04-24    1    1    1</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; 2000-04-25    9    5    6</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt; 2000-04-26    7    4    5</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt; 2000-05-05    1    1    1</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt; 2000-05-28    3    2    3</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(sb.xts)</span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co">#&gt; [1] 1726    3</span></span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt; Warning: timezone of object (UTC) is different than current timezone ().</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; 2000-04-21    1    1    1</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; 2000-04-24    1    1    1</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt; 2000-04-25    9    5    6</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt; 2000-04-26    7    4    5</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt; 2000-05-05    1    1    1</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">#&gt; 2000-05-28    3    2    3</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(sb.xts)</span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">#&gt; [1] 1734    3</span></span></code></pre></div>
 <p>Sub-setting is convenient in <code>xts</code> as you can do it with its dates and with a <code><a href="https://rdrr.io/r/base/Arithmetic.html">/</a></code> for a range of dates.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>sb.xts[<span class="st">"2017-09"</span>] <span class="co">#a specific month</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
@@ -220,7 +221,7 @@
 <span id="cb4-25"><a href="#cb4-25"></a><span class="co">#&gt; 2017-04-29    5    5    4</span></span>
 <span id="cb4-26"><a href="#cb4-26"></a><span class="co">#&gt; 2017-04-30   12   11    6</span></span>
 <span id="cb4-27"><a href="#cb4-27"></a></span>
-<span id="cb4-28"><a href="#cb4-28"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obs.m[<span class="st">"2010/2017"</span>,<span class="dv">2</span>], <span class="dt">col =</span> <span class="st">"darkblue"</span>, <span class="dt">grid.ticks.on =</span> <span class="st">"month"</span>, <span class="dt">major.ticks =</span> <span class="st">"month"</span>, <span class="dt">grid.col =</span> <span class="st">"lightgrey"</span>, <span class="dt">main =</span> <span class="st">"Maximum number of daily observations per month"</span>)</span></code></pre></div>
+<span id="cb4-28"><a href="#cb4-28"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obs.m[<span class="st">"2010/2017"</span>,<span class="dv">2</span>], <span class="dt">col =</span> <span class="st">"darkblue"</span>, <span class="dt">grid.ticks.on =</span> <span class="st">"month"</span>,   <span class="dt">major.ticks =</span> <span class="st">"month"</span>, <span class="dt">grid.col =</span> <span class="st">"lightgrey"</span>,  <span class="dt">main =</span> <span class="st">"Maximum number of daily observations per month"</span>)</span></code></pre></div>
 <p><img src="working_with_xts_timeseries_files/figure-html/monthly%20and%20plot-1.png" width="864"></p>
 <p>Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too? in the original time series there is not data for every day, therefore the time series is incomplete.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># sb.xts.na is same as sb.xts but with all missing days added (with NAs)</span></span>
@@ -238,7 +239,7 @@
 <span id="cb6-9"><a href="#cb6-9"></a>sb.xts<span class="fl">.0</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(sb.xts, z, <span class="dt">fill =</span> <span class="dv">0</span>)</span>
 <span id="cb6-10"><a href="#cb6-10"></a></span>
 <span id="cb6-11"><a href="#cb6-11"></a>obs.m<span class="fl">.0</span> &lt;-<span class="st"> </span><span class="kw">to.monthly</span>(sb.xts<span class="fl">.0</span><span class="op">$</span>nObs)</span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obs.m<span class="fl">.0</span>[<span class="st">"2010/2017"</span>,<span class="dv">2</span>], <span class="dt">col =</span> <span class="st">"darkblue"</span>, <span class="dt">grid.ticks.on =</span> <span class="st">"month"</span>, <span class="dt">major.ticks =</span> <span class="st">"month"</span>, <span class="dt">grid.col =</span> <span class="st">"lightgrey"</span>, <span class="dt">main =</span> <span class="st">"Maximum number of daily observations per month"</span>)</span></code></pre></div>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(obs.m<span class="fl">.0</span>[<span class="st">"2010/2017"</span>,<span class="dv">2</span>], <span class="dt">col =</span> <span class="st">"darkblue"</span>, <span class="dt">grid.ticks.on =</span> <span class="st">"month"</span>,   <span class="dt">major.ticks =</span> <span class="st">"month"</span>, <span class="dt">grid.col =</span> <span class="st">"lightgrey"</span>,  <span class="dt">main =</span> <span class="st">"Maximum number of daily observations per month"</span>)</span></code></pre></div>
 <p><img src="working_with_xts_timeseries_files/figure-html/completting2-1.png" width="864"></p>
 </div>
   </div>

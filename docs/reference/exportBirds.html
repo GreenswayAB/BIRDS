@@ -87,7 +87,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -201,8 +201,10 @@ For more details over the possible combinations of dimensions and variables
 please refer to the vignette "Technical details".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObs</span>), <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>31 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.015 % of the visits spill over neighbouring grid cells.</span></div><div class='input'><span class='no'>EB</span> <span class='kw'>&lt;-</span> <span class='fu'>exportBirds</span>(<span class='no'>SB</span>, <span class='st'>"spatial"</span>, <span class='st'>"month"</span>, <span class='st'>"nDays"</span>, <span class='st'>"median"</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObsShort</span>), <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>8 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='no'>EB</span> <span class='kw'>&lt;-</span> <span class='fu'>exportBirds</span>(<span class='no'>SB</span>, <span class='st'>"spatial"</span>, <span class='st'>"month"</span>, <span class='st'>"nDays"</span>, <span class='st'>"median"</span>)
+<span class='co'># }</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

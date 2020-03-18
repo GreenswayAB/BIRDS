@@ -4,7 +4,7 @@
 \alias{exploreVisits}
 \title{A function to explore the definition of field visits}
 \usage{
-exploreVisits(x, visitCol = attr(x, "visitCol"), sppCol = "scientificName")
+exploreVisits(x, visitCol = NULL, sppCol = "scientificName")
 }
 \arguments{
 \item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial Dataframe).
@@ -22,14 +22,16 @@ a \code{data.frame} with summarized data per visit:
   \item \dQuote{year}
   \item \dQuote{nObs}: number of species observations
   \item \dQuote{SLL}: species list length (i.e. the number of observed species)
-  \item \dQuote{effortDiam}: the diameter of the minumum circle that covers all points (i.e. locations for
-  species observations), in meters. This is calculated as two times the maximum distance between
+  \item \dQuote{effortDiam}: the 2 times the maximum of the distances between
   the centroid of all observation points and any individual observation.
-  \item \dQuote{medianDist}: the median (Q2) of the distances between the centroid and the observations, in meters.
-  \item \dQuote{iqrDist}: the interquartile range of the distances between the centroid the observations, in meters.
-  \item \dQuote{nOutliers}: the number of observations whose distance to the centroid is considered an outlier.
-  Ouliers are defined as distances grater than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as
-  all distances are positive).
+  \item \dQuote{medianDist}: the median (Q2) of the distances between the
+  centroid and the observations, in meters.
+  \item \dQuote{iqrDist}: the interquartile range of the distances between the
+   centroid the observations, in meters.
+  \item \dQuote{nOutliers}: the number of observations whose distance to the
+  centroid are considered an outlier. Ouliers are defined as distances grater
+  than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as all
+  distances are positive).
 }
 }
 \description{
@@ -38,26 +40,24 @@ in the approach to species observation data used by the BIRDS package. In order 
 definition of visit aligns with your grid size, you must explore the spatial extent of visits.
 }
 \examples{
-\donttest{
+if(interactive()){
 # create a visit-based data object from the original observation-based data
 OB<-organizeBirds(bombusObs)
 visitStats<-exploreVisits(OB)
-# open an interactive data explorer
-# esquisse::esquisser(visitStats)
-}
-
-# alternativelly, plot the variable you want, e.g.:
+ esquisse::esquisser(visitStats)
+# alternatively, plot the variable you want, e.g.:
 # to see the distribution of distances covered on each visit
-# hist(visitStat$effortDiam)
+hist(visitStats$effortDiam)
 # to see the distribution of species list lengths of each visit
-# hist(visitStat$SLL)
+hist(visitStats$SLL)
 # to identify suspicious visits reported the first day of each month or year
-# hist(visitStat$day)
+hist(visitStats$day)
 # to see correlations
-# plot(visitStat$nObs, visitStat$effortDiam)
-# plot(visitStat$SLL, visitStat$effortDiam)
+plot(visitStats$nObs, visitStats$effortDiam)
+plot(visitStats$SLL, visitStats$effortDiam)
 # to see the ditributions of observations along the days of the month
-# plot(visitStat$day, visitStat$nObs)
+plot(visitStats$day, visitStats$nObs)
+}
 }
 \seealso{
 \code{\link{createVisits}}, \code{\link{organiseBirds}}

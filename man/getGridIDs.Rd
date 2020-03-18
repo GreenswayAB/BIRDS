@@ -7,8 +7,7 @@
 getGridIDs(x, grid)
 }
 \arguments{
-\item{x}{a ... .
-be a SpatialPointsDataFrame (useful when inside 'organizeBirds()') or an OrganizedBirds.}
+\item{x}{a SpatialPointsDataFrame .}
 
 \item{grid}{A a SpatialPolygon object (a grid is expected) defining the
 maximum extent of visits effort.}
@@ -18,9 +17,5 @@ A vector of the same length as the number of rows (observations) as x
   with a unique number corresponding to the grid's ID.
 }
 \description{
-Takes a dataframe and a grid .
-}
-\examples{
-
-
+Takes a spatial points dataframe and a grid and gets the overlay IDs.
 }

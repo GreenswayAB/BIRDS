@@ -1,4 +1,4 @@
-#' BIRDS: A set of tools for Biodiversity Information Review and Decision Support.
+#' BIRDS: Biodiversity Information Review and Decision Support.
 #'
 #' @section About:
 #'
@@ -7,40 +7,38 @@
 #' we can perform and draw approriate conclusions. For this we need to understand
 #' the data generation process. With this R package we want to take the
 #' user a step closer to understanding the observers’ behaviour.
-#' The BIRDS packages provides a workflow for reproducable data review, involving
+#' The 'BIRDS' packages provides a workflow for reproducable data review, involving
 #' three basic steps: organise data, summarise data, review data.
 #'
 #'
 #' @docType package
 #' @name BIRDS
 #' @examples
+#' \donttest{
 #' # Organise the data
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #'
 #' OB2 <- organizeBirds(bryophytaObs, sppCol = "species", simplifySppName = FALSE,
-#'  taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
+#'       taxonRankCol = "taxonRank", taxonRank = c("SPECIES", "SUBSPECIES","VARIETY"))
 #'
 #' # Make a grid that can be used by summariseBirds()
+#' # gotaland is a SpatialPolygonDataFrame provided as an example
 #' grid <- makeGrid(gotaland, gridSize = 10)
-#' # alternatively:
-#' # polygon <- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")
-#' # grid <- makeGrid(polygon, gridSize = 10)
 #'
 #' # Summarise the data (using the grid to overlay with the organised data)
 #' SB <- summariseBirds(OB, grid=grid)
 
-#' EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nObs", method = "sum")
-#' EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly", variable = "nVis", method = "sum")
-#' EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE) ## to be implemented in export
-#'
-#'
-#' \donttest{
+#' EBnObs <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
+#' variable = "nObs", method = "sum")
+#' EBnVis <- exportBirds(SB, dimension = "temporal", timeRes = "yearly",
+#' variable = "nVis", method = "sum")
+
 #' EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 #' palBW <- leaflet::colorNumeric(c("white", "navyblue"),
-#' c(0, max(EB@data, na.rm = TRUE)), na.color = "transparent")
-#' old.par <- par()
-#' par(mfrow=c(1,2), mar=c(1,1,1,1))
+#'          c(0, max(EB@data, na.rm = TRUE)), na.color = "transparent")
 #' library(sp)
+#' old.par <- par(no.readonly =TRUE)
+#' par(mfrow=c(1,2), mar=c(1,1,1,1))
 #' plot(EB, col=palBW(EB@data$Jul))
 #' mtext("July", 3)
 #' plot(EB, col=palBW(EB@data$Dec))
@@ -48,14 +46,6 @@
 #' legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE),length.out = 5),
 #'        col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
 #'        title = "Number of years", pch = 15, bty="n")
-
-#' #### Community analysis
-#' CM <- communityMatrix(SB, sampleUnit="visit")
-#' library(vegan)
-#' sp1 <- specaccum(CM)
-#' plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue", xlab="Grid cells")
-#' specslope(sp1, at=50)
-#' expectedRich<-specpool(CM, smallsample = TRUE)
-#' specpool(CM, pool = rownames(CM), smallsample = FALSE)
+#' par(old.par)
 #' }
 NULL

@@ -46,6 +46,7 @@ includeSpillover <- function(x, birdData, visitCol){
 #'
 #' @return A  ObservationsInGrid list
 #' @importFrom sp over
+#' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
   obs <- birdData@data
@@ -56,7 +57,6 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 
   wNA <- which(is.na(obs$grid))
   if(length(wNA)>0){
-    # message(paste0(length(wNA), " observations did not overlap with the grid."))
     obs <- obs[-wNA,]
   }
 
@@ -72,14 +72,12 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
     visits <- visits[-wNAvis,]
   }
 
-  colsExc <- which(colnames(obs) == "grid") #1:(ncol(obs)-1) #Drop the grid-col
+  colsExc <- which(colnames(obs) == "grid")
 
   res <- list()
   for(g in 1:length(grid)){
     res[[g]] <- obs[obs[, visitCol] %in% unique(visits[visits[, "grid"] == g, "visits"]), -colsExc]
   }
-  # #alternativelly
-  # res<-lapply(1:length(grid), function(x)obs[obs[, visitCol] %in% unique(visits[visits[, "grid"] == x, "visits"]), -colsExc])
 
   return(res)
 }
@@ -127,10 +125,10 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 #'   }
 #' @export
 #' @importFrom sp coordinates proj4string spTransform CRS over
-#' @rdname overlayBirds
-#' @examples ob<-organizeBirds(bombusObs)
+#' @examples
+#' ob <- organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)
-#' overlayBirds(ob, grid)
+#' ovB <- overlayBirds(ob, grid)
 overlayBirds <- function(x, grid, spillOver = NULL){
   if(!is.null(spillOver)){
     ### Bad spill over definition
@@ -198,10 +196,6 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
       ObsInGridList[wNonEmpty] <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
     }
   }
-  # if spillOver=NULL {
-  #### NO SPILLOVER
-  #### Nothing changes
-  # }
 
   if (class(grid) == "SpatialPolygonsDataFrame"){
     grid@data <- grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribut data from the input grid, if there is any

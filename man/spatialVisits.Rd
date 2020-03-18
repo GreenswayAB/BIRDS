@@ -12,7 +12,7 @@ spatialVisits(
 )
 }
 \arguments{
-\item{x}{an object of class \sQuote{data.frame}.}
+\item{x}{an object of class \sQuote{data.frame} from exploreVistis.}
 
 \item{xyCols}{a character vector with the column names for the coordinates.
 Default to \code{c("centroidX","centroidY")}}
@@ -35,7 +35,8 @@ A function to
 }
 \examples{
 # create a visit-based data object from the original observation-based data
-OB<-organizeBirds(bombusObs)
+library(sp)
+OB<-organizeBirds(bombusObsShort)
 visitStats<-exploreVisits(OB)
 spV<-spatialVisits(visitStats)
 plot(spV$effort)

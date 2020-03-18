@@ -66,7 +66,7 @@ obs.m <- to.monthly(sb.xts$nObs)
 obs.m["2017-04"]
 sb.xts["2017-04"]
 
-plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month", major.ticks = "month", grid.col = "lightgrey", main = "Maximum number of daily observations per month")
+plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   major.ticks = "month", grid.col = "lightgrey",  main = "Maximum number of daily observations per month")
 ```
 
 Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too?
@@ -91,6 +91,6 @@ z <- xts(, z.seq)
 sb.xts.0 <- merge(sb.xts, z, fill = 0)
 
 obs.m.0 <- to.monthly(sb.xts.0$nObs)
-plot(obs.m.0["2010/2017",2], col = "darkblue", grid.ticks.on = "month", major.ticks = "month", grid.col = "lightgrey", main = "Maximum number of daily observations per month")
+plot(obs.m.0["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   major.ticks = "month", grid.col = "lightgrey",  main = "Maximum number of daily observations per month")
 ```
 

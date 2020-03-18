@@ -19,12 +19,14 @@ A function to summarise records of a species among all visits. Returns number of
 number of observations, number of visits, number of years and number of months with occurrences.
 }
 \examples{
-OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+\donttest{
+OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
 allSpp <- listSpecies(SB)
-focal<-"Zygodon viridissimus Bridel, 1826"
+focal<-"Zygodon viridissimus"
 focalSpSummary(SB, focalSp=focal)
+}
 }
 \seealso{
 \code{\link{summarizeBirds}}, \code{\link{exportBirds}}

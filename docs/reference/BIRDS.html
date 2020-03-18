@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>BIRDS: A set of tools for Biodiversity Information Review and Decision Support. — BIRDS • BIRDS</title>
+<title>BIRDS: Biodiversity Information Review and Decision Support. — BIRDS • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,8 @@
 
 
 
-<meta property="og:title" content="BIRDS: A set of tools for Biodiversity Information Review and Decision Support. — BIRDS" />
-<meta property="og:description" content="BIRDS: A set of tools for Biodiversity Information Review and Decision Support." />
+<meta property="og:title" content="BIRDS: Biodiversity Information Review and Decision Support. — BIRDS" />
+<meta property="og:description" content="BIRDS: Biodiversity Information Review and Decision Support." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -87,7 +87,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1</span>
       </span>
     </div>
 
@@ -144,13 +144,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>BIRDS: A set of tools for Biodiversity Information Review and Decision Support.</h1>
+    <h1>BIRDS: Biodiversity Information Review and Decision Support.</h1>
     <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/BIRDS_pkg.r'><code>R/BIRDS_pkg.r</code></a></small>
     <div class="hidden name"><code>BIRDS.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>BIRDS: A set of tools for Biodiversity Information Review and Decision Support.</p>
+    <p>BIRDS: Biodiversity Information Review and Decision Support.</p>
     </div>
 
 
@@ -165,43 +165,37 @@ in order to understand the specis information data and decide about what analyse
 we can perform and draw approriate conclusions. For this we need to understand
 the data generation process. With this R package we want to take the
 user a step closer to understanding the observers’ behaviour.
-The BIRDS packages provides a workflow for reproducable data review, involving
+The 'BIRDS' packages provides a workflow for reproducable data review, involving
 three basic steps: organise data, summarise data, review data.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Organise the data</span>
-<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='co'># Organise the data</span>
+<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObsShort</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='no'>OB2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"species"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
- <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='st'>"taxonRank"</span>, <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>,<span class='st'>"VARIETY"</span>))</div><div class='output co'>#&gt; <span class='message'>46 observations did not match with the specified taxon rank and were removed.</span></div><div class='input'>
+      <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='st'>"taxonRank"</span>, <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>,<span class='st'>"VARIETY"</span>))</div><div class='output co'>#&gt; <span class='message'>46 observations did not match with the specified taxon rank and were removed.</span></div><div class='input'>
 <span class='co'># Make a grid that can be used by summariseBirds()</span>
+<span class='co'># gotaland is a SpatialPolygonDataFrame provided as an example</span>
 <span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='co'># alternatively:</span>
-<span class='co'># polygon &lt;- rgdal::readOGR(dsn = "yourShape.shp", layer="shapeLayer")</span>
-<span class='co'># grid &lt;- makeGrid(polygon, gridSize = 10)</span>
 
 <span class='co'># Summarise the data (using the grid to overlay with the organised data)</span>
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>3031 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.467 % of the visits spill over neighbouring grid cells.</span></div><div class='input'><span class='no'>EBnObs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nObs"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
-<span class='no'>EBnVis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>, <span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nVis"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
-<span class='no'>EBavgSll</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>colMeans</a></span>(<span class='no'>SB</span>$<span class='no'>spatioTemporal</span>[,,<span class='st'>"Yearly"</span>,<span class='st'>"avgSll"</span>], <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'>## to be implemented in export</span>
-
-
-<span class='co'># \donttest{</span>
+<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>289 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='no'>EBnObs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>,
+<span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nObs"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
+<span class='no'>EBnVis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>,
+<span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nVis"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
 <span class='no'>EB</span><span class='kw'>&lt;-</span><span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='st'>"Spatial"</span>, <span class='st'>"Month"</span>, <span class='st'>"nYears"</span>, <span class='st'>"sum"</span>)
 <span class='no'>palBW</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>leaflet</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/leaflet/man/colorNumeric.html'>colorNumeric</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"white"</span>, <span class='st'>"navyblue"</span>),
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)), <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)
-<span class='no'>old.par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>()
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>), <span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>))
+         <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)), <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
+<span class='no'>old.par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>no.readonly</span> <span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>), <span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>))
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>EB</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>palBW</span>(<span class='no'>EB</span>@<span class='kw'>data</span>$<span class='no'>Jul</span>))
 <span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='st'>"July"</span>, <span class='fl'>3</span>)
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>EB</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>palBW</span>(<span class='no'>EB</span>@<span class='kw'>data</span>$<span class='no'>Dec</span>))</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='st'>"December"</span>, <span class='fl'>3</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span>(<span class='st'>"bottomleft"</span>, <span class='kw'>legend</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),<span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>5</span>),
        <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>palBW</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>5</span>)),
-       <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Number of years"</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>bty</span><span class='kw'>=</span><span class='st'>"n"</span>)</div><div class='img'><img src='BIRDS-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'>#### Community analysis</span>
-<span class='no'>CM</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='communityMatrix.html'>communityMatrix</a></span>(<span class='no'>SB</span>, <span class='kw'>sampleUnit</span><span class='kw'>=</span><span class='st'>"visit"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>vegan</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: permute</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'>This is vegan 2.5-6</span></div><div class='input'><span class='no'>sp1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/vegan/man/specaccum.html'>specaccum</a></span>(<span class='no'>CM</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>sp1</span>, <span class='kw'>ci.type</span><span class='kw'>=</span><span class='st'>"poly"</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"blue"</span>, <span class='kw'>lwd</span><span class='kw'>=</span><span class='fl'>2</span>, <span class='kw'>ci.lty</span><span class='kw'>=</span><span class='fl'>0</span>, <span class='kw'>ci.col</span><span class='kw'>=</span><span class='st'>"lightblue"</span>, <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Grid cells"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no non-missing arguments to max; returning -Inf</span></div><div class='output co'>#&gt; <span class='error'>Error in plot.window(...): need finite 'ylim' values</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/vegan/man/specaccum.html'>specslope</a></span>(<span class='no'>sp1</span>, <span class='kw'>at</span><span class='kw'>=</span><span class='fl'>50</span>)</div><div class='output co'>#&gt; [1] 0</div><div class='input'><span class='no'>expectedRich</span><span class='kw'>&lt;-</span><span class='fu'><a href='https://rdrr.io/pkg/vegan/man/specpool.html'>specpool</a></span>(<span class='no'>CM</span>, <span class='kw'>smallsample</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in if (S[is] == 0) next: missing value where TRUE/FALSE needed</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/vegan/man/specpool.html'>specpool</a></span>(<span class='no'>CM</span>, <span class='kw'>pool</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>CM</span>), <span class='kw'>smallsample</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in if (S[is] == 0) next: missing value where TRUE/FALSE needed</span></div><div class='input'># }
-</div><div class='img'><img src='BIRDS-2.png' alt='' width='700' height='433' /></div></pre>
+       <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Number of years"</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>bty</span><span class='kw'>=</span><span class='st'>"n"</span>)</div><div class='img'><img src='BIRDS-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='no'>old.par</span>)
+<span class='co'># }</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

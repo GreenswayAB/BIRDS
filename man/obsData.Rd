@@ -19,6 +19,6 @@ A dataframe
 Extract the observation data from a OrganizedBirds-object
 }
 \examples{
-ob<-organizeBirds(bombusObs)
-obsData(ob)
+ob <- organizeBirds(bombusObs)
+head(obsData(ob))
 }

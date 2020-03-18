@@ -24,13 +24,17 @@ is considered to be enough to reduce the ignorance score by half (henceforth
 the Half-ignorance approach). The algorithm behind the Ignorance Score is
 designed for comparison of bias and gaps in primary biodiversity data across
 taxonomy, time and space
-Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
 }
 \examples{
-OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+\donttest{
+OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
 ignorance <- exposeIgnorance(nObs=SB$spatial@data$nObs)
+}
+}
+\references{
+Ruete (2015) <doi:10.3897/BDJ.3.e5361>
 }
 \seealso{
 \code{\link{summarizeBirds}}, \code{\link{exportBirds}}

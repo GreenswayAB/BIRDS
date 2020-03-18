@@ -5,7 +5,6 @@ knitr::opts_chunk$set(
 )
 
 ## ----install package, eval = F------------------------------------------------
-#  install.packages('remotes')
 #  remotes::install_github('Greensway/BIRDS')
 
 ## ----basic example, eval = TRUE-----------------------------------------------
@@ -18,7 +17,6 @@ grid <- makeGrid(gotaland, gridSize = 10)
 # Import the species observation data:
 PBD<-bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
-# PBD <- read.csv(file="path/to/your/file.csv)
 
 # Convert the data from an observation-based to a visit-based format, adding a 
 # unique identifier for each visit:
@@ -42,6 +40,7 @@ relObs<-EBnObs/EBnVis
 EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 
 ## ----figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."----
+oldpar <- par(no.readonly =TRUE)
 par(mar=c(4,4,1,6), las=1)
 plot(time(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
      ylim=c(0, max(EBnObs)), xaxp=c(2000, 2018, 18))
@@ -58,6 +57,7 @@ legend("topleft", legend=c("n.observations","n.visits"),
        lty = c(1,2), lwd = 3, bty = "n")
 legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell"),
        lty = 1, lwd = 3, col = c("#78D2EB", "#FFB3B5"), bty = "n")
+par(oldpar)
 
 ## ----figure 2, fig.show='hold', fig.width= 7, fig.height= 3-------------------
 wNonEmpty<-unname( which( unlist(lapply(SB$overlaid, nrow)) != 0) )
@@ -67,6 +67,7 @@ EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(EB@data, na.rm = TRUE)), 
                                na.color = "transparent")
+oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,3), mar=c(1,1,1,1))
 plot(SB$spatial[wNonEmpty,], col="grey", border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
@@ -83,8 +84,10 @@ legend("bottomleft",
        legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
        col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
        title = "Number of years", pch = 15, bty="n")
+par(oldpar)
 
 ## ----figure 3, fig.show='hold', fig.width= 7, fig.height= 4-------------------
+oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(SB$spatial@data$nVis, na.rm = TRUE)), 
@@ -104,4 +107,5 @@ plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 legend("bottomleft", legend=c(seq(0, 1, length.out = 5), "NA"),
       col = c(palBWR(seq(0, 1, length.out = 5)), "grey90"),
       title = "Ignorance \nnVis, \nO0.5=5", pch = 15, bty="n")
+par(oldpar)
 

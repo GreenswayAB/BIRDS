@@ -25,7 +25,7 @@ normalize <- function(x) {
 #' included in 'group' and will remove them
 #' @param norm if TRUE, the result is nomalized to a 0-1 range
 #' @return a positive observation index
-#'
+#' @references Telfer, Preston & Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 #' @keywords internal
 logObsInd<-function(focal,
                     group,
@@ -35,8 +35,8 @@ logObsInd<-function(focal,
     group <- group - focal
     ## check: if group is negative after removing, then the focal specis
     if(any(group < 0)) stop("Some of the observations for the group are negative
-                            \nafter removing the focal species. Maybe they were
-                            \nalready removed? Try with 'fs.rm=FALSE'")
+                            after removing the focal species. Maybe they were
+                            already removed? Try with 'fs.rm=FALSE'")
   }
   focalS <- sum(focal, na.rm=TRUE)
   groupS <- sum(group, na.rm=TRUE)
@@ -83,6 +83,7 @@ extractPresence<-function(x){
 #' @return An xts timeseries
 #'
 #' @keywords internal
+#' @importFrom rlang .data
 obsIndexTemporal<-function(x,
                            timeRes,
                            focalSp = NULL,
@@ -119,15 +120,15 @@ obsIndexTemporal<-function(x,
     stop("Unknown time resolution")
   }
 
-  spNgby<-group_by(spData[spData$scientificName==focalSp,], dates)
+  spNgby<-group_by(spData[spData$scientificName==focalSp,], .data$dates)
   ## if there is a column for presence then remove absences
   spNgby<-extractPresence(spNgby)
 
   if (visits){
-    allN <- summarise(group_by(spData, dates), all= n_distinct(!!dplyr::sym(visitCol)))
+    allN <- summarise(group_by(spData, .data$dates), all= n_distinct(!!dplyr::sym(visitCol)))
     spN <- summarise(spNgby, sp=n_distinct(!!dplyr::sym(visitCol)))
   } else {
-    allN <- summarise(group_by(spData, dates), all=n())
+    allN <- summarise(group_by(spData, .data$dates), all=n())
     spN <- summarise(spNgby, sp=n())
   }
 
@@ -240,18 +241,20 @@ obsIndexSpatial<-function(x,
 #' @param fs.rm if TRUE, assumes that the observations for the focal species are
 #' included in 'group' and will remove them
 #' @param norm if TRUE, the result is nomalized to a 0-1 range
-#'
+
+#' @references Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 #' @return If \code{dimension = "spatial"} a \sQuote{SpatialPolygonsDataFrame}
 #' or a \sQuote{xts} timeseries if \code{dimension = "temporal"}.
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' grid <- makeGrid(gotaland, gridSize = 10)
-#' PBD<-bombusObs
+#' PBD <- bombusObsShort
 #' OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 #' SB <- summariseBirds(OB, grid=grid)
 #' spp <- listSpecies(SB)
-#' tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3])
+#' tempOI <- obsIndex(SB, "temporal", "yearly", focalSp=spp[3], fs.rm = FALSE)
 #' plot(tempOI$relObs, main=spp[3])
 
 #' spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
@@ -261,7 +264,7 @@ obsIndexSpatial<-function(x,
 #' sp::plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 #' legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
 #'        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
-
+#'}
 obsIndex<-function(x,
                    dimension,
                    timeRes = NULL,

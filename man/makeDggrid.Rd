@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{makeDggrid}
 \alias{makeDggrid}
-\title{Make a dggrid}
+\title{Make a discrete global grid}
 \usage{
 makeDggrid(
   polygon,
@@ -34,11 +34,6 @@ Default: \dQuote{hexagon}.}
 Complicated polygons (those with much detail) make this function run slower.}
 
 \item{tol}{numerical tolerance value for the simplification algorith. Set to 0.01 as default.}
-
-\item{offset}{the offset (position) of the grid (from \code{spsample} methods).
-If it is left empty (\code{NULL}, default), then takes default values.
-For squared grid cells the default is set to \code{c(0.5,0.5)} ("centric systematic").
-For hexagonal grid cells the default is set to \code{c(0,0)}.}
 }
 \value{
 an object of class \sQuote{SpatialPolygon} with a set of polygons
@@ -48,7 +43,10 @@ conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ES
 Construct a discrete global grid system (dggs) object over a preferred polygon.
 }
 \details{
-Note: This may generate odd results for very large rectangles, because putting rectangles on spheres is weird... as you should know, if you're using this package.
+This function depends on a package that is no longer on CRAN. You can 
+find it in its GitHub repository \url{https://github.com/r-barnes/dggridR}.
+Also, this may generate odd results for very large rectangles, because putting
+rectangles on spheres is weird... as you should know, if you're using this package.
  Use the function \code{exploreVisits()} to assess if your definition of visit
  aligns with your grid size.
 }
@@ -59,7 +57,9 @@ Grid cells must be smaller than the sampling area. If the grid cell size is wide
 an error message will be displayed.
 }
 \examples{
-grid <- makeGrid(gotaland, gridSize = 10)
+\donttest{
+library(dggridR) ## Not anylonger on CRAN
+grid <- makeDggrid(gotaland, gridSize = 10)}
 }
 \seealso{
 \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}

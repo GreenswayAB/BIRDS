@@ -40,7 +40,9 @@ For more details over the possible combinations of dimensions and variables
 please refer to the vignette "Technical details".
 }
 \examples{
+\donttest{
 grid <- makeGrid(searchPolygon, gridSize = 10)
-SB <- summariseBirds(organizeBirds(bombusObs), grid=grid)
+SB <- summariseBirds(organizeBirds(bombusObsShort), grid=grid)
 EB <- exportBirds(SB, "spatial", "month", "nDays", "median")
+}
 }

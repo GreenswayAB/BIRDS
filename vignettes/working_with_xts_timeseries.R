@@ -1,10 +1,10 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----SB, echo=TRUE, message=FALSE, warning=FALSE-------------------------
+## ----SB, echo=TRUE, message=FALSE, warning=FALSE------------------------------
 library(BIRDS)
 library(xts)
 # Create a grid for your sample area that will be used to summarise the data:
@@ -23,12 +23,12 @@ OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
 # Summarise the data:
 SB <- summariseBirds(OB, grid=grid)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 sb.xts<-SB$temporal
 head(sb.xts)
 dim(sb.xts)
 
-## ----subsetting, echo=TRUE, message=FALSE, warning=FALSE-----------------
+## ----subsetting, echo=TRUE, message=FALSE, warning=FALSE----------------------
 sb.xts["2017-09"] #a specific month
 sb.xts["2017-09-07"] #a specific day
 sb.xts["2017-01-01/2017-05-01"] #for a period
@@ -38,9 +38,9 @@ obs.m <- to.monthly(sb.xts$nObs)
 obs.m["2017-04"]
 sb.xts["2017-04"]
 
-plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month", major.ticks = "month", grid.col = "lightgrey", main = "Maximum number of daily observations per month")
+plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   major.ticks = "month", grid.col = "lightgrey",  main = "Maximum number of daily observations per month")
 
-## ----completting, echo=TRUE, message=FALSE, warning=FALSE----------------
+## ----completting, echo=TRUE, message=FALSE, warning=FALSE---------------------
 # sb.xts.na is same as sb.xts but with all missing days added (with NAs)
 rng <- range(time(sb.xts))
 sb.xts.na <- merge(sb.xts, xts(, seq(rng[1], rng[2], by = "day")))
@@ -57,5 +57,5 @@ z <- xts(, z.seq)
 sb.xts.0 <- merge(sb.xts, z, fill = 0)
 
 obs.m.0 <- to.monthly(sb.xts.0$nObs)
-plot(obs.m.0["2010/2017",2], col = "darkblue", grid.ticks.on = "month", major.ticks = "month", grid.col = "lightgrey", main = "Maximum number of daily observations per month")
+plot(obs.m.0["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   major.ticks = "month", grid.col = "lightgrey",  main = "Maximum number of daily observations per month")
 

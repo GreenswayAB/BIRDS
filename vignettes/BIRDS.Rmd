@@ -17,16 +17,16 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-## Installing `BIRDS`
+## Installing 'BIRDS'
 
-The package `BIRDS` is currently available on GitHub and you can freely download 
+The package 'BIRDS' is currently available on GitHub and you can freely download 
 the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
 
 The easiest option is to install the package directly from GitHub using the 
-package `remotes`.  Install `remotes` if you do not already have installed it.
+package 'remotes'.  Install 'remotes as usual `install.packages('remotes')` 
+if you do not already have installed it. 
 
 ```{r install package, eval = F}
-install.packages('remotes')
 remotes::install_github('Greensway/BIRDS')
 ```
 
@@ -81,7 +81,6 @@ grid <- makeGrid(gotaland, gridSize = 10)
 # Import the species observation data:
 PBD<-bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
-# PBD <- read.csv(file="path/to/your/file.csv)
 
 # Convert the data from an observation-based to a visit-based format, adding a 
 # unique identifier for each visit:
@@ -107,6 +106,7 @@ EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 
 Then, with functions you already know, plot this into a time series.
 ```{r figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."}
+oldpar <- par(no.readonly =TRUE)
 par(mar=c(4,4,1,6), las=1)
 plot(time(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
      ylim=c(0, max(EBnObs)), xaxp=c(2000, 2018, 18))
@@ -123,6 +123,7 @@ legend("topleft", legend=c("n.observations","n.visits"),
        lty = c(1,2), lwd = 3, bty = "n")
 legend("bottomright", legend=c("n.observations / n.visits", "avg. SLL per cell"),
        lty = 1, lwd = 3, col = c("#78D2EB", "#FFB3B5"), bty = "n")
+par(oldpar)
 ```  
 
 Although we downloaded the data in April 2019, we know that the latest reports
@@ -145,6 +146,7 @@ EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(EB@data, na.rm = TRUE)), 
                                na.color = "transparent")
+oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,3), mar=c(1,1,1,1))
 plot(SB$spatial[wNonEmpty,], col="grey", border = NA)
 plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
@@ -161,6 +163,7 @@ legend("bottomleft",
        legend=seq(0, max(EB@data, na.rm = TRUE), length.out = 5),
        col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
        title = "Number of years", pch = 15, bty="n")
+par(oldpar)
 ```
   
 
@@ -171,9 +174,10 @@ relative to a reference number of observations that is considered to be enough t
 reduce the ignorance score by half (henceforth the Half-ignorance approach).
 The algorithm behind the Ignorance Score is designed for comparison of bias and 
 gaps in primary biodiversity data across taxonomy, time and space
- Read more here: Ruete 2015 Biodiv Data J 3:e5361, doi:10.3897/BDJ.3.e5361
+ Read more here: Ruete (2015) Biodiv Data J 3:e5361 \doi{10.3897/BDJ.3.e5361}.
  
 ```{r figure 3, fig.show='hold', fig.width= 7, fig.height= 4}
+oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(SB$spatial@data$nVis, na.rm = TRUE)), 
@@ -193,25 +197,8 @@ plot(gotaland, col=NA, border = "grey", lwd=1, add=TRUE)
 legend("bottomleft", legend=c(seq(0, 1, length.out = 5), "NA"),
       col = c(palBWR(seq(0, 1, length.out = 5)), "grey90"),
       title = "Ignorance \nnVis, \nO0.5=5", pch = 15, bty="n")
+par(oldpar)
 ```  
   
 The ignorance scores are highlighting where we have little information and hence cannot be 
 confident about the lack of reports implying an absence of the species. 
-
-<!-- Or we could connect to other packages like `vegan` to continue with community analyses. -->
-<!-- In this case, we create a community matrix using the visits as sampling units,  -->
-<!-- summarizing for each grid cell the number of visits a species was observed (i.e.  -->
-<!-- ignoring replicates within visits). -->
-
-<!-- ```{r community richness, fig.show='hold', fig.width=7, message=FALSE} -->
-<!-- ## Community analysis -->
-<!-- CM <- communityMatrix(SB, sampleUnit="visit") -->
-<!-- library(vegan) -->
-<!-- sp1 <- specaccum(CM, method = "exact") -->
-<!-- par(mar=c(4,4,1,1), xlog=TRUE, las=1) -->
-<!-- plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0,  -->
-<!--      ci.col="lightblue", log="x",   -->
-<!--      xlab="Number of grid cells sampled",  -->
-<!--      ylab="Species richness",  -->
-<!--      main="Species accumulation curve") -->
-<!-- ``` -->

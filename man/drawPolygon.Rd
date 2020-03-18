@@ -27,7 +27,7 @@ an object of class \sQuote{SpatialPolygon-class} with a polygon
 Create the polygon for the study area by drawing into a world map
 }
 \examples{
-\donttest{
-# polygon <- drawPolygon()
+if(interactive()){
+ polygon <- drawPolygon()
 }
 }

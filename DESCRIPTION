@@ -1,41 +1,45 @@
 Package: BIRDS
 Type: Package
-Title: A set of tools for Biodiversity Information Review and Decision Support 
-Version: 0.0.3
+Title: Biodiversity Information Review and Decision Support 
+Version: 0.1
 URL: https://github.com/greensway/BIRDS
+BugReports: https://github.com/Greensway/BIRDS/issues
 Authors@R: c(
     person("Debora", "Arlt", email = "debora.arlt@slu.se", role = "aut",
             comment = c(ORCID = "0000-0003-0874-4250")),
-    person("Alejandro", "Ruete", email = "alejandro@greensway.se", role = c("aut","cre"),
+    person("Alejandro", "Ruete", email = "aleruete@gmail.com", role = c("aut","cre"),
             comment = c(ORCID = "0000-0001-7681-2812")),
     person("Anton", "Hammarström", email = "anton@greensway.se", role = "aut"))
-Description: A set of tools to review and make decisions upon the use of
-   biodiversity data. This R package helps making the evaluation and preparation 
-   of biodiversity data easy, systematic and reproducible. It also helps the users
-   to overlay the point observations into a custom grid that is useful for further
-   analysis. The review summarise statistics that helps evaluate whether a set 
-   of species observations is fit-for-use and take decisions upon its use of on
-   further analyses. It does so by quantifying the sampling effort (amount of 
-   effort expended during an event) and data completeness (data gaps) to help 
-   judge whether the data is representative, valid and fit for any intended 
-   purpose. The `BIRDS` package is most useful when working with heterogeneous 
-   data sets with variation in the sampling process, i.e. where data have been 
-   collected and reported in various ways and therefore varying in sampling effort 
+Description: It helps making the evaluation and preparation of biodiversity data
+   easy, systematic and reproducible. It also helps the users to overlay the 
+   point observations into a custom grid that is useful for further analysis. 
+   The review summarise statistics that helps evaluate whether a set of species 
+   observations is fit-for-use and take decisions upon its use of on further 
+   analyses. It does so by quantifying the sampling effort (amount of effort
+   expended during an event) and data completeness (data gaps) to help judge 
+   whether the data is representative, valid and fit for any intended purpose. 
+   The 'BIRDS' package is most useful when working with heterogeneous data sets 
+   with variation in the sampling process, i.e. where data have been collected 
+   and reported in various ways and therefore varying in sampling effort 
    and data completeness (i.e. how well the reported observations describe the 
-   “true” state). Primary biodiversity data (PBD) combining data from different 
-   data sets, like e.g. GBIF mediated data, commonly vary in the ways data has 
-   been generated - containing opportunistically collected presence-only data 
-   toghether with and data from systematic monitoring programs. The set of tools
-   provided is aimed at understanding the process that generated the data (i.e. 
-   observing, recording and reporting species into databases).
+   true state). Primary biodiversity data (PBD) combining data from different 
+   data sets, like e.g. Global Biodiversity Information Facility (GBIF) mediated
+   data, commonly vary in the ways data has been generated - containing 
+   opportunistically collected presence-only data together with and data from 
+   systematic monitoring programs. The set of tools provided is aimed at 
+   understanding the process that generated the data (i.e. observing, recording 
+   and reporting species into databases). There is a non-vital function on this 
+   package (makeDggrid()) that depends the package 'dggridR' that is no longer on CRAN. 
+   You can find it here <https://github.com/r-barnes/dggridR>. References: 
+   Ruete (2015) <doi:10.3897/BDJ.3.e5361>; Szabo, Vesk, Baxter & Possingham (2010) 
+   <doi:10.1890/09-0877.1>; Telfer, Preston 6 Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.5.0)
 SystemRequirements: GDAL (>= 2.0.1)
 Imports:
     data.table, 
-    dggridR, 
     dplyr,
     esquisse,
     geosphere (>= 1.5),
@@ -44,19 +48,21 @@ Imports:
     magrittr,
     mapedit (>= 0.5),
     methods,
+    nnet,
     rgeos (>= 0.4),
     rgdal (>= 1.4),
     rlang,
     sf (>= 0.7),
     shiny (>= 1.0),
     sp (>= 1.3),
-    stringr (>= 1.4), 
-    vegan,
+    stringr (>= 1.4),
+    shotGroups,
     xts
 Suggests: 
     biogeo,
     CoordinateCleaner, 
     covr, 
+    dggridR, 
     knitr, 
     KnowBR, 
     leaflet.extras,
@@ -66,6 +72,7 @@ Suggests:
     rmarkdown, 
     taxize, 
     testthat,
-    utils
-RoxygenNote: 7.0.0
+    utils,
+    vegan
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
