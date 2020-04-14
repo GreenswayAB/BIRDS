@@ -1,5 +1,7 @@
 # BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" alt="" width="120" />
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/BIRDS)](https://cran.r-project.org/package=BIRDS)
+[![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/grand-total/BIRDS)](https://cran.r-project.org/package=BIRDS)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CRAN Status](https://www.r-pkg.org/badges/version/BIRDS)](https://cran.r-project.org/package=BIRDS)
 [![Downloads](https://cranlogs.r-pkg.org/badges/BIRDS?color=blue)](https://cranlogs.r-pkg.org/)
@@ -54,10 +56,10 @@ how to install this package into R.
 
 ### How to install `BIRDS`
 
-This package is still not published in CRAN. Therefore the easiest option to 
-install it is directly from GitHub using the package `remotes`. 
-
-Install `remotes` if you do not already have installed it (`install.packages('remotes')`):
+This package is now published on CRAN. Therefore the easiest option to 
+install it is `install.packages('BIRDS')`. 
+Else, you can install the development version directly from GitHub using the package `remotes`. 
+Install `remotes` if you have not already installed it (`install.packages('remotes')`):
 
 ```r
 remotes::install_github('Greensway/BIRDS')
