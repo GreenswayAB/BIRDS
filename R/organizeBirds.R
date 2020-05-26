@@ -221,7 +221,7 @@ createVisits<-function(x,
     if (all(timeCols=="")) timeCols <- NULL
 
     columns <- c(gridID, idCols, timeCols)
-    if (length(columns)==0) stop("At least one of the arguments 'idCols','timeCols','grid' need to be defined.")
+    if (length(columns)==0) stop("At least one of the arguments 'idCols','timeCols','grid' needs to be defined.")
 
     cols.df <- findCols(columns, df)
 
