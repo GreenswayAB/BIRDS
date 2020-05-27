@@ -8,6 +8,7 @@ focalSpReport(
   x,
   focalSp = NULL,
   long = TRUE,
+  polygon = NULL,
   colVis = "grey",
   colPres = "red",
   ...
@@ -19,6 +20,9 @@ focalSpReport(
 \item{focalSp}{the focal spp to look for.}
 
 \item{long}{whether the map should be long or wide.}
+
+\item{polygon}{(optional) an object of class \sQuote{SpatialPolygon} or
+\sQuote{SpatialPolygonDataFrame}. (Default is \code{NULL})}
 
 \item{colVis}{color to plot visited gird cells}
 
