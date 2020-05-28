@@ -230,14 +230,14 @@ speciesSummary <- function(x){
                   "nMonths"=numeric(0),
                   stringsAsFactors = FALSE)
 
-  tmp <- t(sapply(allSpecies,
+  tmp <- sapply(allSpecies,
                 function(y){
                   fsp<-focalSpSummary(x, focalSp = y)
-                  message(y,"\n")
+                  message(y)
                   return(fsp)
-                })
-  )
-  res <- rbind(res, as.data.frame(tmp))
+                }, simplify = FALSE)
+  res <- do.call(rbind, tmp)
+  # res <- rbind(res, as.data.frame(tmp))
   rownames(res) <- NULL
 
   # for(s in allSpecies){
