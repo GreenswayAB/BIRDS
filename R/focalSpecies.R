@@ -147,7 +147,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
   yearMax <- max(yearsAll)
   yearMin <- min(yearsAll)
 
-  wNonEmptyFocal <- unname(which(unlist(lapply(overFocal, nrow))>0))
+  wNonEmptyFocal <- wOverFocal #unname(which(unlist(lapply(overFocal, nrow))>0))
   nObs <- sum(unlist(lapply(overFocal, function(x) return(sum(x$scientificName == focalSp))) ))
   visitsFocal <- unique(unname(unlist(lapply(overFocal,
                                       FUN=function(x) x[x$scientificName == focalSp, visitCol])
