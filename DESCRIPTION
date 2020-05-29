@@ -59,18 +59,14 @@ Imports:
     shotGroups,
     xts
 Suggests: 
-    biogeo,
-    CoordinateCleaner, 
     covr, 
     dggridR, 
     knitr, 
-    KnowBR, 
     leaflet.extras,
     leafpm,
     maps, 
     rgbif, 
     rmarkdown, 
-    taxize, 
     testthat,
     utils,
     vegan
