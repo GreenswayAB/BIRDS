@@ -45,16 +45,21 @@ includeSpillover <- function(x, birdData, visitCol){
 #' @param visitCol A character string for specifying the columns that identify a visit.
 #'
 #' @return A  ObservationsInGrid list
-#' @importFrom sp over
+#' @importFrom sp over identicalCRS
 #' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
   obs <- birdData@data
   visits <- unique(obs[, visitCol])
   visits <- cbind(visits, "grid"=NA)
-
+ 
+  if(identicalCRS(birdData, grid) != TRUE){
+   stop("Organized data and grid don´t share the same CRS")
+  }
+  
+  #### TODO IF ncols grid@data >1 take the first one or let the user choose?
+  
   obs$grid <- over(birdData, grid, returnList=FALSE)
-
   wNA <- which(is.na(obs$grid))
   if(length(wNA)>0){
     obs <- obs[-wNA,]
