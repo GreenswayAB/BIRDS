@@ -34,7 +34,7 @@ listSpecies<-function(x){
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
-#' focal<-"Zygodon viridissimus"
+#' focal<-"Bombus campestris"
 #' focalSpSummary(SB, focalSp=focal)
 #' }
 #' @export
@@ -52,7 +52,15 @@ focalSpSummary <- function(x, focalSp=NULL){
 
   wFocal <- match(focalSp, allSpecies)
 
-  wOverFocal <- unname(unlist(lapply(x$overlaid, FUN=function(x) return(focalSp %in% x$scientificName))))
+  wOverFocal <- unname(unlist(lapply(x$overlaid,
+                                     FUN=function(x) {
+                                       return(focalSp %in% x$scientificName)
+                                     }
+                                     )
+                              )
+                       )
+
+  if(sum(wOverFocal) == 0) stop("The focal species was not found in the data set.")
   # overFocal <- lapply(x$overlaid, FUN=function(x) return(x[x$scientificName==focalSp,]))
   overFocal <- x$overlaid[wOverFocal]
 
