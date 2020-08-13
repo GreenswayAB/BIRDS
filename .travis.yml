@@ -11,14 +11,10 @@ addons:
 addons:
   apt:
     update: true
-    sources:
-    - 'ubuntu-toolchain-r-test'
     packages:
     - libudunits2-dev
-    - libv8-3.14-dev
-    - gcc-8
-    - g++-8
-    - gfortran-8
+    - libgdal-dev
+    - libproj-dev
 matrix:
   include:
   - os: linux
