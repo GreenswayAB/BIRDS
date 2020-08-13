@@ -9,6 +9,7 @@ addons:
     - libudunits2-dev
     - libgdal-dev
     - libproj-dev
+    - libgeos-dev
 matrix:
   include:
   - os: linux
