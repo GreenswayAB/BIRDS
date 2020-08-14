@@ -51,10 +51,10 @@ includeSpillover <- function(x, birdData, visitCol){
 includeUniqueSpillover <- function(birdData, grid, visitCol){
   obs <- birdData@data
   visits <- unique(obs[, visitCol])
-  visits <- cbind(visits, "grid"=NA)
- 
+  visits <- cbind(visits, "grid" = NA)
+
   if(identicalCRS(birdData, grid) != TRUE){
-   stop("Organized data and grid don´t share the same CRS")
+   stop("Organized data and grid do not share the same CRS")
   }
   
   #Extract the unique ID from the polygons in the spdf
@@ -73,12 +73,14 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
   
   obs$grid <- unlist(over(birdData, spdfIDs, returnList=FALSE))
   
+
   wNA <- which(is.na(obs$grid))
   if(length(wNA)>0){
     obs <- obs[-wNA,]
   }
 
-  crossTab <- table("grid"=obs[,"grid"], "visits"=obs[,visitCol])
+  crossTab <- table("grid" = obs[,"grid"],
+                    "visits" = obs[,visitCol])
 
   for(v in dimnames(crossTab)$visits){
     visits[visits[, "visits"] == as.integer(v), "grid"] <- as.integer(dimnames(crossTab)$grid[nnet::which.is.max(crossTab[,v])])
