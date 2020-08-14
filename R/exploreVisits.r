@@ -65,7 +65,9 @@ exploreVisits<-function(x,
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
-
+  
+  dat$date <- lubridate::date(paste(dat$year, dat$month, dat$day, sep = "-"))
+  
   visitStat <- data.frame("visitUID" = uniqueUID,
                           "day" = NA,
                           "month" = NA,
@@ -86,9 +88,10 @@ exploreVisits<-function(x,
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
   visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName)  )$SLL
-  visitStat$day  <- summarise(datGBY, day = as.character(unique(.data$day)))$day
-  visitStat$month<- summarise(datGBY, mon = as.character(unique(.data$month)))$mon
-  visitStat$year <- summarise(datGBY, yea = as.character(unique(.data$year)))$yea
+  dates <- summarise(datGBY, date = min(date)) ##If the visits are over multiple days, we take the first. 
+  visitStat$day  <- lubridate::day(dates$date)
+  visitStat$month<- lubridate::month(dates$date)
+  visitStat$year <- lubridate::year(dates$date)
   rm(datGBY)
 
   ### TODO? can this lapply be done with dplyr?
