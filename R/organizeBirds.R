@@ -145,6 +145,10 @@ getGridIDs <- function(x, grid){
         warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
       All results will use this nomenclature, but the order of the cells will remain unaltered.")
       }
+      
+      if(! identicalCRS(x, grid)){
+        grid <- spTransform(grid, CRS(proj4string(x)))
+      }
 
       return( sp::over(x, grid, returnList=FALSE) )
     }else stop("The argument 'grid' can only be of class SpatialPolygonsDataFrame or SpatialPolygons")
