@@ -54,7 +54,7 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
   visits <- cbind(visits, "grid"=NA)
  
   if(identicalCRS(birdData, grid) != TRUE){
-   stop("Organized data and grid don´t share the same CRS")
+   stop("Organized data and grid don't share the same CRS")
   }
   
   #Extract the unique ID from the polygons in the spdf
