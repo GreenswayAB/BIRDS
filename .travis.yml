@@ -1,0 +1,19 @@
+language: r
+os: linux
+dist: xenial
+cache: packages
+
+
+addons:
+  apt:
+    update: true
+    packages:
+    - libudunits2-dev
+    - libgdal-dev
+    - libproj-dev
+    - libgeos-dev
+
+env:
+  global:
+  - NOT_CRAN=true
+  

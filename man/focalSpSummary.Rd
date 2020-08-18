@@ -24,7 +24,7 @@ OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName =
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
 allSpp <- listSpecies(SB)
-focal<-"Zygodon viridissimus"
+focal<-"Bombus campestris"
 focalSpSummary(SB, focalSp=focal)
 }
 }
