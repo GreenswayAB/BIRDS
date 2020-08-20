@@ -340,6 +340,9 @@ makeGrid <- function(polygon,
 #' @param topology Shape of cell. shall the grid cells be hexagonal, diamonds or
 #' triangular? Options are: \dQuote{hexagon}, \dQuote{diamond}, \dQuote{tirangle}.
 #' Default: \dQuote{hexagon}.
+#' @param aperture How finely subsequent resolution levels divide the grid. Options are: 3, 4. 
+#' Only applicable for \code{topology = "hexagon"}. Default for \code{topology = "hexagon"} is 3,
+#' else \code{aperture = 4}.
 #' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 #' Complicated polygons (those with much detail) make this function run slower.
 #' @param tol numerical tolerance value for the simplification algorith. Set to 0.01 as default.
@@ -362,12 +365,24 @@ makeDggrid <- function(polygon,
                      gridSize,
                      buffer = FALSE,
                      topology = "hexagon",
+                     aperture = 3,
                      simplify=FALSE,
                      tol=0.01) {
   #Construct a global grid with cells approximately 1000 m across
   topology <- toupper(topology)
+  
+  aperture <- if(topology == "HEXAGON"){
+    if(aperture == 3 || aperture == 4){
+      aperture
+    }else{
+      stop("aperture can only be 3 or 4.")
+    }
+  }else{
+    4
+  }
+  
   dggs <- dggridR::dgconstruct(spacing=gridSize, metric=TRUE, precision=10,
-                      resround='nearest', topology = topology)
+                      resround='nearest', topology = topology, aperture = aperture)
 
   # error not a SpatialPolygon
   if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
