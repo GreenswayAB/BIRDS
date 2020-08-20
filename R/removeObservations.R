@@ -83,69 +83,71 @@ removeObs <- function(x,
       #percentage level as polsible. 
       #It should only look at the next best visit after good visits and se if it could be added. 
       if(round(percLeft, 3) < percent){
-        if(nextStep <= 0) break(paste0("Nothing else to remove. The result is ", round(percLeft*100, 2), "% of the original observations set"))
-        nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1), "visitUID"])
-        wKeepNext <- which(obs[,visitCol] %in% nextVisits)
-        nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
-        
-        if(! nToAdd < 1){
-          #No more rows to remove
-          if(length(wKeepNext)<=nToAdd){
-            wKeep <- c(wKeep, wKeepNext)
-          }else{
-            #Placing the visits in a random order.
-            #The complexity in 'nextVisits[sample(length(nextVisits))]' is due to if length(nextVisits)==1
-            #Then it will not reorder, se ?sample()
-            nextVisitSample <- nextVisits[sample(length(nextVisits))]
-            wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
-            # pick a big chunk
-            chunkPerc <- 1
-            while(length(wKeepSample) >= nToAdd){
-              chunkPerc <- chunkPerc * (1-stepChunk)
-              chunk <- floor(length(nextVisitSample) * chunkPerc)
-              if(chunk == 0){
-                # If chunk == 0 nextVisitSample[1:chunk] will be the same as nextVisitSample[1],
-                # which will take us to an infinate loop.
-                chunk <- 1
-                break()
+        if(nextStep <= 0){
+          print(paste0("Nothing else to remove. The result is ", round(percLeft*100, 2), "% of the original observations set"))
+        }else{
+          nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1), "visitUID"])
+          wKeepNext <- which(obs[,visitCol] %in% nextVisits)
+          nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
+          
+          if(! nToAdd < 1){
+            #No more rows to remove
+            if(length(wKeepNext)<=nToAdd){
+              wKeep <- c(wKeep, wKeepNext)
+            }else{
+              #Placing the visits in a random order.
+              #The complexity in 'nextVisits[sample(length(nextVisits))]' is due to if length(nextVisits)==1
+              #Then it will not reorder, se ?sample()
+              nextVisitSample <- nextVisits[sample(length(nextVisits))]
+              wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
+              # pick a big chunk
+              chunkPerc <- 1
+              while(length(wKeepSample) >= nToAdd){
+                chunkPerc <- chunkPerc * (1-stepChunk)
+                chunk <- floor(length(nextVisitSample) * chunkPerc)
+                if(chunk == 0){
+                  # If chunk == 0 nextVisitSample[1:chunk] will be the same as nextVisitSample[1],
+                  # which will take us to an infinate loop.
+                  chunk <- 1
+                  break()
+                }
+                wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[1:chunk])
               }
-              wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[1:chunk])
-            }
-            #redefine which visits are left
-            if(exists("chunk")){
-              nextVisitSample <- nextVisitSample[-(1:chunk)]
-            }
-            
-            nObs2keep <- length(wKeep) + length(wKeepSample)
-            percLeft.tmp <- nObs2keep / nrow(obs)
-            if(percLeft.tmp <= percent){
-              wKeep <- c(wKeep, wKeepSample)
-              percLeft <- length(wKeep) / nrow(obs)
-            }
-            
-            ### Slowly complete until reaching the target
-            i=0
-            while(round(percLeft, 3) < percent){ # while 2
-              i=i+1
-              if(i > length(nextVisitSample)){
-                break() # nothing left to add, lets look at the next class
+              #redefine which visits are left
+              if(exists("chunk")){
+                nextVisitSample <- nextVisitSample[-(1:chunk)]
               }
-              wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[i])
+              
               nObs2keep <- length(wKeep) + length(wKeepSample)
               percLeft.tmp <- nObs2keep / nrow(obs)
               if(percLeft.tmp <= percent){
                 wKeep <- c(wKeep, wKeepSample)
                 percLeft <- length(wKeep) / nrow(obs)
-              } else {
-                message("Chunks too big, next...\n")
-                next()
               }
-            } ## end while 2
+              
+              ### Slowly complete until reaching the target
+              i=0
+              while(round(percLeft, 3) < percent){ # while 2
+                i=i+1
+                if(i > length(nextVisitSample)){
+                  break() # nothing left to add, lets look at the next class
+                }
+                wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[i])
+                nObs2keep <- length(wKeep) + length(wKeepSample)
+                percLeft.tmp <- nObs2keep / nrow(obs)
+                if(percLeft.tmp <= percent){
+                  wKeep <- c(wKeep, wKeepSample)
+                  percLeft <- length(wKeep) / nrow(obs)
+                } else {
+                  message("Chunks too big, next...\n")
+                  next()
+                }
+              } ## end while 2
+            }
+            percLeft <- length(wKeep) / nrow(obs)
+            nextStep <- nextStep - 1
           }
-          percLeft <- length(wKeep) / nrow(obs)
-          nextStep <- nextStep - 1
         }
-        
         
       } # end of while 1
     }else{ stop("The argument 'percent' must be a number between 0 and 1")}
