@@ -83,6 +83,8 @@ removeObs <- function(x,
         wKeepNext <- which(obs[,visitCol] %in% nextVisits)
         nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
 
+        if(nToAdd < 1) break(paste0("Nothing else to remove. The result is ", round(percLeft*100, 2), "% of the original observations set"))
+
         if(length(wKeepNext)<=nToAdd){
           wKeep <- c(wKeep, wKeepNext)
         }else{
