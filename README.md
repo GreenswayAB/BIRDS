@@ -1,7 +1,7 @@
 # BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" alt="" width="120" />
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![CRAN Status](https://www.r-pkg.org/badges/version/BIRDS)](https://cran.r-project.org/package=BIRDS)
 [![Downloads](https://cranlogs.r-pkg.org/badges/BIRDS?color=blue)](https://cranlogs.r-pkg.org/)
 [![Build Status](https://travis-ci.com/Greensway/BIRDS.svg?branch=master)](https://travis-ci.com/Greensway/BIRDS)
