@@ -112,10 +112,9 @@ removeObs <- function(x,
               wKeep <- c(wKeep, wKeepNext)
             }else{
               # Placing the visits in a random order.
-              # The complexity in 'nextVisits[sample(length(nextVisits))]' is due to if length(nextVisits)==1
-              # Then it will not reorder, se ?sample()
-              nextVisitSample <- nextVisits[sample(length(nextVisits))]
+              nextVisitSample <- nextVisits[sample.int(length(nextVisits))]
               wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
+
               # pick a big chunk
               chunkPerc <- 1
               while(length(wKeepSample) >= nToAdd){
@@ -123,13 +122,13 @@ removeObs <- function(x,
                 chunk <- floor(length(nextVisitSample) * chunkPerc)
                 if(chunk == 0){
                   # If chunk == 0 nextVisitSample[1:chunk] will be the same as nextVisitSample[1],
-                  # which will take us to an infinate loop.
+                  # which will take us to an infinite loop.
                   chunk <- 1
                   break()
                 }
                 wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[1:chunk])
               }
-              #redefine which visits are left
+              # redefine which visits are left
               if(exists("chunk")){
                 nextVisitSample <- nextVisitSample[-(1:chunk)]
               }
