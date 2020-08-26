@@ -9,6 +9,7 @@ makeDggrid(
   gridSize,
   buffer = FALSE,
   topology = "hexagon",
+  aperture = 3,
   simplify = FALSE,
   tol = 0.01
 )
@@ -29,6 +30,10 @@ for the spatial extent for visits.}
 \item{topology}{Shape of cell. shall the grid cells be hexagonal, diamonds or
 triangular? Options are: \dQuote{hexagon}, \dQuote{diamond}, \dQuote{tirangle}.
 Default: \dQuote{hexagon}.}
+
+\item{aperture}{How finely subsequent resolution levels divide the grid. Options are: 3, 4. 
+Only applicable for \code{topology = "hexagon"}. Default for \code{topology = "hexagon"} is 3,
+else \code{aperture = 4}.}
 
 \item{simplify}{simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 Complicated polygons (those with much detail) make this function run slower.}

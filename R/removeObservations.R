@@ -1,25 +1,25 @@
 #' Remove observations belonging to the shortest ("worst") visits
 #'
-#' This function removes observations based on the visists effort or quality.
+#' This function removes observations based on the visits effort or quality.
 #' Visit effort or quality could be given most often by species list length
 #' (that is, the number of species observed during the visit, SLL). However,
 #' in some cases there could be only one or few species observed but in great
-#' numbers each and spred across a big surveyed area. The effort then may not be
-#' small. If the user may find it necesary to remove those observations belonging
+#' numbers each and spread across a big surveyed area. The effort then may not be
+#' small. If the user may find it necessary to remove those observations belonging
 #' to visits with an effort lower than a threshold, or a certain percentage of
 #' the "worst" observations, then this function will help.
 #'
 #' Please note: this function removes all observations belonging to visits
-#' that fullfil the criteria. Also, the percentage of "lower quality" visits in
+#' that fulfil the criteria. Also, the percentage of "lower quality" visits in
 #' the sample is not necessarily the same as the the percentage of "lower quality"
 #' observations. The removal of observations is done stepwise by quantile therefore
-#' you may get a lower percentage than the aimed given than all remaining visists
+#' you may get a lower percentage than the aimed given than all remaining visits
 #' are too large to be included completely. This may happen particularly with
 #' samller datasets.
 #'
 #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
 #' Dataframe). See \code{\link{organizeBirds}}
-#' @param ev an object of class \sQuote{data.frame} from exploreVistis.
+#' @param ev an object of class \sQuote{data.frame} from exploreVisits.
 #' @param criteria the criteria to rank "good visits". Accepts c("SLL", "nObs",
 #' "effortDiam", "medianDist")
 #' @param percent the percentage (i.e. 0 - 100) of observation to keep, or NULL.
@@ -28,7 +28,7 @@
 #' (default = NULL).
 #' @param stepChunk if the search for observations includes too many in a given
 #' quality stage, the search takes progressively smaller fractions of the dataset
-#' in steps. This argumente controls for how small fractions are discarded on
+#' in steps. This argument controls for how small fractions are discarded on
 #' each step. If stepChunk = 0.05 (default) means that in the first step 95% of
 #' the observations will be tested, then 95% x 95% = 90.25%, and so on until an
 #' adequate number of observations are obtained. Increase this argument if you
@@ -78,17 +78,23 @@ removeObs <- function(x,
       nextStep <- q
 
       while(round(percLeft, 3) < percent){ # while 1
-        if(nextStep <= 0) break(paste0("Nothing else to remove. The result is ", round(percLeft*100, 2), "% of the original observations set"))
-        nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1), "visitUID"])
+        if(nextStep <= 0) break(paste0("Nothing else to remove. The result is ",
+                                       round(percLeft*100, 2),
+                                       "% of the original observations set"))
+        nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1),
+                                 "visitUID"])
         wKeepNext <- which(obs[,visitCol] %in% nextVisits)
         nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
 
-        if(nToAdd < 1) break(paste0("Nothing else to remove. The result is ", round(percLeft*100, 2), "% of the original observations set"))
+        if(nToAdd < 1) break(paste0("Nothing else to remove. The result is ",
+                                    round(percLeft*100, 2),
+                                    "% of the original observations set"))
 
         if(length(wKeepNext)<=nToAdd){
           wKeep <- c(wKeep, wKeepNext)
         }else{
-          nextVisitSample <- sample(nextVisits)
+          # nextVisitSample <- sample(nextVisits)
+          nextVisitSample <- nextVisits[sample.int(length(nextVisits))]
           wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
           # pick a big chunk
           chunkPerc <- 1
@@ -111,6 +117,7 @@ removeObs <- function(x,
 
           ### Slowly complete until reaching the target
           i=0
+          message("Testing if it could be completed by chunks \n")
           while(round(percLeft, 3) < percent){ # while 2
             i=i+1
             if(i > length(nextVisitSample)){
@@ -123,7 +130,7 @@ removeObs <- function(x,
               wKeep <- c(wKeep, wKeepSample)
               percLeft <- length(wKeep) / nrow(obs)
             } else {
-              message("Chunks too big, next...\n")
+              message("Chunks are too big, next...\n")
               next()
             }
           } ## end while 2
@@ -132,7 +139,7 @@ removeObs <- function(x,
         nextStep <- nextStep - 1
       } # end of while 1
     }else{ stop("The argument 'percent' must be a number between 0 and 1")}
-  # if percent is NULL
+    # if percent is NULL
   }else if(!is.null(minCrit)){
     # check minCrit integer >1
     if(minCrit > 0){
@@ -143,6 +150,8 @@ removeObs <- function(x,
   }else{stop("Either 'percent' or 'minCrit' must be supplied")}
 
   x$spdf <- x$spdf[wKeep,]
-  message(paste0("The result is ", round(percLeft*100, 2), "% of the original observations set"))
+  message(paste0("The result is ",
+                 round(percLeft*100, 2),
+                 "% of the original observations set"))
   return(x)
 }
