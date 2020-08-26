@@ -117,6 +117,7 @@ removeObs <- function(x,
 
           ### Slowly complete until reaching the target
           i=0
+          message("Testing if it could be completed by chunks \n")
           while(round(percLeft, 3) < percent){ # while 2
             i=i+1
             if(i > length(nextVisitSample)){
@@ -129,7 +130,7 @@ removeObs <- function(x,
               wKeep <- c(wKeep, wKeepSample)
               percLeft <- length(wKeep) / nrow(obs)
             } else {
-              message("Chunks too big, next...\n")
+              message("Chunks are too big, next...\n")
               next()
             }
           } ## end while 2
