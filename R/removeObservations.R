@@ -58,129 +58,95 @@ removeObs <- function(x,
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
 
-  evColnamesRef <- c("visitUID", "day", "month", "Month", "year", "date",
-                     "centroidX", "centroidY",  "nObs", "SLL", "effortDiam",
-                     "medianDist", "iqrDist", "nOutliers")
-  #check ev class = data.frame
-  if (class(ev) != "data.frame" |
-      !all(evColnamesRef %in% colnames(ev)) ) {
+  #check x class = Organised birds
+  if (class(ev) != "data.frame") {
     stop("The object 'ev' must be of class data.frame resulting from exploreVisits(). See the function 'exploreVisits()'.")
   }
+  if(!(criteria %in% c("SLL", "nObs", "effortDiam", "medianDist"))) stop("The argument 'criteria' needs to be one of c('SLL', 'nObs', 'effortDiam', 'medianDist')")
 
-  if(!(criteria %in% c("SLL", "nObs", "effortDiam", "medianDist"))){
-    stop("The argument 'criteria' needs to be one of c('SLL', 'nObs', 'effortDiam', 'medianDist')")
-  }
+  if(!is.null(percent)){ #check if percent use it else minCrit, else error
+    percent<-percent/100
+    if(0<=percent & percent <=1){#check percent between 0-1
+      wEV <- match(obs[,visitCol], ev$visitUID)
+      obs$crit <- ev[wEV,criteria]
 
-  #check: if percent use it, else minCrit, else error
-  if(!is.null(percent)){
-    percent <- percent / 100
-
-    #check percent between 0-1
-    if(0 <= percent & percent <= 1){
-      wEV <- match(obs[, visitCol], ev$visitUID)
-      obs$crit <- ev[wEV, criteria]
-
-      ## the lowest integer fulfilling the quantile
-      q <- floor(unname(quantile(obs$crit, probs = 1 - percent)))
-      # goodVisits <- unique(obs[which( obs$crit > q),"visitUID"])
-      goodVisits <- unique(obs[which( obs$crit > q), visitCol])
+      q <- floor(unname(quantile(obs$crit, probs = 1 - percent))) ## the lowest integer fulfilling this quantile
+      goodVisits <- unique(obs[which( obs$crit > q),"visitUID"])
 
       wKeep <- which(obs[,visitCol] %in% goodVisits)
       percLeft <- length(wKeep) / nrow(obs)
       nextStep <- q
 
-      #while(round(percLeft, 3) < percent){ # while 1
-      #Cannot have a while here. The function should only return the best effort observations.
-      #Whith a while it will go throug all efforts and try to add, trying to make a subset as close to the
-      #percentage level as polsible.
-      #It should only look at the next best visit after good visits and se if it could be added.
-      if(round(percLeft, 3) < percent){
-        if(nextStep <= 0){
-          message(paste0("Nothing else to remove. The result is ",
-                         round(percLeft * 100, 2),
-                         "% of the original observations set"))
+      while(round(percLeft, 3) < percent){ # while 1
+        if(nextStep <= 0) break(paste0("Nothing else to remove. The result is ",
+                                       round(percLeft*100, 2),
+                                       "% of the original observations set"))
+        nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1),
+                                 "visitUID"])
+        wKeepNext <- which(obs[,visitCol] %in% nextVisits)
+        nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
+
+        if(nToAdd < 1) break(paste0("Nothing else to remove. The result is ",
+                                    round(percLeft*100, 2),
+                                    "% of the original observations set"))
+
+        if(length(wKeepNext)<=nToAdd){
+          wKeep <- c(wKeep, wKeepNext)
         }else{
-          nextVisits <- unique(obs[which( obs$crit >= nextStep &
-                                            obs$crit < nextStep + 1),
-                                   "visitUID"])
-          wKeepNext <- which(obs[,visitCol] %in% nextVisits)
-          nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
-
-          if(! nToAdd < 1){
-            # No more rows to remove
-            if(length(wKeepNext)<=nToAdd){
-              wKeep <- c(wKeep, wKeepNext)
-            }else{
-              # Placing the visits in a random order.
-              nextVisitSample <- nextVisits[sample.int(length(nextVisits))]
-              wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
-
-              # pick a big chunk
-              chunkPerc <- 1
-              while(length(wKeepSample) >= nToAdd){
-                chunkPerc <- chunkPerc * (1-stepChunk)
-                chunk <- floor(length(nextVisitSample) * chunkPerc)
-                if(chunk == 0){
-                  # If chunk == 0 nextVisitSample[1:chunk] will be the same as nextVisitSample[1],
-                  # which will take us to an infinite loop.
-                  chunk <- 1
-                  break()
-                }
-                wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[1:chunk])
-              }
-              # redefine which visits are left
-              if(exists("chunk")){
-                nextVisitSample <- nextVisitSample[-(1:chunk)]
-              }
-
-              nObs2keep <- length(wKeep) + length(wKeepSample)
-              percLeft.tmp <- nObs2keep / nrow(obs)
-              if(percLeft.tmp <= percent){
-                wKeep <- c(wKeep, wKeepSample)
-                percLeft <- length(wKeep) / nrow(obs)
-              }
-
-              ### Slowly complete until reaching the target
-              i=0
-              while(round(percLeft, 3) < percent){ # while 2
-                i=i+1
-                if(i > length(nextVisitSample)){
-                  break() # nothing left to add, lets look at the next class
-                }
-                wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[i])
-                nObs2keep <- length(wKeep) + length(wKeepSample)
-                percLeft.tmp <- nObs2keep / nrow(obs)
-                if(percLeft.tmp <= percent){
-                  wKeep <- c(wKeep, wKeepSample)
-                  percLeft <- length(wKeep) / nrow(obs)
-                } else {
-                  message("Chunks too big, next...\n")
-                  next()
-                }
-              } ## end while 2
-            }
-            percLeft <- length(wKeep) / nrow(obs)
-            nextStep <- nextStep - 1
+          # nextVisitSample <- sample(nextVisits)
+          nextVisitSample <- nextVisits[sample.int(length(nextVisits))]
+          wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
+          # pick a big chunk
+          chunkPerc <- 1
+          while(length(wKeepSample) >= nToAdd){
+            chunkPerc <- chunkPerc * (1-stepChunk)
+            chunk <- floor(length(nextVisitSample) * chunkPerc)
+            wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[1:chunk])
           }
-        }
+          #redefine which visits are left
+          if(exists("chunk")){
+            nextVisitSample <- nextVisitSample[-(1:chunk)]
+          }
 
-      } # end of if (not while)
-    }else{
-      stop("The argument 'percent' must be a number between 0 and 1")
-    }
-  # if percent is NULL
+          nObs2keep <- length(wKeep) + length(wKeepSample)
+          percLeft.tmp <- nObs2keep / nrow(obs)
+          if(percLeft.tmp <= percent){
+            wKeep <- c(wKeep, wKeepSample)
+            percLeft <- length(wKeep) / nrow(obs)
+          }
+
+          ### Slowly complete until reaching the target
+          i=0
+          while(round(percLeft, 3) < percent){ # while 2
+            i=i+1
+            if(i > length(nextVisitSample)){
+              break() # nothing left to add, lets look at the next class
+            }
+            wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[i])
+            nObs2keep <- length(wKeep) + length(wKeepSample)
+            percLeft.tmp <- nObs2keep / nrow(obs)
+            if(percLeft.tmp <= percent){
+              wKeep <- c(wKeep, wKeepSample)
+              percLeft <- length(wKeep) / nrow(obs)
+            } else {
+              message("Chunks too big, next...\n")
+              next()
+            }
+          } ## end while 2
+        }
+        percLeft <- length(wKeep) / nrow(obs)
+        nextStep <- nextStep - 1
+      } # end of while 1
+    }else{ stop("The argument 'percent' must be a number between 0 and 1")}
+    # if percent is NULL
   }else if(!is.null(minCrit)){
     # check minCrit integer >1
     if(minCrit > 0){
       goodVisits <- ev[which(ev[,criteria] >= minCrit),"visitUID"]
       wKeep <- which(obs[,visitCol] %in% goodVisits)
       percLeft <- length(wKeep) / nrow(obs)
-    }else{
-      stop("The argument 'minCrit' must be > 0")
-    }
-  }else{
-    stop("Either 'percent' or 'minCrit' must be supplied")
-  }
+    }else{stop("The argument 'minCrit' must be > 0")}
+  }else{stop("Either 'percent' or 'minCrit' must be supplied")}
 
   x$spdf <- x$spdf[wKeep,]
   message(paste0("The result is ",
