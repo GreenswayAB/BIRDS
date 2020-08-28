@@ -107,12 +107,15 @@ simplifySpp <- function(df, sppCol){
   splitLits<-strsplit(as.character(df[, sppCol]), "\ ")
 
   simpleNamesList<-lapply(splitLits, FUN=function(x){
-    if (length(x)==1){ # Only genus
+    if (length(x) == 1){ # Only genus
       return(x)
     }
-    if (length(x)>=2){ # Genus and more
+    if (length(x) >= 2){ # Genus and more
       if(grepl("(?!-)(?!/)[[:punct:]]|[A-Z]", x[2], perl = TRUE)){ # Genus and more (find punctuation except for - and /)
         return(x[1])
+        # TODO cases like #Falco peregrinus, 1771" will wrongly end like "Falco"
+        # but without htis line it will wrongly take Falco Lineus, 1771 as Falco Lineus
+        # is the key on the capital letter?
       } else {
         return(paste(x[1:2], collapse=" ")  ) # only species
       }
@@ -145,7 +148,7 @@ getGridIDs <- function(x, grid){
         warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
       All results will use this nomenclature, but the order of the cells will remain unaltered.")
       }
-      
+
       if(! identicalCRS(x, grid)){
         grid <- spTransform(grid, CRS(proj4string(x)))
       }
