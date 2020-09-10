@@ -12,7 +12,8 @@ simplifySpp(df, sppCol)
 \item{sppCol}{A character vector with the column names for the species names.}
 }
 \value{
-A vector vith data.frame with a scientific names up to specific names
+A vector with data.frame with a canonical name given by taxize::gbif_parse(),
+that is a scientific name with up to 3 elements and no authorship
 }
 \description{
 Removes infraspecific epithets, authors and years from scientific names

@@ -281,6 +281,8 @@ makeGrid <- function(polygon,
     } else {polygonProjBuffer <- polygonProj}
 
     polygonGeod <- spTransform(polygonProjBuffer, CRSobj = CRS("+init=epsg:4326"))
+    # polygonGeod <- spTransform(polygonProjBuffer, CRSobj = CRS(SRS_string="EPSG:4326"))
+
 
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
@@ -322,7 +324,7 @@ makeGrid <- function(polygon,
 #'
 #' Construct a discrete global grid system (dggs) object over a preferred polygon.
 #'
-#' This function depends on a package that is no longer on CRAN. You can 
+#' This function depends on a package that is no longer on CRAN. You can
 #' find it in its GitHub repository \url{https://github.com/r-barnes/dggridR}.
 #' Also, this may generate odd results for very large rectangles, because putting
 #' rectangles on spheres is weird... as you should know, if you're using this package.
@@ -340,7 +342,7 @@ makeGrid <- function(polygon,
 #' @param topology Shape of cell. shall the grid cells be hexagonal, diamonds or
 #' triangular? Options are: \dQuote{hexagon}, \dQuote{diamond}, \dQuote{tirangle}.
 #' Default: \dQuote{hexagon}.
-#' @param aperture How finely subsequent resolution levels divide the grid. Options are: 3, 4. 
+#' @param aperture How finely subsequent resolution levels divide the grid. Options are: 3, 4.
 #' Only applicable for \code{topology = "hexagon"}. Default for \code{topology = "hexagon"} is 3,
 #' else \code{aperture = 4}.
 #' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
@@ -370,7 +372,7 @@ makeDggrid <- function(polygon,
                      tol=0.01) {
   #Construct a global grid with cells approximately 1000 m across
   topology <- toupper(topology)
-  
+
   aperture <- if(topology == "HEXAGON"){
     if(aperture == 3 || aperture == 4){
       aperture
@@ -380,7 +382,7 @@ makeDggrid <- function(polygon,
   }else{
     4
   }
-  
+
   dggs <- dggridR::dgconstruct(spacing=gridSize, metric=TRUE, precision=10,
                       resround='nearest', topology = topology, aperture = aperture)
 

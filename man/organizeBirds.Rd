@@ -83,11 +83,13 @@ That is the minimum taxonomic identification level.}
 \item{taxonRank}{a string or vector of strings containing the taxonomic ranks to keep.
 Only evaluated if taxonRankCol is not \code{NULL}}
 
-\item{simplifySppName}{wheter to remove everything else that is not the species
-name (authors, years and intraspecific epithets). Default set to FALSE}
+\item{simplifySppName}{whether to remove everything else that is not the species
+name (authors, years). Default set to FALSE, else leaves a canonical name given
+by taxize::gbif_parse(), that is a scientific name with up to 3 elements.}
 }
 \value{
-a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.
+a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds,
+with additional attributes.
 }
 \description{
 Takes a dataframe with reported species observations and reformats it, using

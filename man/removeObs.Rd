@@ -17,7 +17,7 @@ removeObs(
 \item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
 Dataframe). See \code{\link{organizeBirds}}}
 
-\item{ev}{an object of class \sQuote{data.frame} from exploreVistis.}
+\item{ev}{an object of class \sQuote{data.frame} from exploreVisits.}
 
 \item{criteria}{the criteria to rank "good visits". Accepts c("SLL", "nObs",
 "effortDiam", "medianDist")}
@@ -30,7 +30,7 @@ Dataframe). See \code{\link{organizeBirds}}}
 
 \item{stepChunk}{if the search for observations includes too many in a given
 quality stage, the search takes progressively smaller fractions of the dataset
-in steps. This argumente controls for how small fractions are discarded on
+in steps. This argument controls for how small fractions are discarded on
 each step. If stepChunk = 0.05 (default) means that in the first step 95% of
 the observations will be tested, then 95% x 95% = 90.25%, and so on until an
 adequate number of observations are obtained. Increase this argument if you
@@ -40,21 +40,21 @@ see the function takes too long.}
 An updated OrganisedBirds dataset
 }
 \description{
-This function removes observations based on the visists effort or quality.
+This function removes observations based on the visits effort or quality.
 Visit effort or quality could be given most often by species list length
 (that is, the number of species observed during the visit, SLL). However,
 in some cases there could be only one or few species observed but in great
-numbers each and spred across a big surveyed area. The effort then may not be
-small. If the user may find it necesary to remove those observations belonging
+numbers each and spread across a big surveyed area. The effort then may not be
+small. If the user may find it necessary to remove those observations belonging
 to visits with an effort lower than a threshold, or a certain percentage of
 the "worst" observations, then this function will help.
 }
 \details{
 Please note: this function removes all observations belonging to visits
-that fullfil the criteria. Also, the percentage of "lower quality" visits in
+that fulfil the criteria. Also, the percentage of "lower quality" visits in
 the sample is not necessarily the same as the the percentage of "lower quality"
 observations. The removal of observations is done stepwise by quantile therefore
-you may get a lower percentage than the aimed given than all remaining visists
+you may get a lower percentage than the aimed given than all remaining visits
 are too large to be included completely. This may happen particularly with
 samller datasets.
 }
