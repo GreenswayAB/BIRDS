@@ -42,8 +42,8 @@ definition of visit aligns with your grid size, you must explore the spatial ext
 \examples{
 if(interactive()){
 # create a visit-based data object from the original observation-based data
-OB<-organizeBirds(bombusObs)
-visitStats<-exploreVisits(OB)
+OB <- organizeBirds(bombusObs)
+visitStats <- exploreVisits(OB)
  esquisse::esquisser(visitStats)
 # alternatively, plot the variable you want, e.g.:
 # to see the distribution of distances covered on each visit

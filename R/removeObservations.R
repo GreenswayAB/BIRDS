@@ -15,7 +15,7 @@
 #' observations. The removal of observations is done stepwise by quantile therefore
 #' you may get a lower percentage than the aimed given than all remaining visits
 #' are too large to be included completely. This may happen particularly with
-#' samller datasets.
+#' smaller datasets.
 #'
 #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
 #' Dataframe). See \code{\link{organizeBirds}}
@@ -47,7 +47,7 @@
 removeObs <- function(x,
                       ev,
                       criteria = "SLL",
-                      percent=75,
+                      percent = 75,
                       minCrit = NULL,
                       stepChunk=0.05){
   #check x class = Organised birds
@@ -155,3 +155,44 @@ removeObs <- function(x,
                  "% of the original observations set"))
   return(x)
 }
+
+
+#' #' Remove observations considered outliers in the visits they belong to
+#' #'
+#' #' The function \code{\link{exploreVisits}}, among other things, identifies
+#' #' observations considered to be outliers on each visits.  WHAT IS OUTLIER?
+#' #' This function removes those observations from the original dataset.
+#' #'
+#' #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
+#' #' Dataframe). See \code{\link{organizeBirds}}
+#' #' @param ev an object of class \sQuote{data.frame} from exploreVisits.
+#' #'
+#' #' @return An updated OrganisedBirds dataset
+#' #' @examples
+#' #' \donttest{
+#' #' OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' #' EV <- exploreVisits(OB)
+#' #' OBshorter <- removeOutliers(OB, EV)
+#' #' }
+#' #' @export
+#'
+#' removeOutliers <- function(x, ev){
+#'   #check x class = Organised birds
+#'   if (class(x) == "OrganizedBirds") {
+#'     obs <- x$spdf@data
+#'     visitCol <- attr(x, "visitCol")
+#'   } else {
+#'     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
+#'   }
+#'
+#'   #check x class = Organised birds
+#'   if (class(ev) != "data.frame") {
+#'     stop("The object 'ev' must be of class data.frame resulting from exploreVisits(). See the function 'exploreVisits()'.")
+#'   }
+#'
+#'   x$spdf <- x$spdf[wKeep,]
+#'   message(paste0("The result is ",
+#'                  round(percLeft*100, 2),
+#'                  "% of the original observations set"))
+#'   return(x)
+#' }

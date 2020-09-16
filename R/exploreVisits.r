@@ -20,17 +20,18 @@
 #'   centroid and the observations, in meters.
 #'   \item \dQuote{iqrDist}: the interquartile range of the distances between the
 #'    centroid the observations, in meters.
+#'   \item \dQuote{nUniqueLoc}: the number of unique combination of coordinates (locations).
 #'   \item \dQuote{nOutliers}: the number of observations whose distance to the
-#'   centroid are considered an outlier. Ouliers are defined as distances grater
+#'   centroid are considered an outlier. Outliers are defined as distances grater
 #'   than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as all
 #'   distances are positive).
 #'}
 #' @examples
 #' if(interactive()){
 #' # create a visit-based data object from the original observation-based data
-#' OB<-organizeBirds(bombusObs)
-#' visitStats<-exploreVisits(OB)
-#'  esquisse::esquisser(visitStats)
+#' OB <- organizeBirds(bombusObs)
+#' visitStats <- exploreVisits(OB)
+#' esquisse::esquisser(visitStats)
 #' # alternatively, plot the variable you want, e.g.:
 #' # to see the distribution of distances covered on each visit
 #' hist(visitStats$effortDiam)
@@ -46,6 +47,7 @@
 #' }
 #' @export
 #' @importFrom rlang .data
+#' @importFrom dplyr group_by summarise n n_distinct sym
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 exploreVisits<-function(x,
                         visitCol=NULL, #visitCol=attr(x, "visitCol"),
@@ -60,14 +62,15 @@ exploreVisits<-function(x,
   if (is.null(visitCol)){
     visitCol<-attr(x, "visitCol")
   }
-  if (!(visitCol %in% colnames(dat))) stop(paste("There is not column called", visitCol, "in your organised dataset."))
+  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",
+                                                 visitCol, "in your organised dataset."))
 
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
-  
+
   dat$date <- lubridate::date(paste(dat$year, dat$month, dat$day, sep = "-"))
-  
+
   visitStat <- data.frame("visitUID" = uniqueUID,
                           "day" = NA,
                           "month" = NA,
@@ -81,14 +84,16 @@ exploreVisits<-function(x,
                           "effortDiam" = NA, # the diameter of the minumum circle that covers all points, in meters
                           "medianDist" = NA, # the median (Q2) of the distances between the centroid and all points
                           "iqrDist" = NA, # the interquartile range of the distances between the centroid and all points
+                          "nUniqueLoc" = NA, # number of unique locations
                           "nOutliers" = NA) # number of observations estimated to be outliers
 
   message(paste("Analysing", nUID, "visits..."))
-  datGBY <- group_by(dat, !!! rlang::syms(visitCol))
+  # datGBY <- group_by(dat, !!! rlang::syms(visitCol))
+  datGBY <- group_by(dat, !! sym(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
   visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName)  )$SLL
-  dates <- summarise(datGBY, date = min(date)) ##If the visits are over multiple days, we take the first. 
+  dates <- summarise(datGBY, date = min(date)) ##If the visits are over multiple days, we take the first.
   visitStat$day  <- lubridate::day(dates$date)
   visitStat$month<- lubridate::month(dates$date)
   visitStat$year <- lubridate::year(dates$date)
@@ -102,43 +107,48 @@ exploreVisits<-function(x,
     coord <- sp::coordinates(spdfTmp)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
+    nUniqueLoc <- nrow(coordUnique)
 
     ctr <- rgeos::gCentroid(spdfTmp) ## still valid if two points
     centroidX <- ctr@coords[1]
     centroidY <- ctr@coords[2]
 
-    if (nrow(coordUnique) > 1) {
-      distances<-geosphere::distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
+    if (nUniqueLoc > 1) {
+      distances <- geosphere::distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
 
-      # The minumum circle that covers all points
+      # The minimum circle that covers all points
       effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
-      nOutliers  <- length(boxplot.stats(distances)$out)
+      nOutliers  <- length(boxplot.stats(distances)$out) ### TODO think another way to compute this
     } else {
       effortDiam <- 1 # 1m
       medianDist <- 1
       iqrDist    <- 1
       nOutliers  <- 0
     }
-    return(list(centroidX, centroidY, effortDiam, medianDist, iqrDist,nOutliers))
+
+    return(c(centroidX, centroidY, effortDiam, medianDist,
+           iqrDist, nUniqueLoc, nOutliers))
   } )
+  varsCtr <- c("centroidX", "centroidY","effortDiam", "medianDist","iqrDist",
+             "nUniqueLoc", "nOutliers")
+  tmp <- matrix(unlist(ctrList), ncol = length(varsCtr), byrow = TRUE,
+                dimnames = list(uniqueUID, varsCtr))
 
-  tmp<-matrix(unlist(ctrList), ncol = 6, byrow = TRUE)
+  visitStat[, match(varsCtr, colnames(visitStat))] <- tmp
 
-  visitStat$centroidX  <- tmp[,1]
-  visitStat$centroidY  <- tmp[,2]
-  visitStat$effortDiam <- tmp[,3]
-  visitStat$medianDist <- tmp[,4]
-  visitStat$iqrDist    <- tmp[,5]
-  visitStat$nOutliers  <- tmp[,6]
+
+  # boxplot.stats(visitStat$medianDist[visitStat$medianDist>1])
+  # wVis <- which(dat[, visitCol] %in% visitStat$visitUID[visitStat$medianDist>1])
+  # spdfTmp <- spdf[wVis, ]
 
   visitStat$date <- as.Date(paste(visitStat$year,
                                   visitStat$month,
                                   visitStat$day,
                                   sep="-"),
                             format = "%Y-%m-%d")
-  visitStat$Month <- as.factor(months(visitStat$date))
+  visitStat$Month <- as.factor(months(visitStat$date, abbreviate = FALSE))
   levels(visitStat$Month) <- month.name
 
   message(paste("Finished analysing", nUID, "visits.\n"))
