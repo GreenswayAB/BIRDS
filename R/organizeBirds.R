@@ -463,7 +463,8 @@ organizeBirds <- function(x,
     stop("The argument 'x' should be of class data.frame or SpatialPointsDataFrame.")
   }
 
-  if(slot(x,"proj4string") != CRS("+init=epsg:4326")){
+  if(slot(slot(x,"proj4string"), "projargs") != slot(CRS("+init=epsg:4326"),"projargs")){
+  # if(! identicalCRS(x, CRS("+init=epsg:4326"))){
     x <- spTransform(x, CRS("+init=epsg:4326"))
     # x <- spTransform(x, CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
   }

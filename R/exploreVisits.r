@@ -126,22 +126,20 @@ exploreVisits<-function(x,
 
     if (nUniqueLoc > 1) {
       distances <- distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
-      distM <- distm(spdfTmp,spdfTmp) ## the unstransformed spdf
+      distM <- distm(spdfTmp, spdfTmp) ## the unstransformed spdf
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
-      # spdfTmpTr <- sp::spTransform(spdfTmp,
-                                   # CRSobj = CRS("+init=epsg:3857"))
-      # shotGroups::getMinCircle(coordUnique)
+      spdfTmpTr <- sp::spTransform(spdfTmp,
+                                   CRSobj = CRS("+init=epsg:3857"))
+      # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
+      # this function is very much dependent on the projection
 
-      # The minimum circle that covers all points
       effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
       # nOutliers  <- length(boxplot.stats(distancesOut)$out) ### TODO think another way to compute this
       if(nUniqueLoc >= minPts ){
-        spdfTmpTr <- sp::spTransform(spdfTmp,
-                                     CRSobj = CRS("+init=epsg:3857"))
         clusters  <- dbscan(sp::coordinates(spdfTmpTr),
                             eps = median(distancesOut),
                             minPts = minPts)

@@ -12,10 +12,26 @@
 
 <meta name="author" content="Alejandro Ruete" />
 
-<meta name="date" content="2020-03-02" />
+<meta name="date" content="2020-09-17" />
 
 <title>Working with xts time series</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -303,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Working with xts time series</h1>
 <h4 class="author">Alejandro Ruete</h4>
-<h4 class="date">2020-03-02</h4>
+<h4 class="date">2020-09-17</h4>
 
 
 
@@ -319,7 +335,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-5"><a href="#cb1-5"></a><span class="co"># The grid can be easily created in different ways. </span></span>
 <span id="cb1-6"><a href="#cb1-6"></a></span>
 <span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Import the species observation data:</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>PBD&lt;-bombusObs</span>
+<span id="cb1-8"><a href="#cb1-8"></a>PBD &lt;-<span class="st"> </span>bombusObs</span>
 <span id="cb1-9"><a href="#cb1-9"></a><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
 <span id="cb1-10"><a href="#cb1-10"></a><span class="co"># PBD &lt;- read.csv(file=&quot;path/to/your/file.csv)</span></span>
 <span id="cb1-11"><a href="#cb1-11"></a></span>

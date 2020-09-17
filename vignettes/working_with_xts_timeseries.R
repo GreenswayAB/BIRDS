@@ -12,7 +12,7 @@ grid <- makeGrid(gotaland, gridSize = 10)
 # The grid can be easily created in different ways. 
 
 # Import the species observation data:
-PBD<-bombusObs
+PBD <- bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
 # PBD <- read.csv(file="path/to/your/file.csv)
 
