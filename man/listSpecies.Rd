@@ -16,7 +16,7 @@ a \code{vector} with all species names in the data set
 Lists all species names from the data set.
 }
 \examples{
-OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 allSpp <- listSpecies(OB)
 }
 \seealso{

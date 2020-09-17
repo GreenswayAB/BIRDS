@@ -4,7 +4,7 @@
 #' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SummarizeBirds}.
 #' @return a \code{vector} with all species names in the data set
 #' @examples
-#' OB <- organizeBirds(bryophytaObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' allSpp <- listSpecies(OB)
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}

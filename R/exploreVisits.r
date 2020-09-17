@@ -136,10 +136,11 @@ exploreVisits<-function(x,
       iqrDist    <- round(IQR(distances), 0)
       # nOutliers  <- length(boxplot.stats(distancesOut)$out) ### TODO think another way to compute this
       if(nUniqueLoc >= minPts ){
-        clusters  <- dbscan(sp::coordinates(sp::spTransform(spdfTmp,
-                                                            CRSobj = CRS("+init=EPSG:3857"))),
-                                     eps = median(distancesOut),
-                                     minPts = minPts)
+        spdfTmpTr <- sp::spTransform(spdfTmp,
+                                     CRSobj = CRS("+init=epsg:3857"))
+        clusters  <- dbscan(sp::coordinates(spdfTmpTr),
+                            eps = median(distancesOut),
+                            minPts = minPts)
         nOutliers <- sum(clusters$cluster==0)
         nClusters  <- sum(unique(clusters$cluster)!=0)
       } else {
@@ -228,10 +229,10 @@ spatialVisits <- function(x,
   }
 
   utmCRS <- CRS(getUTMproj(x))
-  xTrans <- sp::spTransform(x, CRSobj = utmCRS)
+  xTrans <- spTransform(x, CRSobj = utmCRS)
 
   buff <- rgeos::gBuffer(xTrans,  byid = TRUE, id=x@data$visitUID, width=radiusVal)
-  buff <- sp::spTransform(buff, CRSobj = dataCRS)
+  buff <- spTransform(buff, CRSobj = dataCRS)
 
   return(list("points"=x, "effort"=buff))
 
@@ -241,8 +242,8 @@ spatialVisits <- function(x,
 #' @keywords internal
 getUTMzone <- function(points){
   ##Find which UTM-zones that have the most points
-  utmZonesTr <- sp::spTransform(utmZones, points@proj4string) #To accept all reference systems for points.
-  utmZone <- sp::over(points, utmZonesTr)
+  utmZonesTr <- spTransform(utmZones, proj4string(points)) #To accept all reference systems for points.
+  utmZone <- over(points, utmZonesTr)
   freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
 
@@ -260,9 +261,11 @@ getUTMzone <- function(points){
     }
   }else{
     ##Else we check if there is more or as many points in zone 0 as in any other zone.
-    if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones], sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
+    if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones],
+           sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
       alternatives<-c("0" = FALSE)
-    }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones], sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
+    }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones],
+                 sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
       alternatives["0"]<-FALSE
     }
   }
@@ -322,7 +325,7 @@ getUTMzone <- function(points){
     }
 
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points),
-                                   proj4string = points@proj4string)
+                                   proj4string = proj4string(points))
     utmMeanZone <- sp::over(meanPoint, utmZones)
     res$zone <- as.integer(utmMeanZone$ZONE)
     message("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")

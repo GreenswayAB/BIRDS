@@ -45,7 +45,7 @@ includeSpillover <- function(x, birdData, visitCol){
 #' @param visitCol A character string for specifying the columns that identify a visit.
 #'
 #' @return A  ObservationsInGrid list
-#' @importFrom sp over identicalCRS
+#' @importFrom sp over identicalCRS SpatialPolygonsDataFrame SpatialPolygons CRS proj4string
 #' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
@@ -54,25 +54,25 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
   visits <- cbind(visits, "grid" = NA)
 
   if(identicalCRS(birdData, grid) != TRUE){
-   stop("Organized data and grid do not share the same CRS")
+    stop("Organized data and grid do not share the same CRS")
   }
-  
+
   #Extract the unique ID from the polygons in the spdf
   ids <- data.frame(
     matrix(
-      unlist(lapply(grid@polygons, function(x){x@ID}))[grid@plotOrder], 
+      unlist(lapply(grid@polygons, function(x){x@ID}))[grid@plotOrder],
       dimnames = list(c(), c("id"))),
     stringsAsFactors = FALSE)
-  
+
   rownames(ids)<-ids[,1] #Since SpatialPolygonsDataFrame() wants to match rownames with the IDs
-  
+
   spP <- SpatialPolygons(grid@polygons, grid@plotOrder, proj4string = CRS(proj4string(grid)))
-  
+
   #A new spdf with only unique IDs, should be possible to join up with attribute data later
-  spdfIDs <- SpatialPolygonsDataFrame(spP, ids) 
-  
+  spdfIDs <- SpatialPolygonsDataFrame(spP, ids)
+
   obs$grid <- unlist(over(birdData, spdfIDs, returnList=FALSE))
-  
+
 
   wNA <- which(is.na(obs$grid))
   if(length(wNA)>0){
