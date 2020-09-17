@@ -158,6 +158,7 @@
   <span class='no'>gridSize</span>,
   <span class='kw'>buffer</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>topology</span> <span class='kw'>=</span> <span class='st'>"hexagon"</span>,
+  <span class='kw'>aperture</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>0.01</span>
 )</pre>
@@ -190,6 +191,12 @@ triangular? Options are: &#8220;hexagon&#8221;, &#8220;diamond&#8221;, &#8220;ti
 Default: &#8220;hexagon&#8221;.</p></td>
     </tr>
     <tr>
+      <th>aperture</th>
+      <td><p>How finely subsequent resolution levels divide the grid. Options are: 3, 4.
+Only applicable for <code>topology = "hexagon"</code>. Default for <code>topology = "hexagon"</code> is 3,
+else <code>aperture = 4</code>.</p></td>
+    </tr>
+    <tr>
       <th>simplify</th>
       <td><p>simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 Complicated polygons (those with much detail) make this function run slower.</p></td>
@@ -206,7 +213,7 @@ Complicated polygons (those with much detail) make this function run slower.</p>
 conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function depends on a package that is no longer on CRAN. You can 
+    <p>This function depends on a package that is no longer on CRAN. You can
 find it in its GitHub repository <a href='https://github.com/r-barnes/dggridR'>https://github.com/r-barnes/dggridR</a>.
 Also, this may generate odd results for very large rectangles, because putting
 rectangles on spheres is weird... as you should know, if you're using this package.
@@ -227,10 +234,10 @@ an error message will be displayed.</p>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dggridR</span>) <span class='co'>## Not anylonger on CRAN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: package 'dggridR' was built under R version 3.6.3</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: rgdal</span></div><div class='output co'>#&gt; <span class='message'>rgdal: version: 1.4-8, (SVN revision 845)</span>
 #&gt; <span class='message'> Geospatial Data Abstraction Library extensions to R successfully loaded</span>
 #&gt; <span class='message'> Loaded GDAL runtime: GDAL 2.2.3, released 2017/11/20</span>
-#&gt; <span class='message'> Path to GDAL shared files: E:/Alejandro/Documents/R/win-library/3.6/sf/gdal</span>
+#&gt; <span class='message'> Path to GDAL shared files: </span>
 #&gt; <span class='message'> GDAL binary built with GEOS: TRUE </span>
 #&gt; <span class='message'> Loaded PROJ.4 runtime: Rel. 4.9.3, 15 August 2016, [PJ_VERSION: 493]</span>
-#&gt; <span class='message'> Path to PROJ.4 shared files: E:/Alejandro/Documents/R/win-library/3.6/sf/proj</span>
+#&gt; <span class='message'> Path to PROJ.4 shared files: E:/Alejandro/Documents/R/win-library/3.6/rgdal/proj</span>
 #&gt; <span class='message'> Linking to sp version: 1.3-2 </span></div><div class='output co'>#&gt; <span class='message'>Loading required package: ggplot2</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: dplyr</span></div><div class='output co'>#&gt; <span class='warning'>Warning: package 'dplyr' was built under R version 3.6.2</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: 'dplyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:testthat':</span>
 #&gt; <span class='message'></span>

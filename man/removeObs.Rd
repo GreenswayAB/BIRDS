@@ -56,7 +56,7 @@ the sample is not necessarily the same as the the percentage of "lower quality"
 observations. The removal of observations is done stepwise by quantile therefore
 you may get a lower percentage than the aimed given than all remaining visits
 are too large to be included completely. This may happen particularly with
-samller datasets.
+smaller datasets.
 }
 \note{
 If both 'percent' and 'minCrit' are defined then 'percent' prevails.

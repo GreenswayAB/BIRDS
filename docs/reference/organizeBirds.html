@@ -261,14 +261,16 @@ Only evaluated if taxonRankCol is not <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>simplifySppName</th>
-      <td><p>wheter to remove everything else that is not the species
-name (authors, years and intraspecific epithets). Default set to FALSE</p></td>
+      <td><p>whether to remove everything else that is not the species
+name (authors, years). Default set to FALSE, else leaves a canonical name given
+by taxize::gbif_parse(), that is a scientific name with up to 3 elements.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds, with additional attributes.</p>
+    <p>a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds,
+with additional attributes.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>An OrganizedBirds-class is essentially a list containing one element, a

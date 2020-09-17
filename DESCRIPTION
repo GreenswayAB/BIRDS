@@ -40,6 +40,7 @@ Depends: R (>= 3.5.0)
 SystemRequirements: GDAL (>= 2.0.1)
 Imports:
     data.table, 
+    dbscan, 
     dplyr,
     esquisse,
     geosphere (>= 1.5),

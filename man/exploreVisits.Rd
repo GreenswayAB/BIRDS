@@ -28,10 +28,15 @@ a \code{data.frame} with summarized data per visit:
   centroid and the observations, in meters.
   \item \dQuote{iqrDist}: the interquartile range of the distances between the
    centroid the observations, in meters.
-  \item \dQuote{nOutliers}: the number of observations whose distance to the
-  centroid are considered an outlier. Ouliers are defined as distances grater
-  than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as all
-  distances are positive).
+  \item \dQuote{nUniqueLoc}: the number of unique combination of coordinates (locations).
+  \item \dQuote{nClusters}: the number of clusters defined by the DBSCAN algorithm,
+  a minimum of 3 observations per cluster within the median distance between
+  all observations. If the number of clusters is = 0 means that there are at
+  least 3 unique locations but observations are too spread and no cluster was
+  found. If the number of unique locations is less than 3, observations are
+  considered as a single cluster without outliers.
+  \item \dQuote{nOutliers}: the number of observations whose distance to any
+  cluster is beyond the median distance between all observations.
 }
 }
 \description{
@@ -44,7 +49,7 @@ if(interactive()){
 # create a visit-based data object from the original observation-based data
 OB <- organizeBirds(bombusObs)
 visitStats <- exploreVisits(OB)
- esquisse::esquisser(visitStats)
+esquisse::esquisser(visitStats)
 # alternatively, plot the variable you want, e.g.:
 # to see the distribution of distances covered on each visit
 hist(visitStats$effortDiam)

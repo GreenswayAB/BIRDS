@@ -21,10 +21,14 @@
 #'   \item \dQuote{iqrDist}: the interquartile range of the distances between the
 #'    centroid the observations, in meters.
 #'   \item \dQuote{nUniqueLoc}: the number of unique combination of coordinates (locations).
-#'   \item \dQuote{nOutliers}: the number of observations whose distance to the
-#'   centroid are considered an outlier. Outliers are defined as distances grater
-#'   than the Q3 * 1.5 (i.e. \code{length(boxplot.stats(distances)$out)} as all
-#'   distances are positive).
+#'   \item \dQuote{nClusters}: the number of clusters defined by the DBSCAN algorithm,
+#'   a minimum of 3 observations per cluster within the median distance between
+#'   all observations. If the number of clusters is = 0 means that there are at
+#'   least 3 unique locations but observations are too spread and no cluster was
+#'   found. If the number of unique locations is less than 3, observations are
+#'   considered as a single cluster without outliers.
+#'   \item \dQuote{nOutliers}: the number of observations whose distance to any
+#'   cluster is beyond the median distance between all observations.
 #'}
 #' @examples
 #' if(interactive()){
@@ -48,10 +52,16 @@
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarise n n_distinct sym
+#' @importFrom rgeos gCentroid
+#' @importFrom dbscan dbscan
+#' @importFrom lubridate date day month year
+#' @importFrom geosphere distGeo distm
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 exploreVisits<-function(x,
                         visitCol=NULL, #visitCol=attr(x, "visitCol"),
                         sppCol="scientificName"){
+  minPts <- 3 ## Minumin number of points required for clustering
+
 
   if (class(x) == "OrganizedBirds") {
     spdf<- x$spdf
@@ -69,7 +79,7 @@ exploreVisits<-function(x,
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
 
-  dat$date <- lubridate::date(paste(dat$year, dat$month, dat$day, sep = "-"))
+  dat$date <- date(paste(dat$year, dat$month, dat$day, sep = "-"))
 
   visitStat <- data.frame("visitUID" = uniqueUID,
                           "day" = NA,
@@ -85,7 +95,8 @@ exploreVisits<-function(x,
                           "medianDist" = NA, # the median (Q2) of the distances between the centroid and all points
                           "iqrDist" = NA, # the interquartile range of the distances between the centroid and all points
                           "nUniqueLoc" = NA, # number of unique locations
-                          "nOutliers" = NA) # number of observations estimated to be outliers
+                          "nClusters" = NA, # Number of clusters
+                          "nOutliers" = NA) # number of observations estimated to be outliers from the clusters
 
   message(paste("Analysing", nUID, "visits..."))
   # datGBY <- group_by(dat, !!! rlang::syms(visitCol))
@@ -94,9 +105,9 @@ exploreVisits<-function(x,
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
   visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName)  )$SLL
   dates <- summarise(datGBY, date = min(date)) ##If the visits are over multiple days, we take the first.
-  visitStat$day  <- lubridate::day(dates$date)
-  visitStat$month<- lubridate::month(dates$date)
-  visitStat$year <- lubridate::year(dates$date)
+  visitStat$day  <- day(dates$date)
+  visitStat$month<- month(dates$date)
+  visitStat$year <- year(dates$date)
   rm(datGBY)
 
   ### TODO? can this lapply be done with dplyr?
@@ -109,39 +120,50 @@ exploreVisits<-function(x,
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
     nUniqueLoc <- nrow(coordUnique)
 
-    ctr <- rgeos::gCentroid(spdfTmp) ## still valid if two points
+    ctr <- gCentroid(spdfTmp) ## still valid if two points
     centroidX <- ctr@coords[1]
     centroidY <- ctr@coords[2]
 
     if (nUniqueLoc > 1) {
-      distances <- geosphere::distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
+      distances <- distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
+      distM <- distm(spdfTmp,spdfTmp) ## the unstransformed spdf
+      distMLT <- distM[lower.tri(distM)]
+      distancesOut <- distMLT[which(distMLT>0)]
 
       # The minimum circle that covers all points
       effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
-      nOutliers  <- length(boxplot.stats(distances)$out) ### TODO think another way to compute this
+      # nOutliers  <- length(boxplot.stats(distancesOut)$out) ### TODO think another way to compute this
+      if(nUniqueLoc >= minPts ){
+        clusters  <- dbscan(sp::coordinates(sp::spTransform(spdfTmp,
+                                                            CRSobj = CRS("+init=EPSG:3857"))),
+                                     eps = median(distancesOut),
+                                     minPts = minPts)
+        nOutliers <- sum(clusters$cluster==0)
+        nClusters  <- sum(unique(clusters$cluster)!=0)
+      } else {
+        nClusters  <- 1
+        nOutliers  <- 0
+      }
+
     } else {
       effortDiam <- 1 # 1m
       medianDist <- 1
       iqrDist    <- 1
+      nClusters  <- 1
       nOutliers  <- 0
     }
 
     return(c(centroidX, centroidY, effortDiam, medianDist,
-           iqrDist, nUniqueLoc, nOutliers))
+           iqrDist, nUniqueLoc, nClusters, nOutliers))
   } )
   varsCtr <- c("centroidX", "centroidY","effortDiam", "medianDist","iqrDist",
-             "nUniqueLoc", "nOutliers")
+             "nUniqueLoc", "nClusters", "nOutliers")
   tmp <- matrix(unlist(ctrList), ncol = length(varsCtr), byrow = TRUE,
                 dimnames = list(uniqueUID, varsCtr))
 
   visitStat[, match(varsCtr, colnames(visitStat))] <- tmp
-
-
-  # boxplot.stats(visitStat$medianDist[visitStat$medianDist>1])
-  # wVis <- which(dat[, visitCol] %in% visitStat$visitUID[visitStat$medianDist>1])
-  # spdfTmp <- spdf[wVis, ]
 
   visitStat$date <- as.Date(paste(visitStat$year,
                                   visitStat$month,
