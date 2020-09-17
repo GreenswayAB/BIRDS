@@ -130,6 +130,10 @@ exploreVisits<-function(x,
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
+      # spdfTmpTr <- sp::spTransform(spdfTmp,
+                                   # CRSobj = CRS("+init=epsg:3857"))
+      # shotGroups::getMinCircle(coordUnique)
+
       # The minimum circle that covers all points
       effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
@@ -242,7 +246,7 @@ spatialVisits <- function(x,
 #' @keywords internal
 getUTMzone <- function(points){
   ##Find which UTM-zones that have the most points
-  utmZonesTr <- spTransform(utmZones, proj4string(points)) #To accept all reference systems for points.
+  utmZonesTr <- spTransform(utmZones, slot(points, "proj4string")) #To accept all reference systems for points.
   utmZone <- over(points, utmZonesTr)
   freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
@@ -325,7 +329,7 @@ getUTMzone <- function(points){
     }
 
     meanPoint <- sp::SpatialPoints(geosphere::geomean(points),
-                                   proj4string = proj4string(points))
+                                   proj4string = slot(points, "proj4string"))
     utmMeanZone <- sp::over(meanPoint, utmZones)
     res$zone <- as.integer(utmMeanZone$ZONE)
     message("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")
@@ -354,7 +358,7 @@ getUTMproj<-function(x){
   }
 
   ## error no CRS
-  if (is.na(proj4string(spdf))) {
+  if (is.na(proj4string(spdf))) { #slot(points, "proj4string") or soon wkt()
     stop("The polygon has no coordinate projection system (CRS) associated")
   }
 

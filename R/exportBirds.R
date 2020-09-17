@@ -283,7 +283,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
     }
 
   } else if (variable == "nYears"){
-    ## only valid for month, prohibition set at the begining
+    ## only valid for month, prohibition set at the beginning
     if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
     tmp <- summarise(gby, nYear=n_distinct(.data$year))
     resMon <-  summarise(group_by(tmp, .data$month), var=sum(.data$nYear))

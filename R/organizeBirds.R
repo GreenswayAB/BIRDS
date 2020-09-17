@@ -156,10 +156,10 @@ getGridIDs <- function(x, grid){
       }
 
       if(! identicalCRS(x, grid)){
-        grid <- spTransform(grid, CRS(proj4string(x)))
+        grid <- spTransform(grid, slot(x,"proj4string"))
       }
 
-      return( sp::over(x, grid, returnList=FALSE) )
+      return( over(x, grid, returnList=FALSE) )
     }else stop("The argument 'grid' can only be of class SpatialPolygonsDataFrame or SpatialPolygons")
   } else stop("The argument 'x' can only be of class SpatialPointsDataFrame")
 }
@@ -448,7 +448,7 @@ organizeBirds <- function(x,
 
     xyColsl.df <- unlist(findCols(xyCols, x))
     if (length(xyColsl.df) > 0){
-      if (length(xyColsl.df) > 2){ ## if too many matchs try exact=TRUE
+      if (length(xyColsl.df) > 2){ ## if too many matches try exact=TRUE
         xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
@@ -463,8 +463,9 @@ organizeBirds <- function(x,
     stop("The argument 'x' should be of class data.frame or SpatialPointsDataFrame.")
   }
 
-  if(proj4string(x) != "+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"){
-    x <- spTransform(x, CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+  if(slot(x,"proj4string") != CRS("+init=epsg:4326")){
+    x <- spTransform(x, CRS("+init=epsg:4326"))
+    # x <- spTransform(x, CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
   }
 
   ### Check the column names

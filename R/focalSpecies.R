@@ -88,11 +88,15 @@ focalSpSummary <- function(x, focalSp=NULL){
   # yearsFocal <- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"year"]) )))
   # monthsFocal <- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"month"]) )))
   nCells <- sum(wOverFocal)
-  nObs <- sum(unlist(lapply(overFocal, function(x) return(sum(x$scientificName == focalSp))) ))
-  visitsFocal <- unique(unname(unlist(lapply(overFocal, FUN=function(x) x[x$scientificName == focalSp,visitCol]) )))
+  nObs <- sum(unlist(lapply(overFocal,
+                            function(x) return(sum(x$scientificName == focalSp))) ))
+  visitsFocal <- unique(unname(unlist(lapply(overFocal,
+                                             FUN=function(x) x[x$scientificName == focalSp,visitCol]) )))
   nVis <- length(visitsFocal)
-  yearsFocal <- sort(unique(unlist(lapply(overFocal, FUN=function(x) x[x$scientificName == focalSp,"year"]) )))
-  monthsFocal <- sort(unique(unlist(lapply(overFocal, FUN=function(x) x[x$scientificName == focalSp,"month"]) )))
+  yearsFocal <- sort(unique(unlist(lapply(overFocal,
+                                          FUN=function(x) x[x$scientificName == focalSp,"year"]) )))
+  monthsFocal <- sort(unique(unlist(lapply(overFocal,
+                                           FUN=function(x) x[x$scientificName == focalSp,"month"]) )))
 
   return(data.frame("species"=focalSp,
                     "nCells"=nCells,
@@ -147,7 +151,8 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
   if(!(focalSp %in% allSpecies)) stop(paste0("The focal species ", focalSp,
                                              " was not found among the species names in the data set."))
   # overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
-  wOverFocal <- unname(unlist(lapply(x$overlaid, FUN=function(x) return(focalSp %in% x$scientificName))))
+  wOverFocal <- unname(unlist(lapply(x$overlaid,
+                                     FUN=function(x) return(focalSp %in% x$scientificName))))
   overFocal <- x$overlaid[wOverFocal]
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
@@ -156,7 +161,8 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
   yearMin <- min(yearsAll)
 
   wNonEmptyFocal <- wOverFocal #unname(which(unlist(lapply(overFocal, nrow))>0))
-  nObs <- sum(unlist(lapply(overFocal, function(x) return(sum(x$scientificName == focalSp))) ))
+  nObs <- sum(unlist(lapply(overFocal,
+                            function(x) return(sum(x$scientificName == focalSp))) ))
   visitsFocal <- unique(unname(unlist(lapply(overFocal,
                                       FUN=function(x) x[x$scientificName == focalSp, visitCol])
                                       )))
@@ -188,7 +194,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
         polygon<-NULL
       } else {
         # Transform to SB$spatial projection
-        polygon <- spTransform(polygon, CRSobj = CRS(proj4string(x$spatial)))
+        polygon <- spTransform(polygon, CRSobj = slot(x$spatial, "proj4string"))
       }
     }
   }
@@ -240,7 +246,7 @@ speciesSummary <- function(x){
 
   tmp <- sapply(allSpecies,
                 function(y){
-                  fsp<-focalSpSummary(x, focalSp = y)
+                  fsp <- focalSpSummary(x, focalSp = y)
                   message(y)
                   return(fsp)
                 }, simplify = FALSE)
@@ -282,13 +288,16 @@ communityMatrix<-function(x, sampleUnit="observation"){
 
   allSpecies <- listSpecies(x)
   nCells<-length(x$spatial)
-  cellID<-sapply(methods::slot(x$spatial, "polygons"), FUN=function(x) methods::slot(x, "ID"))
+  cellID<-sapply(slot(x$spatial, "polygons"),
+                 FUN = function(x) slot(x, "ID"))
   wNonEmpty<-unname(which(unlist(lapply(x$overlaid, nrow))>0))
-  res<-matrix(NA, nrow=nCells, ncol = length(allSpecies), dimnames = list(cellID, allSpecies))
+  res<-matrix(NA, nrow=nCells, ncol = length(allSpecies),
+              dimnames = list(cellID, allSpecies))
 
   if (sampleUnit == "visit"){
     for(i in wNonEmpty){
-      tmp.vis <- summarise(group_by(x$overlaid[[i]], .data$scientificName, !!! rlang::syms(visitCol)))
+      tmp.vis <- summarise(group_by(x$overlaid[[i]],
+                                    .data$scientificName, !!! rlang::syms(visitCol)))
       tmp <- rowSums(table(tmp.vis))
       wSp<- match( names(tmp), allSpecies)
       res[i, wSp] <- tmp

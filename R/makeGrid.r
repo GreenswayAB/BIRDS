@@ -97,7 +97,7 @@ makeCircle<-function(spdf, projCRS=NULL){
       circle <- spTransform(circle, CRSobj = CRS("+init=epsg:4326"))
 
     } else {
-        stop("More than one unique set of coordinates is needed to make a minimum circle polygon.")
+        stop("More than one unique set of coordinates are needed to make a minimum circle polygon.")
     }
 
     row.names(circle) <- as.character(1:length(row.names(circle)))
@@ -203,7 +203,8 @@ OB2Polygon <- function(x, shape="bBox") {
 #' @keywords internal
 renameGrid<-function(grid){
     for(i in 1:length(grid)){
-      grid@polygons[[i]]@ID <- paste0("ID", i)
+      # grid@polygons[[i]]@ID <- paste0("ID", i)
+      slot(slot(grid, "polygons")[[i]], "ID") <- paste0("ID", i)
     }
   return(grid)
 }
@@ -286,7 +287,8 @@ makeGrid <- function(polygon,
 
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
-    dif <- diff(t(polygonProj@bbox))
+    # dif <- diff(t(polygonProj@bbox))
+    dif <- diff(t(slot(polygonProj, "bbox")))
 
     if (any(gridSizeM >= dif)) {
         stop("Grid cells must be smaller than the sampling area")
@@ -424,6 +426,7 @@ makeDggrid <- function(polygon,
     })
   gridPol <- SpatialPolygons(gridPolList, proj4string=CRS("+init=epsg:4326"))
   gridPolInt <- vector()
+
   for(i in 1:length(gridPol)){
     gridPolInt[i] <-rgeos::gIntersects(polygonGeod, gridPol[i,])
   }
@@ -448,7 +451,15 @@ gridAsString <- function(grid) {
 
     ncells <- length(grid)
     polyStrg <- list()
-    for (i in 1:ncells) polyStrg[[i]] <- paste0(apply(grid@polygons[i][[1]]@Polygons[[1]]@coords, 1, paste0, collapse = "%20"), collapse = ",")
+    for (i in 1:ncells){
+
+      polyStrg[[i]] <- paste0(apply(slot(slot(slot(grid, "polygons")[i][[1]],
+                                              "Polygons")[[1]],
+                                         "coords"),  #grid@polygons[i][[1]]@Polygons[[1]]@coords,
+                                    1, paste0, collapse = "%20"),
+                              collapse = ",")
+    }
+
 
     return(polyStrg)
 }
