@@ -264,13 +264,15 @@ speciesSummary <- function(x){
 
 #' Create a community matrix
 #'
-#' A function that counts the number of observations or visits per grid cell for all species.
+#' A function that counts the number of observations or visits per grid cell for
+#' all species.
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param sampleUnit an string specifying the sample unit within a grid cell.
 #' Options are \dQuote{observation} (default) or \dQuote{visit}.
 #' If spillOver=TRUE and visits are defined by locality, it may happen that some
 #' species observations are counted in more than one grid cell.
-#' @return a \code{matrix} with counts of observations or visits for each species on each non-empty grid cell.
+#' @return a \code{matrix} with counts of observations or visits for each species
+#' on each non-empty grid cell.
 #' @examples
 #' \donttest{
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
@@ -280,33 +282,41 @@ speciesSummary <- function(x){
 #' @export
 #' @importFrom rlang .data
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-communityMatrix<-function(x, sampleUnit="observation"){
+communityMatrix<-function(x,
+                          sampleUnit="observation"){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   visitCol<-attr(x, "visitCol")
 
   allSpecies <- listSpecies(x)
-  nCells<-length(x$spatial)
-  cellID<-sapply(slot(x$spatial, "polygons"),
+  nCells <- length(x$spatial)
+  cellID <- sapply(slot(x$spatial, "polygons"),
                  FUN = function(x) slot(x, "ID"))
-  wNonEmpty<-unname(which(unlist(lapply(x$overlaid, nrow))>0))
-  res<-matrix(NA, nrow=nCells, ncol = length(allSpecies),
-              dimnames = list(cellID, allSpecies))
+  wNonEmpty <- unname(which(unlist(lapply(x$overlaid, nrow)) > 0))
+
+  res <- matrix(NA,
+                nrow=nCells,
+                ncol = length(allSpecies),
+                dimnames = list(cellID,
+                                allSpecies))
 
   if (sampleUnit == "visit"){
     for(i in wNonEmpty){
       tmp.vis <- summarise(group_by(x$overlaid[[i]],
-                                    .data$scientificName, !!! rlang::syms(visitCol)))
+                                    .data$scientificName,
+                                    !!! rlang::syms(visitCol)))
       tmp <- rowSums(table(tmp.vis))
-      wSp<- match( names(tmp), allSpecies)
+      wSp <- match( names(tmp), allSpecies)
       res[i, wSp] <- tmp
     }
   }
   if (sampleUnit == "observation"){
     for(i in wNonEmpty){
-      tmp <- summarise(group_by(x$overlaid[[i]], .data$scientificName), n=n())
-      wSp<- match( tmp$scientificName, allSpecies)
+      tmp <- summarise(group_by(x$overlaid[[i]],
+                                .data$scientificName),
+                       n=n())
+      wSp <- match( tmp$scientificName, allSpecies)
       res[i, wSp] <- tmp$n
     }
   }

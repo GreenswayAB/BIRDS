@@ -416,7 +416,7 @@ obsData.OrganizedBirds<-function(x){
 #' @importFrom stats IQR median na.omit  quantile var
 #' @importFrom grDevices boxplot.stats
 #' @importFrom graphics barplot layout legend mtext par plot
-#' @importFrom methods as
+#' @importFrom methods as slot slot<-
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds,
 #' with additional attributes.
 #' @export
