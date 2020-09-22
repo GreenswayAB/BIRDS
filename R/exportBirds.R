@@ -129,19 +129,20 @@ exportSpatial <- function(sb, timeRes, variable, method){
       resList <- lapply(1:length(sb$overlaid), function(x) rep(NA, ncolumns))
       tmpList <- lapply(sb$overlaid[wNonEmpty], function(x){
         if(timeRes == "yearly"){
-          gby<-dplyr::group_by(x, factor(.data$year, levels = yearsAll),
-                               !!dplyr::sym(visitCol),
+          gby <- group_by(x, factor(.data$year, levels = yearsAll),
+                               # !!dplyr::sym(visitCol),
+                               !!sym(visitCol),
                                .drop=FALSE)
-          resSLL <- dplyr::summarise(gby, SLL=n_distinct(.data$scientificName))
-          resAvg <- dplyr::summarise(resSLL, avgSll=median(.data$SLL))
+          resSLL <- summarise(gby, SLL=n_distinct(.data$scientificName))
+          resAvg <- summarise(resSLL, avgSll=median(.data$SLL))
           return(resAvg$avgSll)
         } else { # monthly
-          gby<-dplyr::group_by(x, factor(.data$year, levels = yearsAll),
+          gby<-group_by(x, factor(.data$year, levels = yearsAll),
                                factor(.data$month, levels = 1:12), #, labels=month.abb
-                               !!dplyr::sym(visitCol),
+                               !!sym(visitCol),
                                .drop=FALSE)
-          resSLL <- dplyr::summarise(gby, SLL=n_distinct(.data$scientificName))
-          resAvg <- as.data.frame(dplyr::summarise(resSLL, avgSll=median(.data$SLL)))
+          resSLL <- summarise(gby, SLL=n_distinct(.data$scientificName))
+          resAvg <- as.data.frame(summarise(resSLL, avgSll=median(.data$SLL)))
           colnames(resAvg) <- c("year", "month", "avgSll")
 
           if(timeRes == "monthly"){
@@ -189,7 +190,9 @@ exportSpatial <- function(sb, timeRes, variable, method){
 removeInexDays<-function(x){
   if (!all(c("year", "month", "day") %in% colnames(x) )) stop("Input data must have the columns 'year', 'month' and 'day'")
 
-  dates<-as.Date(paste0(x$year, "-", sprintf("%02d", x$month), "-", sprintf("%02d", x$day)))
+  dates<-as.Date(paste0(x$year, "-",
+                        sprintf("%02d", x$month), "-",
+                        sprintf("%02d", x$day)))
   wRm <- which(is.na(dates))
   x <- x[-wRm,]
   return(x)
@@ -201,16 +204,16 @@ removeInexDays<-function(x){
 getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
   if(timeRes=="yearly"){
     gby<-group_by(obsData, year=factor(.data$year, levels = yearsAll),
-                         !!dplyr::sym(visitCol), .drop=FALSE)
+                         !!sym(visitCol), .drop=FALSE)
   } else if(timeRes %in% c("monthly", "month")){
     gby<-group_by(obsData, year=factor(.data$year, levels = yearsAll),
                          month=factor(.data$month, levels = 1:12),
-                         !!dplyr::sym(visitCol), .drop=FALSE)
+                         !!sym(visitCol), .drop=FALSE)
   } else if(timeRes=="daily"){
     gby<-group_by(obsData, year=factor(.data$year, levels = yearsAll),
                          month=factor(.data$month, levels = 1:12),
                          day=factor(.data$day, levels = 1:31),
-                         !!dplyr::sym(visitCol), .drop=FALSE)
+                         !!sym(visitCol), .drop=FALSE)
   } else {
     stop(paste0("Unknown timeRes: ", timeRes ))
   }
@@ -231,6 +234,7 @@ countIfHigher <- function(x, thr, na.rm = TRUE) {
 
 #' @keywords internal
 #' @importFrom rlang .data
+#' @importFrom dplyr pull
 exportTemporal <- function(sb, timeRes, variable, method){
   if (variable == "nYears" && timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
   if (is.null(timeRes)) stop("Time resolution ('timeRes') needs to be defined for dimension 'Temporal'")
@@ -257,7 +261,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
     ## Summarising
     res <- summarise(gby,
                      nObs=n(),
-                     nVis=n_distinct(!!dplyr::sym(visitCol)),
+                     nVis=n_distinct(!!sym(visitCol)),
                      nSpp=n_distinct(.data$scientificName),
                      nDays=n_distinct(paste0(.data$year, .data$month, .data$day)))
 
@@ -265,7 +269,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
     if (timeRes %in% c("yearly", "monthly", "daily")){
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-      resVar <- dplyr::pull(res, !!dplyr::sym(variable))
+      resVar <- pull(res, !!sym(variable))
       names(resVar) <- switch(timeRes,
                               "yearly" = paste0(yearsAll, "-01-01"),
                               "monthly"= paste0(res$year, "-", sprintf("%02d", res$month), "-01"),
@@ -275,10 +279,11 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
     } else { #month
       if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'median' or 'mean' as summary method")
-      if (method == "sum")    resMon <-  summarise(group_by(res, .data$month), var=sum(!!dplyr::sym(variable)))
-      if (method == "mean")   resMon <-  summarise(group_by(res, .data$month), var=mean(!!dplyr::sym(variable)))
-      if (method == "median") resMon <-  summarise(group_by(res, .data$month), var=median(!!dplyr::sym(variable)))
-      resVar <- dplyr::pull(resMon, .data$var)
+      gpby <- group_by(res, .data$month)
+      if (method == "sum")    resMon <-  summarise(gpby, var=sum(!!sym(variable)))
+      if (method == "mean")   resMon <-  summarise(gpby, var=mean(!!sym(variable)))
+      if (method == "median") resMon <-  summarise(gpby, var=median(!!sym(variable)))
+      resVar <- pull(resMon, .data$var)
       names(resVar) <- month.abb
     }
 
@@ -287,7 +292,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
     if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
     tmp <- summarise(gby, nYear=n_distinct(.data$year))
     resMon <-  summarise(group_by(tmp, .data$month), var=sum(.data$nYear))
-    resVar <- dplyr::pull(resMon, .data$var)
+    resVar <- pull(resMon, .data$var)
     names(resVar) <- month.abb
 
   } else if (variable == "avgSll"){
@@ -295,7 +300,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
     res <- getTemporalAvgSll(obsData, timeRes, visitCol, yearsAll)
     if (timeRes %in% c("yearly", "monthly", "daily")){
       if (method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
-      resVar <- dplyr::pull(res, .data$avgSll)
+      resVar <- pull(res, .data$avgSll)
       names(resVar) <- switch(timeRes,
                               "yearly" = paste0(yearsAll, "-01-01"),
                               "monthly"= paste0(res$year, "-", sprintf("%02d", res$month), "-01"),
@@ -304,9 +309,10 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
     } else { #month
       if (!(method %in% c("median", "mean"))) stop("This combination of variable and time resolution only accepts 'median' or 'mean' as summary method")
-      if (method == "mean")   resMon <-  summarise(group_by(res, .data$month), var = round(mean(.data$avgSll),2))
-      if (method == "median") resMon <-  summarise(group_by(res, .data$month), var = median(.data$avgSll))
-      resVar <- dplyr::pull(resMon, .data$var)
+      gpby <- group_by(res, .data$month)
+      if (method == "mean")   resMon <-  summarise(gpby, var = round(mean(.data$avgSll),2))
+      if (method == "median") resMon <-  summarise(gpby, var = median(.data$avgSll))
+      resVar <- pull(resMon, .data$var)
       names(resVar) <- month.abb
     }
   ## nCells
@@ -406,7 +412,9 @@ exportBirds <- function(x, dimension, timeRes, variable, method="sum"){
 
   variable <- tolower(variable)
   if (any(variable == c("nobs", "nvis", "nspp", "nyears", "ndays", "ncells"))){
-    variable <- paste0(substr(variable,1,1), toupper(substr(variable,2,2)), substr(variable, 3, nchar(variable)))
+    variable <- paste0(substr(variable,1,1),
+                       toupper(substr(variable,2,2)),
+                       substr(variable, 3, nchar(variable)))
   } else if (variable == "avgsll"){
     variable <- "avgSll"
   } else {

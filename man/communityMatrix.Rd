@@ -15,10 +15,12 @@ If spillOver=TRUE and visits are defined by locality, it may happen that some
 species observations are counted in more than one grid cell.}
 }
 \value{
-a \code{matrix} with counts of observations or visits for each species on each non-empty grid cell.
+a \code{matrix} with counts of observations or visits for each species
+on each non-empty grid cell.
 }
 \description{
-A function that counts the number of observations or visits per grid cell for all species.
+A function that counts the number of observations or visits per grid cell for
+all species.
 }
 \examples{
 \donttest{
