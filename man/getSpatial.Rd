@@ -4,10 +4,10 @@
 \alias{getSpatial}
 \title{Collect spatial data}
 \usage{
-getSpatial(birdData, visitCol = NULL)
+getSpatial(birdOverlay, visitCol = NULL)
 }
 \arguments{
-\item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}
+\item{birdOverlay}{An birdOverlay which is the result of the \code{\link{overlayBirds}}-function.}
 
 \item{visitCol}{A character string for specifying the columns that identify a visit.}
 }

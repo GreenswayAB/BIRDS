@@ -59,6 +59,7 @@ Imports:
     stringr (>= 1.4),
     shotGroups,
     taxize,
+    tidyr,
     xts
 Suggests: 
     covr, 

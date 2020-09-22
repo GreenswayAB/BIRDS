@@ -7,9 +7,9 @@
 getSpatioTemporal(birdOverlay, visitCol = NULL)
 }
 \arguments{
-\item{visitCol}{A character string for specifying the columns that identify a visit.}
+\item{birdOverlay}{An birdOverlay which is the result of the \code{\link{overlayBirds}}-function.}
 
-\item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}
+\item{visitCol}{A character string for specifying the columns that identify a visit.}
 }
 \value{
 A list with two arrays

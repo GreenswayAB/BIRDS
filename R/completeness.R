@@ -6,7 +6,7 @@
 #'
 #' @references Lobo et al. (2018) <https://doi.org/10.1016/j.ecolind.2018.03.077>
 #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial Dataframe).
-#' @param type the type of matrix to return: type 'A' where each row is a
+#' @param format the type of matrix to return: type 'A' where each row is a
 #' combination of species, location (unique coordinates or visits' ID) and count,
 #' or 'B' where each row is a location, each column a species, and the elements
 #' of the matrix the counts
@@ -15,19 +15,19 @@
 #' @export
 #' @importFrom tidyr pivot_wider
 #' @seealso \code{\link{organizeBirds}}
-recBySpp <- function(x, type="A", location="coordinates"){
+recBySpp <- function(x, format="A", location="coordinates"){
   if (class(x) != "OrganizedBirds") {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
 
   if (is.null(location) | !(location %in% c("coordinates", "visit"))){
-    stop("The argument 'locaiton' needs to be one of 'coordinates' or 'visit'")
+    stop("The argument 'location' needs to be one of 'coordinates' or 'visit'")
   }
   if(location == "visit") location <- "visitUID"
 
-  type <- tolower(type)
-  if(is.null(type) | !(type %in% c("a","b"))){
-    stop("The argument 'type' needs to be one of 'a' or 'b'")
+  format <- tolower(format)
+  if(is.null(format) | !(format %in% c("a","b"))){
+    stop("The argument 'format' needs to be one of 'a' or 'b'")
   }
 
   ## paste coordinates
@@ -39,16 +39,16 @@ recBySpp <- function(x, type="A", location="coordinates"){
 
   ### typeA
   resA <- obCoor %>%
-    group_by(scientificName, !!sym(location)) %>%
+    group_by(.data$scientificName, !!sym(location)) %>%
     summarise("count"=n())
-  if(type="a"){
+  if(format == "a"){
     return(as.data.frame(resA))
   }else{
     ### typeB
     resB <- resA %>%
-      pivot_wider(names_from = scientificName,
-                  values_from = count)
-    return(as.dta.frame(resB))
+      pivot_wider(names_from = .data$scientificName,
+                  values_from = .data$count)
+    return(as.data.frame(resB))
   }
 
 }
@@ -57,7 +57,7 @@ recBySpp <- function(x, type="A", location="coordinates"){
 
 
 
-#' Completness analysis
+#' Completeness analysis
 #'
 #' Lorem ipsum
 #'
@@ -76,7 +76,7 @@ recBySpp <- function(x, type="A", location="coordinates"){
 #' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-completness <- function(SB, nSpp=NULL, h=1){
+completness <- function(nObs){
 
 
 }
