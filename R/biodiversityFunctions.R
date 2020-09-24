@@ -1,7 +1,7 @@
-#' Create a community matrix
+#' Create a community matrix (grid cells x species)
 #'
 #' A function that counts the number of observations or visits per grid cell for
-#' all species.
+#' each species.
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param sampleUnit an string specifying the sample unit within a grid cell.
 #' Options are \dQuote{observation} (default) or \dQuote{visit}.
@@ -18,8 +18,8 @@
 #' @export
 #' @importFrom rlang .data
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-communityMatrix<-function(x,
-                          sampleUnit="observation"){
+communityMatrix <- function(x, sampleUnit="observation"){
+
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
@@ -61,7 +61,64 @@ communityMatrix<-function(x,
 }
 
 
-#' Observations by Species or records by species matrix
+
+#' Creates a community matrix per grid cell (sample x species x grid cell)
+#'
+#' A function that counts for each grid cell the number of observations per visit
+#' for each species.
+#' @param x an object of class \sQuote{SummarizeBirds}.
+#' @return a \code{list} with a \code{data.frame} per grid cell with counts of
+#' observations for each species per visits on each non-empty grid cell.
+#' @examples
+#' \donttest{
+#' grid <- makeGrid(searchPolygon, gridSize = 10)
+#' OB <- organizeBirds(bombusObs, sppCol = "scientificName",
+#'                     taxonRankCol = "taxonRank", taxonRank = "SPECIES",
+#'                     simplifySppName = TRUE)
+#' SB <- summarizeBirds(OB, grid=grid)
+#' CM <- communityMatrixGrid(SB)
+#' lCM <- lengths(CM) ## Which cells are empty
+#' lapply(CM[which(lCM>0)], specaccum)
+#' }
+#' @export
+#' @importFrom rlang .data
+#' @importFrom tidyr pivot_wider
+#' @seealso \code{\link{communityMatrix}}
+communityMatrixGrid <- function(x){
+
+  if (class(x) != "SummarizedBirds") {
+    stop("The object 'x' must be of class SummarizedBirds.")
+  }
+  visitCol<-attr(x, "visitCol")
+  overlaid <- x$overlaid
+  allSpecies <- listSpecies(x)
+  nCells <- length(x$spatial)
+  cellID <- sapply(slot(x$spatial, "polygons"),
+                   FUN = function(x) slot(x, "ID"))
+  res<-vector("list",nCells)
+  names(res)<-cellID
+
+  # wNonEmpty <- wichNonEmpty(overlaid)
+  wNonEmpty <- attr(x, "nonEmptyGridCells")
+
+  comMatList <- lapply(wNonEmpty, function(x){
+    specMat <- overlaid[[x]] %>%
+      group_by(.data$visitUID,
+               "scientificName"=factor(.data$scientificName, levels=allSpecies),
+               .drop = FALSE) %>%
+      summarise("count"=n()) %>%
+      pivot_wider(names_from = .data$scientificName,
+                         values_from = .data$count,
+                         values_fill = list(count = 0))
+    return(as.data.frame(specMat))
+  })
+
+  res[wNonEmpty] <- comMatList
+  return(res)
+}
+
+
+#' Observations by species or records-by-species matrix
 #'
 #' This function prepares the organised data into a "records-by-species" matrix
 #' summarizing the number of observations (records)  per species in the shape
@@ -75,9 +132,17 @@ communityMatrix<-function(x,
 #' of the matrix the counts
 #' @param location the uniqueness of the position given by the coordinates or the visits' ID
 #' @return a \code{data.frame} with a record-by-species matrix
+#' @examples
+#' \donttest{
+#' grid <- makeGrid(searchPolygon, gridSize = 10)
+#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName",
+#'                     taxonRankCol = "taxonRank", taxonRank = "SPECIES",
+#'                     simplifySppName = TRUE)
+#' RxS <- recBySpp(OB)
+#' }
 #' @export
 #' @importFrom tidyr pivot_wider
-#' @seealso \code{\link{organizeBirds}}
+#' @seealso \code{\link{communityMatrix}}
 recBySpp <- function(x, format="A", location="coordinates"){
   if (class(x) != "OrganizedBirds") {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
@@ -117,49 +182,29 @@ recBySpp <- function(x, format="A", location="coordinates"){
 }
 
 
-
-##### COMMUNITY MATRIX PER GRID CELL
-OB <- organizeBirds(bombusObs, sppCol = "scientificName",
-                    taxonRankCol = "taxonRank", taxonRank = "SPECIES",
-                    simplifySppName = TRUE)
-grid <- makeGrid(searchPolygon, gridSize = 10)
-
-RxS <- recBySpp(OB)
-KnowBPolygon(RxS, format="A", grid)
-
-SB <- summariseBirds(OB, grid=grid)
-
-x <- SB$overlaid[["ID997"]]
-specMat <- x %>%
-  group_by(visitUID,
-           "scientificName"=factor(x$scientificName, levels=listSpecies(SB)),
-           .drop = FALSE) %>%
-  summarise("count"=n()) %>%
-  tidyr::pivot_wider(names_from = .data$scientificName,
-                     values_from = .data$count,
-                     values_fill = list(count = 0))
-
-specaccum(as.data.frame(specMat))
-
-
-#' Completeness analysis
+#' #' Completeness analysis
+#' #'
+#' #' Lorem ipsum
+#' #'
+#' #' @references
+#' #' @param x a community matrix
+#' #' @return a \code{data.frame} with ignorance scores
+#' #' @examples
+#' #' \donttest{
+#' #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
+#' #' grid <- makeGrid(searchPolygon, gridSize = 10)
+#' #' SB <- summariseBirds(OB, grid=grid)
+#' #' }
+#' #' @export
+#' #' @seealso \code{\link{communityMatrix}}, \code{\link{communityMatrixGrid}}
+#' completeness <- function(x){
+#'   nSpp<-sum(colSums(x[-1])>0)
+#'   nObsSpp<-colSums(x[-1]>0)
+#'   a<-sum(nObsSpp==1)
+#'   b<-sum(nObsSpp==2)
+#'   SouzaBaenaComp <- nSpp / (nSpp + (a^2/2*b))
+#'   return(SouzaBaenaComp)
 #'
-#' Lorem ipsum
 #'
-#' @references La Sorte & Somveille (2019) < https://doi.org/10.1111/ecog.04632>
-#' @param nObs an object of any class (mainly resulting from \code{summariseBirds} or
-#' \code{exportBirds} with  the number of observations, or visits in your desired analysis unit.
-#' @return a \code{data.frame} with ignorance scores
-#' @examples
-#' \donttest{
-#' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
-#' grid <- makeGrid(searchPolygon, gridSize = 10)
-#' SB <- summariseBirds(OB, grid=grid)
-#' ignorance <- exposeIgnorance(nObs=SB$spatial@data$nObs)
 #' }
-#' @export
-#' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-completeness <- function(nObs){
 
-
-}

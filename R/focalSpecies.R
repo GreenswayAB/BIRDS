@@ -144,7 +144,9 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
     stop("Please, define the focal species to search for.")
   }
   visitCol<-attr(x, "visitCol")
-  wNonEmpty<-unname(which(unlist(lapply(x$overlaid, nrow))>0))
+  # wNonEmpty<-unname(which(unlist(lapply(x$overlaid, nrow))>0))
+  wNonEmpty<-attr(x, "nonEmptyGridCells")
+
   allSpecies <- listSpecies(x)
 
   wFocal <- match(focalSp, allSpecies)

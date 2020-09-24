@@ -288,10 +288,12 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
   spatial<-NULL
   spatioTemporal<-NULL
   visits<-NULL
+  wNonEmptyCells <- NULL
 
   if(!is.null(grid)){
     if(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons")){
       bOver <- overlayBirds(x, grid=grid, spillOver = spillOver) # To use in the spatial analysis
+      wNonEmptyCells <- bOver$nonEmptyGridCells
 
       areaGrid <- rgeos::gUnaryUnion(grid)
       suppressMessages(bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver))
@@ -305,7 +307,6 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
 
     areaGrid <- OB2Polygon(x)
     bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver)
-
     warning("To get the most out of summarizeBirds you should have a grid.")
   }
 
@@ -316,9 +317,11 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
     #If we have spatial grid data:
     spatial <- getSpatial(bOver)
     spatioTemporal <- getSpatioTemporal(bOver,  visitCol=visitCol)
+    wNonEmptyCells <- bOver$nonEmptyGridCells
   }else{
     spatial <- getSpatial(bTOver)
     spatioTemporal <- getSpatioTemporal(bTOver, visitCol=visitCol)
+    wNonEmptyCells <- bTOver$nonEmptyGridCells
   }
 
   res <- list("temporal" = temporal,
@@ -331,6 +334,7 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
   attr(res,"visitCol") <- visitCol #The column(s) that identify a visit
   attr(res,"spillOver") <- spillOver #If spillover has been used
   attr(res,"spatial") <- useSpatial #If there is a spatial grid in the object
+  attr(res, "nonEmptyGridCells") <- wNonEmptyCells
 
   return(res)
 

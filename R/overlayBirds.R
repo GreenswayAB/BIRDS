@@ -1,3 +1,16 @@
+#' Which cells are not empty
+#'
+#' This function returns the ID of those cells that have some data. It is used to
+#' speed up other functions
+#'
+#' @param x A list.
+#' @return The a \code{vector} with list elements IDs.
+#' @keywords internal
+whichNonEmpty <- function(x){
+  res <- unname(which(unlist(lapply(x, nrow)) > 0))
+  return(res)
+}
+
 #' Create spillover overlay for specific grid
 #'
 #' An internal function. Takes the resulting dataframe from the spatial overlay
@@ -193,7 +206,9 @@ All results will use this nomenclature, but the order of the cells will remain u
   #### SPILL OVER
   ### Generic overlay
   ObsInGridList <- over(grid, spBird, returnList=TRUE)
-  wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+  # wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+  wNonEmpty <- whichNonEmpty(ObsInGridList)
+
   if(length(wNonEmpty)==0) stop("Observations don't overlap any grid cell.")
   ### Check nObs
   nObsInGrid <- sum(unlist(lapply(ObsInGridList, nrow)))
@@ -221,7 +236,8 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
     if(spillOver == "unique"){ ### UNIQUE SPILL OVER
       # This will replace the previously defined ObsInGridList
       ObsInGridList <- includeUniqueSpillover(spBird, grid, visitCol)
-      wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+      # wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+      wNonEmpty <- whichNonEmpty(ObsInGridList)
 
     } else if(spillOver == "duplicate"){   ### DUPLICATE SPILL OVER
       ObsInGridList[wNonEmpty] <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
