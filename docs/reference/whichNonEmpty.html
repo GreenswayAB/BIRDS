@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect spatiotemporal data — getSpatioTemporal • BIRDS</title>
+<title>Which cells are not empty — whichNonEmpty • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,9 @@
 
 
 
-<meta property="og:title" content="Collect spatiotemporal data — getSpatioTemporal" />
-<meta property="og:description" content="An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and summarises basic variables as a list of arrays" />
+<meta property="og:title" content="Which cells are not empty — whichNonEmpty" />
+<meta property="og:description" content="This function returns the ID of those cells that have some data. It is used to
+speed up other functions" />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -145,34 +145,30 @@ for a specific grid and summarises basic variables as a list of arrays" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect spatiotemporal data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
-    <div class="hidden name"><code>getSpatioTemporal.Rd</code></div>
+    <h1>Which cells are not empty</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/overlayBirds.R'><code>R/overlayBirds.R</code></a></small>
+    <div class="hidden name"><code>whichNonEmpty.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and summarises basic variables as a list of arrays</p>
+    <p>This function returns the ID of those cells that have some data. It is used to
+speed up other functions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getSpatioTemporal</span>(<span class='no'>birdOverlay</span>, <span class='kw'>visitCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>whichNonEmpty</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>birdOverlay</th>
-      <td><p>An birdOverlay which is the result of the <code><a href='overlayBirds.html'>overlayBirds</a></code>-function.</p></td>
-    </tr>
-    <tr>
-      <th>visitCol</th>
-      <td><p>A character string for specifying the columns that identify a visit.</p></td>
+      <th>x</th>
+      <td><p>A list.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with two arrays</p>
+    <p>The a <code>vector</code> with list elements IDs.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

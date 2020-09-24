@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect spatiotemporal data — getSpatioTemporal • BIRDS</title>
+<title>Observations by species or records-by-species matrix — recBySpp • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,10 @@
 
 
 
-<meta property="og:title" content="Collect spatiotemporal data — getSpatioTemporal" />
-<meta property="og:description" content="An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and summarises basic variables as a list of arrays" />
+<meta property="og:title" content="Observations by species or records-by-species matrix — recBySpp" />
+<meta property="og:description" content="This function prepares the organised data into a &quot;records-by-species&quot; matrix
+summarizing the number of observations (records)  per species in the shape
+required by the functions from the KnowBR package for calculating 'completeness'." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -145,41 +146,65 @@ for a specific grid and summarises basic variables as a list of arrays" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect spatiotemporal data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
-    <div class="hidden name"><code>getSpatioTemporal.Rd</code></div>
+    <h1>Observations by species or records-by-species matrix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/biodiversityFunctions.R'><code>R/biodiversityFunctions.R</code></a></small>
+    <div class="hidden name"><code>recBySpp.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An internal function. Takes the dataframe resulting from the spatial overlay
-for a specific grid and summarises basic variables as a list of arrays</p>
+    <p>This function prepares the organised data into a "records-by-species" matrix
+summarizing the number of observations (records)  per species in the shape
+required by the functions from the KnowBR package for calculating 'completeness'.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getSpatioTemporal</span>(<span class='no'>birdOverlay</span>, <span class='kw'>visitCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>recBySpp</span>(<span class='no'>x</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"A"</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"coordinates"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>birdOverlay</th>
-      <td><p>An birdOverlay which is the result of the <code><a href='overlayBirds.html'>overlayBirds</a></code>-function.</p></td>
+      <th>x</th>
+      <td><p>an object of class &#8216;OrganizedBirds&#8217; (organised BIRDS Spatial Dataframe).</p></td>
     </tr>
     <tr>
-      <th>visitCol</th>
-      <td><p>A character string for specifying the columns that identify a visit.</p></td>
+      <th>format</th>
+      <td><p>the type of matrix to return: type 'A' where each row is a
+combination of species, location (unique coordinates or visits' ID) and count,
+or 'B' where each row is a location, each column a species, and the elements
+of the matrix the counts</p></td>
+    </tr>
+    <tr>
+      <th>location</th>
+      <td><p>the uniqueness of the position given by the coordinates or the visits' ID</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with two arrays</p>
+    <p>a <code>data.frame</code> with a record-by-species matrix</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>Lobo et al. (2018) &lt;https://doi.org/10.1016/j.ecolind.2018.03.077&gt;</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='communityMatrix.html'>communityMatrix</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>searchPolygon</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObsShort</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>,
+                    <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='st'>"taxonRank"</span>, <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='st'>"SPECIES"</span>,
+                    <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>20 observations did not match with the specified taxon rank and were removed.</span></div><div class='input'><span class='no'>RxS</span> <span class='kw'>&lt;-</span> <span class='fu'>recBySpp</span>(<span class='no'>OB</span>)
+<span class='co'># }</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
+      <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
