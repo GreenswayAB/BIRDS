@@ -78,7 +78,8 @@ communityMatrix <- function(x, sampleUnit="observation"){
 #' SB <- summarizeBirds(OB, grid=grid)
 #' CM <- communityMatrixGrid(SB)
 #' lCM <- lengths(CM) ## Which cells are empty
-#' lapply(CM[which(lCM>0)], specaccum)
+#' ## library(vegan)
+#' ## R <- lapply(CM[which(lCM>0)], specaccum)
 #' }
 #' @export
 #' @importFrom rlang .data
