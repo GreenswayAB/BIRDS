@@ -183,29 +183,35 @@ recBySpp <- function(x, format="A", location="coordinates"){
 }
 
 
-#' #' Completeness analysis
-#' #'
-#' #' Lorem ipsum
-#' #'
-#' #' @references
-#' #' @param x a community matrix
-#' #' @return a \code{data.frame} with ignorance scores
-#' #' @examples
-#' #' \donttest{
-#' #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
-#' #' grid <- makeGrid(searchPolygon, gridSize = 10)
-#' #' SB <- summariseBirds(OB, grid=grid)
-#' #' }
-#' #' @export
-#' #' @seealso \code{\link{communityMatrix}}, \code{\link{communityMatrixGrid}}
-#' completeness <- function(x){
-#'   nSpp<-sum(colSums(x[-1])>0)
-#'   nObsSpp<-colSums(x[-1]>0)
-#'   a<-sum(nObsSpp==1)
-#'   b<-sum(nObsSpp==2)
-#'   SouzaBaenaComp <- nSpp / (nSpp + (a^2/2*b))
-#'   return(SouzaBaenaComp)
-#'
-#'
-#' }
+# #' Completeness analysis
+# #'
+# #' Lorem ipsum
+# #'
+# #' @references
+# #' @param x a community matrix
+# #' @return a \code{data.frame} with ignorance scores
+# #' @examples
+# #' \donttest{
+# #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
+# #' grid <- makeGrid(searchPolygon, gridSize = 10)
+# #' SB <- summariseBirds(OB, grid=grid)
+# #' }
+# #' @export
+# #' @seealso \code{\link{communityMatrix}}, \code{\link{communityMatrixGrid}}
+# completeness <- function(x){
+#   nSpp<-sum(colSums(x[-1])>0)
+#   nObsSpp<-colSums(x[-1]>0)
+#   a<-sum(nObsSpp==1)
+#   b<-sum(nObsSpp==2)
+#   SouzaBaenaComp <- nSpp / (nSpp + (a^2/2*b))
+#   return(SouzaBaenaComp)
+#
+#
+# }
+#
+#
+# x <- c(541, 1463, 2445, 3438, 4437, 5401, 6392, 8304, 11904, 22261)
+# compute Gini coefficient
+# ineq::ineq(x)
+# compute
 
