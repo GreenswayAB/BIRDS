@@ -17,23 +17,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -50,8 +54,7 @@ the data generation process. With this R package we want to take the
 user a step closer to understanding the observers’ behaviour.
 The 'BIRDS' packages provides a workflow for reproducable data review, involving
 three basic steps: organise data, summarise data, review data." />
-<meta property="og:image" content="/logo.png" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="/logo.svg" />
 
 
 
@@ -79,7 +82,7 @@ three basic steps: organise data, summarise data, review data." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -151,7 +154,7 @@ three basic steps: organise data, summarise data, review data." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>BIRDS: Biodiversity Information Review and Decision Support.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/greensway/BIRDS/blob/master/R/BIRDS_pkg.r'><code>R/BIRDS_pkg.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/BIRDS_pkg.r'><code>R/BIRDS_pkg.r</code></a></small>
     <div class="hidden name"><code>BIRDS.Rd</code></div>
     </div>
 
@@ -171,37 +174,42 @@ three basic steps: organise data, summarise data, review data.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Organise the data</span>
-<span class='no'>OB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bombusObsShort</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"scientificName"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='va'>OB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span>, sppCol <span class='op'>=</span> <span class='st'>"scientificName"</span>, simplifySppName <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='no'>OB2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span>(<span class='no'>bryophytaObs</span>, <span class='kw'>sppCol</span> <span class='kw'>=</span> <span class='st'>"species"</span>, <span class='kw'>simplifySppName</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-      <span class='kw'>taxonRankCol</span> <span class='kw'>=</span> <span class='st'>"taxonRank"</span>, <span class='kw'>taxonRank</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>,<span class='st'>"VARIETY"</span>))</div><div class='output co'>#&gt; <span class='message'>46 observations did not match with the specified taxon rank and were removed.</span></div><div class='input'>
+<span class='va'>OB2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bryophytaObs</span>, sppCol <span class='op'>=</span> <span class='st'>"species"</span>, simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>,
+      taxonRankCol <span class='op'>=</span> <span class='st'>"taxonRank"</span>, taxonRank <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>,<span class='st'>"VARIETY"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>46 observations did not match with the specified taxon rank and were removed.</span></div><div class='input'>
 <span class='co'># Make a grid that can be used by summariseBirds()</span>
 <span class='co'># gotaland is a SpatialPolygonDataFrame provided as an example</span>
-<span class='no'>grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span>(<span class='no'>gotaland</span>, <span class='kw'>gridSize</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-
+<span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in CRS definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum WGS_1984 in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NULL source CRS comment, falling back to PROJ string</span></div><div class='output co'>#&gt; <span class='warning'>Warning: +init dropped in PROJ string</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'>
 <span class='co'># Summarise the data (using the grid to overlay with the organised data)</span>
-<span class='no'>SB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span>(<span class='no'>OB</span>, <span class='kw'>grid</span><span class='kw'>=</span><span class='no'>grid</span>)</div><div class='output co'>#&gt; <span class='message'>289 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='no'>EBnObs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>,
-<span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nObs"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
-<span class='no'>EBnVis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='kw'>dimension</span> <span class='kw'>=</span> <span class='st'>"temporal"</span>, <span class='kw'>timeRes</span> <span class='kw'>=</span> <span class='st'>"yearly"</span>,
-<span class='kw'>variable</span> <span class='kw'>=</span> <span class='st'>"nVis"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sum"</span>)
-<span class='no'>EB</span><span class='kw'>&lt;-</span><span class='fu'><a href='exportBirds.html'>exportBirds</a></span>(<span class='no'>SB</span>, <span class='st'>"Spatial"</span>, <span class='st'>"Month"</span>, <span class='st'>"nYears"</span>, <span class='st'>"sum"</span>)
-<span class='no'>palBW</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>leaflet</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/leaflet/man/colorNumeric.html'>colorNumeric</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"white"</span>, <span class='st'>"navyblue"</span>),
-         <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)), <span class='kw'>na.color</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'sp' was built under R version 3.6.3</span></div><div class='input'><span class='no'>old.par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>no.readonly</span> <span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>), <span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>))
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>EB</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>palBW</span>(<span class='no'>EB</span>@<span class='kw'>data</span>$<span class='no'>Jul</span>))
-<span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='st'>"July"</span>, <span class='fl'>3</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>EB</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='fu'>palBW</span>(<span class='no'>EB</span>@<span class='kw'>data</span>$<span class='no'>Dec</span>))</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='st'>"December"</span>, <span class='fl'>3</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span>(<span class='st'>"bottomleft"</span>, <span class='kw'>legend</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),<span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>5</span>),
-       <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>palBW</span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>EB</span>@<span class='kw'>data</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>5</span>)),
-       <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Number of years"</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>15</span>, <span class='kw'>bty</span><span class='kw'>=</span><span class='st'>"n"</span>)</div><div class='img'><img src='BIRDS-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='no'>old.par</span>)
-<span class='co'># }</span></div></pre>
+<span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span><span class='op'>(</span><span class='va'>OB</span>, grid<span class='op'>=</span><span class='va'>grid</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>289 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>EBnObs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span><span class='op'>(</span><span class='va'>SB</span>, dimension <span class='op'>=</span> <span class='st'>"temporal"</span>, timeRes <span class='op'>=</span> <span class='st'>"yearly"</span>,
+variable <span class='op'>=</span> <span class='st'>"nObs"</span>, method <span class='op'>=</span> <span class='st'>"sum"</span><span class='op'>)</span>
+<span class='va'>EBnVis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span><span class='op'>(</span><span class='va'>SB</span>, dimension <span class='op'>=</span> <span class='st'>"temporal"</span>, timeRes <span class='op'>=</span> <span class='st'>"yearly"</span>,
+variable <span class='op'>=</span> <span class='st'>"nVis"</span>, method <span class='op'>=</span> <span class='st'>"sum"</span><span class='op'>)</span>
+<span class='va'>EB</span><span class='op'>&lt;-</span><span class='fu'><a href='exportBirds.html'>exportBirds</a></span><span class='op'>(</span><span class='va'>SB</span>, <span class='st'>"Spatial"</span>, <span class='st'>"Month"</span>, <span class='st'>"nYears"</span>, <span class='st'>"sum"</span><span class='op'>)</span>
+<span class='va'>palBW</span> <span class='op'>&lt;-</span> <span class='fu'>leaflet</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/leaflet/man/colorNumeric.html'>colorNumeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"white"</span>, <span class='st'>"navyblue"</span><span class='op'>)</span>,
+         <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>EB</span><span class='op'>@</span><span class='va'>data</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>, na.color <span class='op'>=</span> <span class='st'>"transparent"</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+<span class='va'>old.par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly <span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>, mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>EB</span>, col<span class='op'>=</span><span class='fu'>palBW</span><span class='op'>(</span><span class='va'>EB</span><span class='op'>@</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Jul</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span><span class='op'>(</span><span class='st'>"July"</span>, <span class='fl'>3</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>EB</span>, col<span class='op'>=</span><span class='fu'>palBW</span><span class='op'>(</span><span class='va'>EB</span><span class='op'>@</span><span class='va'>data</span><span class='op'>$</span><span class='va'>Dec</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span><span class='op'>(</span><span class='st'>"December"</span>, <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span><span class='op'>(</span><span class='st'>"bottomleft"</span>, legend<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>EB</span><span class='op'>@</span><span class='va'>data</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,length.out <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
+       col <span class='op'>=</span> <span class='fu'>palBW</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>EB</span><span class='op'>@</span><span class='va'>data</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, length.out <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>,
+       title <span class='op'>=</span> <span class='st'>"Number of years"</span>, pch <span class='op'>=</span> <span class='fl'>15</span>, bty<span class='op'>=</span><span class='st'>"n"</span><span class='op'>)</span>
+</div><div class='img'><img src='BIRDS-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>old.par</span><span class='op'>)</span>
+<span class='co'># }</span>
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -212,7 +220,7 @@ three basic steps: organise data, summarise data, review data.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
