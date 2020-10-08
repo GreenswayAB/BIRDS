@@ -1,32 +1,33 @@
 ## Test environment
-* local Windows 10,  R version 3.6.1 (2019-07-05)
-* local Ubuntu 18.04.3 LTS, R version 3.6.1 (2019-07-05)
+* local Windows 10,  R version 4.0.2 (2020-06-22)
+* local Ubuntu 18.04.3 LTS, R version 4.0.2 (2020-06-22)
 * remote win-builder.r-project.org (/wfjJw9QWLsmf/)
 
 ## R CMF check results
-There where no ERRORs, WARNINGs or NOTEs on local RMD check
+There where no ERRORs, WARNINGs on local RMD check, 
+There where 2 NOTEs: 
 
 Only during r-devel build I get a Note regarding my email, but it is the one I use.
   CRAN incoming feasibility ... NOTE
   Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
 
-We did the following changes based on the package reviewers recommendations: 
-* We use '' only for package names but not for function names
+We did the following changes based on the package since last: 
+###Note: 
+During the coming releases compatibility issues with rgdal and sp may occur. We advice to update those packages and the libraries GDAL and PROJ.  
 
-* we changed the beginning of the description so that it does not start with "This package".
+###Bug fixes:  
+* removeObs() got stuck in infinite loops under certain circumstances. #10  
+* zoo::index() Sometimes when reloading summarise birds it trows the following error when I run focalSpReport #7  
+* includeUniqueSpillover() would crash if the grid polygon had an associated data.frame (spatialPolygonDataFrame). #8  
+* exploreVisits() error when timeInVisits != "day" #11  
+* CRS issue in organizeBirds(x=data, grid=grid) #9 This issue was related to #17 for which we have made a great deal of changes to prepare for the imminent release of the new versions of rgdal and sp packages.  
+* simplifySpp() would return "Falco" for cases like "Falco peregrinus, 1771". We now implemented the package   taxsize to improve this function. #16  
 
-* package dggridR was moved to Suggested in Description as it is no longer available on CRAN, and its source is now linked in the description 
-
-* we now are careful to reset user option on the examples using 
-  oldpar <- par(no.readonly = TRUE)
-  ...
-  par(oldpar)
-
-and in functions that so require via 
-  oldpar <- par(no.readonly = TRUE)       # code line i
-  on.exit(par(oldpar))                    # code line i + 1
-
-* we now avoid \dontrun{} (replaced with \donttest{}) as it is not adequate on our case, and  removed both \dontrun{} and \donttest{} when we use instead if(interactive())
+###New functions:
+* we now offer more options to prepare community matices with functions communityMatrix(), CommunityMatrixGrid() and RecbySpec() to we used in community analyses and completeness functions from other packages. #24
+* the function exploreVisits() gains the output variable "nclusters" and nos uses the function DBSCAN::DBSCAN() to calculate clusters and outliers within each visit. #19 #18
+* focalSpp() reports are now more efficient and fast. #25
+* sppreports() now gained the argument overlay to add overlay layers in the reports
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
