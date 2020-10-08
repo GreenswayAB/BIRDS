@@ -1,15 +1,12 @@
 ## Test environment
 * local Windows 10,  R version 4.0.2 (2020-06-22)
 * local Ubuntu 18.04.3 LTS, R version 4.0.2 (2020-06-22)
-* remote win-builder.r-project.org (/wfjJw9QWLsmf/)
+* remote win-builder.r-project.org (/M6NUwM96x3e4/)
+* remote travisCI Ubuntu 18.04.5 LTS, R version 4.0.2 (2020-06-22)
 
 ## R CMF check results
-There where no ERRORs, WARNINGs on local RMD check, 
-There where 2 NOTEs: 
-
-Only during r-devel build I get a Note regarding my email, but it is the one I use.
-  CRAN incoming feasibility ... NOTE
-  Maintainer: ‘Alejandro Ruete <aleruete@gmail.com>’
+There where no ERRORs, WARNINGs on local or remote buidls RMD check, 
+There was 1 NOTEs on local buidls RMD check: 
 
 We did the following changes based on the package since last: 
 ###Note: 

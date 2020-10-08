@@ -36,7 +36,7 @@ Description: It helps making the evaluation and preparation of biodiversity data
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 4.0.2)
+Depends: R (>= 3.5.0)
 SystemRequirements: GDAL (>= 2.0.1)
 Imports:
     data.table, 
@@ -51,7 +51,7 @@ Imports:
     methods,
     nnet,
     rgeos (>= 0.4),
-    rgdal (>= 1.5-16),
+    rgdal (>= 1.5),
     rlang,
     sf (>= 0.7),
     shiny (>= 1.0),
