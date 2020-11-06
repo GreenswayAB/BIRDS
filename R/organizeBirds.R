@@ -51,7 +51,7 @@ organizeDate <- function(x, columns){
   if (!length(columns) %in% c(1,3)) stop("Could not create date, please specify either one or three column names")
   stdTimeCols <- c("year", "month", "day")
 
-  cols.df <- findCols(columns, x)
+  cols.df <- findCols(columns, x, exact = TRUE)
 
   if(all(lengths(cols.df) > 0)){
     cols.df <- unlist(cols.df)
@@ -61,24 +61,39 @@ organizeDate <- function(x, columns){
 
     cols.df<-tolower(cols.df)
 
-    if(length(cols.df)==3){
+    if(length(cols.df) == 3){
       if(all(stdTimeCols %in% cols.df)){
-      } else if(any(stdTimeCols %in% cols.df)){
-        wColNot<-which(!(cols.df %in% stdTimeCols))
-        for(i in 1:length(wColNot)){
-          x$placeholder <- as.matrix(x[, cols.df[wColNot]])
-          names(x)[names(x) == "placeholder"] <- stdTimeCols[wColNot[i]]
+        ## all is just fine
+        return(x)
+      } else{
+        ### This part here assumes the 3 defined columns are in the right order
+        ### and gives the standard name
+        message("This function assumes that the 3 given column names represent 'year', 'month' and 'day' in that specific order.")
+        if(any(stdTimeCols %in% cols.df)){
+
+          wColNot <- which(!(stdTimeCols %in% cols.df))
+          for(i in 1:length(wColNot)){
+            # x$placeholder <- as.matrix(x[, cols.df[wColNot[i]]])
+            x$placeholder <- x[, cols.df[wColNot[i]]]
+            names(x)[names(x) == "placeholder"] <- stdTimeCols[wColNot[i]]
+          }
+
+        } else {
+          ## if none of the columns names are standard then makes them standard
+          x$year  <- x[,cols.df[1]]
+          x$month <- x[,cols.df[2]]
+          x$day   <- x[,cols.df[3]]
         }
-      } else {
-        x$year  <- x[,cols.df[1]]
-        x$month <- x[,cols.df[2]]
-        x$day   <- x[,cols.df[3]]
       }
 
-      x$day<-ifelse(is.na(x$day), 1, x$day)
-      x$month<-ifelse(is.na(x$month), 1, x$month)
+      ## empty years are not tolerated! but days and months are given value 1
+      if(sum(is.na(x$day))>0) message(paste("There were", sum(is.na(x$day)),"empty days that were given the value 1"))
+      if(sum(is.na(x$month))>0) message(paste("There were", sum(is.na(x$month)),"empty months that were given the value 1"))
+      x$day <- ifelse(is.na(x$day), 1, x$day)
+      x$month <- ifelse(is.na(x$month), 1, x$month)
       return(x)
     }
+
     if(length(cols.df) == 1){
       dateVector<-array(dim=c(nrow(x), 3), dimnames = list(c(), stdTimeCols))
       dateYMD <- as.Date(x[,cols.df])
@@ -215,6 +230,9 @@ createVisits<-function(x,
       spdf <- x
     }
 
+    if (all(idCols == "")) idCols <- NULL
+    if (all(timeCols=="")) timeCols <- NULL
+
     if(!is.null(grid)) {
       if(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")  & !is.null(spdf)){
         df[,"gridID"] <- getGridIDs(spdf, grid)
@@ -230,18 +248,18 @@ createVisits<-function(x,
       gridID <- NULL
     }
 
-    if (all(idCols == "")) idCols <- NULL
-    if (all(timeCols=="")) timeCols <- NULL
-
     columns <- c(gridID, idCols, timeCols)
-    if (length(columns)==0) stop("At least one of the arguments 'idCols','timeCols','grid' needs to be defined.")
+    if (length(columns) == 0) stop("At least one of the arguments 'idCols','timeCols','grid' needs to be defined.")
 
-    cols.df <- findCols(columns, df)
+    cols.df <- findCols(columns, df, exact = TRUE)
 
     if(all(lengths(cols.df) > 0)){
       cols.df <- unlist(cols.df)
-      return(as.integer(factor(apply(df[cols.df], 1, paste0, collapse=""))))
-    } else { stop("Some or none of the column names were not found in the data set.") }
+      res <- as.integer(factor(apply(df[cols.df], 1, paste0, collapse="")))
+      return(res)
+    } else {
+      stop("Some or any of the column names were not found in the data set.")
+    }
 
   } else {
     stop("Argument 'x' must be a 'data.frame' or an 'OrganizedBirds'")
@@ -484,11 +502,13 @@ organizeBirds <- function(x,
                                   ignore.case = TRUE,
                                   value = FALSE)))
       nOut <- nrow(x@data) - length(wIn)
-      if (length(wIn)>0){
+      if (length(wIn) > 0){
         x<-x[wIn,]
-      } else {stop(paste0("No observation match with the specified taxon rank(s).")) }
+        message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
 
-      message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
+      } else { stop(paste0("No observation match with the specified taxon rank(s).")) }
+
+
     } else { stop(paste0("Taxon Rank: there is no column called ", taxonRankCol))}
   }
 
@@ -500,6 +520,8 @@ organizeBirds <- function(x,
     }
   } else { stop(paste0("Species name: there is no column called ", sppCol))}
 
+print(colnames(x@data))
+print(organizeDate(x@data, timeCols))
   ## column name control defined in the function organizeDate()
   x@data[, stdTimeCols] <- organizeDate(x@data, timeCols)
   ## clean unreadable dates (cleaning also the spatial points)
@@ -520,10 +542,10 @@ organizeBirds <- function(x,
                           "year" = "year") ## Else NULL
   }
 
-  x@data[,"visitUID"] <- createVisits(x,
-                                      idCols=idCols,
-                                      timeCols=timeColsVis,
-                                      grid=grid)
+  x@data[,"visitUID"] <- createVisits(x@data,
+                                      idCols = idCols,
+                                      timeCols = timeColsVis,
+                                      grid = grid)
 
   #### Preparing the output as we want it
   res.df <- x@data[,c(sppCol.df, stdTimeCols, "visitUID")]
