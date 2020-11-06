@@ -9,16 +9,19 @@
 #' @return The overlay dataframe for a specific grid, including the spillover visits.
 #' @keywords internal
 getTemporal <- function(birdOverlay, visitCol=NULL){
-  if (length(birdOverlay$observationsInGrid)>1) stop("The input should ALWAYS be a overlayBirds whith only one gridcell")
+  if (length(birdOverlay$observationsInGrid) > 1) stop("The input should ALWAYS be a overlayBirds whith only one gridcell")
 
-  data<-birdOverlay$observationsInGrid[[1]] ##The input should ALWAYS be a overlayBirds whith only one gridcell.
+  data <- birdOverlay$observationsInGrid[[1]] ##The input should ALWAYS be a overlayBirds whith only one gridcell.
 
   if (is.null(visitCol)){
     visitCol<-attr(birdOverlay, "visitCol")
   }
 
-  ts<-xts::xts(data[, ! names(data) %in% c("year", "month", "day")],
-               order.by=as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-")))
+  datesFormated<-as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-"))
+  if(any(is.na(datesFormated))) stop("Some combinations of y-m-d tunred into invalid dates")
+
+  ts<-xts::xts(data[, !names(data) %in% c("year", "month", "day")],
+               order.by = datesFormated)
 
   tempData<-xts::apply.daily(ts, function(x){
 
