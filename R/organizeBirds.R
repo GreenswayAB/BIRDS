@@ -501,10 +501,12 @@ organizeBirds <- function(x,
                                   x@data[, TRCol.df],
                                   ignore.case = TRUE,
                                   value = FALSE)))
+
       nOut <- nrow(x@data) - length(wIn)
+
       if (length(wIn) > 0){
         x<-x[wIn,]
-        message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
+        if(nOut > 0) message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
 
       } else { stop(paste0("No observation match with the specified taxon rank(s).")) }
 
@@ -520,8 +522,6 @@ organizeBirds <- function(x,
     }
   } else { stop(paste0("Species name: there is no column called ", sppCol))}
 
-print(colnames(x@data))
-print(organizeDate(x@data, timeCols))
   ## column name control defined in the function organizeDate()
   x@data[, stdTimeCols] <- organizeDate(x@data, timeCols)
   ## clean unreadable dates (cleaning also the spatial points)
