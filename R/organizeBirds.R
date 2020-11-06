@@ -515,7 +515,7 @@ organizeBirds <- function(x,
   }
 
   # Simplify species names to reduce epitets and author names
-  sppCol.df <- findCols(sppCol, x@data)
+  sppCol.df <- findCols(sppCol, x@data, exact = TRUE)
   if (length(sppCol.df) > 0){
     if (!is.null(simplifySppName) && simplifySppName == TRUE){
       x@data[, sppCol.df] <- simplifySpp(x@data, sppCol.df)
