@@ -270,10 +270,11 @@ exportTemporal <- function(sb, timeRes, variable, method){
     if (timeRes %in% c("yearly", "monthly", "daily")){
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       resVar <- pull(res, !!sym(variable))
-      names(resVar) <- switch(timeRes,
+      names(resVar) <- lubridate::ymd(switch(timeRes,
                               "yearly" = paste0(yearsAll, "-01-01"),
                               "monthly"= paste0(res$year, "-", sprintf("%02d", res$month), "-01"),
                               "daily"  = paste0(res$year, "-", sprintf("%02d", res$month), "-", sprintf("%02d", res$day)))
+                              )
       # MAKE RESVAR to xts::as.xts()
       resVar <- xts::as.xts(resVar)
 
@@ -301,10 +302,10 @@ exportTemporal <- function(sb, timeRes, variable, method){
     if (timeRes %in% c("yearly", "monthly", "daily")){
       if (method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
       resVar <- pull(res, .data$avgSll)
-      names(resVar) <- switch(timeRes,
+      names(resVar) <- lubridate::ymd(switch(timeRes,
                               "yearly" = paste0(yearsAll, "-01-01"),
                               "monthly"= paste0(res$year, "-", sprintf("%02d", res$month), "-01"),
-                              "daily"  = paste0(res$year, "-", sprintf("%02d", res$month), "-", sprintf("%02d", res$day)))
+                              "daily"  = paste0(res$year, "-", sprintf("%02d", res$month), "-", sprintf("%02d", res$day))))
       resVar <- xts::as.xts(resVar)
 
     } else { #month
