@@ -54,7 +54,7 @@
 #' @importFrom dplyr group_by summarise n n_distinct sym
 #' @importFrom rgeos gCentroid
 #' @importFrom dbscan dbscan
-#' @importFrom lubridate date day month year
+#' @importFrom lubridate date day month year ymd
 #' @importFrom geosphere distGeo distm
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 exploreVisits<-function(x,
@@ -78,7 +78,8 @@ exploreVisits<-function(x,
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
 
-  dat$date <- lubridate::date(paste(dat$year, dat$month, dat$day, sep = "-"))
+  # dat$date <- date(paste(dat$year, dat$month, dat$day, sep = "-"))
+  dat$date <- ymd(paste(dat$year, dat$month, dat$day, sep = "-"))
 
   visitStat <- data.frame("visitUID" = uniqueUID,
                           "day" = NA,
@@ -172,11 +173,15 @@ exploreVisits<-function(x,
 
   visitStat[, match(varsCtr, colnames(visitStat))] <- tmp
 
-  visitStat$date <- as.Date(paste(visitStat$year,
-                                  visitStat$month,
-                                  visitStat$day,
-                                  sep="-"),
-                            format = "%Y-%m-%d")
+  # visitStat$date <- as.Date(paste(visitStat$year,
+  #                                 visitStat$month,
+  #                                 visitStat$day,
+  #                                 sep="-"),
+  #                           format = "%Y-%m-%d")
+  visitStat$date <- lubridate::ymd(paste(visitStat$year,
+                                         visitStat$month,
+                                         visitStat$day,
+                                         sep="-"))
   visitStat$Month <- as.factor(months(visitStat$date, abbreviate = FALSE))
   levels(visitStat$Month) <- month.name
 

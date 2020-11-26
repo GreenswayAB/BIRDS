@@ -8,6 +8,7 @@
 #'
 #' @return The overlay dataframe for a specific grid, including the spillover visits.
 #' @keywords internal
+#' @importFrom lubridate ymd
 getTemporal <- function(birdOverlay, visitCol=NULL){
   if (length(birdOverlay$observationsInGrid) > 1) stop("The input should ALWAYS be a overlayBirds whith only one gridcell")
 
@@ -17,11 +18,15 @@ getTemporal <- function(birdOverlay, visitCol=NULL){
     visitCol<-attr(birdOverlay, "visitCol")
   }
 
-  datesFormated<-as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-"))
+  # datesFormated<-as.Date(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-"))
+  datesFormated <- ymd(apply(data[, c("year", "month", "day")], 1, paste0, collapse="-"))
   if(any(is.na(datesFormated))) stop("Some combinations of y-m-d tunred into invalid dates")
 
-  ts<-xts::xts(data[, !names(data) %in% c("year", "month", "day")],
-               order.by = datesFormated)
+  # ts<-xts::xts(data[, !names(data) %in% c("year", "month", "day")],
+  #              order.by = datesFormated)
+
+  ts <- as.xts(zoo(data[, !names(data) %in% c("year", "month", "day")],
+                   datesFormated))
 
   tempData<-xts::apply.daily(ts, function(x){
 
