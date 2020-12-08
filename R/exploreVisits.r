@@ -57,7 +57,7 @@
 #' @importFrom lubridate date day month year ymd
 #' @importFrom geosphere distGeo distm
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
-exploreVisits<-function(x,
+exploreVisits <- function(x,
                         visitCol=NULL, #visitCol=attr(x, "visitCol"),
                         sppCol="scientificName"){
   minPts <- 3 ## Minumin number of points required for clustering
