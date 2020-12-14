@@ -64,11 +64,11 @@ includeSpillover <- function(x, birdData, visitCol){
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
   # obs <- birdData@data
-  obs <- slot(birdData, "data")
+  obs <- slot(birdData$spdf, "data")
   visits <- unique(obs[, visitCol])
   visits <- cbind(visits, "grid" = NA)
 
-  if(identicalCRS(birdData, grid) != TRUE){
+  if(identicalCRS(birdData$spdf, grid) != TRUE){
     stop("Organized data and grid do not share the same CRS")
   }
 
@@ -92,7 +92,7 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
   #A new spdf with only unique IDs, should be possible to join up with attribute data later
   spdfIDs <- SpatialPolygonsDataFrame(spP, ids)
 
-  obs$grid <- unlist(over(birdData, spdfIDs, returnList=FALSE))
+  obs$grid <- unlist(over(birdData$spdf, spdfIDs, returnList=FALSE))
 
 
   wNA <- which(is.na(obs$grid))
