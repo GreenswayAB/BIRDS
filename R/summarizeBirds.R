@@ -25,10 +25,10 @@ getTemporal <- function(birdOverlay, visitCol=NULL){
   # ts<-xts::xts(data[, !names(data) %in% c("year", "month", "day")],
   #              order.by = datesFormated)
 
-  ts <- as.xts(zoo(data[, !names(data) %in% c("year", "month", "day")],
-                   datesFormated))
+  ts <- xts::as.xts(zoo(data[, !names(data) %in% c("year", "month", "day")]),
+                   datesFormated)
 
-  tempData<-xts::apply.daily(ts, function(x){
+  tempData <- xts::apply.daily(ts, function(x){
 
     return(c("nObs" = length(x[,1]),
              "nVis" = length(unique(x[, visitCol])),

@@ -131,7 +131,8 @@ exploreVisits <- function(x,
       distancesOut <- distMLT[which(distMLT>0)]
 
       spdfTmpTr <- sp::spTransform(spdfTmp,
-                                   CRSobj = CRS("+init=epsg:3857"))
+                                   CRSobj = suppressWarnings(
+                                     CRS("+init=epsg:3857")))
       # coord <- sp::coordinates(spdfTmpTr)
       # coordPaste <- apply(coord, 1, paste0, collapse = ",")
       # coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
@@ -239,7 +240,7 @@ spatialVisits <- function(x,
          vector of length equal to the number of visits")
   }
 
-  utmCRS <- CRS(getUTMproj(x))
+  utmCRS <- suppressWarnings(CRS(getUTMproj(x)))
   xTrans <- spTransform(x, CRSobj = utmCRS)
 
   buff <- rgeos::gBuffer(xTrans,  byid = TRUE, id=x@data$visitUID, width=radiusVal)
@@ -253,7 +254,9 @@ spatialVisits <- function(x,
 #' @keywords internal
 getUTMzone <- function(points){
   ##Find which UTM-zones that have the most points
-  utmZonesTr <- spTransform(utmZones, slot(points, "proj4string")) #To accept all reference systems for points.
+  utmZonesTr <- suppressWarnings(spTransform(utmZones,
+                                             slot(points, "proj4string"))
+                              ) #To accept all reference systems for points.
   utmZone <- over(points, utmZonesTr)
   freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
@@ -358,14 +361,20 @@ getUTMproj<-function(x){
   } else {
     if(class(x) == "SpatialPointsDataFrame"){
       spdf <- x
-      spdf <- spTransform(spdf, CRSobj = CRS("+init=epsg:4326"))
+      spdf <- spTransform(spdf,
+                          CRSobj = suppressWarnings(
+                            CRS("+init=epsg:4326"))
+                          )
     } else {
       stop("Input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
     }
   }
 
   ## error no CRS
-  if (is.na(proj4string(spdf))) { #slot(points, "proj4string") or soon wkt()
+  # if (is.na(proj4string(spdf))) { #slot(points, "proj4string") or soon wkt()
+  #   stop("The polygon has no coordinate projection system (CRS) associated")
+  # }
+  if (is.na(slot(spdf, "proj4string"))) {
     stop("The polygon has no coordinate projection system (CRS) associated")
   }
 
