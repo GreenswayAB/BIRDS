@@ -71,12 +71,12 @@ makeCircle<-function(spdf, projCRS=NULL){
       stop("The input object is neither of class 'SpatialPoints' nor 'SpatialPointsDataFrame'")
 
     ## error no CRS in spdf
-    if (is.na(proj4string(spdf))) stop("The polygon has no coordinate projection system (CRS) associated")
+    if (is.na(slot(spdf, "proj4string"))) stop("The polygon has no coordinate projection system (CRS) associated")
 
     ## error projCRS not defined
     if (is.null(projCRS)) stop("projCRS needs to be defined")
 
-    spdf <- spTransform(spdf, CRS(projCRS) )
+    spdf <- suppressWarnings(spTransform(spdf, CRS(projCRS)) )
 
     if (!is.na(sp::is.projected(spdf)) && !sp::is.projected(spdf))
       warning("Spatial object is not projected; this function expects planar coordinates")
@@ -94,7 +94,7 @@ makeCircle<-function(spdf, projCRS=NULL){
       sp::proj4string(mincircSP) <- projCRS
 
       circle <- rgeos::gBuffer(spgeom = mincircSP, width = mincirc$rad, quadsegs = 10)
-      circle <- spTransform(circle, CRSobj = CRS("+init=epsg:4326"))
+      circle <- spTransform(circle, CRSobj = suppressWarnings(CRS("+init=epsg:4326")))
 
     } else {
         stop("More than one unique set of coordinates are needed to make a minimum circle polygon.")
@@ -130,15 +130,18 @@ OB2Polygon <- function(x, shape="bBox") {
     } else {
         if(class(x) == "SpatialPointsDataFrame"){
             spdf <- x
-            spdf <- spTransform(spdf, CRSobj = CRS("+init=epsg:4326"))
+            spdf <- spTransform(spdf, CRSobj = suppressWarnings(CRS("+init=epsg:4326")))
         } else {
             stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
         }
     }
 
     ## error no CRS
-    if (is.na(proj4string(spdf))) {
-        stop("The polygon has no coordinate projection system (CRS) associated")
+    # if (is.na(proj4string(spdf))) {
+    #     stop("The polygon has no coordinate projection system (CRS) associated")
+    # }
+    if (is.na(slot(spdf, "proj4string"))) {
+      stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
     coord <- coordinates(spdf)
@@ -264,7 +267,7 @@ makeGrid <- function(polygon,
     }
 
     ## error no CRS
-    if (is.na(proj4string(polygon))) {
+    if (is.na(slot(polygon, "proj4string"))) {
         stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
@@ -275,15 +278,17 @@ makeGrid <- function(polygon,
     }
 
     # Transform to WGS84 pseudo-Mercator
-    polygonProj <- spTransform(polygon, CRSobj = CRS("+init=epsg:3857"))
+    polygonProj <- suppressWarnings(spTransform(polygon,
+                                                CRSobj = CRS("+init=epsg:3857"))
+                                    )
     if (buffer) {
         # Needs to be projected
         polygonProjBuffer <- rgeos::gBuffer(polygonProj, width = gridSizeM)
     } else {polygonProjBuffer <- polygonProj}
 
-    polygonGeod <- spTransform(polygonProjBuffer, CRSobj = CRS("+init=epsg:4326"))
-    # polygonGeod <- spTransform(polygonProjBuffer, CRSobj = CRS(SRS_string="EPSG:4326"))
-
+    polygonGeod <- suppressWarnings(spTransform(polygonProjBuffer,
+                                                CRSobj = CRS("+init=epsg:4326"))
+                                    )
 
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
@@ -314,7 +319,8 @@ makeGrid <- function(polygon,
                                offset = offset,
                                cellsize = gridSizeDg)
         grid <- sp::as.SpatialPolygons.GridTopology(sp::points2grid(points),
-                                                    proj4string = CRS("+init=epsg:4326"))
+                                              proj4string = CRS("+init=epsg:4326"))
+
         wcells <- over(points, grid)
         grid <- grid[wcells, ]
     }
@@ -394,7 +400,7 @@ makeDggrid <- function(polygon,
   }
 
   ## error no CRS
-  if (is.na(proj4string(polygon))) {
+  if (is.na(slot(polygon,"proj4string"))) {
     stop("The polygon has no coordinate projection system (CRS) associated")
   }
 
@@ -407,11 +413,13 @@ makeDggrid <- function(polygon,
   # Transform to WGS84 pseudo-Mercator
   if (buffer) {
     # Needs to be projected
-    polygonProj <- spTransform(polygon, CRSobj = CRS("+init=epsg:3857"))
+    polygonProj <- suppressWarnings(spTransform(polygon,
+                                                CRSobj = CRS("+init=epsg:3857")) )
     polygonBuffer <- rgeos::gBuffer(polygonProj, width = gridSize*1000)
   } else {polygonBuffer <- polygon}
 
-  polygonGeod <- spTransform(polygonBuffer, CRSobj = CRS("+init=epsg:4326"))
+  polygonGeod <- suppressWarnings(spTransform(polygonBuffer,
+                                              CRSobj = CRS("+init=epsg:4326")))
 
   extent <- polygonGeod@bbox
   #Get the grid cell boundaries for cells on the polygon extent
@@ -424,7 +432,8 @@ makeDggrid <- function(polygon,
         list(Polygon(cbind(.x$long, .x$lat))),
         ID=strsplit(as.character(unique(.x$group)),"[.]")[[1]][1])
     })
-  gridPol <- SpatialPolygons(gridPolList, proj4string=CRS("+init=epsg:4326"))
+  gridPol <- SpatialPolygons(gridPolList,
+                             proj4string = CRS("+init=epsg:4326") )
   gridPolInt <- vector()
 
   for(i in 1:length(gridPol)){
