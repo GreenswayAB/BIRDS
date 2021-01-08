@@ -57,11 +57,10 @@ organizeDate <- function(x, columns){
     cols.df <- unlist(cols.df)
 
     if(ncol(x)>1) x<-x[,cols.df]
-    colnames(x)<-tolower(colnames(x))
-
     cols.df<-tolower(cols.df)
 
     if(length(cols.df) == 3){
+      colnames(x)<-tolower(colnames(x))
       if(all(stdTimeCols %in% cols.df)){
         ## all is just fine
         return(x)
@@ -91,22 +90,31 @@ organizeDate <- function(x, columns){
       if(sum(is.na(x$month))>0) message(paste("There were", sum(is.na(x$month)),"empty months that were given the value 1"))
       x$day <- ifelse(is.na(x$day), 1, x$day)
       x$month <- ifelse(is.na(x$month), 1, x$month)
-      return(x)
+
+      res<-x
     }
 
     if(length(cols.df) == 1){
-      dateVector<-array(dim=c(nrow(x), 3), dimnames = list(c(), stdTimeCols))
-      dateYMD <- as.Date(x[,cols.df])
+      res <- data.frame(matrix(nrow = length(x), ncol=length(stdTimeCols)))
+      colnames(res)<-stdTimeCols
+      dateYMD <- as.Date(x)
 
-      x$year  <- lubridate::year(dateYMD)
-      x$month <- lubridate::month(dateYMD)
-      x$day   <- lubridate::day(dateYMD)
+      res$year  <- lubridate::year(dateYMD)
+      res$month <- lubridate::month(dateYMD)
+      res$day   <- lubridate::day(dateYMD)
 
-      return(x)
+      # res
     }
   } else {
     stop("One or more specified column names are not present in the input data set.")
   }
+  ## clean unreadable dates (cleaning also the spatial points)
+  wNA <- is.na(res)
+  if (sum(wNA)>1){
+    res <- res[-wNA,]
+    message(paste(length(wNA), " records deleted because the date was unreadable."))
+  }
+  return(res)
 }
 
 
@@ -465,6 +473,9 @@ organizeBirds <- function(x,
     x <- as.data.frame(x)
 
     xyColsl.df <- unlist(findCols(xyCols, x))
+    if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
+    if(length(xyColsl.df) == 1) stop("The column names defined for the coordinates must be two. Check your values")
+
     if (length(xyColsl.df) > 0){
       if (length(xyColsl.df) > 2){ ## if too many matches try exact=TRUE
         xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
@@ -524,12 +535,7 @@ organizeBirds <- function(x,
 
   ## column name control defined in the function organizeDate()
   x@data[, stdTimeCols] <- organizeDate(x@data, timeCols)
-  ## clean unreadable dates (cleaning also the spatial points)
-  wNA <- is.na(x@data$year)
-  if (sum(wNA)>1){
-    x <- x[-wNA,]
-    message(paste(length(wNA), " records deleted because the date was unreadable."))
-  }
+
 
   ## colum name control defined in the function visitUID()
   ## Time is optional in the visits
