@@ -482,9 +482,17 @@ organizeBirds <- function(x,
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
       sp::coordinates(x) <- xyColsl.df
-  ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
       sp::proj4string(x) <- dataCRS
-
+  
+    ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
+    # testCoord<-tryCatch({
+    #   sp::coordinates(xtest) <- xyColsl.df
+    #   sp::proj4string(xtest) <- CRS(epsgInfo$proj4)  
+    # }, error = function(e){
+    #   # print(str(e$message))
+    #   return(e$message)
+    # }
+      
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
     ## Just continue... :)
