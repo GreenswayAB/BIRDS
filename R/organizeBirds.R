@@ -45,7 +45,10 @@ findCols <- function(pattern, df, exact=FALSE, value = TRUE){
 #' @export
 #' @examples
 #' ymd<-as.Date(Sys.Date())+1:5
-#' organizeDate(as.data.frame(ymd), "ymd")
+#' id<-1:5
+#' organizeDate(data.frame("id"=id,
+#'                         "ymd"=as.character(ymd)),
+#'              "ymd")
 #' @keywords internal
 organizeDate <- function(x, columns){
   if (!length(columns) %in% c(1,3)) stop("Could not create date, please specify either one or three column names")

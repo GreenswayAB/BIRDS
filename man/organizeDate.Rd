@@ -23,6 +23,9 @@ Organize the date-column(s) in a dataframe to three columns
 }
 \examples{
 ymd<-as.Date(Sys.Date())+1:5
-organizeDate(as.data.frame(ymd), "ymd")
+id<-1:5
+organizeDate(data.frame("id"=id,
+                        "ymd"=as.character(ymd)),
+             "ymd")
 }
 \keyword{internal}

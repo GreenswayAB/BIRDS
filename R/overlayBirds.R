@@ -76,6 +76,11 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
     stop("Organized data and grid do not share the same CRS")
   }
 
+  ## rename grids id no have integers
+  for(i in 1:length(grid)){
+    slot(slot(grid, "polygons")[[i]], "ID") <- as.character(i)
+  }
+
   #Extract the unique ID from the polygons in the spdf
   ids <- data.frame(
     matrix(

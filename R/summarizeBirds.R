@@ -70,21 +70,24 @@ getSpatial<-function(birdOverlay, visitCol=NULL){
 
   cols2use<-c("scientificName", "year", "month", "day", visitCol)
 
-  dataRes<-lapply(dataList[birdOverlay$nonEmptyGridCells], function(x){
+  dataRes<-lapply(dataList[birdOverlay$nonEmptyGridCells],
+                  function(x){
+                    x<-x[,cols2use]
+                    colnames(x) <- c("scientificName", "year", "month", "day", "visitCol")
 
-    x<-x[,cols2use]
-    colnames(x) <- c("scientificName", "year", "month", "day", "visitCol")
-
-    return(c("nObs"=length(x[,"scientificName"]),
-             "nVis"=length(unique(x[,"visitCol"])),
-             "nSpp"=length(unique(x[,"scientificName"])),
-             "avgSll"= median(summarise(group_by(x, visitCol),
-                                       avgSLL=n_distinct(.data$scientificName))$avgSLL),
-             "nDays"=length(unique( paste0(x[,"year"],"-", as.numeric(x[,"month"]), "-", as.numeric(x[,"day"]))) ),
-             "nYears"=length(unique(x[,"year"])),
-             "visitsUID"= paste0(unique(x[,"visitCol"]), collapse = ",")
-             ))
-  })
+                    tmp <- c("nObs"=length(x[,"scientificName"]),
+                             "nVis"=length(unique(x[,"visitCol"])),
+                             "nSpp"=length(unique(x[,"scientificName"])),
+                             "avgSll"= median(summarise(group_by(x, .data$visitCol),
+                                                        avgSLL=n_distinct(.data$scientificName))$avgSLL),
+                             "nDays"=length(unique( paste0(x[,"year"],"-",
+                                                           as.numeric(x[,"month"]), "-",
+                                                           as.numeric(x[,"day"]))) ),
+                             "nYears"=length(unique(x[,"year"])),
+                             "visitsUID"= paste0(unique(x[,"visitCol"]), collapse = ",")
+                             )
+                    return(tmp)
+                    })
 
   dataRes<-data.frame(matrix(unlist(dataRes),
                              nrow=length(dataRes), byrow=TRUE),
@@ -314,7 +317,6 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
       stop("The variable grid can only be of class SpatialPolygonsDataFrame, or NULL")
     }
   }else{
-
     areaGrid <- OB2Polygon(x)
     bTOver <- overlayBirds(x, grid=areaGrid, spillOver = spillOver)
     warning("To get the most out of summarizeBirds you should have a grid.")
@@ -322,7 +324,6 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
 
   #Here we use a modifyed version of bOver where the grid is only one single cell.
   temporal <- getTemporal(bTOver)
-
   if(useSpatial){
     #If we have spatial grid data:
     spatial <- getSpatial(bOver)
@@ -333,7 +334,6 @@ summarizeBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
     spatioTemporal <- getSpatioTemporal(bTOver, visitCol=visitCol)
     wNonEmptyCells <- bTOver$nonEmptyGridCells
   }
-
   res <- list("temporal" = temporal,
               "spatial" = spatial,
               "spatioTemporal" = spatioTemporal$resYM,
