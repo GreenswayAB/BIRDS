@@ -482,17 +482,17 @@ organizeBirds <- function(x,
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
       sp::coordinates(x) <- xyColsl.df
-      sp::proj4string(x) <- dataCRS
-  
+      sp::proj4string(x) <- CRS(dataCRS)
+
     ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
     # testCoord<-tryCatch({
     #   sp::coordinates(xtest) <- xyColsl.df
-    #   sp::proj4string(xtest) <- CRS(epsgInfo$proj4)  
+    #   sp::proj4string(xtest) <- CRS(epsgInfo$proj4)
     # }, error = function(e){
     #   # print(str(e$message))
     #   return(e$message)
     # }
-      
+
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
     ## Just continue... :)
@@ -501,9 +501,7 @@ organizeBirds <- function(x,
   }
 
   if(slot(slot(x,"proj4string"), "projargs") != slot(CRS("+init=epsg:4326"),"projargs")){
-  # if(! identicalCRS(x, CRS("+init=epsg:4326"))){
-    x <- spTransform(x, CRS("+init=epsg:4326"))
-    # x <- spTransform(x, CRS("+init=epsg:4326 +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+    x <- spTransform(x, CRSobj = CRS("+init=epsg:4326"))
   }
 
   ### Check the column names
@@ -556,7 +554,7 @@ organizeBirds <- function(x,
                           "year" = "year") ## Else NULL
   }
 
-  x@data[,"visitUID"] <- createVisits(x@data,
+  x@data[,"visitUID"] <- createVisits(x,
                                       idCols = idCols,
                                       timeCols = timeColsVis,
                                       grid = grid)
