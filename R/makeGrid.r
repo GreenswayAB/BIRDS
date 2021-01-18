@@ -362,10 +362,6 @@ makeGrid <- function(polygon,
 #' If there are more than 100 cells on any dimension a warning message will be displayed.
 #' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
 #' an error message will be displayed.
-#' @examples
-#' \donttest{
-#' library(dggridR) ## Not anylonger on CRAN
-#' grid <- makeDggrid(gotaland, gridSize = 10)}
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @importFrom dplyr group_map
