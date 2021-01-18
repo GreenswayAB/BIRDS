@@ -64,7 +64,6 @@ Imports:
     zoo
 Suggests: 
     covr, 
-    dggridR, 
     knitr, 
     leaflet.extras,
     leafpm,
