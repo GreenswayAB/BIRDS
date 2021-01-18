@@ -232,7 +232,7 @@ All results will use this nomenclature, but the order of the cells will remain u
     porcSpill<-round(nSpill/nVis*100,3)
     message(paste(porcSpill, "% of the visits spill over neighbouring grid cells."))
     if (porcSpill >= 20) {
-      warning("20% or more of the visits spill observations over other grid cells.
+      message("20% or more of the visits spill observations over other grid cells.
 This may suggest that either your grid cell is too narrow or your definition of a 'visit' is not properly defined to match your grid cell size.
 
 Please, consider using 'exploreVisits()' to double check your assumptions.")
