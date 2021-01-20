@@ -59,13 +59,16 @@ organizeDate <- function(x, columns){
   if(all(lengths(cols.df) > 0)){
     cols.df <- unlist(cols.df)
 
-    if(ncol(x)>1) x<-x[,cols.df]
+    if(ncol(x)>1) x <- x[,cols.df]
+    colnames(x)<-tolower(colnames(x))
     cols.df<-tolower(cols.df)
+print(x)
 
     if(length(cols.df) == 3){
-      colnames(x)<-tolower(colnames(x))
       if(all(stdTimeCols %in% cols.df)){
         ## all is just fine
+        x<-x[,stdTimeCols]
+print(x)
         return(x)
       } else{
         ### This part here assumes the 3 defined columns are in the right order
@@ -93,7 +96,7 @@ organizeDate <- function(x, columns){
       if(sum(is.na(x$month))>0) message(paste("There were", sum(is.na(x$month)),"empty months that were given the value 1"))
       x$day <- ifelse(is.na(x$day), 1, x$day)
       x$month <- ifelse(is.na(x$month), 1, x$month)
-
+print(x)
       res<-x
     }
 
@@ -113,10 +116,11 @@ organizeDate <- function(x, columns){
   }
   ## clean unreadable dates (cleaning also the spatial points)
   wNA <- is.na(res)
-  if (sum(wNA)>1){
+  if (sum(wNA) > 1){
     res <- res[-wNA,]
     message(paste(length(wNA), " records deleted because the date was unreadable."))
   }
+print(res)
   return(res)
 }
 
