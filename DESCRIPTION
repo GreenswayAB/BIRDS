@@ -64,6 +64,7 @@ Imports:
     zoo
 Suggests: 
     covr, 
+    Remotes: github::R-barnes/dggridR,
     knitr, 
     leaflet.extras,
     leafpm,
