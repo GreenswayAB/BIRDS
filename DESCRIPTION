@@ -63,7 +63,8 @@ Imports:
     xts,
     zoo
 Suggests: 
-    covr, 
+    covr,
+    dggridR,
     knitr, 
     leaflet.extras,
     leafpm,
@@ -73,6 +74,6 @@ Suggests:
     testthat,
     utils,
     vegan
-Remotes: github::R-barnes/dggridR
+Remotes: R-barnes/dggridR
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
