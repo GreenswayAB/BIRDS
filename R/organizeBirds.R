@@ -60,15 +60,13 @@ organizeDate <- function(x, columns){
     cols.df <- unlist(cols.df)
 
     if(ncol(x)>1) x <- x[,cols.df]
-    colnames(x)<-tolower(colnames(x))
     cols.df<-tolower(cols.df)
-print(x)
 
     if(length(cols.df) == 3){
+      colnames(x)<-tolower(colnames(x))
       if(all(stdTimeCols %in% cols.df)){
         ## all is just fine
         x<-x[,stdTimeCols]
-print(x)
         return(x)
       } else{
         ### This part here assumes the 3 defined columns are in the right order
