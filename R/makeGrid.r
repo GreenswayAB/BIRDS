@@ -366,6 +366,7 @@ makeGrid <- function(polygon,
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @importFrom dplyr group_map
 #' @importFrom rlang .data
+#' @import dggridR
 #' @export
 makeDggrid <- function(polygon,
                      gridSize,
