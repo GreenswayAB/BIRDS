@@ -2,7 +2,7 @@
 * local Windows 10,  R version 4.0.2 (2020-06-22)
 * local Ubuntu 18.04.3 LTS, R version 4.0.2 (2020-06-22)
 * remote win-builder.r-project.org (/M6NUwM96x3e4/)
-* remote Github Actions Ubuntu 18.04.5 LTS, R version 4.0.2 (2020-06-22)
+* remote Github Actions Ubuntu 20.04 LTS, R version 4.0.2 (2020-06-22)
 
 ## R CMF check results
 There where no ERRORs, WARNINGs on local or remote buidls RMD check, 
@@ -27,4 +27,4 @@ During the coming releases compatibility issues with rgdal and sp may occur. We 
 * sppreports() now gained the argument overlay to add overlay layers in the reports
 
 ## Downstream dependencies
-There are currently no downstream dependencies for this package
+There are currently no downstream dependencies for this package in CRAN
