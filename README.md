@@ -4,6 +4,7 @@
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![CRAN Status](https://www.r-pkg.org/badges/version/BIRDS)](https://cran.r-project.org/package=BIRDS)
 [![Downloads](https://cranlogs.r-pkg.org/badges/BIRDS?color=blue)](https://cranlogs.r-pkg.org/)
+[![R-CMD-check](https://github.com/Greensway/BIRDS/workflows/R-CMD-check/badge.svg)](https://github.com/Greensway/BIRDS/actions)
 
 
 ### A set of tools for Biodiversity Informatics in R 
