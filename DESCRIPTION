@@ -1,7 +1,7 @@
 Package: BIRDS
 Type: Package
 Title: Biodiversity Information Review and Decision Support 
-Version: 0.1.23
+Version: 0.1.26
 URL: https://github.com/greensway/BIRDS
 BugReports: https://github.com/Greensway/BIRDS/issues
 Authors@R: c(
@@ -42,7 +42,6 @@ Imports:
     data.table, 
     dbscan, 
     dplyr,
-    esquisse,
     geosphere (>= 1.5),
     leaflet (>= 2.0),
     lubridate (>= 1.7.4),
@@ -51,7 +50,6 @@ Imports:
     methods,
     nnet,
     rgeos (>= 0.4),
-    rgdal (>= 1.5),
     rlang,
     sf (>= 0.7),
     shiny (>= 1.0),

@@ -2,7 +2,7 @@
 * local Windows 10,  R version 4.0.2 (2020-06-22)
 * local Ubuntu 18.04.3 LTS, R version 4.0.2 (2020-06-22)
 * remote win-builder.r-project.org (/M6NUwM96x3e4/)
-* remote travisCI Ubuntu 18.04.5 LTS, R version 4.0.2 (2020-06-22)
+* remote Github Actions Ubuntu 18.04.5 LTS, R version 4.0.2 (2020-06-22)
 
 ## R CMF check results
 There where no ERRORs, WARNINGs on local or remote buidls RMD check, 
