@@ -92,7 +92,7 @@ definition of visit aligns with your grid size, you must explore the spatial ext
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -100,7 +100,7 @@ definition of visit aligns with your grid size, you must explore the spatial ext
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -132,7 +132,7 @@ definition of visit aligns with your grid size, you must explore the spatial ext
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -214,7 +214,7 @@ See <code><a href='organizeBirds.html'>organizeBirds</a></code>.</p></td>
 <span class='co'># create a visit-based data object from the original observation-based data</span>
 <span class='va'>OB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>
 <span class='va'>visitStats</span> <span class='op'>&lt;-</span> <span class='fu'>exploreVisits</span><span class='op'>(</span><span class='va'>OB</span><span class='op'>)</span>
-<span class='fu'>esquisse</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/esquisse/man/esquisser.html'>esquisser</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>)</span>
+<span class='co'># esquisse::esquisser(visitStats)</span>
 <span class='co'># alternatively, plot the variable you want, e.g.:</span>
 <span class='co'># to see the distribution of distances covered on each visit</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>effortDiam</span><span class='op'>)</span>

@@ -91,7 +91,7 @@ in spatial and  temporal dimensions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -99,7 +99,7 @@ in spatial and  temporal dimensions." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -131,7 +131,7 @@ in spatial and  temporal dimensions." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -207,13 +207,15 @@ neighbouring cells is minimal and information over the spatial extent of the
 sampling effort is more important than sample independence.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span><span class='op'>)</span>
 <span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in CRS definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum WGS_1984 in CRS definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NULL source CRS comment, falling back to PROJ string</span></div><div class='output co'>#&gt; <span class='warning'>Warning: +init dropped in PROJ string</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'>summarizeBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'>summarizeBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>289 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>nObsG</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>SB</span><span class='op'>$</span><span class='va'>spatioTemporal</span><span class='op'>[</span>,,<span class='fl'>13</span>,<span class='st'>"nObs"</span><span class='op'>]</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>nObsG2</span> <span class='op'>&lt;-</span> <span class='va'>SB</span><span class='op'>$</span><span class='va'>spatial</span><span class='op'>@</span><span class='va'>data</span><span class='op'>$</span><span class='va'>nObs</span>
 <span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span><span class='op'>(</span><span class='va'>nObsG</span> <span class='op'>!=</span> <span class='va'>nObsG2</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'>## Check, two ways to obtain the same</span>
-</div><div class='output co'>#&gt; [1] FALSE</div></pre>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

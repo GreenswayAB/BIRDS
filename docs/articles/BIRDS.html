@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -52,7 +52,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +84,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,13 +98,13 @@
 
       
 
-      </header><script src="BIRDS_files/header-attrs-2.4/header-attrs.js"></script><script src="BIRDS_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="BIRDS_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to BIRDS</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2020-10-08</h4>
+            <h4 class="date">2021-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Greensway/BIRDS/blob/master/vignettes/BIRDS.Rmd"><code>vignettes/BIRDS.Rmd</code></a></small>
       <div class="hidden name"><code>BIRDS.Rmd</code></div>
@@ -118,8 +118,8 @@
 <a href="#installing-birds" class="anchor"></a>Installing ‘BIRDS’</h2>
 <p>The package ‘BIRDS’ is currently available on GitHub and you can freely download the source code here <a href="https://github.com/Greensway/BIRDS">BIRDS on GitHub</a></p>
 <p>The easiest option is to install the package directly from GitHub using the package ‘remotes’. Install ’remotes as usual <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages('remotes')</a></code> if you do not already have installed it.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'Greensway/BIRDS'</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'Greensway/BIRDS'</span><span class="op">)</span></code></pre></div>
 <p>If you receive an error we would love to receive your bug report <a href="https://github.com/Greensway/BIRDS/issues">here</a></p>
 </div>
 <div id="basic-example-and-data-requirements" class="section level2">
@@ -136,20 +136,11 @@
 <p>Then, the function <code><a href="../reference/summarizeBirds.html">summariseBirds()</a></code> will overlay the data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, and spatio-temporally, and also provide other intermediate results useful for later analyses. Finally, the function <code><a href="../reference/exportBirds.html">exportBirds()</a></code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
 <p>We use as an example a data set consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The data set <code>bombusObs</code> is part of this package and its metadata can be found in the data set help page <code><a href="../reference/bombusObs.html">?bombusObs</a></code>.</p>
 <p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/greensway/BIRDS">BIRDS</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/greensway/BIRDS">BIRDS</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/">sp</a></span><span class="op">)</span>
 <span class="co"># Create a grid for your sample area that will be used to summarise the data:</span>
 <span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeGrid.html">makeGrid</a></span><span class="op">(</span><span class="va">gotaland</span>, gridSize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded</span>
-<span class="co">#&gt; ellps WGS 84 in CRS definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0</span>
-<span class="co">#&gt; +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs</span>
-<span class="co">#&gt; Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded</span>
-<span class="co">#&gt; datum WGS_1984 in CRS definition</span>
-<span class="co">#&gt; Warning in spTransform(polygon, CRSobj = CRS("+init=epsg:3857")): NULL source</span>
-<span class="co">#&gt; CRS comment, falling back to PROJ string</span>
-<span class="co">#&gt; Warning in spTransform(polygon, CRSobj = CRS("+init=epsg:3857")): +init dropped</span>
-<span class="co">#&gt; in PROJ string</span>
 <span class="co">#&gt; Warning in proj4string(obj): CRS object has comment, which is lost in output</span>
 <span class="co"># The grid can be easily created in different ways. </span>
 
@@ -178,10 +169,10 @@
 
 <span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span>
 <span class="co"># over cell values for the median SLL from all visits per year and cell) </span>
-<span class="va">EBavgSll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">spatioTemporal</span><span class="op">[</span>,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
+<span class="va">EBavgSll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">spatioTemporal</span><span class="op">[</span>,,<span class="st">"Yearly"</span>,<span class="st">"avgSll"</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>Then, with functions you already know, plot this into a time series.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">6</span><span class="op">)</span>, las<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">EBnObs</span><span class="op">)</span>, <span class="va">EBnObs</span>, type <span class="op">=</span> <span class="st">"l"</span>, lwd <span class="op">=</span> <span class="fl">3</span>, xlab <span class="op">=</span> <span class="st">"Year"</span>, ylab <span class="op">=</span> <span class="st">"Number"</span>, 
      ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">EBnObs</span><span class="op">)</span><span class="op">)</span>, xaxp<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2018</span>, <span class="fl">18</span><span class="op">)</span><span class="op">)</span>
@@ -198,7 +189,7 @@
        lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">3</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"n.observations / n.visits"</span>, <span class="st">"avg. SLL per cell"</span><span class="op">)</span>,
        lty <span class="op">=</span> <span class="fl">1</span>, lwd <span class="op">=</span> <span class="fl">3</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#78D2EB"</span>, <span class="st">"#FFB3B5"</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="BIRDS_files/figure-html/figure%201-1.png" alt="Time series for *Bombus* spp. dataset." width="672"><p class="caption">
 Time series for <em>Bombus</em> spp. dataset.
@@ -207,8 +198,8 @@ Time series for <em>Bombus</em> spp. dataset.
 <p>Although we downloaded the data in April 2019, we know that the latest reports for 2018 were not yet uploaded and we see that in the figure.<br>
 We can see that over the years there are on average more observations, more visits and also more species reported for each visit. While it looks like as sampling effort has increased we can also see that there are on average fewer observations per visit. This suggests that the sampling effort per visit has actually decreased. There seem to be many more visits reported in later years driving also an increase in number of observations, but many visits hold only few observations. There seem to be also few visits with long species lists driving the increase of average SLL.</p>
 <p>Then, we can summarize spatial data in some maps, to review, for example, Where do we have visits at all?, or How often are visits performed in July vs December?</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">wNonEmpty</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html">unname</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">overlaid</span>, <span class="va">nrow</span><span class="op">)</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">wNonEmpty</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html">unname</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">overlaid</span>, <span class="va">nrow</span><span class="op">)</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">)</span>
 <span class="va">EB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exportBirds.html">exportBirds</a></span><span class="op">(</span><span class="va">SB</span>, <span class="st">"Spatial"</span>, <span class="st">"Month"</span>, <span class="st">"nYears"</span>, <span class="st">"sum"</span><span class="op">)</span>
 <span class="co"># because the dimension is "spatial", the result is a 'SpatialPolygonDataFrame'</span>
 
@@ -232,11 +223,11 @@ We can see that over the years there are on average more observations, more visi
        legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">EB</span><span class="op">@</span><span class="va">data</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,
        col <span class="op">=</span> <span class="fu">palBW</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">EB</span><span class="op">@</span><span class="va">data</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
        title <span class="op">=</span> <span class="st">"Number of years"</span>, pch <span class="op">=</span> <span class="fl">15</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></code></pre></div>
 <p><img src="BIRDS_files/figure-html/figure%202-1.png" width="672"></p>
 <p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete (2015) Biodiv Data J 3:e5361 .</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">palBW</span> <span class="op">&lt;-</span> <span class="fu">leaflet</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/colorNumeric.html">colorNumeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"navyblue"</span><span class="op">)</span>, 
                                <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">spatial</span><span class="op">@</span><span class="va">data</span><span class="op">$</span><span class="va">nVis</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, 
@@ -251,12 +242,13 @@ We can see that over the years there are on average more observations, more visi
 <span class="va">palBWR</span> <span class="op">&lt;-</span> <span class="fu">leaflet</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/colorNumeric.html">colorNumeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"navyblue"</span>, <span class="st">"white"</span>,<span class="st">"red"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, 
                                 na.color <span class="op">=</span> <span class="st">"transparent"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">gotaland</span>, col<span class="op">=</span><span class="st">"grey90"</span>, border <span class="op">=</span> <span class="st">"grey90"</span>, lwd<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; Warning in wkt(obj): CRS object has no comment</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">spatial</span>, col<span class="op">=</span><span class="fu">palBWR</span><span class="op">(</span><span class="va">ign</span><span class="op">)</span>, border <span class="op">=</span> <span class="cn">NA</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">gotaland</span>, col<span class="op">=</span><span class="cn">NA</span>, border <span class="op">=</span> <span class="st">"grey"</span>, lwd<span class="op">=</span><span class="fl">1</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"bottomleft"</span>, legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, <span class="st">"NA"</span><span class="op">)</span>,
       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">palBWR</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="st">"grey90"</span><span class="op">)</span>,
       title <span class="op">=</span> <span class="st">"Ignorance \nnVis, \nO0.5=5"</span>, pch <span class="op">=</span> <span class="fl">15</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></code></pre></div>
 <p><img src="BIRDS_files/figure-html/figure%203-1.png" width="672"></p>
 <p>The ignorance scores are highlighting where we have little information and hence cannot be confident about the lack of reports implying an absence of the species.</p>
 </div>

@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -52,7 +52,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +84,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,13 +98,13 @@
 
       
 
-      </header><script src="technical_details_files/header-attrs-2.4/header-attrs.js"></script><script src="technical_details_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="technical_details_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>BIRDS technical details</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2020-10-08</h4>
+            <h4 class="date">2021-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Greensway/BIRDS/blob/master/vignettes/technical_details.Rmd"><code>vignettes/technical_details.Rmd</code></a></small>
       <div class="hidden name"><code>technical_details.Rmd</code></div>
@@ -140,11 +140,11 @@ It is important to keep in mind that, to keep the sampling bias consistent, the 
 <p>Once the data is in R as a <code>data.frame</code> and loaded the package BIRDS, the fun begins. The function <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> converts the <code>data.frame</code> into a <code>SpatialPointsDataFrame</code> using the specified coordinates. The function takes as default coordinates in geodesic WGS84 (epsg:4326), but other can be used too. It also adds to each observation a unique identifier for the assumed <em>visit</em> (sampling event) it belongs to, given some input parameters. There are a few options here depending on the variables included in the data set, but the default is the unique combination of “locality”, “day”, “month”, “year”, and “recordedBy”. Alternatives could be a known “eventID”, or using the “rightsHolder” instead of the recorder, if that matches the reality and better helps to identify unique visits. The overall idea is to separate unique sample units, i.e. a transect, a square, a combination of point samples, or a random walk along the river side. If you lack a clear spatial definition of a visit, there are a few things you can do in the next steps (visit exploration and summary).</p>
 <p>The <code><a href="../reference/organizeBirds.html">organiseBirds()</a></code> function will also help to keep those observation that are useful to you based on the level of taxonomical resolution or taxon rank (the level to which each species was identified). Sometimes, observers can only identify the species up to genus, but these observations are not always helping our analyses. Then, you can define which “taxonRank” should be kept specifying the column that should be read and the ranks to be kept. As default everything with species identifications or lower are kept (varietals and subspecies). At the same time, you may not want to differentiate among subspecies, because you know, accuracy can get shaky. Then, you can opt to simplify the names by removing all epithets and author names.</p>
 <p>The result is a <code>SpatialPointsDataFrame</code> wrapped into an object of class <code>OrganizedBirds</code>, with additional information. To save memory, only a few columns that will be used later are kept. The <code>OrganizedBirds</code> has as an attribute the variable “visitCol” that stores which is the column with the default ID for the visits in case the are many (see below).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="op">?</span><span class="fu"><a href="../reference/organizeBirds.html">organiseBirds</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">?</span><span class="fu"><a href="../reference/organizeBirds.html">organiseBirds</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">OB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/organizeBirds.html">organizeBirds</a></span><span class="op">(</span><span class="va">bombusObs</span>, simplifySppName <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">OB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/organizeBirds.html">organizeBirds</a></span><span class="op">(</span><span class="va">bombusObs</span>, sppCol <span class="op">=</span> <span class="st">"species"</span>, simplifySppName <span class="op">=</span> <span class="cn">FALSE</span>, 
-                     taxonRankCol <span class="op">=</span> <span class="st">"taxonRank"</span>, taxonRank <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SPECIES"</span>, <span class="st">"SUBSPECIES"</span>,<span class="st">"VARIETY"</span><span class="op">)</span><span class="op">)</span></pre></div>
+                     taxonRankCol <span class="op">=</span> <span class="st">"taxonRank"</span>, taxonRank <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SPECIES"</span>, <span class="st">"SUBSPECIES"</span>,<span class="st">"VARIETY"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <blockquote>
 <p><strong>Field visit</strong><br>
 A central concept used by the <code>BIRDS</code> package is the “visit” – defining the sampling unit as a sampling event by a unique observer (or group of observers), at a unique unit of space and time (commonly a day). Visits can help us to summarize the amount of effort expended in the field. During a visit, the observer commonly samples (i.e. observes and records) species by similar methods. The sampling effort can vary among visits, with the amount of effort expended being greater when spending more time, and reporting more of the observed species. The same number of observations (records of species) at a unique unit of time and space could be made by either few observers reporting many species (greater effort by each observer) or many observers reporting few species (small effort by each observer). Using visits as sampling units allows separation of sampling effort into the effort that can be expressed through the number of visits by different observers and the effort per visit (e.g. species list length, or when available the time spent during a visit). Hence, the quality (completeness) of the data can be judged by using information for each visit and information from a collection of visits. Note that the term ‘checklists’ has also been used for this purpose although it is often confused with the ‘potential species list’ that a visitor may find.</p>
@@ -167,17 +167,17 @@ A central concept used by the <code>BIRDS</code> package is the “visit” – 
 </ul>
 <p>The idea is to see, for example, if the distribution of covered area (effortDiam) matches your expectations for how much terrain an observer can cover during a typical sampling event for species of the considered reference group.</p>
 <p>You can directly plot these variables or use the suggested package <code>esquisse</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">visitStats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exploreVisits.html">exploreVisits</a></span><span class="op">(</span><span class="va">OB</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">visitStats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/exploreVisits.html">exploreVisits</a></span><span class="op">(</span><span class="va">OB</span><span class="op">)</span>
 <span class="co"># open an interactive data explorer</span>
 <span class="fu">esquisse</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/esquisse/man/esquisser.html">esquisser</a></span><span class="op">(</span><span class="va">visitStats</span><span class="op">)</span>
 
 <span class="co"># alternativelly, plot the variable you want, e.g.:</span>
 <span class="co"># to see the distribution of distances covered on each visit</span>
-<span class="co"># hist(visitStat$effortDiam)</span></pre></div>
+<span class="co"># hist(visitStat$effortDiam)</span></code></pre></div>
 <p>If you are not happy with how the observations ended up being grouped into visits, you can test another definition of visits with the following function:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="../reference/visits.html">visits</a></span><span class="op">(</span><span class="va">OB</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/createVisits.html">createVisits</a></span><span class="op">(</span><span class="va">x</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"locality"</span>, <span class="st">"day"</span>, <span class="st">"month"</span>, <span class="st">"year"</span>, <span class="st">"recordedBy"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/visits.html">visits</a></span><span class="op">(</span><span class="va">OB</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/createVisits.html">createVisits</a></span><span class="op">(</span><span class="va">x</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"locality"</span>, <span class="st">"day"</span>, <span class="st">"month"</span>, <span class="st">"year"</span>, <span class="st">"recordedBy"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>This script will create a new vector of unique visits IDs, and either add it to the organised data set or change the current with the new values. See <code>?visits()</code>.</p>
 </div>
 <div id="summaries" class="section level4">
@@ -196,9 +196,9 @@ Sometimes locations can be more accurate positions for individuals of species th
 If there is no common spatial identifier to define the visit extent, and the observer id is not enough to constrain observations spatially (e.g. group of observers from organisation where observer id = organisation name), then visits can be created <em>when</em> overlaying the observation data with the spatial grid. A visit is then defined as all the observations falling into the same grid cell. It is important to keep in mind to choose a grid with a cell size that corresponds to (or at least is not smaller than) the average spatial extent known (or assumed) to be typical for field visits for the reference species group. This process can be repeated with a set of grids with different offset to explore the sensitivity of the results to the size of the grid cells.</p>
 <p><img src="Visits.png" alt="visits"><br><strong>Example of distribution of observations over visits, and overlay in a spatial grid</strong> In this example we see how given the definition of visits and the size of the grid cell, the observations in visit 1 are split over two grid cells.</p>
 </blockquote>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeGrid.html">makeGrid</a></span><span class="op">(</span><span class="va">searchPolygon</span>, gridSize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># grid size in kilometers!</span>
-<span class="va">SB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeBirds.html">summariseBirds</a></span><span class="op">(</span><span class="va">OB</span>, grid<span class="op">=</span><span class="va">grid</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeGrid.html">makeGrid</a></span><span class="op">(</span><span class="va">searchPolygon</span>, gridSize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># grid size in kilometers!</span>
+<span class="va">SB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeBirds.html">summariseBirds</a></span><span class="op">(</span><span class="va">OB</span>, grid<span class="op">=</span><span class="va">grid</span><span class="op">)</span></code></pre></div>
 <p>It is important to note that after summarizing the data, NA are used for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data for this grid cell but not in this time unit).</p>
 <p>The <code>SummarisedBirds</code> object, here called SB, is then a set of objects with different dimensions returning the variables:</p>
 <ul>
@@ -272,8 +272,8 @@ It takes as parameters:</p>
 <img src="ExportFunction.png" alt=""><p class="caption">Possible outcomes to the export function</p>
 </div>
 <p>Some examples of this function could be:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="../reference/exportBirds.html">exportBirds</a></span><span class="op">(</span><span class="va">SB</span>, dimension <span class="op">=</span> <span class="st">"temporal"</span>, timeRes <span class="op">=</span> <span class="st">"yearly"</span>, variable <span class="op">=</span> <span class="st">"nObs"</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/exportBirds.html">exportBirds</a></span><span class="op">(</span><span class="va">SB</span>, dimension <span class="op">=</span> <span class="st">"temporal"</span>, timeRes <span class="op">=</span> <span class="st">"yearly"</span>, variable <span class="op">=</span> <span class="st">"nObs"</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span>
 <span class="co"># this is equivalent to </span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">spatioTemporal</span><span class="op">[</span>,,<span class="st">"Yearly"</span>,<span class="st">"nObs"</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -287,7 +287,7 @@ It takes as parameters:</p>
 <span class="co"># that is somehow equivalent to the xts method except the later excludes months without data</span>
 <span class="fu">xts</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/xts/man/apply.monthly.html">apply.monthly</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">temporal</span><span class="op">[</span>,<span class="st">"nVis"</span><span class="op">]</span>, <span class="va">sum</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/exportBirds.html">exportBirds</a></span><span class="op">(</span><span class="va">SB</span>, dimension <span class="op">=</span> <span class="st">"spatial"</span>, timeRes <span class="op">=</span> <span class="st">"NULL"</span>, variable <span class="op">=</span> <span class="st">"nYears"</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span><span class="op">@</span><span class="va">data</span></pre></div>
+<span class="fu"><a href="../reference/exportBirds.html">exportBirds</a></span><span class="op">(</span><span class="va">SB</span>, dimension <span class="op">=</span> <span class="st">"spatial"</span>, timeRes <span class="op">=</span> <span class="st">"NULL"</span>, variable <span class="op">=</span> <span class="st">"nYears"</span>, method <span class="op">=</span> <span class="st">"sum"</span><span class="op">)</span><span class="op">@</span><span class="va">data</span></code></pre></div>
 </div>
 <div id="listspecies" class="section level5">
 <h5 class="hasAnchor">
@@ -300,8 +300,8 @@ It takes as parameters:</p>
 <a href="#focalspsummary" class="anchor"></a><code>focalSpSummary()</code>
 </h5>
 <p>If you are interested in a particular species, you can produce a summary of the number of cells, number of observations, numbers visits (and unique visit ID), number of years, and months where the focal species was observed.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="../reference/focalSpSummary.html">focalSpSummary</a></span><span class="op">(</span><span class="va">SB</span>, <span class="st">"Bombus humilis"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/focalSpSummary.html">focalSpSummary</a></span><span class="op">(</span><span class="va">SB</span>, <span class="st">"Bombus humilis"</span><span class="op">)</span></code></pre></div>
 <p>Its variant <code><a href="../reference/speciesSummary.html">speciesSummary()</a></code> will loop the function <code><a href="../reference/focalSpSummary.html">focalSpSummary()</a></code> over for all species in the data set.</p>
 </div>
 <div id="focalspreport" class="section level5">
@@ -309,16 +309,16 @@ It takes as parameters:</p>
 <a href="#focalspreport" class="anchor"></a><code>focalSpReport()</code>
 </h5>
 <p>This function will produce a simple visual report for the observation pattern of the focal species.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="../reference/focalSpReport.html">focalSpReport</a></span><span class="op">(</span><span class="va">SB</span>, <span class="st">"Bombus humilis"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/focalSpReport.html">focalSpReport</a></span><span class="op">(</span><span class="va">SB</span>, <span class="st">"Bombus humilis"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="exposeignorance" class="section level5">
 <h5 class="hasAnchor">
 <a href="#exposeignorance" class="anchor"></a><code>exposeIgnorance()</code>
 </h5>
 <p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code><a href="../reference/exposeIgnorance.html">exposeIgnorance()</a></code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete (2015) Biodiv Data J 3:e5361 .</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">palBW</span> <span class="op">&lt;-</span> <span class="fu">leaflet</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/colorNumeric.html">colorNumeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"navyblue"</span><span class="op">)</span>, 
                                <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">SB</span><span class="op">$</span><span class="va">spatial</span><span class="op">@</span><span class="va">data</span><span class="op">$</span><span class="va">nVis</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, 
                                na.color <span class="op">=</span> <span class="st">"transparent"</span><span class="op">)</span>
@@ -336,17 +336,17 @@ It takes as parameters:</p>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">gotaland</span>, col<span class="op">=</span><span class="cn">NA</span>, border <span class="op">=</span> <span class="st">"grey"</span>, lwd<span class="op">=</span><span class="fl">1</span>, add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"bottomleft"</span>, legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, <span class="st">"NA"</span><span class="op">)</span>,
       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">palBWR</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="st">"grey90"</span><span class="op">)</span>,
-      title <span class="op">=</span> <span class="st">"Ignorance \nnVis, \nO0.5=5"</span>, pch <span class="op">=</span> <span class="fl">15</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></pre></div>
+      title <span class="op">=</span> <span class="st">"Ignorance \nnVis, \nO0.5=5"</span>, pch <span class="op">=</span> <span class="fl">15</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="communitymatrix" class="section level5">
 <h5 class="hasAnchor">
 <a href="#communitymatrix" class="anchor"></a><code>communityMatrix()</code>
 </h5>
 <p>In case you need to continue with community and biodiversity analyses, we made it easier for you to use the concept of visits as sampling units in other packages. These packages (e.g. vegan) take as input a matrix with n spatial sampling units by m species, summarizing the number of times a species has been observed in each spatial unit. These assume of course that the same sampling effort has been made in all spatial units. Unfortunately, it is very common in PBDs that the number of observations for a specie does not reflect the species abundance, because it is very bias by the species detectability, commonness and popularity, and overall sampling effort. Ideally, such a matrix would be constructed from species lists corrected by detectability (i.e. occupancy model). However, a first approximation can be done by summarizing the number of visits (instead of number of observations) where a species has been observed and weighing or filtering them by each visits effort. We are working on a function that could do exactly that. As of v.0.0.1, this function returns the number of visits where each species has been observed, without any filtering or compensating for sampling effort.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="co">## Community analysis --&gt;</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Community analysis --&gt;</span>
 <span class="va">CM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/communityMatrix.html">communityMatrix</a></span><span class="op">(</span><span class="va">SB</span>, sampleUnit<span class="op">=</span><span class="st">"visit"</span><span class="op">)</span>
-<span class="va">sp1</span> <span class="op">&lt;-</span> <span class="fu">vegan</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/vegan/man/specaccum.html">specaccum</a></span><span class="op">(</span><span class="va">CM</span>, method <span class="op">=</span> <span class="st">"exact"</span><span class="op">)</span></pre></div>
+<span class="va">sp1</span> <span class="op">&lt;-</span> <span class="fu">vegan</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/vegan/man/specaccum.html">specaccum</a></span><span class="op">(</span><span class="va">CM</span>, method <span class="op">=</span> <span class="st">"exact"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="footnotes">
