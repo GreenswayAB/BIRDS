@@ -329,122 +329,122 @@ makeGrid <- function(polygon,
 }
 
 
-#' Make a discrete global grid
-#'
-#' Construct a discrete global grid system (dggs) object over a preferred polygon.
-#'
-#' This function depends on a package that is no longer on CRAN. You can
-#' find it in its GitHub repository \url{https://github.com/r-barnes/dggridR}.
-#' Also, this may generate odd results for very large rectangles, because putting
-#' rectangles on spheres is weird... as you should know, if you're using this package.
-#'  Use the function \code{exploreVisits()} to assess if your definition of visit
-#'  aligns with your grid size.
-#' @param polygon an object of class \sQuote{SpatialPolygon} or
-#' \sQuote{SpatialPolygonDataFrame}
-#' @param gridSize width of the cells in Km. It defines the central assumption
-#' of this package that is the maximum area a person can explore during a day.
-#' Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
-#' Maximum recomended for this package 10 km if there is no reliable definition
-#' for the spatial extent for visits.
-#' @param buffer shall the grid cells include the polygon border? Then \code{TRUE}
-#' (default = \code{FALSE}).
-#' @param topology Shape of cell. shall the grid cells be hexagonal, diamonds or
-#' triangular? Options are: \dQuote{hexagon}, \dQuote{diamond}, \dQuote{tirangle}.
-#' Default: \dQuote{hexagon}.
-#' @param aperture How finely subsequent resolution levels divide the grid. Options are: 3, 4.
-#' Only applicable for \code{topology = "hexagon"}. Default for \code{topology = "hexagon"} is 3,
-#' else \code{aperture = 4}.
-#' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
-#' Complicated polygons (those with much detail) make this function run slower.
-#' @param tol numerical tolerance value for the simplification algorith. Set to 0.01 as default.
-#' @return an object of class \sQuote{SpatialPolygon} with a set of polygons
-#' conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
-#' @note Depending on the total number of grid cells the computations may take time.
-#' If there are more than 100 cells on any dimension a warning message will be displayed.
-#' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
-#' an error message will be displayed.
-#' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
-#' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
-#' @importFrom dplyr group_map
-#' @importFrom rlang .data
-#' @importFrom utils installed.packages
-#' @export
-makeDggrid <- function(polygon,
-                     gridSize,
-                     buffer = FALSE,
-                     topology = "hexagon",
-                     aperture = 3,
-                     simplify=FALSE,
-                     tol=0.01) {
-
-  if(!"dggridR" %in% names(installed.packages()[,1])) stop("This function requires the package 'dggridR' that is not currently installed.
-intalled. As this package may not currently be on CRAN, please consider installing it with 'remotes::install_github('r-barnes/dggridR')'")
-
-  #Construct a global grid with cells approximately 1000 m across
-  topology <- toupper(topology)
-
-  aperture <- if(topology == "HEXAGON"){
-    if(aperture == 3 || aperture == 4){
-      aperture
-    }else{
-      stop("aperture can only be 3 or 4.")
-    }
-  }else{
-    4
-  }
-
-  dggs <- dggridR::dgconstruct(spacing=gridSize, metric=TRUE, precision=10,
-                      resround='nearest', topology = topology, aperture = aperture)
-
-  # error not a SpatialPolygon
-  if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
-    stop("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame")
-  }
-
-  ## error no CRS
-  if (is.na(slot(polygon,"proj4string"))) {
-    stop("The polygon has no coordinate projection system (CRS) associated")
-  }
-
-  ## simplify if takes too long to make the grid
-  if (simplify) {
-    ##TODO use tryCatch()
-    polygon <- rgeos::gSimplify(polygon, tol = tol)
-  }
-
-  # Transform to WGS84 pseudo-Mercator
-  if (buffer) {
-    # Needs to be projected
-    polygonProj <- suppressWarnings(spTransform(polygon,
-                                                CRSobj = CRS("+init=epsg:3857")) )
-    polygonBuffer <- rgeos::gBuffer(polygonProj, width = gridSize*1000)
-  } else {polygonBuffer <- polygon}
-
-  polygonGeod <- suppressWarnings(spTransform(polygonBuffer,
-                                              CRSobj = CRS("+init=epsg:4326")))
-
-  extent <- polygonGeod@bbox
-  #Get the grid cell boundaries for cells on the polygon extent
-  grid <- dggridR::dgrectgrid(dggs, extent[2,1], extent[1,1], extent[2,2], extent[1,2])
-
-  gridPolList <- grid %>%
-    group_by(.data$cell) %>%
-    group_map(.f=function(.x,...){
-      Polygons(
-        list(Polygon(cbind(.x$long, .x$lat))),
-        ID=strsplit(as.character(unique(.x$group)),"[.]")[[1]][1])
-    })
-  gridPol <- SpatialPolygons(gridPolList,
-                             proj4string = CRS("+init=epsg:4326") )
-  gridPolInt <- vector()
-
-  for(i in 1:length(gridPol)){
-    gridPolInt[i] <-rgeos::gIntersects(polygonGeod, gridPol[i,])
-  }
-  gridPol <- gridPol[gridPolInt, ]
-
-  return(gridPol)
-}
+# #' Make a discrete global grid
+# #'
+# #' Construct a discrete global grid system (dggs) object over a preferred polygon.
+# #'
+# #' This function depends on a package that is no longer on CRAN. You can
+# #' find it in its GitHub repository \url{https://github.com/r-barnes/dggridR}.
+# #' Also, this may generate odd results for very large rectangles, because putting
+# #' rectangles on spheres is weird... as you should know, if you're using this package.
+# #'  Use the function \code{exploreVisits()} to assess if your definition of visit
+# #'  aligns with your grid size.
+# #' @param polygon an object of class \sQuote{SpatialPolygon} or
+# #' \sQuote{SpatialPolygonDataFrame}
+# #' @param gridSize width of the cells in Km. It defines the central assumption
+# #' of this package that is the maximum area a person can explore during a day.
+# #' Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
+# #' Maximum recomended for this package 10 km if there is no reliable definition
+# #' for the spatial extent for visits.
+# #' @param buffer shall the grid cells include the polygon border? Then \code{TRUE}
+# #' (default = \code{FALSE}).
+# #' @param topology Shape of cell. shall the grid cells be hexagonal, diamonds or
+# #' triangular? Options are: \dQuote{hexagon}, \dQuote{diamond}, \dQuote{tirangle}.
+# #' Default: \dQuote{hexagon}.
+# #' @param aperture How finely subsequent resolution levels divide the grid. Options are: 3, 4.
+# #' Only applicable for \code{topology = "hexagon"}. Default for \code{topology = "hexagon"} is 3,
+# #' else \code{aperture = 4}.
+# #' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
+# #' Complicated polygons (those with much detail) make this function run slower.
+# #' @param tol numerical tolerance value for the simplification algorith. Set to 0.01 as default.
+# #' @return an object of class \sQuote{SpatialPolygon} with a set of polygons
+# #' conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
+# #' @note Depending on the total number of grid cells the computations may take time.
+# #' If there are more than 100 cells on any dimension a warning message will be displayed.
+# #' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
+# #' an error message will be displayed.
+# #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
+# #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
+# #' @importFrom dplyr group_map
+# #' @importFrom rlang .data
+# #' @importFrom utils installed.packages
+# #' @export
+# makeDggrid <- function(polygon,
+#                      gridSize,
+#                      buffer = FALSE,
+#                      topology = "hexagon",
+#                      aperture = 3,
+#                      simplify=FALSE,
+#                      tol=0.01) {
+#
+#   if(!"dggridR" %in% names(installed.packages()[,1])) stop("This function requires the package 'dggridR' that is not currently installed.
+# intalled. As this package may not currently be on CRAN, please consider installing it with 'remotes::install_github('r-barnes/dggridR')'")
+#
+#   #Construct a global grid with cells approximately 1000 m across
+#   topology <- toupper(topology)
+#
+#   aperture <- if(topology == "HEXAGON"){
+#     if(aperture == 3 || aperture == 4){
+#       aperture
+#     }else{
+#       stop("aperture can only be 3 or 4.")
+#     }
+#   }else{
+#     4
+#   }
+#
+#   dggs <- dggridR::dgconstruct(spacing=gridSize, metric=TRUE, precision=10,
+#                       resround='nearest', topology = topology, aperture = aperture)
+#
+#   # error not a SpatialPolygon
+#   if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+#     stop("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame")
+#   }
+#
+#   ## error no CRS
+#   if (is.na(slot(polygon,"proj4string"))) {
+#     stop("The polygon has no coordinate projection system (CRS) associated")
+#   }
+#
+#   ## simplify if takes too long to make the grid
+#   if (simplify) {
+#     ##TODO use tryCatch()
+#     polygon <- rgeos::gSimplify(polygon, tol = tol)
+#   }
+#
+#   # Transform to WGS84 pseudo-Mercator
+#   if (buffer) {
+#     # Needs to be projected
+#     polygonProj <- suppressWarnings(spTransform(polygon,
+#                                                 CRSobj = CRS("+init=epsg:3857")) )
+#     polygonBuffer <- rgeos::gBuffer(polygonProj, width = gridSize*1000)
+#   } else {polygonBuffer <- polygon}
+#
+#   polygonGeod <- suppressWarnings(spTransform(polygonBuffer,
+#                                               CRSobj = CRS("+init=epsg:4326")))
+#
+#   extent <- polygonGeod@bbox
+#   #Get the grid cell boundaries for cells on the polygon extent
+#   grid <- dggridR::dgrectgrid(dggs, extent[2,1], extent[1,1], extent[2,2], extent[1,2])
+#
+#   gridPolList <- grid %>%
+#     group_by(.data$cell) %>%
+#     group_map(.f=function(.x,...){
+#       Polygons(
+#         list(Polygon(cbind(.x$long, .x$lat))),
+#         ID=strsplit(as.character(unique(.x$group)),"[.]")[[1]][1])
+#     })
+#   gridPol <- SpatialPolygons(gridPolList,
+#                              proj4string = CRS("+init=epsg:4326") )
+#   gridPolInt <- vector()
+#
+#   for(i in 1:length(gridPol)){
+#     gridPolInt[i] <-rgeos::gIntersects(polygonGeod, gridPol[i,])
+#   }
+#   gridPol <- gridPol[gridPolInt, ]
+#
+#   return(gridPol)
+# }
 
 
 #' Convert a grid into a web query string.

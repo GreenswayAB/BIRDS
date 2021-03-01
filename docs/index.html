@@ -36,9 +36,7 @@
    opportunistically collected presence-only data together with and data from 
    systematic monitoring programs. The set of tools provided is aimed at 
    understanding the process that generated the data (i.e. observing, recording 
-   and reporting species into databases). There is a non-vital function on this 
-   package (makeDggrid()) that depends the package dggridR that is no longer on CRAN. 
-   You can find it here &lt;https://github.com/r-barnes/dggridR&gt;. References: 
+   and reporting species into databases). References: 
    Ruete (2015) &lt;doi:10.3897/BDJ.3.e5361&gt;; Szabo, Vesk, Baxter &amp; Possingham (2010) 
    &lt;doi:10.1890/09-0877.1&gt;; Telfer, Preston 6 Rothery (2002) &lt;doi:10.1016/S0006-3207(02)00050-2&gt;.">
 <meta property="og:image" content="/logo.svg">
@@ -66,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27.1</span>
       </span>
     </div>
 
@@ -133,7 +131,7 @@
 <p>This is the Biodiversity Information Review and Decision Support package for R!<br><strong>NB</strong>: BIRDS is an acronym. This packages is not limited to birds’ data (i.e. Aves) <span class="emoji" data-emoji="smiley">😃</span></p>
 <p>This set of tools has been developed for systematizing biodiversity data review in order to evaluate whether a set of species observation are fit-for-use and help take decisions upon its use on further analysis.</p>
 <p>This R-package was awarded the Third Prize on the <a href="https://www.gbif.org/en/news/2mixX9oDrJI2W3AqPFOxI3/wherenext-wins-2019-gbif-ebbe-nielsen-challenge#birds">2019 GBIF Ebbe Nielsen Challenge</a> for which it was developed.</p>
-<p>The set of tools provided are aimed to review and understand biodiversity data quality in terms of completeness, and the data generation process (i.e. the observers’ sampling behavior). The <code>BIRDS</code> package provides a systematic approach to evaluate biodiversity data – to enhance reproducibility and facilitate the review of data. The <code>BIRDS</code> package intends to provide the data user with knowledge about sampling effort (amount of effort expended during an event) and data completeness (data gaps) to help judge whether the data is representative, valid and fit for the purpose of its intended use – and hence support for making decisions upon the use and further analysis of biodiversity data.</p>
+<p>The set of tools provided are aimed to review and understand biodiversity data quality in terms of completeness, and the data generation process (i.e. the observers’ sampling behaviour). The <code>BIRDS</code> package provides a systematic approach to evaluate biodiversity data – to enhance reproducibility and facilitate the review of data. The <code>BIRDS</code> package intends to provide the data user with knowledge about sampling effort (amount of effort expended during an event) and data completeness (data gaps) to help judge whether the data is representative, valid and fit for the purpose of its intended use – and hence support for making decisions upon the use and further analysis of biodiversity data.</p>
 <p>The <code>BIRDS</code> package is most useful for heterogeneous data sets with variation in the sampling process, i.e. where data have been collected and reported in variable ways, not conforming to the same sampling protocol and therefore varying in sampling effort, leading to variation in data completeness (i.e. how well the reported observations describe the “true” state). Primary biodiversity data (PBD) combining data from different data sets, like e.g. GBIF mediated data, commonly vary in the ways data has been generated - containing opportunistically collected presence-only data (no sampling protocol, no or inconsistent information about absences, high sampling variability between observers), and data sets that have been collected using different sampling protocols. The set of tools provided by the <code>BIRDS</code> package is aimed at illuminating and understanding the process that generated the data (i.e. observing, recording and reporting species into databases). It does this by a systematic approach, and providing summaries that inform about sampling effort and data completeness (or data gaps).</p>
 <p>The <code>BIRDS</code> package is <strong>not</strong> concerned with data accuracy, which can be evaluated and improved using other existing packages (as outlined in the <a href="https://greensway.github.io/BIRDS/articles/technical_details.html">technical details</a> vignette), before processing the data using <code>BIRDS</code>.</p>
 <p>The concepts and methods, and examples are described after a short description on how to install this package into R.</p>
@@ -271,7 +269,7 @@ Szabo et al. 2010 Regional avian species declines estimated from volunteer‐co
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="Lifecycle: stable"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="Lifecycle: stable"></a></li>
 <li><a href="https://cran.r-project.org/package=BIRDS"><img src="https://www.r-pkg.org/badges/version/BIRDS" alt="CRAN Status"></a></li>
 <li><a href="https://cranlogs.r-pkg.org/"><img src="https://cranlogs.r-pkg.org/badges/BIRDS?color=blue" alt="Downloads"></a></li>
 <li><a href="https://github.com/Greensway/BIRDS/actions"><img src="https://github.com/Greensway/BIRDS/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>

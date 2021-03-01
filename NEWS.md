@@ -2,6 +2,11 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+# BIRDS 0.1.27
+
+### Breaking changes
+* we sadly had to remove the function makeDggrid() because of persistent dependency issues. You can check the commented function from the repository.  
+
 # BIRDS 0.1
 
 ### Breaking changes
