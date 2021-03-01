@@ -124,6 +124,7 @@ makeCircle<-function(spdf, projCRS=NULL){
 #' @examples
 #' orgDf <- organizeBirds(bombusObs)
 #' polygon <- OB2Polygon(orgDf, shape = "cHull")
+#' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @export
 OB2Polygon <- function(x, shape="bBox") {
     if (class(x) == "OrganizedBirds") {
