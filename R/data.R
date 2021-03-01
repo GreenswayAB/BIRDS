@@ -16,7 +16,7 @@
 #' @description A random sample of 10,000 observations of bryophytes from an original dataset
 #' of 178,765 observations. The observations were accessed via \url{https://www.gbif.org/}.
 #' Citation for the original dataset: GBIF.org (03 April 2019) GBIF Occurrence
-#' Download \url{https://doi.org/10.15468/dl.ijr8gw}. \cr{}
+#' Download \doi{https://doi.org/10.15468/dl.ijr8gw}. \cr{}
 #' Searching parameters\cr{}
 #' And: (All must apply)
 #' \describe{
@@ -47,7 +47,7 @@
 #' @description A random sample of 10,000 observations for the genus \emph{Bombus} spp.
 #' from an original dataset of 25,848 observations. The observations were accessed via \url{https://www.gbif.org/}.
 #' Citation for the original dataset: GBIF.org (03 April 2019) GBIF Occurrence
-#' Download \url{https://doi.org/10.15468/dl.jhthmb} \cr{}
+#' Download \doi{https://doi.org/10.15468/dl.jhthmb} \cr{}
 #' Searching parameters\cr{}
 #' And: (All must apply)
 #' \describe{

@@ -1,7 +1,7 @@
 # BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" alt="" width="120" />
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![CRAN Status](https://www.r-pkg.org/badges/version/BIRDS)](https://cran.r-project.org/package=BIRDS)
 [![Downloads](https://cranlogs.r-pkg.org/badges/BIRDS?color=blue)](https://cranlogs.r-pkg.org/)
 [![R-CMD-check](https://github.com/Greensway/BIRDS/workflows/R-CMD-check/badge.svg)](https://github.com/Greensway/BIRDS/actions)
@@ -20,7 +20,7 @@ for which it was developed.
 
 The set of tools provided are aimed to review and understand biodiversity data
 quality in terms of completeness, and the data generation process (i.e. the 
-observers’ sampling behavior). The `BIRDS` package provides a systematic approach 
+observers’ sampling behaviour). The `BIRDS` package provides a systematic approach 
 to evaluate biodiversity data – to enhance reproducibility and facilitate the 
 review of data. The `BIRDS` package intends to provide the data user with knowledge 
 about sampling effort (amount of effort expended during an event) and data 

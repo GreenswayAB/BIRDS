@@ -18,6 +18,7 @@
 #'  polygon <- drawPolygon()
 #' }
 #' @importFrom magrittr %>%
+#' @importFrom sp spTransform CRS
 drawPolygon <- function(lat = 0,
                         lng = 0,
                         zoom = 1,
@@ -52,7 +53,7 @@ drawPolygon <- function(lat = 0,
 
 #' Create the minimum circle containing the points
 #'
-#' This funciton is based on the function shotGroups::getMinCircle() that uses
+#' This function is based on the function shotGroups::getMinCircle() that uses
 #' the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf
 #'
 #' @param spdf an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.
@@ -366,6 +367,7 @@ makeGrid <- function(polygon,
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @importFrom dplyr group_map
 #' @importFrom rlang .data
+#' @importFrom utils installed.packages
 #' @export
 makeDggrid <- function(polygon,
                      gridSize,
@@ -374,6 +376,10 @@ makeDggrid <- function(polygon,
                      aperture = 3,
                      simplify=FALSE,
                      tol=0.01) {
+
+  if(!"dggridR" %in% names(installed.packages()[,1])) stop("This function requires the package 'dggridR' that is not currently installed.
+intalled. As this package may not currently be on CRAN, please consider installing it with 'remotes::install_github('r-barnes/dggridR')'")
+
   #Construct a global grid with cells approximately 1000 m across
   topology <- toupper(topology)
 

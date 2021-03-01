@@ -1,7 +1,7 @@
 Package: BIRDS
 Type: Package
 Title: Biodiversity Information Review and Decision Support 
-Version: 0.1.27
+Version: 0.1.27.1
 URL: https://github.com/greensway/BIRDS
 BugReports: https://github.com/Greensway/BIRDS/issues
 Authors@R: c(
@@ -46,13 +46,12 @@ Imports:
     leaflet (>= 2.0),
     lubridate (>= 1.7.4),
     magrittr,
-    mapedit (>= 0.5),
     methods,
     nnet,
+    rgdal (>= 1.5), 
     rgeos (>= 0.4),
     rlang,
     sf (>= 0.7),
-    shiny (>= 1.0),
     sp (>= 1.4-4),
     stringr (>= 1.4),
     shotGroups,
@@ -66,12 +65,13 @@ Suggests:
     knitr, 
     leaflet.extras,
     leafpm,
+    mapedit (>= 0.5),
     maps, 
     rgbif, 
     rmarkdown, 
+    shiny (>= 1.0),
     testthat,
     utils,
     vegan
-Remotes: R-barnes/dggridR
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

@@ -19,7 +19,7 @@ a polygon object of class \sQuote{SpatialPolygon} with geodesic
 coordinates in WGS84 (ESPG:4326).
 }
 \description{
-This funciton is based on the function shotGroups::getMinCircle() that uses
+This function is based on the function shotGroups::getMinCircle() that uses
 the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf
 }
 \seealso{
