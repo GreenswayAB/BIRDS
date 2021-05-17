@@ -14,7 +14,7 @@ organizeBirds(
   grid = NULL,
   presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
-  dataCRS = "+init=epsg:4326",
+  dataCRS = 4326,
   taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
   simplifySppName = FALSE
@@ -29,7 +29,7 @@ organiseBirds(
   grid = NULL,
   presenceCol = NULL,
   xyCols = c("decimalLongitude", "decimalLatitude"),
-  dataCRS = "+init=epsg:4326",
+  dataCRS = 4326,
   taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
   simplifySppName = FALSE
@@ -71,8 +71,8 @@ latitude(y). Default is the Darwin Core standard column names
 \code{c("decimalLongitude", "decimalLatitude")}. Only applicable to non-
 spatial dataframes.}
 
-\item{dataCRS}{A character string for the dataframe CRS (Coordinate Reference
-System). Default is \code{"+init=epsg:4326"}, which is WGS 84. This is only
+\item{dataCRS}{A character string or numeric for the dataframe CRS (Coordinate Reference
+System). Default is \code{"4326"}, which is WGS 84. This is only
 applicable to non-spatial dataframes, since a spatial dataframes already
 should have this information.}
 

@@ -430,8 +430,8 @@ obsData.OrganizedBirds<-function(x){
 #'  latitude(y). Default is the Darwin Core standard column names
 #'  \code{c("decimalLongitude", "decimalLatitude")}. Only applicable to non-
 #'  spatial dataframes.
-#' @param dataCRS A character string for the dataframe CRS (Coordinate Reference
-#'  System). Default is \code{"+init=epsg:4326"}, which is WGS 84. This is only
+#' @param dataCRS A character string or numeric for the dataframe CRS (Coordinate Reference
+#'  System). Default is \code{"4326"}, which is WGS 84. This is only
 #'  applicable to non-spatial dataframes, since a spatial dataframes already
 #'  should have this information.
 #' @param taxonRankCol the name of the column containing the taxonomic rank for
@@ -444,6 +444,7 @@ obsData.OrganizedBirds<-function(x){
 #' by taxize::gbif_parse(), that is a scientific name with up to 3 elements.
 #'
 #' @importFrom sp coordinates proj4string spTransform CRS plot
+#' @importFrom sf st_crs
 #' @importFrom stats IQR median na.omit  quantile var
 #' @importFrom grDevices boxplot.stats
 #' @importFrom graphics barplot layout legend mtext par plot
@@ -466,11 +467,12 @@ organizeBirds <- function(x,
                         grid = NULL,
                         presenceCol = NULL,
                         xyCols = c("decimalLongitude", "decimalLatitude"),
-                        dataCRS = "+init=epsg:4326",
+                        dataCRS = 4326,
                         taxonRankCol=NULL,
                         taxonRank=c("SPECIES","SUBSPECIES","VARIETY"),
                         simplifySppName=FALSE){
 
+  crswkt <- sf::st_crs(as.numeric(dataCRS))[[2]]
   stdTimeCols <- c("year", "month", "day")
 
   # Check the type of data
@@ -487,7 +489,7 @@ organizeBirds <- function(x,
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
       sp::coordinates(x) <- xyColsl.df
-      sp::proj4string(x) <- CRS(dataCRS)
+      sp::proj4string(x) <- CRS(crswkt)
 
     ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
     # testCoord<-tryCatch({

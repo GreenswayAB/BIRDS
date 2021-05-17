@@ -7,7 +7,7 @@
 spatialVisits(
   x,
   xyCols = c("centroidX", "centroidY"),
-  dataCRS = "+init=epsg:4326",
+  dataCRS = "4326",
   radius = "medianDist"
 )
 }
@@ -17,8 +17,8 @@ spatialVisits(
 \item{xyCols}{a character vector with the column names for the coordinates.
 Default to \code{c("centroidX","centroidY")}}
 
-\item{dataCRS}{a character string with the proj4 description of the original
-coordinate projeciton system (CRS). Default to \code{"+init=epsg:4326"}}
+\item{dataCRS}{a character string or numeric with the original
+coordinate reference system (CRS). Default to \code{"4326"}}
 
 \item{radius}{either a character string with the name of the column
 containing the radius of the visit circle, or a numeric vector with its value

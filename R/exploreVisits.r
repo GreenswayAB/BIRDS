@@ -197,8 +197,8 @@ exploreVisits <- function(x,
 #' @param x an object of class \sQuote{data.frame} from exploreVistis.
 #' @param xyCols a character vector with the column names for the coordinates.
 #' Default to \code{c("centroidX","centroidY")}
-#' @param dataCRS a character string with the proj4 description of the original
-#' coordinate projeciton system (CRS). Default to \code{"+init=epsg:4326"}
+#' @param dataCRS a character string or numeric with the original
+#' coordinate reference system (CRS). Default to \code{"4326"}
 #' @param radius either a character string with the name of the column
 #' containing the radius of the visit circle, or a numeric vector with its value
 #' in meters. Default to \code{"medianDist"}
@@ -219,11 +219,13 @@ exploreVisits <- function(x,
 #' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
 spatialVisits <- function(x,
                           xyCols=c("centroidX","centroidY"),
-                          dataCRS="+init=epsg:4326",
+                          dataCRS="4326",
                           radius="medianDist"){
+  crswkt <- sf::st_crs(as.numeric(dataCRS))[[2]]
+
   if (class(x) == "data.frame") {
     sp::coordinates(x) <- xyCols
-    sp::proj4string(x) <- dataCRS ## because I know where it comes from
+    sp::proj4string(x) <- CRS(crswkt) ## because I know where it comes from
   } else {
     stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
   }
@@ -243,8 +245,10 @@ spatialVisits <- function(x,
   utmCRS <- suppressWarnings(CRS(getUTMproj(x)))
   xTrans <- spTransform(x, CRSobj = utmCRS)
 
-  buff <- rgeos::gBuffer(xTrans,  byid = TRUE, id=x@data$visitUID, width=radiusVal)
-  buff <- spTransform(buff, CRSobj = dataCRS)
+  buff <- rgeos::gBuffer(xTrans,  byid = TRUE,
+                         id=x@data$visitUID,
+                         width=radiusVal)
+  buff <- spTransform(buff, CRSobj = CRS(crswkt))
 
   return(list("points"=x, "effort"=buff))
 
