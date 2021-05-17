@@ -130,9 +130,10 @@ exploreVisits <- function(x,
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
+      crswkt <- sf::st_crs(3857)[[2]]
       spdfTmpTr <- sp::spTransform(spdfTmp,
                                    CRSobj = suppressWarnings(
-                                     CRS("+init=epsg:3857")))
+                                     CRS(crswkt)))
       # coord <- sp::coordinates(spdfTmpTr)
       # coordPaste <- apply(coord, 1, paste0, collapse = ",")
       # coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
@@ -365,9 +366,10 @@ getUTMproj<-function(x){
   } else {
     if(class(x) == "SpatialPointsDataFrame"){
       spdf <- x
+      crswkt <- sf::st_crs(4326)[[2]]
       spdf <- spTransform(spdf,
                           CRSobj = suppressWarnings(
-                            CRS("+init=epsg:4326"))
+                            CRS(crswkt))
                           )
     } else {
       stop("Input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")

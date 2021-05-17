@@ -43,7 +43,8 @@ drawPolygon <- function(lat = 0,
         if (length(wPoly) > 1)
             warning("Only the first polygon will go through")
         polygon <- as(area[wPoly[1]], "Spatial")
-        polygon <- spTransform(polygon, CRSobj = CRS("+init=epsg:4326"))
+        crswkt <- sf::st_crs(4326)[[2]]
+        polygon <- spTransform(polygon, CRSobj = CRS(crswkt))
     } else {
         stop("There are no polygones in your drawing")
     }
@@ -57,7 +58,7 @@ drawPolygon <- function(lat = 0,
 #' the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf
 #'
 #' @param spdf an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.
-#' @param projCRS a proj4-type string defining a projected CRS. It is very important
+#' @param projCRS a number defining a projected CRS. It is very important
 #' that the selected CRS is accurate in the study area. This is not the CRS for
 #' the argument 'spdf' which should be defined internally. This is the CRS used to
 #' make a flat circle. Some UTM variant is recommended. See \code{\link{getUTMproj}}
@@ -95,7 +96,8 @@ makeCircle<-function(spdf, projCRS=NULL){
       sp::proj4string(mincircSP) <- projCRS
 
       circle <- rgeos::gBuffer(spgeom = mincircSP, width = mincirc$rad, quadsegs = 10)
-      circle <- spTransform(circle, CRSobj = suppressWarnings(CRS("+init=epsg:4326")))
+      crswkt <- sf::st_crs(4326)[[2]]
+      circle <- spTransform(circle, CRSobj = suppressWarnings(CRS(crswkt)))
 
     } else {
         stop("More than one unique set of coordinates are needed to make a minimum circle polygon.")
@@ -127,12 +129,14 @@ makeCircle<-function(spdf, projCRS=NULL){
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @export
 OB2Polygon <- function(x, shape="bBox") {
+    crswkt <- sf::st_crs(4326)[[2]]
+
     if (class(x) == "OrganizedBirds") {
         spdf <- x$spdf
     } else {
         if(class(x) == "SpatialPointsDataFrame"){
             spdf <- x
-            spdf <- spTransform(spdf, CRSobj = suppressWarnings(CRS("+init=epsg:4326")))
+            spdf <- spTransform(spdf, CRSobj = suppressWarnings(CRS(crswkt)))
         } else {
             stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
         }
@@ -167,7 +171,7 @@ OB2Polygon <- function(x, shape="bBox") {
                         ),
                     ID="1")
                 ),
-            proj4string=CRS("+init=epsg:4326")
+            proj4string=CRS(crswkt)
             )
     }
 
@@ -183,7 +187,7 @@ OB2Polygon <- function(x, shape="bBox") {
                             ),
                         ID="1")
                     ),
-                proj4string=CRS("+init=epsg:4326")
+                proj4string=CRS(crswkt)
                 )
         } else {
             stop("More than two unique set of coordinates is needed to make a
@@ -208,7 +212,6 @@ OB2Polygon <- function(x, shape="bBox") {
 #' @keywords internal
 renameGrid<-function(grid){
     for(i in 1:length(grid)){
-      # grid@polygons[[i]]@ID <- paste0("ID", i)
       slot(slot(grid, "polygons")[[i]], "ID") <- paste0("ID", i)
     }
   return(grid)
@@ -262,7 +265,8 @@ makeGrid <- function(polygon,
 
     gridSizeM <- gridSize * 1000 # in meters
     gridSizeDg <- gridSize/111  # because on average 1 degree is 111 km
-
+    crswkt <- sf::st_crs(4326)[[2]]
+    crswktPM <- sf::st_crs(3857)[[2]]
     # error not a SpatialPolygon
     if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         stop("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame")
@@ -281,7 +285,7 @@ makeGrid <- function(polygon,
 
     # Transform to WGS84 pseudo-Mercator
     polygonProj <- suppressWarnings(spTransform(polygon,
-                                                CRSobj = CRS("+init=epsg:3857"))
+                                                CRSobj = CRS(crswktPM))
                                     )
     if (buffer) {
         # Needs to be projected
@@ -289,7 +293,7 @@ makeGrid <- function(polygon,
     } else {polygonProjBuffer <- polygonProj}
 
     polygonGeod <- suppressWarnings(spTransform(polygonProjBuffer,
-                                                CRSobj = CRS("+init=epsg:4326"))
+                                                CRSobj = CRS(crswkt))
                                     )
 
     # observe the grid cell and study area polygon get the difference in
@@ -321,7 +325,7 @@ makeGrid <- function(polygon,
                                offset = offset,
                                cellsize = gridSizeDg)
         grid <- sp::as.SpatialPolygons.GridTopology(sp::points2grid(points),
-                                              proj4string = CRS("+init=epsg:4326"))
+                                              proj4string = CRS(crswkt))
 
         wcells <- over(points, grid)
         grid <- grid[wcells, ]

@@ -9,7 +9,7 @@ makeCircle(spdf, projCRS = NULL)
 \arguments{
 \item{spdf}{an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.}
 
-\item{projCRS}{a proj4-type string defining a projected CRS. It is very important
+\item{projCRS}{a number defining a projected CRS. It is very important
 that the selected CRS is accurate in the study area. This is not the CRS for
 the argument 'spdf' which should be defined internally. This is the CRS used to
 make a flat circle. Some UTM variant is recommended. See \code{\link{getUTMproj}}}

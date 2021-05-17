@@ -489,7 +489,7 @@ organizeBirds <- function(x,
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
       sp::coordinates(x) <- xyColsl.df
-      sp::proj4string(x) <- CRS(crswkt)
+      sp::proj4string(x) <- sp::CRS(crswkt)
 
     ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
     # testCoord<-tryCatch({
@@ -507,8 +507,8 @@ organizeBirds <- function(x,
     stop("The argument 'x' should be of class data.frame or SpatialPointsDataFrame.")
   }
 
-  if(slot(slot(x,"proj4string"), "projargs") != slot(CRS("+init=epsg:4326"),"projargs")){
-    x <- spTransform(x, CRSobj = CRS("+init=epsg:4326"))
+  if(slot(slot(x,"proj4string"), "projargs") != slot(CRS(crswkt),"projargs")){
+    x <- spTransform(x, CRSobj = CRS(crswkt))
   }
 
   ### Check the column names
