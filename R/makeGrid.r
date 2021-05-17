@@ -268,6 +268,7 @@ makeGrid <- function(polygon,
     crswkt <- sf::st_crs(4326)[[2]]
     crswktPM <- sf::st_crs(3857)[[2]]
     # error not a SpatialPolygon
+
     if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         stop("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame")
     }
@@ -285,7 +286,7 @@ makeGrid <- function(polygon,
 
     # Transform to WGS84 pseudo-Mercator
     polygonProj <- suppressWarnings(spTransform(polygon,
-                                                CRSobj = CRS(crswktPM))
+                                                CRSobj = sp::CRS(CRSargs(CRS(crswktPM))))
                                     )
     if (buffer) {
         # Needs to be projected
