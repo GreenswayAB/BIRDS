@@ -285,17 +285,27 @@ makeGrid <- function(polygon,
     }
 
     # Transform to WGS84 pseudo-Mercator
-    polygonProj <- suppressWarnings(spTransform(polygon,
-                                                CRSobj = sp::CRS(CRSargs(CRS(crswktPM))))
-                                    )
+    polygonProj <- suppressWarnings(
+      sf::as_Spatial(
+        sf::st_transform(
+          sf::st_as_sf(polygon), crs = crswktPM) )
+      )
+    # polygonProj <- suppressWarnings(spTransform(polygon,
+    #                                             CRSobj = sp::CRS(crswktPM))
+    #                                 )
     if (buffer) {
         # Needs to be projected
         polygonProjBuffer <- rgeos::gBuffer(polygonProj, width = gridSizeM)
     } else {polygonProjBuffer <- polygonProj}
 
-    polygonGeod <- suppressWarnings(spTransform(polygonProjBuffer,
-                                                CRSobj = CRS(crswkt))
-                                    )
+    polygonGeod <- suppressWarnings(
+      sf::as_Spatial(
+        sf::st_transform(
+          sf::st_as_sf(polygon), crs = crswkt) )
+    )
+    # polygonGeod <- suppressWarnings(spTransform(polygonProjBuffer,
+    #                                             CRSobj = CRS(crswkt))
+    #                                 )
 
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
