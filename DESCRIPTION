@@ -64,7 +64,6 @@ Suggests:
     leafpm,
     mapedit (>= 0.5),
     maps, 
-    rgbif, 
     rmarkdown, 
     shiny (>= 1.0),
     testthat,
