@@ -10,7 +10,7 @@ getUTMproj(x)
 \item{x}{an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}}
 }
 \value{
-a proj4 character string for an apropiate UTM zone
+a proj4 character string for an appropriate UTM zone
 }
 \description{
 A wrapper around getUTMzone and produce a proj4 string

@@ -92,7 +92,7 @@ analyses with the BIRDS-package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -169,7 +169,7 @@ analyses with the BIRDS-package.</p>
   grid <span class='op'>=</span> <span class='cn'>NULL</span>,
   presenceCol <span class='op'>=</span> <span class='cn'>NULL</span>,
   xyCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span><span class='op'>)</span>,
-  dataCRS <span class='op'>=</span> <span class='st'>"+init=epsg:4326"</span>,
+  dataCRS <span class='op'>=</span> <span class='fl'>4326</span>,
   taxonRankCol <span class='op'>=</span> <span class='cn'>NULL</span>,
   taxonRank <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span><span class='op'>)</span>,
   simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>
@@ -184,7 +184,7 @@ analyses with the BIRDS-package.</p>
   grid <span class='op'>=</span> <span class='cn'>NULL</span>,
   presenceCol <span class='op'>=</span> <span class='cn'>NULL</span>,
   xyCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"decimalLongitude"</span>, <span class='st'>"decimalLatitude"</span><span class='op'>)</span>,
-  dataCRS <span class='op'>=</span> <span class='st'>"+init=epsg:4326"</span>,
+  dataCRS <span class='op'>=</span> <span class='fl'>4326</span>,
   taxonRankCol <span class='op'>=</span> <span class='cn'>NULL</span>,
   taxonRank <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span><span class='op'>)</span>,
   simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>
@@ -246,8 +246,8 @@ spatial dataframes.</p></td>
     </tr>
     <tr>
       <th>dataCRS</th>
-      <td><p>A character string for the dataframe CRS (Coordinate Reference
-System). Default is <code>"+init=epsg:4326"</code>, which is WGS 84. This is only
+      <td><p>A character string or numeric for the dataframe CRS (Coordinate Reference
+System). Default is <code>"4326"</code>, which is WGS 84. This is only
 applicable to non-spatial dataframes, since a spatial dataframes already
 should have this information.</p></td>
     </tr>

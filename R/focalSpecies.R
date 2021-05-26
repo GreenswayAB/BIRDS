@@ -196,7 +196,11 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
         polygon<-NULL
       } else {
         # Transform to SB$spatial projection
-        polygon <- spTransform(polygon, CRSobj = slot(x$spatial, "proj4string"))
+        # polygon <- spTransform(polygon, CRSobj = slot(x$spatial, "proj4string"))
+        polygon <- sf::as_Spatial(
+                    sf::st_transform(
+                      sf::st_as_sf(polygon),
+                      crs = sf::st_crs(slot(x$spatial, "proj4string"))$wkt) )
       }
     }
   }

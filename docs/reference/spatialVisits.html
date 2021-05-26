@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -159,7 +159,7 @@
     <pre class="usage"><span class='fu'>spatialVisits</span><span class='op'>(</span>
   <span class='va'>x</span>,
   xyCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"centroidX"</span>, <span class='st'>"centroidY"</span><span class='op'>)</span>,
-  dataCRS <span class='op'>=</span> <span class='st'>"+init=epsg:4326"</span>,
+  dataCRS <span class='op'>=</span> <span class='st'>"4326"</span>,
   radius <span class='op'>=</span> <span class='st'>"medianDist"</span>
 <span class='op'>)</span></pre>
 
@@ -177,8 +177,8 @@ Default to <code><a href='https://rdrr.io/r/base/c.html'>c("centroidX","centroid
     </tr>
     <tr>
       <th>dataCRS</th>
-      <td><p>a character string with the proj4 description of the original
-coordinate projeciton system (CRS). Default to <code>"+init=epsg:4326"</code></p></td>
+      <td><p>a character string or numeric with the original
+coordinate reference system (CRS). Default to <code>"4326"</code></p></td>
     </tr>
     <tr>
       <th>radius</th>
@@ -203,7 +203,7 @@ directly effort circles may not look like circles in the returned
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
 <span class='va'>OB</span><span class='op'>&lt;-</span><span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span><span class='op'>)</span>
 <span class='va'>visitStats</span><span class='op'>&lt;-</span><span class='fu'><a href='exploreVisits.html'>exploreVisits</a></span><span class='op'>(</span><span class='va'>OB</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Analysing 765 visits...</span></div><div class='output co'>#&gt; <span class='message'>Finished analysing 765 visits.</span></div><div class='input'><span class='va'>spV</span><span class='op'>&lt;-</span><span class='fu'>spatialVisits</span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Analysing 765 visits...</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded ellps WGS 84 in Proj4 definition: +proj=merc +a=6378137 +b=6378137 +lat_ts=0 +lon_0=0 +x_0=0 +y_0=0 +k=1 +units=m +nadgrids=@null +wktext +no_defs +type=crs</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarded datum World Geodetic System 1984 in Proj4 definition</span></div><div class='output co'>#&gt; <span class='message'>Finished analysing 765 visits.</span></div><div class='input'><span class='va'>spV</span><span class='op'>&lt;-</span><span class='fu'>spatialVisits</span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>spV</span><span class='op'>$</span><span class='va'>effort</span><span class='op'>)</span>
 </div><div class='img'><img src='spatialVisits-1.png' alt='' width='700' height='433' /></div></pre>
   </div>

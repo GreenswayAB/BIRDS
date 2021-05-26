@@ -43,8 +43,12 @@ drawPolygon <- function(lat = 0,
         if (length(wPoly) > 1)
             warning("Only the first polygon will go through")
         polygon <- as(area[wPoly[1]], "Spatial")
-        crswkt <- sf::st_crs(4326)[[2]]
-        polygon <- spTransform(polygon, CRSobj = CRS(crswkt))
+
+        # polygon <- spTransform(polygon, CRSobj = CRS(crswkt))
+        polygon <- sf::as_Spatial(
+                    sf::st_transform(
+                      sf::st_as_sf(polygon),
+                      crs = sf::st_crs(4326)$wkt) )
     } else {
         stop("There are no polygones in your drawing")
     }
@@ -78,7 +82,12 @@ makeCircle<-function(spdf, projCRS=NULL){
     ## error projCRS not defined
     if (is.null(projCRS)) stop("projCRS needs to be defined")
 
-    spdf <- suppressWarnings(spTransform(spdf, CRS(projCRS)) )
+    # spdf <- suppressWarnings(spTransform(spdf, CRS(projCRS)) )
+    spdf <- sf::as_Spatial(
+                sf::st_transform(
+                  sf::st_as_sf(spdf),
+                  crs = sf::st_crs(projCRS)$wkt)
+                )
 
     if (!is.na(sp::is.projected(spdf)) && !sp::is.projected(spdf))
       warning("Spatial object is not projected; this function expects planar coordinates")
@@ -96,8 +105,12 @@ makeCircle<-function(spdf, projCRS=NULL){
       sp::proj4string(mincircSP) <- projCRS
 
       circle <- rgeos::gBuffer(spgeom = mincircSP, width = mincirc$rad, quadsegs = 10)
-      crswkt <- sf::st_crs(4326)[[2]]
-      circle <- spTransform(circle, CRSobj = suppressWarnings(CRS(crswkt)))
+      # crswkt <- sf::st_crs(4326)
+      # circle <- spTransform(circle, CRSobj = suppressWarnings(CRS(crswkt)))
+      circle <- sf::as_Spatial(
+                  sf::st_transform(
+                    sf::st_as_sf(circle),
+                    crs = sf::st_crs(4326)$wkt) )
 
     } else {
         stop("More than one unique set of coordinates are needed to make a minimum circle polygon.")
@@ -129,17 +142,19 @@ makeCircle<-function(spdf, projCRS=NULL){
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @export
 OB2Polygon <- function(x, shape="bBox") {
-    crswkt <- sf::st_crs(4326)[[2]]
+    crswkt <- sf::st_crs(4326)$wkt
 
     if (class(x) == "OrganizedBirds") {
         spdf <- x$spdf
     } else {
         if(class(x) == "SpatialPointsDataFrame"){
             spdf <- x
-            spdf <- spTransform(spdf, CRSobj = suppressWarnings(CRS(crswkt)))
+            # spdf <- spTransform(spdf, CRSobj = suppressWarnings(CRS(crswkt)))
+
         } else {
             stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
         }
+
     }
 
     ## error no CRS
@@ -149,6 +164,11 @@ OB2Polygon <- function(x, shape="bBox") {
     if (is.na(slot(spdf, "proj4string"))) {
       stop("The polygon has no coordinate projection system (CRS) associated")
     }
+    spdf <- sf::as_Spatial(
+              sf::st_transform(
+                sf::st_as_sf(spdf),
+                crs = crswkt)
+          )
 
     coord <- coordinates(spdf)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
@@ -254,6 +274,7 @@ renameGrid<-function(grid){
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sp coordinates proj4string spTransform CRS over
+#' @importFrom sf st_crs as_Spatial st_transform st_as_sf
 #' @export
 makeGrid <- function(polygon,
                      gridSize,
@@ -265,8 +286,8 @@ makeGrid <- function(polygon,
 
     gridSizeM <- gridSize * 1000 # in meters
     gridSizeDg <- gridSize/111  # because on average 1 degree is 111 km
-    crswkt <- sf::st_crs(4326)[[2]]
-    crswktPM <- sf::st_crs(3857)[[2]]
+    crswkt <- sf::st_crs(4326)$wkt
+    crswktPM <- sf::st_crs(3857)$wkt
     # error not a SpatialPolygon
 
     if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
@@ -286,10 +307,10 @@ makeGrid <- function(polygon,
 
     # Transform to WGS84 pseudo-Mercator
     polygonProj <- suppressWarnings(
-      sf::as_Spatial(
-        sf::st_transform(
-          sf::st_as_sf(polygon), crs = crswktPM) )
-      )
+                    sf::as_Spatial(
+                      sf::st_transform(
+                        sf::st_as_sf(polygon), crs = crswktPM) )
+                    )
     # polygonProj <- suppressWarnings(spTransform(polygon,
     #                                             CRSobj = sp::CRS(crswktPM))
     #                                 )

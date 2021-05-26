@@ -198,11 +198,13 @@ overlayBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
   nVis <- length(unique(spBird@data[,visitCol]))
   nObs <- nrow(spBird)
 
-  # if(!spBird@proj4string@projargs == grid@proj4string@projargs){
-  #       grid <- spTransform(grid, CRS(spBird@proj4string@projargs))
-  # }
   if(!identicalCRS(spBird, grid)){
-    grid <- spTransform(grid, slot(spBird, "proj4string"))
+    # grid <- spTransform(grid, slot(spBird, "proj4string"))
+    grid <- sf::as_Spatial(
+                sf::st_transform(
+                  sf::st_as_sf(grid),
+                  crs = st_crs(slot(spBird, "proj4string"))$wkt)
+              )
   }
 
   #### Rename grid

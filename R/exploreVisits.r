@@ -130,10 +130,14 @@ exploreVisits <- function(x,
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
-      crswkt <- sf::st_crs(3857)[[2]]
-      spdfTmpTr <- sp::spTransform(spdfTmp,
-                                   CRSobj = suppressWarnings(
-                                     CRS(crswkt)))
+      # crswkt <- sf::st_crs(3857)[[2]]
+      # spdfTmpTr <- sp::spTransform(spdfTmp,
+      #                              CRSobj = suppressWarnings(
+      #                                CRS(crswkt)))
+      spdfTmpTr <- sf::as_Spatial(
+                      sf::st_transform(
+                        sf::st_as_sf(spdfTmp),
+                        crs = sf::st_crs(3857)$wkt) )
       # coord <- sp::coordinates(spdfTmpTr)
       # coordPaste <- apply(coord, 1, paste0, collapse = ",")
       # coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
@@ -192,76 +196,21 @@ exploreVisits <- function(x,
 }
 
 
-#' A function to make the exploreVisits Spatial
-#'
-#' A function to
-#' @param x an object of class \sQuote{data.frame} from exploreVistis.
-#' @param xyCols a character vector with the column names for the coordinates.
-#' Default to \code{c("centroidX","centroidY")}
-#' @param dataCRS a character string or numeric with the original
-#' coordinate reference system (CRS). Default to \code{"4326"}
-#' @param radius either a character string with the name of the column
-#' containing the radius of the visit circle, or a numeric vector with its value
-#' in meters. Default to \code{"medianDist"}
-#'
-#' @return a list with a \code{SpatialPointsDataFrame} (the centroids) and a
-#' \code{ "SpatialPolygonsDataFrame"} (the effort circles). Note that when plotted
-#' directly effort circles may not look like circles in the returned
-#' (Pseudo-Mercator) projection.
-#'
-#' @examples
-#' # create a visit-based data object from the original observation-based data
-#' library(sp)
-#' OB<-organizeBirds(bombusObsShort)
-#' visitStats<-exploreVisits(OB)
-#' spV<-spatialVisits(visitStats)
-#' plot(spV$effort)
-#' @export
-#' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
-spatialVisits <- function(x,
-                          xyCols=c("centroidX","centroidY"),
-                          dataCRS="4326",
-                          radius="medianDist"){
-  crswkt <- sf::st_crs(as.numeric(dataCRS))[[2]]
-
-  if (class(x) == "data.frame") {
-    sp::coordinates(x) <- xyCols
-    sp::proj4string(x) <- CRS(crswkt) ## because I know where it comes from
-  } else {
-    stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
-  }
-
-  if(radius=="" | is.na(radius) | is.null(radius)){
-    radiusVal<- rep(1, nrow(x@data))
-  } else if(radius %in% colnames(x@data)){
-    radiusVal<-x@data[,radius]
-    ## convert meters to degrees?
-  } else if(is.numeric(radius) & length(radius)==nrow(x@data)){
-    radiusVal<-radius
-  } else {
-    stop("The parameter 'radius' needs to be one od the column names or a numeric
-         vector of length equal to the number of visits")
-  }
-
-  utmCRS <- suppressWarnings(CRS(getUTMproj(x)))
-  xTrans <- spTransform(x, CRSobj = utmCRS)
-
-  buff <- rgeos::gBuffer(xTrans,  byid = TRUE,
-                         id=x@data$visitUID,
-                         width=radiusVal)
-  buff <- spTransform(buff, CRSobj = CRS(crswkt))
-
-  return(list("points"=x, "effort"=buff))
-
-}
 
 ## internal function. Depends on the polygon object utmZones
 #' @keywords internal
 getUTMzone <- function(points){
   ##Find which UTM-zones that have the most points
-  utmZonesTr <- suppressWarnings(spTransform(utmZones,
-                                             slot(points, "proj4string"))
-                              ) #To accept all reference systems for points.
+  # utmZonesTr <- suppressWarnings(spTransform(utmZones,
+  #                                            slot(points, "proj4string"))
+  #                             ) #To accept all reference systems for points.
+
+  utmZonesTr <- sf::as_Spatial(
+                  sf::st_transform(
+                    sf::st_as_sf(utmZones),
+                    crs = sf::st_crs(points)$wkt )
+                )
+
   utmZone <- over(points, utmZonesTr)
   freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
@@ -355,7 +304,7 @@ getUTMzone <- function(points){
 #' A wrapper around getUTMzone and produce a proj4 string
 #'
 #' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}
-#' @return a proj4 character string for an apropiate UTM zone
+#' @return a proj4 character string for an appropriate UTM zone
 #' @export
 #' @examples
 #' OB <- organizeBirds(bombusObs)
@@ -366,15 +315,11 @@ getUTMproj<-function(x){
   } else {
     if(class(x) == "SpatialPointsDataFrame"){
       spdf <- x
-      crswkt <- sf::st_crs(4326)[[2]]
-      spdf <- spTransform(spdf,
-                          CRSobj = suppressWarnings(
-                            CRS(crswkt))
-                          )
     } else {
       stop("Input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
     }
   }
+
 
   ## error no CRS
   # if (is.na(proj4string(spdf))) { #slot(points, "proj4string") or soon wkt()
@@ -383,6 +328,12 @@ getUTMproj<-function(x){
   if (is.na(slot(spdf, "proj4string"))) {
     stop("The polygon has no coordinate projection system (CRS) associated")
   }
+
+  spdf <- sf::as_Spatial(
+            sf::st_transform(
+              sf::st_as_sf(spdf),
+              crs = sf::st_crs(4326)$wkt )
+  )
 
   utmZone <- getUTMzone(spdf)
   if(!is.null(utmZone)){
@@ -401,3 +352,75 @@ getUTMproj<-function(x){
   return(proj4)
 }
 
+
+#' A function to make the exploreVisits Spatial
+#'
+#' A function to
+#' @param x an object of class \sQuote{data.frame} from exploreVistis.
+#' @param xyCols a character vector with the column names for the coordinates.
+#' Default to \code{c("centroidX","centroidY")}
+#' @param dataCRS a character string or numeric with the original
+#' coordinate reference system (CRS). Default to \code{"4326"}
+#' @param radius either a character string with the name of the column
+#' containing the radius of the visit circle, or a numeric vector with its value
+#' in meters. Default to \code{"medianDist"}
+#'
+#' @return a list with a \code{SpatialPointsDataFrame} (the centroids) and a
+#' \code{ "SpatialPolygonsDataFrame"} (the effort circles). Note that when plotted
+#' directly effort circles may not look like circles in the returned
+#' (Pseudo-Mercator) projection.
+#'
+#' @examples
+#' # create a visit-based data object from the original observation-based data
+#' library(sp)
+#' OB<-organizeBirds(bombusObsShort)
+#' visitStats<-exploreVisits(OB)
+#' spV<-spatialVisits(visitStats)
+#' plot(spV$effort)
+#' @export
+#' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
+spatialVisits <- function(x,
+                          xyCols=c("centroidX","centroidY"),
+                          dataCRS="4326",
+                          radius="medianDist"){
+  crswkt <- sf::st_crs(as.numeric(dataCRS))$wkt
+
+  if (class(x) == "data.frame") {
+    sp::coordinates(x) <- xyCols
+    sp::proj4string(x) <- CRS(crswkt) ## because I know where it comes from
+  } else {
+    stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
+  }
+
+  if(radius=="" | is.na(radius) | is.null(radius)){
+    radiusVal<- rep(1, nrow(x@data))
+  } else if(radius %in% colnames(x@data)){
+    radiusVal<-x@data[,radius]
+    ## convert meters to degrees?
+  } else if(is.numeric(radius) & length(radius)==nrow(x@data)){
+    radiusVal<-radius
+  } else {
+    stop("The parameter 'radius' needs to be one od the column names or a numeric
+         vector of length equal to the number of visits")
+  }
+
+  utmCRS <- suppressWarnings(CRS(getUTMproj(x)))
+  # xTrans <- spTransform(x, CRSobj = utmCRS)
+  xTrans <- sf::as_Spatial(
+              sf::st_transform(
+                sf::st_as_sf(x),
+                crs = sf::st_crs(utmCRS)$wkt) )
+
+  buff <- rgeos::gBuffer(xTrans,
+                         byid = TRUE,
+                         id = x@data$visitUID,
+                         width = radiusVal)
+
+  # buff <- spTransform(buff, CRSobj = CRS(crswkt))
+  buff <- sf::as_Spatial(
+            sf::st_transform(
+              sf::st_as_sf(buff),
+              crs = crswkt) )
+  return(list("points"=x, "effort"=buff))
+
+}

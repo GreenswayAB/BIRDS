@@ -184,7 +184,12 @@ getGridIDs <- function(x, grid){
       }
 
       if(! identicalCRS(x, grid)){
-        grid <- spTransform(grid, slot(x,"proj4string"))
+        # grid <- spTransform(grid, slot(x,"proj4string"))
+        grid <- sf::as_Spatial(
+                  sf::st_transform(
+                    sf::st_as_sf(grid),
+                    crs = st_crs(slot(x,"proj4string"))$wkt)
+                )
       }
 
       return( over(x, grid, returnList=FALSE) )
@@ -508,7 +513,12 @@ organizeBirds <- function(x,
   }
 
   if(slot(slot(x,"proj4string"), "projargs") != slot(CRS(crswkt),"projargs")){
-    x <- spTransform(x, CRSobj = CRS(crswkt))
+    # x <- spTransform(x, CRSobj = CRS(crswkt))
+    x <- sf::as_Spatial(
+          sf::st_transform(
+            sf::st_as_sf(x),
+            crs = crswkt)
+          )
   }
 
   ### Check the column names
