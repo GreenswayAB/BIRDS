@@ -242,6 +242,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
   if (variable == "nYears" && timeRes != "month")  stop("This combination of variable and time resolution is not defined because it has no meaning")
   if (is.null(timeRes)) stop("Time resolution ('timeRes') needs to be defined for dimension 'Temporal'")
 
+  ## TODO convert to xts and use xts function period.sum(sb.xts$nObs, endpoints(sb.xts$nObs, on = "months"))
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
   visitCol <- attr(sb, "visitCol")
   obsData <- deconstructOverlay(sb$overlaid, attr(sb, "visitCol"))
