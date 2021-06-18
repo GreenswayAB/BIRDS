@@ -130,17 +130,13 @@ exploreVisits <- function(x,
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
-      # crswkt <- sf::st_crs(3857)[[2]]
-      # spdfTmpTr <- sp::spTransform(spdfTmp,
-      #                              CRSobj = suppressWarnings(
-      #                                CRS(crswkt)))
-      spdfTmpTr <- sf::as_Spatial(
+      spdfTmpTr <- suppressWarnings(
+                    sf::as_Spatial(
                       sf::st_transform(
                         sf::st_as_sf(spdfTmp),
                         crs = sf::st_crs(3857)$wkt) )
-      # coord <- sp::coordinates(spdfTmpTr)
-      # coordPaste <- apply(coord, 1, paste0, collapse = ",")
-      # coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
+                    )
+
       # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
       # this function is very much dependent on the projection
       # issue #4 the function shotgun::minCircle() is not reliable for extreme
@@ -179,11 +175,6 @@ exploreVisits <- function(x,
 
   visitStat[, match(varsCtr, colnames(visitStat))] <- tmp
 
-  # visitStat$date <- as.Date(paste(visitStat$year,
-  #                                 visitStat$month,
-  #                                 visitStat$day,
-  #                                 sep="-"),
-  #                           format = "%Y-%m-%d")
   visitStat$date <- lubridate::ymd(paste(visitStat$year,
                                          visitStat$month,
                                          visitStat$day,
