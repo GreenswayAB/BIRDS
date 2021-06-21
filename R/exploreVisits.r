@@ -115,7 +115,7 @@ exploreVisits <- function(x,
     wVis <- which(dat[, visitCol] == x)
     spdfTmp <- spdf[wVis, ]
 
-    coord <- sp::coordinates(spdfTmp)
+    coord <- sf::st_coordinates(spdfTmp)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
     nUniqueLoc <- nrow(coordUnique)

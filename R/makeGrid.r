@@ -225,22 +225,23 @@ OB2Polygon <- function(x, shape="bBox") {
 
 #' Rename the cells in a grid
 #'
-#' Takes a SpatialPolygon* and renames it to "ID1":"IDn".
-#' @param grid an object of class \sQuote{SpatialPolygon-class} or
-#' \sQuote{SpatialPolygonDataFrame-class}.
+#' Takes a sf* and renames it to "ID1":"IDn".
+#' @param grid an object of class \sQuote{sf}.
 #' @return the same input object with known names
 #' @keywords internal
-renameGrid<-function(grid){
-    for(i in 1:length(grid)){
-      slot(slot(grid, "polygons")[[i]], "ID") <- paste0("ID", i)
-    }
+renameGrid <- function(grid, idcol){
+  nrows <- nrow(grid)
+  grid[, idcol] <- paste0("ID", seq(nrows))   
+  # for(i in 1:length(grid)){
+  #     slot(slot(grid, "polygons")[[i]], "ID") <- paste0("ID", i)
+  # }
   return(grid)
 }
 
 
 #' Make a grid
 #'
-#' Makes a grid adapted to the purpose of this package and simplifing options
+#' Makes a grid adapted to the purpose of this package and simplifying options
 #' from the  \code{sp} package. The central concept of the BIRDS package is the
 #' definition of the field visit, and most likely, your grid size will define the
 #' maximum area a person can explore during a day. Use the function
@@ -251,7 +252,7 @@ renameGrid<-function(grid){
 #' @param gridSize width of the cells in Km. It defines the central assumption
 #' of this package that is the maximum area a person can explore during a day.
 #' Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
-#' Maximum recomended for this package 10 km if there is no reliable definition
+#' Maximum recommended for this package 10 km if there is no reliable definition
 #' for the spatial extent for visits.
 #' @param buffer shall the grid cells include the polygon border? Then \code{TRUE}
 #' (default = \code{FALSE}).
