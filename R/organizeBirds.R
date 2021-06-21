@@ -160,41 +160,53 @@ simplifySpp <- function(df, sppCol){
 }
 
 
-### HANDLE THE VISITS ###
+#### HANDLE THE VISITS ####
 #' Create unique IDs based on a grid
 #'
-#' Takes a spatial points dataframe and a grid and gets the overlay IDs.
+#' Takes a spatial points data.frame and a grid and gets the overlay IDs.
 #'
-#' @param x a SpatialPointsDataFrame .
-#' @param grid A a SpatialPolygon object (a grid is expected) defining the
+#' @param x a SpatialPointsDataFrame ('sp') or sf ('sf') (with the observations).
+#' @param grid a SpatialPolygon object ('sp') or sf ('sf') (a grid is expected) defining the
 #' maximum extent of visits effort.
+#' @param idcol column name for the grid names or ids
 #'
 #' @return A vector of the same length as the number of rows (observations) as x
 #'   with a unique number corresponding to the grid's ID.
 #'
 #' @export
-getGridIDs <- function(x, grid){
-  if(class(x) == "SpatialPointsDataFrame"){
-    if(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons")){
-      #### Rename grid
-      if (any(duplicated(names(grid)))){
-        grid <- renameGrid(grid)
-        warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
-      All results will use this nomenclature, but the order of the cells will remain unaltered.")
-      }
+getGridIDs <- function(x, grid, idcol){
+  if(!any(c("SpatialPointsDataFrame", "sf") %in% class(x))) {
+    stop("The argument 'x' can only be of class SpatialPointsDataFrame or sf")
+  }
+  
+  if(class(x) == "SpatialPointsDataFrame") x <- sf::st_as_sf(x)
+  
+  if(!any(c("SpatialPolygonsDataFrame", "SpatialPolygons", "sf") %in% class(grid))){
+    stop("The argument 'grid' can only be of class SpatialPolygonsDataFrame, SpatialPolygons or sf")
+  }
+  
+  if(any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons"))) grid <- sf::st_as_sf(grid)
 
-      if(! identicalCRS(x, grid)){
-        # grid <- spTransform(grid, slot(x,"proj4string"))
-        grid <- sf::as_Spatial(
-                  sf::st_transform(
-                    sf::st_as_sf(grid),
-                    crs = st_crs(slot(x,"proj4string"))$wkt)
-                )
-      }
+  #### Rename grid
+  if (any(duplicated(grid[,idcol]))){
+    grid <- renameGrid(grid, idcol)
+    warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
+  All results will use this nomenclature, but the order of the cells will remain unaltered.")
+  }
 
-      return( over(x, grid, returnList=FALSE) )
-    }else stop("The argument 'grid' can only be of class SpatialPolygonsDataFrame or SpatialPolygons")
-  } else stop("The argument 'x' can only be of class SpatialPointsDataFrame")
+  if(! identical(st_crs(x), st_crs(grid))){
+    # grid <- spTransform(grid, slot(x,"proj4string"))
+    grid <- sf::st_transform(
+                sf::st_as_sf(grid),
+                crs = st_crs(x)
+    )
+  }
+
+      # return( over(x, grid, returnList=FALSE) )
+  res <- sapply(st_intersects(x, grid), 
+                function(z) if (length(z)==0) NA_integer_ else z[1])
+  return(res)
+
 }
 
 
@@ -211,7 +223,7 @@ getGridIDs <- function(x, grid){
 #' by the Darwin Core variables \code{c("locality", "day", "month", "year",
 #' "recordedBy")}.
 #'
-#' @param x An object of class \code{data.frame} or \code{SpatialPointsDataFrame}
+#' @param x An object of class \code{data.frame}, \code{sf} or \code{SpatialPointsDataFrame}
 #' including at least the columns specified that are used to identify a visit.
 #' @param idCols A vector with the names of the columns other (than time columns)
 #' that are used to identify a visit. This variable cannot be empty. At least the
@@ -221,10 +233,10 @@ getGridIDs <- function(x, grid){
 #' identify a visit.  If timeCols=NULL then time is ignored to create a visit ID.
 #' Default is the Darwin Core variables \code{c("day", "month", "year")}.
 #' @param grid Either \code{NULL} to be ignored or an object of class
-#' \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining the maximum
-#'  extent of visits effort. Then x must be an object of class SpatialPointsDataFrame
+#' \code{sf}, \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining 
+#' the maximum extent of visits effort. Then x must be an object of class sf
 #'
-#' @return A vector of the same length as the number of rows as the dataframe
+#' @return A vector of the same length as the number of rows as the data.frame
 #'   with a unique number for each combination of the values in the specified
 #'   columns.
 #' @export
@@ -237,28 +249,33 @@ getGridIDs <- function(x, grid){
 createVisits<-function(x,
                        idCols = c("locality", "recordedBy"),
                        timeCols = c("day", "month", "year"),
-                       grid = NULL){
+                       grid = NULL,
+                       gridIdCol){
 
-  if(any(class(x) %in% c("data.frame", "SpatialPointsDataFrame"))){
+  if(any(class(x) %in% c("data.frame", "SpatialPointsDataFrame", "sf"))){
     if(any(class(x)=="data.frame")){
       df <- as.data.frame(x) ## in case it is a data.table or some other weird class
       spdf <- NULL
     }else if (class(x)=="SpatialPointsDataFrame"){
       df <- x@data
-      spdf <- x
+      # spdf <- x
+      sfdf <- st_as_sf(x)
+    }else if (class(x)=="sf"){
+      df <- st_drop_geometry(x)
+      sfdf <- x
     }
 
     if (all(idCols == "")) idCols <- NULL
     if (all(timeCols=="")) timeCols <- NULL
 
     if(!is.null(grid)) {
-      if(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame")  & !is.null(spdf)){
-        df[,"gridID"] <- getGridIDs(spdf, grid)
+      if(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame", "sf")  & !is.null(sfdf)){
+        df[,"gridID"] <- getGridIDs(sfdf, grid, gridIdCol)
       } else if(class(grid %in% c("character", "numeric"))){
         if(length(grid) == nrow(df)) {
           df[,"gridID"] <- grid
         } else stop("If grid is a vector it should be as long as the number of observations.")
-      } else stop("The argument 'grid' should be a SpatialPolygon or a vector with IDs.")
+      } else stop("The argument 'grid' should be a geometry or a vector with IDs.")
 
       gridID <- "gridID"
 
@@ -381,24 +398,28 @@ obsData<-function(x){
 #' @rdname obsData
 #' @export
 obsData.OrganizedBirds<-function(x){
-
-  return(x$spdf@data)
-
+  if(class(x$spdf) == "SpatialPointsDataFrame") return(x$spdf@data)
+  if(any(class(x$spdf) == "sf")) return(st_drop_geometry(x$spdf))
 }
 
-#'Organize a dataframe to a usable format
+
+#### Main Function #####
+
+#'Organize a data.frame to a usable format
 #'
-#'Takes a dataframe with reported species observations and reformats it, using
+#'Takes a data.frame with reported species observations and reformats it, using
 #' visit identifiers, to an OrganizedBirds-class that can be used in further
 #' analyses with the BIRDS-package.
 #'
-#'An OrganizedBirds-class is essentially a list containing one element, a
-#'SpatialPointsDataFrame. This SpatialPointsDataFrame has its data formatted in
-#'a way that the other functions in the BIRDS-package can use further on. It
-#'also has the attribute \code{"visitCol"}, which indicates which column in the
-#'dataframe holds the visit identifier. The visit identifier is created by
-#'the function \code{\link{createVisits}}, which creates a unique id for each
-#'combination of the values in the defined columns.
+#'An OrganizedBirds-class is essentially a list containing a spatial element. 
+#'After version 0.2, the resulting element is of class \code{sf}. However, we 
+#'now add a parameter for backwards compatibility. It also accepts the inputs 
+#'in both formats. This sf has its data formatted in a way that the other 
+#'functions in the BIRDS-package can use further on. It also has the attribute 
+#'\code{"visitCol"}, which indicates which column in the data.frame holds the 
+#'visit identifier. The visit identifier is created by the function 
+#'\code{\link{createVisits}}, which creates a unique id for each combination of 
+#'the values in the defined columns.
 #'
 #'The variable \code{timeCol} can be formatted differently. If the variable is a
 #'named vector with the names "Year", "Month" and "Day" (letter capitalization
@@ -408,7 +429,7 @@ obsData.OrganizedBirds<-function(x){
 #'is of only length one it will interpret the column as a date column formatted
 #'as "yyyy-mm-dd".
 #'
-#' @param x A dataframe or a SpatialPointsDataFrame containing at least a
+#' @param x A data.frame, sf or a SpatialPointsDataFrame containing at least a
 #'  column for species name, one or several columns for date of observation, one or
 #'  several columns for identifying a visit and, if it is not spatial, coordinate
 #'  columns.
@@ -426,30 +447,31 @@ obsData.OrganizedBirds<-function(x){
 #' Alternatives are \code{c("day", "month", "year", NULL)}. Time is anyhow
 #' organised into three columns year, month, day.
 #' @param grid Either \code{NULL} to be ignored or an object of class
-#' \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} as indetifier of
+#' \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} as identifier of
 #' the visits spatial extent.
 #' @param presenceCol A character string with the column name for the column for the
-#' precense status. Default is \code{NULL}.
+#' presence status. Default is \code{NULL}.
 #' @param xyCols A character vector of the names for the columns that are holding
 #'  the coordinates for the observations. The order should be longitude(x),
 #'  latitude(y). Default is the Darwin Core standard column names
 #'  \code{c("decimalLongitude", "decimalLatitude")}. Only applicable to non-
 #'  spatial dataframes.
-#' @param dataCRS A character string or numeric for the dataframe CRS (Coordinate Reference
-#'  System). Default is \code{"4326"}, which is WGS 84. This is only
-#'  applicable to non-spatial dataframes, since a spatial dataframes already
+#' @param dataCRS A character string or numeric for the data.frame CRS (Coordinate Reference
+#'  System). Default is \code{4326}, which is WGS 84. This is only
+#'  applicable to non-spatial data.frames, since a spatial data.frames already
 #'  should have this information.
 #' @param taxonRankCol the name of the column containing the taxonomic rank for
 #' the observation.
 #' That is the minimum taxonomic identification level.
 #' @param taxonRank a string or vector of strings containing the taxonomic ranks to keep.
 #' Only evaluated if taxonRankCol is not \code{NULL}
-#' @param simplifySppName whether to remove everything else that is not the species
+#' @param simplifySppName Logical. whether to remove everything else that is not the species
 #' name (authors, years). Default set to FALSE, else leaves a canonical name given
 #' by taxize::gbif_parse(), that is a scientific name with up to 3 elements.
+#' @param spOut Logical. Whether the result should be a SpatialPolygon (sp) or an sf.
 #'
-#' @importFrom sp coordinates proj4string spTransform CRS plot
-#' @importFrom sf st_crs
+ #' @importFrom sp coordinates proj4string spTransform CRS plot
+#' @importFrom sf st_crs st_as_sf st_drop_geometry
 #' @importFrom stats IQR median na.omit  quantile var
 #' @importFrom grDevices boxplot.stats
 #' @importFrom graphics barplot layout legend mtext par plot
@@ -475,13 +497,14 @@ organizeBirds <- function(x,
                         dataCRS = 4326,
                         taxonRankCol=NULL,
                         taxonRank=c("SPECIES","SUBSPECIES","VARIETY"),
-                        simplifySppName=FALSE){
+                        simplifySppName=FALSE, 
+                        spOut=FALSE){
 
-  crswkt <- sf::st_crs(as.numeric(dataCRS))[[2]]
+  crswkt <- st_crs(as.numeric(dataCRS))
   stdTimeCols <- c("year", "month", "day")
 
   # Check the type of data
-  if(any(class(x) == "data.frame")){
+  if(all(class(x) == "data.frame")){
     x <- as.data.frame(x)
 
     xyColsl.df <- unlist(findCols(xyCols, x))
@@ -493,8 +516,10 @@ organizeBirds <- function(x,
         xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
-      sp::coordinates(x) <- xyColsl.df
-      sp::proj4string(x) <- sp::CRS(crswkt)
+      x <- st_as_sf(x, coords = xyColsl.df)
+      st_crs(x) <- as.numeric(dataCRS)
+      # sp::coordinates(x) <- xyColsl.df
+      # sp::proj4string(x) <- sp::CRS(crswkt)
 
     ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
     # testCoord<-tryCatch({
@@ -507,39 +532,37 @@ organizeBirds <- function(x,
 
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
-    ## Just continue... :)
+    x <- st_as_sf(x)## Just continue... :)
+  } else if(any(class(x) == "sf")){
+    xdf <- st_drop_geometry(x)## Just continue... :)
   } else {
-    stop("The argument 'x' should be of class data.frame or SpatialPointsDataFrame.")
+    stop("The argument 'x' should be of class data.frame, sf or SpatialPointsDataFrame.")
   }
 
-  if(slot(slot(x,"proj4string"), "projargs") != slot(CRS(crswkt),"projargs")){
-    # x <- spTransform(x, CRSobj = CRS(crswkt))
-    x <- sf::as_Spatial(
-          sf::st_transform(
-            sf::st_as_sf(x),
-            crs = crswkt)
-          )
+  if(st_crs(x) != crswkt){
+    x <- sf::st_transform(sf::st_as_sf(x),
+                          crs = crswkt)
   }
 
   ### Check the column names
-  if (any(duplicated(tolower(names(x@data))))){
+  if (any(duplicated(tolower(names(x))))){
     stop("There are duplicated column names in the dataset (Note: case insensitive check).")
   }
 
   # Check if user wants to leave a certain level
   if (!is.null(taxonRankCol)){
-    TRCol.df <- findCols(taxonRankCol, x@data, exact = TRUE)
+    TRCol.df <- findCols(taxonRankCol, x, exact = TRUE)
     if (length(TRCol.df) > 0){
       exact.taxonRank <- paste0("\\b", taxonRank, "\\b") ## exact match
       wIn <- unique(unlist(lapply(exact.taxonRank, grep,
-                                  x@data[, TRCol.df],
+                                  x[, TRCol.df],
                                   ignore.case = TRUE,
                                   value = FALSE)))
 
-      nOut <- nrow(x@data) - length(wIn)
+      nOut <- nrow(x) - length(wIn)
 
       if (length(wIn) > 0){
-        x<-x[wIn,]
+        x <- x[wIn,]
         if(nOut > 0) message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
 
       } else { stop(paste0("No observation match with the specified taxon rank(s).")) }
@@ -548,16 +571,16 @@ organizeBirds <- function(x,
     } else { stop(paste0("Taxon Rank: there is no column called ", taxonRankCol))}
   }
 
-  # Simplify species names to reduce epitets and author names
-  sppCol.df <- findCols(sppCol, x@data, exact = TRUE)
+  # Simplify species names to reduce epithets and author names
+  sppCol.df <- findCols(sppCol, x, exact = TRUE)
   if (length(sppCol.df) > 0){
     if (!is.null(simplifySppName) && simplifySppName == TRUE){
-      x@data[, sppCol.df] <- simplifySpp(x@data, sppCol.df)
+      x[, sppCol.df] <- simplifySpp(xdf, sppCol.df)
     }
   } else { stop(paste0("Species name: there is no column called ", sppCol))}
 
   ## column name control defined in the function organizeDate()
-  x@data[, stdTimeCols] <- organizeDate(x@data, timeCols)
+  x[, stdTimeCols] <- organizeDate(xdf, timeCols)
 
 
   ## colum name control defined in the function visitUID()
@@ -571,18 +594,19 @@ organizeBirds <- function(x,
                           "year" = "year") ## Else NULL
   }
 
-  x@data[,"visitUID"] <- createVisits(x,
-                                      idCols = idCols,
-                                      timeCols = timeColsVis,
-                                      grid = grid)
+  x[,"visitUID"] <- createVisits(x,
+                                 idCols = idCols,
+                                 timeCols = timeColsVis,
+                                 grid = grid, 
+                                 gridIdCol = NULL)
 
   #### Preparing the output as we want it
-  res.df <- x@data[,c(sppCol.df, stdTimeCols, "visitUID")]
+  res.df <- x[,c(sppCol.df, stdTimeCols, "visitUID", "geometry")]
 
   if (!is.null(presenceCol)){
-    presenceCol.df <- findCols(presenceCol, x@data)
+    presenceCol.df <- findCols(presenceCol, x)
     if (length(presenceCol.df) > 0){
-      presence <- x@data[, presenceCol.df]
+      presence <- x[, presenceCol.df]
       presence <- ifelse(presence>=1, 1, 0)
       res.df[,"presence"] <- presence
     } else {stop(paste0("Presence: there is no column called ", presenceCol))}
@@ -590,10 +614,11 @@ organizeBirds <- function(x,
 
   colnames(res.df)[1] <- "scientificName"
 
-  #### Add the visists SLL to each visits
-  x@data <- res.df
-
-  res<-list(x)
+  #### Add the visits SLL to each visits
+  x <- res.df
+  if(spOut) x <- as_Spatial(x)
+  
+  res <- list(x)
 
   names(res)<-"spdf"
 
