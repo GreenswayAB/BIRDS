@@ -7,6 +7,7 @@
 #' @return The a \code{vector} with list elements IDs.
 #' @keywords internal
 whichNonEmpty <- function(x){
+  res <- which( lengths(x) > 1)  
   res <- unname(which(unlist(lapply(x, nrow)) > 0))
   return(res)
 }
@@ -16,11 +17,11 @@ whichNonEmpty <- function(x){
 #' An internal function. Takes the resulting dataframe from the spatial overlay
 #' for a specific grid cell and searches for spillover visits, i.e. visits that are split by grid cell boundaries.
 #'
-#' @param x A dataframe for a specific grid without spillover.
+#' @param x A data.frame for a specific grid without spillover.
 #' @param birdData An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.
 #' @param visitCol A character string specifying the columns that identify a visit.
 #'
-#' @return The overlay dataframe for a specific grid, including the spillover visits.
+#' @return The overlay data.frame for a specific grid, including the spillover visits.
 #' @keywords internal
 createOverlayForGrid <- function(x, birdData, visitCol){
   visitsInGrid <- unique(x[visitCol])
@@ -192,19 +193,23 @@ overlayBirds <- function(x, grid, spillOver = NULL){
 #' @export
 #' @rdname overlayBirds
 overlayBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
-  spBird <- x$spdf
+  if(any(class(x) == "SpatialPointsDataFrame")){
+    x <- st_as_sf(x) 
+  }
+  spBird <- x
+
+  if(any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
+    grid <- st_as_sf(grid) 
+  }
 
   visitCol <- attr(x, "visitCol")
-  nVis <- length(unique(spBird@data[,visitCol]))
+  nVis <- length(unique(spBird[,visitCol]))
   nObs <- nrow(spBird)
 
-  if(!identicalCRS(spBird, grid)){
-    # grid <- spTransform(grid, slot(spBird, "proj4string"))
-    grid <- sf::as_Spatial(
-                sf::st_transform(
-                  sf::st_as_sf(grid),
-                  crs = st_crs(slot(spBird, "proj4string"))$wkt)
-              )
+  if(!identical(st_crs(spBird), st_crs(grid))){
+    grid <- sf::st_transform(
+                  grid,
+                  crs = st_crs(spBird))
   }
 
   #### Rename grid
@@ -216,8 +221,18 @@ All results will use this nomenclature, but the order of the cells will remain u
 
   #### SPILL OVER
   ### Generic overlay
-  ObsInGridList <- over(grid, spBird, returnList=TRUE)
-  # wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
+  # ObsInGridList <- over(grid, spBird, returnList=TRUE)
+  ## overlay the data with the grid
+  listGrid <- st_intersects(grid, x)
+  
+  ObsInGridList <- list()
+  for(i in seq(length(listGrid))){
+    if(length(listGrid[[i]]) == 0){
+      ObsInGridList[[i]] <- NA
+    } else {
+      ObsInGridList[[i]] <- st_drop_geometry(x[listGrid[[i]],])
+    }
+  }
   wNonEmpty <- whichNonEmpty(ObsInGridList)
 
   if(length(wNonEmpty)==0) stop("Observations don't overlap any grid cell.")

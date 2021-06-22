@@ -21,7 +21,7 @@ makeGrid(
 \item{gridSize}{width of the cells in Km. It defines the central assumption
 of this package that is the maximum area a person can explore during a day.
 Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
-Maximum recomended for this package 10 km if there is no reliable definition
+Maximum recommended for this package 10 km if there is no reliable definition
 for the spatial extent for visits.}
 
 \item{buffer}{shall the grid cells include the polygon border? Then \code{TRUE}
@@ -45,7 +45,7 @@ an object of class \sQuote{SpatialPolygon} with a set of polygons
 conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
 }
 \description{
-Makes a grid adapted to the purpose of this package and simplifing options
+Makes a grid adapted to the purpose of this package and simplifying options
 from the  \code{sp} package. The central concept of the BIRDS package is the
 definition of the field visit, and most likely, your grid size will define the
 maximum area a person can explore during a day. Use the function

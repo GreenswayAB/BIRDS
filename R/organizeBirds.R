@@ -197,7 +197,7 @@ getGridIDs <- function(x, grid, idcol){
   if(! identical(st_crs(x), st_crs(grid))){
     # grid <- spTransform(grid, slot(x,"proj4string"))
     grid <- sf::st_transform(
-                sf::st_as_sf(grid),
+                grid,
                 crs = st_crs(x)
     )
   }
@@ -470,8 +470,8 @@ obsData.OrganizedBirds<-function(x){
 #' by taxize::gbif_parse(), that is a scientific name with up to 3 elements.
 #' @param spOut Logical. Whether the result should be a SpatialPolygon (sp) or an sf.
 #'
- #' @importFrom sp coordinates proj4string spTransform CRS plot
-#' @importFrom sf st_crs st_as_sf st_drop_geometry
+#' @importFrom sp coordinates proj4string spTransform CRS plot
+#' @importFrom sf st_crs st_crs<- st_as_sf st_drop_geometry
 #' @importFrom stats IQR median na.omit  quantile var
 #' @importFrom grDevices boxplot.stats
 #' @importFrom graphics barplot layout legend mtext par plot
@@ -517,7 +517,9 @@ organizeBirds <- function(x,
         if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
       x <- st_as_sf(x, coords = xyColsl.df)
-      st_crs(x) <- as.numeric(dataCRS)
+      st_crs(x) <- st_crs(as.numeric(dataCRS))
+      xdf <- st_drop_geometry(x)
+      
       # sp::coordinates(x) <- xyColsl.df
       # sp::proj4string(x) <- sp::CRS(crswkt)
 
@@ -532,7 +534,8 @@ organizeBirds <- function(x,
 
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
-    x <- st_as_sf(x)## Just continue... :)
+    x <- st_as_sf(x) 
+    xdf <- st_drop_geometry(x)
   } else if(any(class(x) == "sf")){
     xdf <- st_drop_geometry(x)## Just continue... :)
   } else {

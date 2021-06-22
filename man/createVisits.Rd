@@ -8,11 +8,12 @@ createVisits(
   x,
   idCols = c("locality", "recordedBy"),
   timeCols = c("day", "month", "year"),
-  grid = NULL
+  grid = NULL,
+  gridIdCol
 )
 }
 \arguments{
-\item{x}{An object of class \code{data.frame} or \code{SpatialPointsDataFrame}
+\item{x}{An object of class \code{data.frame}, \code{sf} or \code{SpatialPointsDataFrame}
 including at least the columns specified that are used to identify a visit.}
 
 \item{idCols}{A vector with the names of the columns other (than time columns)
@@ -25,11 +26,11 @@ identify a visit.  If timeCols=NULL then time is ignored to create a visit ID.
 Default is the Darwin Core variables \code{c("day", "month", "year")}.}
 
 \item{grid}{Either \code{NULL} to be ignored or an object of class
-\code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining the maximum
- extent of visits effort. Then x must be an object of class SpatialPointsDataFrame}
+\code{sf}, \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining 
+the maximum extent of visits effort. Then x must be an object of class sf}
 }
 \value{
-A vector of the same length as the number of rows as the dataframe
+A vector of the same length as the number of rows as the data.frame
   with a unique number for each combination of the values in the specified
   columns.
 }

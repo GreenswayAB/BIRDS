@@ -3,7 +3,7 @@
 \name{organizeBirds}
 \alias{organizeBirds}
 \alias{organiseBirds}
-\title{Organize a dataframe to a usable format}
+\title{Organize a data.frame to a usable format}
 \usage{
 organizeBirds(
   x,
@@ -17,7 +17,8 @@ organizeBirds(
   dataCRS = 4326,
   taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
-  simplifySppName = FALSE
+  simplifySppName = FALSE,
+  spOut = FALSE
 )
 
 organiseBirds(
@@ -32,11 +33,12 @@ organiseBirds(
   dataCRS = 4326,
   taxonRankCol = NULL,
   taxonRank = c("SPECIES", "SUBSPECIES", "VARIETY"),
-  simplifySppName = FALSE
+  simplifySppName = FALSE,
+  spOut = FALSE
 )
 }
 \arguments{
-\item{x}{A dataframe or a SpatialPointsDataFrame containing at least a
+\item{x}{A data.frame, sf or a SpatialPointsDataFrame containing at least a
 column for species name, one or several columns for date of observation, one or
 several columns for identifying a visit and, if it is not spatial, coordinate
 columns.}
@@ -59,11 +61,11 @@ Alternatives are \code{c("day", "month", "year", NULL)}. Time is anyhow
 organised into three columns year, month, day.}
 
 \item{grid}{Either \code{NULL} to be ignored or an object of class
-\code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} as indetifier of
+\code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} as identifier of
 the visits spatial extent.}
 
 \item{presenceCol}{A character string with the column name for the column for the
-precense status. Default is \code{NULL}.}
+presence status. Default is \code{NULL}.}
 
 \item{xyCols}{A character vector of the names for the columns that are holding
 the coordinates for the observations. The order should be longitude(x),
@@ -71,9 +73,9 @@ latitude(y). Default is the Darwin Core standard column names
 \code{c("decimalLongitude", "decimalLatitude")}. Only applicable to non-
 spatial dataframes.}
 
-\item{dataCRS}{A character string or numeric for the dataframe CRS (Coordinate Reference
-System). Default is \code{"4326"}, which is WGS 84. This is only
-applicable to non-spatial dataframes, since a spatial dataframes already
+\item{dataCRS}{A character string or numeric for the data.frame CRS (Coordinate Reference
+System). Default is \code{4326}, which is WGS 84. This is only
+applicable to non-spatial data.frames, since a spatial data.frames already
 should have this information.}
 
 \item{taxonRankCol}{the name of the column containing the taxonomic rank for
@@ -83,27 +85,31 @@ That is the minimum taxonomic identification level.}
 \item{taxonRank}{a string or vector of strings containing the taxonomic ranks to keep.
 Only evaluated if taxonRankCol is not \code{NULL}}
 
-\item{simplifySppName}{whether to remove everything else that is not the species
+\item{simplifySppName}{Logical. whether to remove everything else that is not the species
 name (authors, years). Default set to FALSE, else leaves a canonical name given
 by taxize::gbif_parse(), that is a scientific name with up to 3 elements.}
+
+\item{spOut}{Logical. Whether the result should be a SpatialPolygon (sp) or an sf.}
 }
 \value{
 a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds,
 with additional attributes.
 }
 \description{
-Takes a dataframe with reported species observations and reformats it, using
+Takes a data.frame with reported species observations and reformats it, using
 visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.
 }
 \details{
-An OrganizedBirds-class is essentially a list containing one element, a
-SpatialPointsDataFrame. This SpatialPointsDataFrame has its data formatted in
-a way that the other functions in the BIRDS-package can use further on. It
-also has the attribute \code{"visitCol"}, which indicates which column in the
-dataframe holds the visit identifier. The visit identifier is created by
-the function \code{\link{createVisits}}, which creates a unique id for each
-combination of the values in the defined columns.
+An OrganizedBirds-class is essentially a list containing a spatial element. 
+After version 0.2, the resulting element is of class \code{sf}. However, we 
+now add a parameter for backwards compatibility. It also accepts the inputs 
+in both formats. This sf has its data formatted in a way that the other 
+functions in the BIRDS-package can use further on. It also has the attribute 
+\code{"visitCol"}, which indicates which column in the data.frame holds the 
+visit identifier. The visit identifier is created by the function 
+\code{\link{createVisits}}, which creates a unique id for each combination of 
+the values in the defined columns.
 
 The variable \code{timeCol} can be formatted differently. If the variable is a
 named vector with the names "Year", "Month" and "Day" (letter capitalization
