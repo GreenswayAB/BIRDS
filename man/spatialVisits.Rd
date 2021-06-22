@@ -2,7 +2,7 @@
 % Please edit documentation in R/exploreVisits.r
 \name{spatialVisits}
 \alias{spatialVisits}
-\title{A function to make the exploreVisits Spatial}
+\title{A function to convert visits into a spatial object}
 \usage{
 spatialVisits(
   x,
@@ -31,7 +31,7 @@ directly effort circles may not look like circles in the returned
 (Pseudo-Mercator) projection.
 }
 \description{
-A function to
+A function to convert visits into a spatial object
 }
 \examples{
 # create a visit-based data object from the original observation-based data

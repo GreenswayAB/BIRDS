@@ -15,7 +15,7 @@ makeGrid(
 )
 }
 \arguments{
-\item{polygon}{an object of class \sQuote{SpatialPolygon} or
+\item{polygon}{an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
 \sQuote{SpatialPolygonDataFrame}}
 
 \item{gridSize}{width of the cells in Km. It defines the central assumption
@@ -38,15 +38,15 @@ For hexagonal grid cells the default is set to \code{c(0,0)}.}
 \item{simplify}{simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 Complicated polygons (those with much detail) make this function run slower.}
 
-\item{tol}{numerical tolerance value for the simplification algorith. Set to 0.01 as default.}
+\item{tol}{numerical tolerance value for the simplification algorithm. Set to 0.01 as default.}
 }
 \value{
-an object of class \sQuote{SpatialPolygon} with a set of polygons
-conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
+an object of class \sQuote{sf} with a set of polygons conforming to a
+grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
 }
 \description{
 Makes a grid adapted to the purpose of this package and simplifying options
-from the  \code{sp} package. The central concept of the BIRDS package is the
+from the  \code{sf} package. The central concept of the BIRDS package is the
 definition of the field visit, and most likely, your grid size will define the
 maximum area a person can explore during a day. Use the function
 \code{exploreVisits()} to assess if your definition of visit aligns with your
@@ -55,8 +55,8 @@ maximum area a person can explore during a day. Use the function
 \note{
 Depending on the total number of grid cells the computations may take time.
 If there are more than 100 cells on any dimension a warning message will be displayed.
-Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
-an error message will be displayed.
+Grid cells must be smaller than the sampling area. If the grid cell size is
+wider than the polygon on any dimension an error message will be displayed.
 }
 \examples{
 grid <- makeGrid(gotaland, gridSize = 10)

@@ -1,5 +1,3 @@
-# Set of functions to create a grid cells from a custom polygon and convert it to API proof strings
-
 #' Create the polygon for the study area by drawing into a world map
 #'
 #' @param lat initial geographical coordinate for latititude in decimal degrees (EPSG:4326)
@@ -19,6 +17,7 @@
 #' }
 #' @importFrom magrittr %>%
 #' @importFrom sp spTransform CRS
+#' @importFrom sf st_transform st_crs st_geometry_type
 drawPolygon <- function(lat = 0,
                         lng = 0,
                         zoom = 1,
@@ -36,19 +35,17 @@ drawPolygon <- function(lat = 0,
     area <- areaDrawn$finished$geometry
 
     # Observe the draw input
-    areaTypes <- sf::st_geometry_type(area)
+    areaTypes <- st_geometry_type(area)
     # check if there is a polygon
     if ("POLYGON" %in% areaTypes) {
         wPoly <- which(areaTypes == "POLYGON")
         if (length(wPoly) > 1)
             warning("Only the first polygon will go through")
-        polygon <- as(area[wPoly[1]], "Spatial")
+        polygon <- st_as_sf(area[wPoly[1]])
 
         # polygon <- spTransform(polygon, CRSobj = CRS(crswkt))
-        polygon <- sf::as_Spatial(
-                    sf::st_transform(
-                      sf::st_as_sf(polygon),
-                      crs = sf::st_crs(4326)$wkt) )
+        polygon <- st_transform(polygon,
+                                crs = st_crs(4326))
     } else {
         stop("There are no polygones in your drawing")
     }
@@ -61,56 +58,54 @@ drawPolygon <- function(lat = 0,
 #' This function is based on the function shotGroups::getMinCircle() that uses
 #' the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf
 #'
-#' @param spdf an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.
-#' @param projCRS a number defining a projected CRS. It is very important
+#' @param spdf an object of class \sQuote{sf} or \sQuote{SpatialPointsDataFrame}
+#' with defined CRS.
+#' @param crs a number defining a projected CRS. It is very important
 #' that the selected CRS is accurate in the study area. This is not the CRS for
 #' the argument 'spdf' which should be defined internally. This is the CRS used to
 #' make a flat circle. Some UTM variant is recommended. See \code{\link{getUTMproj}}
-#' @return a polygon object of class \sQuote{SpatialPolygon} with geodesic
+#' @return a polygon object of class \sQuote{sf} with geodesic
 #' coordinates in WGS84 (ESPG:4326).
 #' @seealso \code{\link{getUTMproj}}
 #' @importFrom shotGroups getMinCircle
 #' @export
-makeCircle<-function(spdf, projCRS=NULL){
+makeCircle<-function(spdf, crs=NULL){
     # error not a SpatialPolygon
-    if(!(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame")))
-      stop("The input object is neither of class 'SpatialPoints' nor 'SpatialPointsDataFrame'")
+    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf")))
+      stop("The input object is neither of class 'sf', SpatialPoints' nor 'SpatialPointsDataFrame'")
+
+    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf") )){
+      spdf <- st_as_sf(spdf)
+    }
 
     ## error no CRS in spdf
-    if (is.na(slot(spdf, "proj4string"))) stop("The polygon has no coordinate projection system (CRS) associated")
+    if (is.na(st_crs(spdf)) ) stop("The polygon has no coordinate projection system (CRS) associated")
 
-    ## error projCRS not defined
-    if (is.null(projCRS)) stop("projCRS needs to be defined")
+    ## error crs not defined
+    if (is.null(crs)) stop("crs needs to be defined")
+    crs <- as.numeric(crs)
 
-    # spdf <- suppressWarnings(spTransform(spdf, CRS(projCRS)) )
-    spdf <- sf::as_Spatial(
-                sf::st_transform(
-                  sf::st_as_sf(spdf),
-                  crs = sf::st_crs(projCRS)$wkt)
-                )
+    spdf <- st_transform(spdf,
+                         crs = st_crs(crs))
 
-    if (!is.na(sp::is.projected(spdf)) && !sp::is.projected(spdf))
+
+    if (!is.na(	st_is_longlat(x)) && st_is_longlat(spdf) )
       warning("Spatial object is not projected; this function expects planar coordinates")
 
-    coord <- coordinates(spdf)
+    coord <- do.call(rbind, st_geometry(spdf)) #coordinates(spdf)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
     if (nrow(coordUnique) > 1) {
       # the minumum circle that covers all points
       mincirc <- getMinCircle(coordUnique)
-      mincircSP<-data.frame(mincirc$ctr[1], mincirc$ctr[2])
-      colnames(mincircSP)<-c("X", "Y")
-      sp::coordinates(mincircSP) <- ~X+Y
-      sp::proj4string(mincircSP) <- projCRS
+      mincircSP<-st_as_sf(data.frame("X"=mincirc$ctr[1], "Y"=mincirc$ctr[2]),
+                          coords=c("X", "Y"))
+      st_crs(mincircSP) <- st_crs(crs)
 
-      circle <- rgeos::gBuffer(spgeom = mincircSP, width = mincirc$rad, quadsegs = 10)
-      # crswkt <- sf::st_crs(4326)
-      # circle <- spTransform(circle, CRSobj = suppressWarnings(CRS(crswkt)))
-      circle <- sf::as_Spatial(
-                  sf::st_transform(
-                    sf::st_as_sf(circle),
-                    crs = sf::st_crs(4326)$wkt) )
+      circle <- st_buffer(mincircSP, dist = mincirc$rad, quadsegs = 10)
+      circle <- st_transform(circle,
+                             crs = st_crs(4326))
 
     } else {
         stop("More than one unique set of coordinates are needed to make a minimum circle polygon.")
@@ -124,7 +119,7 @@ makeCircle<-function(spdf, projCRS=NULL){
 
 #' Create the polygon for the study area from a dataset of class \sQuote{OrganizedBirds}
 #'
-#' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}
+#' @param x an object of class \sQuote{OrganizedBirds}, \sQuote{sf} or \sQuote{SpatialPointsDataFrame}
 #' @param shape which type of polygon should be made from the data:
 #' \itemize{
 #'   \item a bounding box (\dQuote{bBox} or \dQuote{bounding box}; i.e. the smallest bounding rectangle
@@ -134,81 +129,52 @@ makeCircle<-function(spdf, projCRS=NULL){
 #'   \item the minimum circle (\dQuote{minCircle} or \dQuote{min circle}; i.e. the smallest
 #'   circle that covers all the points).
 #' }
-#' @return an object of class \sQuote{SpatialPolygon} with a polygon with geodesic
-#' coordinates in WGS84 (ESPG:4326).
+#' @return an object of class \sQuote{sf} with a polygon with geodesic coordinates
+#'  in WGS84 (ESPG:4326).
 #' @examples
-#' orgDf <- organizeBirds(bombusObs)
-#' polygon <- OB2Polygon(orgDf, shape = "cHull")
+#' ob <- organizeBirds(bombusObs)
+#' polygon <- OB2Polygon(ob, shape = "cHull")
 #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @export
 OB2Polygon <- function(x, shape="bBox") {
-    crswkt <- sf::st_crs(4326)$wkt
 
-    if (class(x) == "OrganizedBirds") {
-        spdf <- x$spdf
-    } else {
-        if(class(x) == "SpatialPointsDataFrame"){
-            spdf <- x
-            # spdf <- spTransform(spdf, CRSobj = suppressWarnings(CRS(crswkt)))
+  if (is.null(shape)) shape <- "bBox"
 
-        } else {
-            stop("input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
-        }
+  if (!any(class(x) %in% c("OrganizedBirds", "sf", "SpatialPointsDataFrame")))
+           stop("input data is neither an object of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
 
-    }
+  if (class(x) == "OrganizedBirds") {
+      spdf <- x$spdf
+      if(class(spdf) == "SpatialPointsDataFrame"){
+        spdf <- st_as_sf(spdf)
+      }
+  }
 
-    ## error no CRS
-    # if (is.na(proj4string(spdf))) {
-    #     stop("The polygon has no coordinate projection system (CRS) associated")
-    # }
-    if (is.na(slot(spdf, "proj4string"))) {
-      stop("The polygon has no coordinate projection system (CRS) associated")
-    }
-    spdf <- sf::as_Spatial(
-              sf::st_transform(
-                sf::st_as_sf(spdf),
-                crs = crswkt)
-          )
+  if(class(x) == "SpatialPointsDataFrame"){
+          spdf <- x
+          spdf <- st_as_sf(spdf)
+  }
+  if (is.na(st_crs(spdf)))
+    stop("The polygon has no coordinate projection system (CRS) associated")
 
-    coord <- coordinates(spdf)
+   crs <- st_crs(getUTMproj(spdf))
+
+    spdf <- st_transform(spdf,
+                         crs = crs)
+
+    coord <- do.call(rbind, st_geometry(spdf))
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
-    if (is.null(shape)) shape<-"bBox"
-
     if (shape %in% c("bBox", "bounding box")){
-        bboxMat<-bbox(spdf)
-        polygonCoord <- matrix(c(bboxMat[1,1], bboxMat[2,1],
-                           bboxMat[1,1], bboxMat[2,2],
-                           bboxMat[1,2], bboxMat[2,2],
-                           bboxMat[1,2], bboxMat[2,1],
-                           bboxMat[1,1], bboxMat[2,1]), ncol = 2, nrow = 5, byrow = TRUE)
-        polygon <- SpatialPolygons(
-            list(
-                Polygons(
-                    list(
-                        Polygon( polygonCoord )
-                        ),
-                    ID="1")
-                ),
-            proj4string=CRS(crswkt)
-            )
+        polygon <- st_as_sfc(st_bbox(spdf))
     }
-
     if (shape %in% c("cHull", "convex hull")) {
         if (nrow(coordUnique) > 2) {
-            hpts <- grDevices::chull(coord)
-            hpts <- c(hpts, hpts[1])
-            polygon<-SpatialPolygons(
-                list(
-                    Polygons(
-                        list(
-                            Polygon( coord[hpts, ] )
-                            ),
-                        ID="1")
-                    ),
-                proj4string=CRS(crswkt)
-                )
+            polygon <- spdf %>%
+              dplyr::group_by() %>%
+              dplyr::summarise() %>%
+              st_convex_hull()
         } else {
             stop("More than two unique set of coordinates is needed to make a
                  convex hull polygon.")
@@ -216,10 +182,10 @@ OB2Polygon <- function(x, shape="bBox") {
     }
 
     if (shape %in% c("minCircle", "min circle")) {
-      proj4UTM <- getUTMproj(spdf)
-      polygon <- makeCircle(spdf, projCRS = proj4UTM)
+      polygon <- makeCircle(spdf, crs = crs)
     } # end shape conditions
 
+    polygon <- st_transform(polygon, crs = st_crs(4326))
     return(polygon)
 }
 
@@ -231,10 +197,7 @@ OB2Polygon <- function(x, shape="bBox") {
 #' @keywords internal
 renameGrid <- function(grid, idcol){
   nrows <- nrow(grid)
-  grid[, idcol] <- paste0("ID", seq(nrows))   
-  # for(i in 1:length(grid)){
-  #     slot(slot(grid, "polygons")[[i]], "ID") <- paste0("ID", i)
-  # }
+  grid[, idcol] <- paste0("ID", seq(nrows))
   return(grid)
 }
 
@@ -242,12 +205,12 @@ renameGrid <- function(grid, idcol){
 #' Make a grid
 #'
 #' Makes a grid adapted to the purpose of this package and simplifying options
-#' from the  \code{sp} package. The central concept of the BIRDS package is the
+#' from the  \code{sf} package. The central concept of the BIRDS package is the
 #' definition of the field visit, and most likely, your grid size will define the
 #' maximum area a person can explore during a day. Use the function
 #' \code{exploreVisits()} to assess if your definition of visit aligns with your
 #'  grid size.
-#' @param polygon an object of class \sQuote{SpatialPolygon} or
+#' @param polygon an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
 #' \sQuote{SpatialPolygonDataFrame}
 #' @param gridSize width of the cells in Km. It defines the central assumption
 #' of this package that is the maximum area a person can explore during a day.
@@ -264,13 +227,13 @@ renameGrid <- function(grid, idcol){
 #' For hexagonal grid cells the default is set to \code{c(0,0)}.
 #' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 #' Complicated polygons (those with much detail) make this function run slower.
-#' @param tol numerical tolerance value for the simplification algorith. Set to 0.01 as default.
-#' @return an object of class \sQuote{SpatialPolygon} with a set of polygons
-#' conforming to a grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
+#' @param tol numerical tolerance value for the simplification algorithm. Set to 0.01 as default.
+#' @return an object of class \sQuote{sf} with a set of polygons conforming to a
+#' grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
 #' @note Depending on the total number of grid cells the computations may take time.
 #' If there are more than 100 cells on any dimension a warning message will be displayed.
-#' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
-#' an error message will be displayed.
+#' Grid cells must be smaller than the sampling area. If the grid cell size is
+#' wider than the polygon on any dimension an error message will be displayed.
 #' @examples
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
@@ -286,83 +249,25 @@ makeGrid <- function(polygon,
                      tol=0.01) {
 
     gridSizeM <- gridSize * 1000 # in meters
-    gridSizeDg <- gridSize/111  # because on average 1 degree is 111 km
-    crswkt <- sf::st_crs(4326)$wkt
-    crswktPM <- sf::st_crs(3857)$wkt
-    # error not a SpatialPolygon
 
-    if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
-        stop("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame")
+    if (!any(class(polygon) %in% c("sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+        stop("Entered polygon is not an sf, SpatialPolygon nor SpatialPolygonsDataFrame")
     }
 
+    if (any(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+      polygon <- st_as_sf(polygon)
+    }
     ## error no CRS
-    if (is.na(slot(polygon, "proj4string"))) {
+    if (is.na(st_crs(polygon))) {
         stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
-    ## simplify if takes too long to make the grid
-    if (simplify) {
-      ##TODO apply tryCatch()
-      polygon <- rgeos::gSimplify(polygon, tol = tol)
-    }
+    polygon <- st_transform(polygon,
+                            crs = st_crs(suppressWarnings(getUTMproj(polygon))))
 
-    # Transform to WGS84 pseudo-Mercator
-    polygonProj <- suppressWarnings(
-                    sf::as_Spatial(
-                      sf::st_transform(
-                        sf::st_as_sf(polygon), crs = crswktPM) )
-                    )
-    # polygonProj <- suppressWarnings(spTransform(polygon,
-    #                                             CRSobj = sp::CRS(crswktPM))
-    #                                 )
-    if (buffer) {
-        # Needs to be projected
-        polygonProjBuffer <- rgeos::gBuffer(polygonProj, width = gridSizeM)
-    } else {polygonProjBuffer <- polygonProj}
+    grid <- st_make_grid(polygon, cellsize = gridSizeM)
 
-    polygonGeod <- suppressWarnings(
-      sf::as_Spatial(
-        sf::st_transform(
-          sf::st_as_sf(polygon), crs = crswkt) )
-    )
-    # polygonGeod <- suppressWarnings(spTransform(polygonProjBuffer,
-    #                                             CRSobj = CRS(crswkt))
-    #                                 )
-
-    # observe the grid cell and study area polygon get the difference in
-    # longitude/latitude to make the condition
-    # dif <- diff(t(polygonProj@bbox))
-    dif <- diff(t(slot(polygonProj, "bbox")))
-
-    if (any(gridSizeM >= dif)) {
-        stop("Grid cells must be smaller than the sampling area")
-    }
-    if (any(gridSizeM <= dif/100)) {
-        warning("Grid cells are too small, this may result in very long computation times")
-    }
-
-    # Create the actual grid
-    if (hexGrid == TRUE) {
-        if (is.null(offset)){
-            offset <- c(0, 0)
-        }
-        points <- sp::spsample(polygonGeod, type = "hexagonal",
-                               offset = offset,
-                               cellsize = gridSizeDg)
-        grid <- sp::HexPoints2SpatialPolygons(points)
-    } else {
-        if (is.null(offset)){
-            offset <- c(0.5, 0.5)
-        }
-        points <- sp::spsample(polygonGeod, type = "regular",
-                               offset = offset,
-                               cellsize = gridSizeDg)
-        grid <- sp::as.SpatialPolygons.GridTopology(sp::points2grid(points),
-                                              proj4string = CRS(crswkt))
-
-        wcells <- over(points, grid)
-        grid <- grid[wcells, ]
-    }
+    grid <- st_transform(grid, crs = st_crs(4326))
     return(grid)
 }
 
@@ -494,19 +399,28 @@ makeGrid <- function(polygon,
 #' @export
 gridAsString <- function(grid) {
     # error not a SpatialPolygon
-    if (!(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
-        stop("Entered grid is not a SpatialPolygon nor SpatialPolygonsDataFrame")
+    if (!any(class(grid) %in% c("sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+        stop("Entered grid is not a sf, SpatialPolygon nor SpatialPolygonsDataFrame")
     }
+    if (any(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+      grid <- st_as_sf(grid)
+    }
+    grid <- st_transform(grid, crs = st_crs(4326))
 
     ncells <- length(grid)
     polyStrg <- list()
     for (i in 1:ncells){
 
-      polyStrg[[i]] <- paste0(apply(slot(slot(slot(grid, "polygons")[i][[1]],
-                                              "Polygons")[[1]],
-                                         "coords"),  #grid@polygons[i][[1]]@Polygons[[1]]@coords,
-                                    1, paste0, collapse = "%20"),
-                              collapse = ",")
+      polyStrg[[i]] <- gsub(" ","%20",
+                            gsub(", ", ",",
+                                 gsub( "))", "",
+                                       gsub("POLYGON ((", "",
+                                            st_as_text(grid[i]),
+                                            fixed=TRUE),
+                                       fixed=TRUE),
+                                 fixed=TRUE),
+                            fixed=TRUE)
+
     }
 
 

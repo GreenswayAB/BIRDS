@@ -4,18 +4,19 @@
 \alias{makeCircle}
 \title{Create the minimum circle containing the points}
 \usage{
-makeCircle(spdf, projCRS = NULL)
+makeCircle(spdf, crs = NULL)
 }
 \arguments{
-\item{spdf}{an object of class \sQuote{SpatialPointsDataFrame} with defined CRS.}
+\item{spdf}{an object of class \sQuote{sf} or \sQuote{SpatialPointsDataFrame}
+with defined CRS.}
 
-\item{projCRS}{a number defining a projected CRS. It is very important
+\item{crs}{a number defining a projected CRS. It is very important
 that the selected CRS is accurate in the study area. This is not the CRS for
 the argument 'spdf' which should be defined internally. This is the CRS used to
 make a flat circle. Some UTM variant is recommended. See \code{\link{getUTMproj}}}
 }
 \value{
-a polygon object of class \sQuote{SpatialPolygon} with geodesic
+a polygon object of class \sQuote{sf} with geodesic
 coordinates in WGS84 (ESPG:4326).
 }
 \description{

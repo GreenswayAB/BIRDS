@@ -7,8 +7,10 @@
 #' @return The a \code{vector} with list elements IDs.
 #' @keywords internal
 whichNonEmpty <- function(x){
-  res <- which( lengths(x) > 1)  
-  res <- unname(which(unlist(lapply(x, nrow)) > 0))
+  # res <- which( lengths(x) > 1)
+  # res <- unname(which(unlist(!is.null(lapply(x, nrow) > 0)))
+  res <- which(unlist(lapply(x, function(y) !all(is.na(y)))))
+
   return(res)
 }
 
@@ -192,24 +194,24 @@ overlayBirds <- function(x, grid, spillOver = NULL){
 
 #' @export
 #' @rdname overlayBirds
-overlayBirds.OrganizedBirds<-function(x, grid, spillOver = NULL){
-  if(any(class(x) == "SpatialPointsDataFrame")){
-    x <- st_as_sf(x) 
+overlayBirds.OrganizedBirds <- function(x, grid, spillOver = NULL){
+  spBird <- x$spdf
+
+  if(any(class(spBird) == "SpatialPointsDataFrame")){
+    spBird <- st_as_sf(spBird)
   }
-  spBird <- x
 
   if(any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
-    grid <- st_as_sf(grid) 
+    grid <- st_as_sf(grid)
   }
 
   visitCol <- attr(x, "visitCol")
-  nVis <- length(unique(spBird[,visitCol]))
+  nVis <- length(unique(st_drop_geometry(spBird)[,visitCol]))
   nObs <- nrow(spBird)
 
   if(!identical(st_crs(spBird), st_crs(grid))){
-    grid <- sf::st_transform(
-                  grid,
-                  crs = st_crs(spBird))
+    grid <- st_transform(grid,
+                         crs = st_crs(spBird))
   }
 
   #### Rename grid
@@ -223,19 +225,20 @@ All results will use this nomenclature, but the order of the cells will remain u
   ### Generic overlay
   # ObsInGridList <- over(grid, spBird, returnList=TRUE)
   ## overlay the data with the grid
-  listGrid <- st_intersects(grid, x)
-  
+  listGrid <- suppressMessages(st_intersects(grid, spBird))
+
   ObsInGridList <- list()
+
   for(i in seq(length(listGrid))){
     if(length(listGrid[[i]]) == 0){
       ObsInGridList[[i]] <- NA
     } else {
-      ObsInGridList[[i]] <- st_drop_geometry(x[listGrid[[i]],])
+      ObsInGridList[[i]] <- st_drop_geometry(spBird[listGrid[[i]],])
     }
   }
   wNonEmpty <- whichNonEmpty(ObsInGridList)
 
-  if(length(wNonEmpty)==0) stop("Observations don't overlap any grid cell.")
+  if(length(wNonEmpty) == 0) stop("Observations don't overlap any grid cell.")
   ### Check nObs
   nObsInGrid <- sum(unlist(lapply(ObsInGridList, nrow)))
 
@@ -245,6 +248,7 @@ All results will use this nomenclature, but the order of the cells will remain u
 
   visitsIDGrid <- lapply(ObsInGridList[wNonEmpty], function(x) unique(x[,visitCol]))
   nSpill <- sum(duplicated(unlist(visitsIDGrid)))
+
   if(nSpill>0){
     porcSpill<-round(nSpill/nVis*100,3)
     message(paste(porcSpill, "% of the visits spill over neighbouring grid cells."))
