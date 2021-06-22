@@ -4,10 +4,10 @@
 \alias{getUTMzone}
 \title{internal function. Depends on the polygon object utmZones}
 \usage{
-getUTMzone(points)
+getUTMzone(sf)
 }
 \arguments{
-\item{points}{a set of points}
+\item{sf}{a sf}
 }
 \description{
 internal function. Depends on the polygon object utmZones

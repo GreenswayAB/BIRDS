@@ -160,7 +160,6 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 #'    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
 #'   }
 #' @export
-#' @importFrom sp coordinates proj4string spTransform CRS over
 #' @examples
 #' ob <- organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, gridSize = 10)

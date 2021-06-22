@@ -7,9 +7,9 @@
 makeGrid(
   polygon,
   gridSize,
-  buffer = FALSE,
   hexGrid = TRUE,
   offset = NULL,
+  buffer = FALSE,
   simplify = FALSE,
   tol = 0.01
 )
@@ -24,9 +24,6 @@ Be aware, that the spatial extent of a visit is dependent on the taxonomic group
 Maximum recommended for this package 10 km if there is no reliable definition
 for the spatial extent for visits.}
 
-\item{buffer}{shall the grid cells include the polygon border? Then \code{TRUE}
-(default = \code{FALSE}).}
-
 \item{hexGrid}{shall the grid cells be hexagonal? Then \code{TRUE} (default).
 Else squared grid cells.}
 
@@ -34,6 +31,9 @@ Else squared grid cells.}
 If it is left empty (\code{NULL}, default), then takes default values.
 For squared grid cells the default is set to \code{c(0.5,0.5)} ("centric systematic").
 For hexagonal grid cells the default is set to \code{c(0,0)}.}
+
+\item{buffer}{shall the grid cells include the polygon border? Then \code{TRUE}
+(default = \code{FALSE}).}
 
 \item{simplify}{simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
 Complicated polygons (those with much detail) make this function run slower.}

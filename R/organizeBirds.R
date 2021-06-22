@@ -470,8 +470,7 @@ obsData.OrganizedBirds<-function(x){
 #' by taxize::gbif_parse(), that is a scientific name with up to 3 elements.
 #' @param spOut Logical. Whether the result should be a SpatialPolygon (sp) or an sf.
 #'
-#' @importFrom sp coordinates proj4string spTransform CRS plot
-#' @importFrom sf st_crs st_crs<- st_as_sf st_drop_geometry
+#' @import sf
 #' @importFrom stats IQR median na.omit  quantile var
 #' @importFrom grDevices boxplot.stats
 #' @importFrom graphics barplot layout legend mtext par plot

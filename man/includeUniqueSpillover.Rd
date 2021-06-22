@@ -9,7 +9,7 @@ includeUniqueSpillover(birdData, grid, visitCol)
 \arguments{
 \item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}
 
-\item{grid}{A SpatialPolygonsDataFrame object of the grid over the study area}
+\item{grid}{A sf or SpatialPolygonsDataFrame object of the grid over the study area}
 
 \item{visitCol}{A character string for specifying the columns that identify a visit.}
 }

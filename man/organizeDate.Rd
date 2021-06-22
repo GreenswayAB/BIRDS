@@ -7,7 +7,7 @@
 organizeDate(x, columns)
 }
 \arguments{
-\item{x}{A dataframe with at least the columns specified in 'columns'}
+\item{x}{A data.frame with at least the columns specified in 'columns'}
 
 \item{columns}{A character vector with the column names for the dates specified.
 It can either be one column formatted as "yyyy-mm-dd" or a vector of
@@ -19,7 +19,7 @@ the first as year, the second as month and the third as day.}
 A data.frame with the columns "year", "month", "day"
 }
 \description{
-Organize the date-column(s) in a dataframe to three columns
+Organize the date-column(s) in a data.frame to three columns
 }
 \examples{
 ymd<-as.Date(Sys.Date())+1:5
