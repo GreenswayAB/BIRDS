@@ -1,13 +1,16 @@
 #' internal function. Depends on the polygon object utmZones
-#' @param points a set of points
+#' @param sf a sf
 #' @keywords internal
-getUTMzone <- function(points){
+getUTMzone <- function(sf){
+  
+  points <- st_cast(sf, to = "POINT")
+  
   ##Find which UTM-zones that have the most points
   utmZonesTr <- st_transform(utmZones,
                              crs = st_crs(points)  )
 
-  utmZone <- suppressMessages(st_intersection(points, utmZonesTr))
-  freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
+  utmZone <- suppressMessages(suppressWarnings(st_intersection(points, utmZonesTr)))
+  freqZones <- table(utmZone$ZONE[utmZone$ZONE != 0 ]) ## Zone 0 is both north and south so we check for it later
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
 
   alternatives <- rep(FALSE, length(maxZones))
@@ -110,26 +113,25 @@ getUTMzone <- function(points){
 #' OB <- organizeBirds(bombusObs)
 #' getUTMproj(OB)
 getUTMproj <- function(x){
-  if (!any(class(x) %in% c("OrganizedBirds", "sf", "SpatialPointsDataFrame")))
-    stop("input data is neither an object of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
+  if (!any(class(x) %in% c("OrganizedBirds", "sf", "sfc", "SpatialPointsDataFrame")))
+    stop("input data is neither an object of class 'OrganizedBirds', 'sf', 'sfc' or 'SpatialPointsDataFrame'")
 
   if (any(class(x) == "OrganizedBirds")) {
     spdf <- x$spdf
-    if(class(spdf) == "SpatialPointsDataFrame"){
+    if(any(class(spdf) == "SpatialPointsDataFrame")){
       spdf <- st_as_sf(spdf)
+    } else {
+      spdf <- spdf
     }
-  }
-
-  if(any(class(x) == "SpatialPointsDataFrame")){
+  } else if(any(class(x) == "SpatialPointsDataFrame")){
     spdf <- x
     spdf <- st_as_sf(spdf)
+  } else {
+    spdf <- x
   }
 
   if (is.na(st_crs(spdf)))
     stop("The polygon has no coordinate projection system (CRS) associated")
-
-  spdf <- st_transform(spdf,
-                       crs = st_crs(4326))
 
   utmZone <- suppressMessages(getUTMzone(spdf))
 
@@ -143,9 +145,9 @@ getUTMproj <- function(x){
       epsg <- 5042 #"+proj=stere +lat_0=-90 +lat_ts=-90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
     }
     if(is.integer(utmZone)){
-      proj4 <- paste0("+proj=utm +zone=", utmZone," +datum=WGS84")
+      proj4 <- paste0("+proj=utm +zone=", utmZone)
       epsg <- as.numeric(rgdal::showEPSG(proj4))
     }
-  }
+  } else { epsg <- NULL}
   return(epsg)
 }

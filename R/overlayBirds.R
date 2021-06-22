@@ -27,8 +27,8 @@ whichNonEmpty <- function(x){
 #' @keywords internal
 createOverlayForGrid <- function(x, birdData, visitCol){
   visitsInGrid <- unique(x[visitCol])
-  # birdDF <- birdData[[1]]@data
-  birdDF <- slot(birdData[[1]], "data")
+
+  birdDF <- st_drop_geometry(birdData$spdf)
   res <- birdDF[which(birdDF[,visitCol] %in% visitsInGrid[,1]),]
   return(res)
 }
@@ -58,63 +58,46 @@ includeSpillover <- function(x, birdData, visitCol){
 #' This function moves spillover observations to the gridcells were the focal visit has the most observations (or at random if ties)
 #'
 #' @param birdData An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.
-#' @param grid A SpatialPolygonsDataFrame object of the grid over the study area
+#' @param grid A sf or SpatialPolygonsDataFrame object of the grid over the study area
 #' @param visitCol A character string for specifying the columns that identify a visit.
 #'
 #' @return A  ObservationsInGrid list
-#' @importFrom sp over identicalCRS SpatialPolygonsDataFrame SpatialPolygons CRS proj4string
 #' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
-  if(class(birdData)=="OrganizedBirds") birdData <- birdData$spdf
-  if(class(birdData)=="SpatialPointsDataFrame") birdData <- birdData
-  if(!(class(birdData) %in% c("OrganizedBirds","SpatialPointsDataFrame"))) stop("Data must be of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
+  if(!any(class(birdData) %in% c("sf","OrganizedBirds","SpatialPointsDataFrame"))) 
+    stop("Data must be of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
+  if(any(class(birdData)=="OrganizedBirds")) birdData <- birdData$spdf
+  if(any(class(birdData)=="SpatialPointsDataFrame")) birdData <- st_as_sf(birdData)
 
-    # obs <- birdData@data
-  obs <- slot(birdData, "data")
-  visits <- unique(obs[, visitCol])
-  visits <- cbind(visits, "grid" = NA)
-
-  if(identicalCRS(birdData, grid) != TRUE){
+  if(!identical(st_crs(birdData), st_crs(grid))){
     stop("Organized data and grid do not share the same CRS")
   }
 
-  ## rename grids id no have integers
-  for(i in 1:length(grid)){
-    slot(slot(grid, "polygons")[[i]], "ID") <- as.character(i)
+  if(any(class(grid)=="sfc")) grid <- st_as_sf(grid)
+     
+  ## create ids
+  if(length(grep("id", colnames(grid), ignore.case = TRUE)) ==0) {
+    grid$id <- seq(nrow(grid))
+  } else {
+    grid$id <- st_drop_geometry(grid[, grep("id", colnames(grid), ignore.case = TRUE)[1]])
   }
 
-  #Extract the unique ID from the polygons in the spdf
-  ids <- data.frame(
-    matrix(
-      unlist(lapply(slot(grid, "polygons"),
-                    function(x){
-                      slot(x,"ID")}
-                    ))[slot(grid, "plotOrder")],
-      dimnames = list(c(), c("id"))),
-    stringsAsFactors = FALSE)
+  obs <- st_drop_geometry(
+            suppressMessages(
+              st_intersection(birdData, grid)))
 
-  rownames(ids) <- ids[,1] #Since SpatialPolygonsDataFrame() wants to match rownames with the IDs
-
-  spP <- SpatialPolygons(slot(grid, "polygons"),
-                         slot(grid, "plotOrder"),
-                         # proj4string = CRS(proj4string(grid)))
-                         proj4string = slot(grid,"proj4string"))
-
-  #A new spdf with only unique IDs, should be possible to join up with attribute data later
-  spdfIDs <- SpatialPolygonsDataFrame(spP, ids)
-
-  obs$grid <- unlist(over(birdData, spdfIDs, returnList=FALSE))
-
-
-  wNA <- which(is.na(obs$grid))
+  wNA <- which(is.na(obs$id))
   if(length(wNA)>0){
     obs <- obs[-wNA,]
   }
 
-  crossTab <- table("grid" = obs[,"grid"],
+  crossTab <- table("grid" = obs[,"id"],
                     "visits" = obs[,visitCol])
 
+  visits <- unique(obs[, visitCol])
+  visits <- cbind(visits, "grid" = NA)
+  
   for(v in dimnames(crossTab)$visits){
     visits[visits[, "visits"] == as.integer(v), "grid"] <- as.integer(dimnames(crossTab)$grid[nnet::which.is.max(crossTab[,v])])
     ##nnet::which.is.max is good since if it's equal number it takes one on random.
@@ -125,10 +108,10 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
     visits <- visits[-wNAvis,]
   }
 
-  colsExc <- which(colnames(obs) == "grid")
+  colsExc <- which(colnames(obs) == "id")
 
   res <- list()
-  for(g in 1:length(grid)){
+  for(g in seq(nrow(grid))){
     res[[g]] <- obs[obs[, visitCol] %in% unique(visits[visits[, "grid"] == g, "visits"]), -colsExc]
   }
 
@@ -264,9 +247,7 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
   if(!is.null(spillOver)){
     ### Good definition
     if(spillOver == "unique"){ ### UNIQUE SPILL OVER
-      # This will replace the previously defined ObsInGridList
       ObsInGridList <- includeUniqueSpillover(spBird, grid, visitCol)
-      # wNonEmpty <- unname( which( unlist(lapply(ObsInGridList, nrow)) != 0) )
       wNonEmpty <- whichNonEmpty(ObsInGridList)
 
     } else if(spillOver == "duplicate"){   ### DUPLICATE SPILL OVER
@@ -276,7 +257,6 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
 
   if (class(grid) == "SpatialPolygonsDataFrame"){
     grid@data <- grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribute data from the input grid, if there is any
-    # slot(grid, "data") <- grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribute data from the input grid, if there is any
   }
 
   res <- list("observationsInGrid" = ObsInGridList,

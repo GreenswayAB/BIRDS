@@ -71,10 +71,10 @@ drawPolygon <- function(lat = 0,
 #' @export
 makeCircle<-function(spdf, crs=NULL){
     # error not a SpatialPolygon
-    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf")))
+    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
       stop("The input object is neither of class 'sf', SpatialPoints' nor 'SpatialPointsDataFrame'")
 
-    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf") )){
+    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame") )){
       spdf <- st_as_sf(spdf)
     }
 
@@ -151,9 +151,10 @@ OB2Polygon <- function(x, shape="bBox") {
   }
 
   if(class(x) == "SpatialPointsDataFrame"){
-          spdf <- x
+          spdf <- x$spdf
           spdf <- st_as_sf(spdf)
   }
+  
   if (is.na(st_crs(spdf)))
     stop("The polygon has no coordinate projection system (CRS) associated")
 
@@ -242,15 +243,15 @@ renameGrid <- function(grid, idcol){
 #' @export
 makeGrid <- function(polygon,
                      gridSize,
-                     buffer = FALSE,
                      hexGrid = TRUE,
-                     offset=NULL,
-                     simplify=FALSE,
-                     tol=0.01) {
+                     offset = NULL,
+                     buffer = FALSE,
+                     simplify = FALSE,
+                     tol = 0.01) {
 
     gridSizeM <- gridSize * 1000 # in meters
 
-    if (!any(class(polygon) %in% c("sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+    if (!any(class(polygon) %in% c("sfc","sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         stop("Entered polygon is not an sf, SpatialPolygon nor SpatialPolygonsDataFrame")
     }
 
@@ -263,9 +264,23 @@ makeGrid <- function(polygon,
     }
 
     polygon <- st_transform(polygon,
-                            crs = st_crs(suppressWarnings(getUTMproj(polygon))))
+                            crs = st_crs(getUTMproj(polygon)))
 
-    grid <- st_make_grid(polygon, cellsize = gridSizeM)
+    if(simplify){
+      polygon <- st_simplify(polygon, dTolerance = tol)
+    }
+    
+    if (buffer) {
+      polygon <- st_buffer(polygon, dist = gridSizeM)
+    }
+
+    # polygon <- st_transform(polygon, crs = st_crs(4326))
+    
+    grid <- st_make_grid(polygon, 
+                         cellsize = gridSizeM, 
+                         square = !hexGrid,
+                         offset = offset, 
+                         what = "polygons")
 
     grid <- st_transform(grid, crs = st_crs(4326))
     return(grid)

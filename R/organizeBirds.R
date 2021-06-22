@@ -14,7 +14,6 @@
 #' @return A vector with the column names that match the pattern
 #' @export
 #' @keywords internal
-
 findCols <- function(pattern, df, exact=FALSE, value = TRUE){
   if(missing(pattern)) stop("The argument 'pattern' must be supplied.")
   if(missing(df)) stop("The argument 'df' must be supplied.")
@@ -32,9 +31,9 @@ findCols <- function(pattern, df, exact=FALSE, value = TRUE){
 
 #' Organize the date-column(s)
 #'
-#' Organize the date-column(s) in a dataframe to three columns
+#' Organize the date-column(s) in a data.frame to three columns
 #'
-#' @param x A dataframe with at least the columns specified in 'columns'
+#' @param x A data.frame with at least the columns specified in 'columns'
 #' @param columns A character vector with the column names for the dates specified.
 #'   It can either be one column formatted as "yyyy-mm-dd" or a vector of
 #'   length=3. If the column names are "year", "month" and "day" it will take
@@ -52,6 +51,7 @@ findCols <- function(pattern, df, exact=FALSE, value = TRUE){
 #' @keywords internal
 organizeDate <- function(x, columns){
   if (!length(columns) %in% c(1,3)) stop("Could not create date, please specify either one or three column names")
+  
   stdTimeCols <- c("year", "month", "day")
 
   cols.df <- findCols(columns, x, exact = TRUE)
@@ -520,17 +520,7 @@ organizeBirds <- function(x,
       st_crs(x) <- st_crs(as.numeric(dataCRS))
       xdf <- st_drop_geometry(x)
       
-      # sp::coordinates(x) <- xyColsl.df
-      # sp::proj4string(x) <- sp::CRS(crswkt)
-
     ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
-    # testCoord<-tryCatch({
-    #   sp::coordinates(xtest) <- xyColsl.df
-    #   sp::proj4string(xtest) <- CRS(epsgInfo$proj4)
-    # }, error = function(e){
-    #   # print(str(e$message))
-    #   return(e$message)
-    # }
 
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
   } else if(any(class(x) == "SpatialPointsDataFrame")){
