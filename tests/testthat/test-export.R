@@ -2,7 +2,7 @@ context("Export BIRDS")
 
 library(BIRDS)
 
-SB<-summariseBirds(x=organiseBirds(bombusObs[1:1000,]),
+SB<-summariseBirds(x=organiseBirds(bombusObsShort),
                    grid=makeGrid(gotaland, 50, buffer = TRUE, simplify=TRUE))
 
 sampleGridCell<-sample(which(unlist(lapply(SB$overlaid, nrow))!=0),1)
@@ -17,7 +17,10 @@ timeResVar<-c("NULL", "Yearly","Monthly", "Daily", "Month")
 varVar<-c("nObs", "nVis", "nSpp", "avgSll", "nYears", "nDays")
 methVar<-c("sum","median", "mean")
 
-exportShouldWork<-array(TRUE, dim=c(length(dimVar), length(timeResVar), length(varVar), length(methVar)),
+exportShouldWork<-array(TRUE, dim=c(length(dimVar),
+                                    length(timeResVar),
+                                    length(varVar),
+                                    length(methVar)),
                         dimnames = list(dimVar, timeResVar, varVar, methVar))
 
 #nYears for Spatial FALSE
@@ -85,9 +88,9 @@ skip_on_cran()
           if(exportShouldWork[s,t,v,m]){
             if(s==1){
               if(timeResVar[t]=="NULL"){
-                expect_is(exportBirds(SB,!!dimVar[s],NULL,!!varVar[v],!!methVar[m]),"SpatialPolygonsDataFrame")
+                expect_is(exportBirds(SB,!!dimVar[s],NULL,!!varVar[v],!!methVar[m]),"sf")
               }else{
-                expect_is(exportBirds(SB,!!dimVar[s],!!timeResVar[t],!!varVar[v],!!methVar[m]),"SpatialPolygonsDataFrame")
+                expect_is(exportBirds(SB,!!dimVar[s],!!timeResVar[t],!!varVar[v],!!methVar[m]),"sf")
               }
             }else if (s==1){
               if(timeResVar[t]=="NULL"){
