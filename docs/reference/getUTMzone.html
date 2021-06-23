@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect temporal data — getTemporal • BIRDS</title>
+<title>internal function. Depends on the polygon object utmZones — getUTMzone • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="Collect temporal data — getTemporal" />
-<meta property="og:description" content="An internal function. Takes the data.frame resulting from the temporal overlay
-for a specific grid and summarises basic variables as a time series" />
+<meta property="og:title" content="internal function. Depends on the polygon object utmZones — getUTMzone" />
+<meta property="og:description" content="internal function. Depends on the polygon object utmZones" />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -148,34 +147,26 @@ for a specific grid and summarises basic variables as a time series" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect temporal data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
-    <div class="hidden name"><code>getTemporal.Rd</code></div>
+    <h1>internal function. Depends on the polygon object utmZones</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/getUTM.r'><code>R/getUTM.r</code></a></small>
+    <div class="hidden name"><code>getUTMzone.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An internal function. Takes the data.frame resulting from the temporal overlay
-for a specific grid and summarises basic variables as a time series</p>
+    <p>internal function. Depends on the polygon object utmZones</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getTemporal</span><span class='op'>(</span><span class='va'>birdOverlay</span>, visitCol <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getUTMzone</span><span class='op'>(</span><span class='va'>sf</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>birdOverlay</th>
-      <td><p>An birdOverlay which is the result of the <code><a href='overlayBirds.html'>overlayBirds</a></code>-function.</p></td>
-    </tr>
-    <tr>
-      <th>visitCol</th>
-      <td><p>A character string for specifying the columns that identify a visit.</p></td>
+      <th>sf</th>
+      <td><p>a sf</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The overlay data.frame for a specific grid, including the spillover visits.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
