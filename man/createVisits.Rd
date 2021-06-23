@@ -28,6 +28,8 @@ Default is the Darwin Core variables \code{c("day", "month", "year")}.}
 \item{grid}{Either \code{NULL} to be ignored or an object of class
 \code{sf}, \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining
 the maximum extent of visits effort. Then x must be an object of class sf}
+
+\item{gridIdCol}{column in grid with ids.}
 }
 \value{
 A vector of the same length as the number of rows as the data.frame
@@ -50,6 +52,7 @@ by the Darwin Core variables \code{c("locality", "day", "month", "year",
 OB <- organizeBirds(bombusObs)
 tmp.vis <- createVisits(bombusObs,
                         idCols=c("locality", "recordedBy"),
-                        timeCols=c("day", "month", "year"))
+                        timeCols=c("day", "month", "year"),
+                        gridIdCol = "id")
 visits(OB, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 }

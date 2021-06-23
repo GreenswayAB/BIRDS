@@ -30,7 +30,10 @@ Gets or sets the visits identifier for a OrganizedBirds-class.
 ob <- organizeBirds(bombusObs)
 attr(ob, "visitCol")
 vis <- visits(ob)
-tmp.vis <- createVisits(bombusObs, idCols=c("locality"), timeCols = c("day", "month", "year"))
+tmp.vis <- createVisits(bombusObs,
+                        idCols=c("locality"),
+                        timeCols = c("day", "month", "year"),
+                        gridIdCols = "id")
 visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 vis2 <- visits(ob)
 attr(ob, "visitCol")

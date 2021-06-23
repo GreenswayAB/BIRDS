@@ -8,6 +8,8 @@ renameGrid(grid, idcol)
 }
 \arguments{
 \item{grid}{an object of class \sQuote{sf}.}
+
+\item{idcol}{column name with names or ids}
 }
 \value{
 the same input object with known names

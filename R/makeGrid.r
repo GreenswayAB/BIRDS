@@ -145,14 +145,14 @@ OB2Polygon <- function(x, shape="bBox") {
 
   if (class(x) == "OrganizedBirds") {
       spdf <- x$spdf
-      if(class(spdf) == "SpatialPointsDataFrame"){
+      if(any(class(spdf) == "SpatialPointsDataFrame")){
         spdf <- st_as_sf(spdf)
       }
-  }
-
-  if(class(x) == "SpatialPointsDataFrame"){
-          spdf <- x$spdf
+  } else if(any(class(x) == "SpatialPointsDataFrame")){
+          spdf <- x
           spdf <- st_as_sf(spdf)
+  } else if(any(class(x) == "sf")){
+    spdf <- x
   }
 
   if (is.na(st_crs(spdf)))
@@ -194,6 +194,7 @@ OB2Polygon <- function(x, shape="bBox") {
 #'
 #' Takes a sf* and renames it to "ID1":"IDn".
 #' @param grid an object of class \sQuote{sf}.
+#' @param idcol column name with names or ids
 #' @return the same input object with known names
 #' @keywords internal
 renameGrid <- function(grid, idcol){
@@ -211,7 +212,7 @@ renameGrid <- function(grid, idcol){
 #' maximum area a person can explore during a day. Use the function
 #' \code{exploreVisits()} to assess if your definition of visit aligns with your
 #'  grid size.
-#' @param polygon an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
+#' @param poly an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
 #' \sQuote{SpatialPolygonDataFrame}
 #' @param gridSize width of the cells in Km. It defines the central assumption
 #' of this package that is the maximum area a person can explore during a day.

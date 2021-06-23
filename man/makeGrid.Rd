@@ -15,6 +15,9 @@ makeGrid(
 )
 }
 \arguments{
+\item{poly}{an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
+\sQuote{SpatialPolygonDataFrame}}
+
 \item{gridSize}{width of the cells in Km. It defines the central assumption
 of this package that is the maximum area a person can explore during a day.
 Be aware, that the spatial extent of a visit is dependent on the taxonomic
@@ -36,9 +39,6 @@ with much detail) make this function run slower.}
 
 \item{tol}{numerical tolerance value for the simplification algorithm. Set to
 0.01 as default.}
-
-\item{polygon}{an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
-\sQuote{SpatialPolygonDataFrame}}
 }
 \value{
 an object of class \sQuote{sf} with a set of polygons conforming to a

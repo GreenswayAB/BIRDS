@@ -235,6 +235,7 @@ getGridIDs <- function(x, grid, idcol){
 #' @param grid Either \code{NULL} to be ignored or an object of class
 #' \code{sf}, \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining
 #' the maximum extent of visits effort. Then x must be an object of class sf
+#' @param gridIdCol column in grid with ids.
 #'
 #' @return A vector of the same length as the number of rows as the data.frame
 #'   with a unique number for each combination of the values in the specified
@@ -244,7 +245,8 @@ getGridIDs <- function(x, grid, idcol){
 #' OB <- organizeBirds(bombusObs)
 #' tmp.vis <- createVisits(bombusObs,
 #'                         idCols=c("locality", "recordedBy"),
-#'                         timeCols=c("day", "month", "year"))
+#'                         timeCols=c("day", "month", "year"),
+#'                         gridIdCol = "id")
 #' visits(OB, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 createVisits<-function(x,
                        idCols = c("locality", "recordedBy"),
@@ -316,13 +318,17 @@ createVisits<-function(x,
 #'   the default column for the visits in further analysis. If name is
 #'   \code{NULL} and \code{useAsDefault = TRUE}, \code{value} will be written to
 #'   column (\code{visitUID}) and that column will be set to default.
+#' @param value the value to assign
 #'
 #' @export
 #' @examples
 #' ob <- organizeBirds(bombusObs)
 #' attr(ob, "visitCol")
 #' vis <- visits(ob)
-#' tmp.vis <- createVisits(bombusObs, idCols=c("locality"), timeCols = c("day", "month", "year"))
+#' tmp.vis <- createVisits(bombusObs,
+#'                         idCols=c("locality"),
+#'                         timeCols = c("day", "month", "year"),
+#'                         gridIdCols = "id")
 #' visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 #' vis2 <- visits(ob)
 #' attr(ob, "visitCol")
@@ -336,13 +342,15 @@ visits<-function(x, name=NULL){
     name<-attr(x, "visitCol")
   }
 
-  return(x[[1]]@data[,name])
+  return(st_drop_geometry(x[[1]][,name]))
 }
 
 #' @rdname visits
-#' @param value the value to assign
 #' @export
-'visits<-'<-function(x, name=NULL, useAsDefault = TRUE, value){
+'visits<-'<-function(x,
+                     name=NULL,
+                     useAsDefault = TRUE,
+                     value){
 
   if(is.null(name)){
     name <- "visitUID"
@@ -350,7 +358,7 @@ visits<-function(x, name=NULL){
 
   if(class(x)=="OrganizedBirds"){
 
-    x[[1]]@data[,name] <- value
+    x$spdf[,name] <- value
 
     if(useAsDefault){
       attr(x, "visitCol") <- name
