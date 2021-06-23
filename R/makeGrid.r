@@ -16,7 +16,6 @@
 #'  polygon <- drawPolygon()
 #' }
 #' @importFrom magrittr %>%
-#' @importFrom sp spTransform CRS
 #' @importFrom sf st_transform st_crs st_geometry_type
 drawPolygon <- function(lat = 0,
                         lng = 0,
@@ -103,7 +102,9 @@ makeCircle<-function(spdf, crs=NULL){
                           coords=c("X", "Y"))
       st_crs(mincircSP) <- st_crs(crs)
 
-      circle <- st_buffer(mincircSP, dist = mincirc$rad, quadsegs = 10)
+      circle <- st_buffer(mincircSP,
+                          dist = mincirc$rad,
+                          quadsegs = 10)
       circle <- st_transform(circle,
                              crs = st_crs(4326))
 
@@ -134,7 +135,6 @@ makeCircle<-function(spdf, crs=NULL){
 #' @examples
 #' ob <- organizeBirds(bombusObs)
 #' polygon <- OB2Polygon(ob, shape = "cHull")
-#' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 #' @export
 OB2Polygon <- function(x, shape="bBox") {
 
@@ -154,7 +154,7 @@ OB2Polygon <- function(x, shape="bBox") {
           spdf <- x$spdf
           spdf <- st_as_sf(spdf)
   }
-  
+
   if (is.na(st_crs(spdf)))
     stop("The polygon has no coordinate projection system (CRS) associated")
 
@@ -215,33 +215,33 @@ renameGrid <- function(grid, idcol){
 #' \sQuote{SpatialPolygonDataFrame}
 #' @param gridSize width of the cells in Km. It defines the central assumption
 #' of this package that is the maximum area a person can explore during a day.
-#' Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
-#' Maximum recommended for this package 10 km if there is no reliable definition
-#' for the spatial extent for visits.
+#' Be aware, that the spatial extent of a visit is dependent on the taxonomic
+#' group, and many other variables. Maximum recommended for this package 10 km
+#' if there is no reliable definition for the spatial extent for visits.
 #' @param buffer shall the grid cells include the polygon border? Then \code{TRUE}
 #' (default = \code{FALSE}).
 #' @param hexGrid shall the grid cells be hexagonal? Then \code{TRUE} (default).
 #' Else squared grid cells.
-#' @param offset the offset (position) of the grid (from \code{spsample} methods).
-#' If it is left empty (\code{NULL}, default), then takes default values.
-#' For squared grid cells the default is set to \code{c(0.5,0.5)} ("centric systematic").
-#' For hexagonal grid cells the default is set to \code{c(0,0)}.
-#' @param simplify simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
-#' Complicated polygons (those with much detail) make this function run slower.
-#' @param tol numerical tolerance value for the simplification algorithm. Set to 0.01 as default.
+#' @param offset numeric of length 2 with lower left corner coordinates (x, y)
+#' of the grid. If it is left empty (\code{NULL}, default), then takes default
+#' values \code{st_bbox(x)[c("xmin", "ymin")]}.
+#' @param simplify simplifies the polygon geometry. Complicated polygons (those
+#' with much detail) make this function run slower.
+#' @param tol numerical tolerance value for the simplification algorithm. Set to
+#' 0.01 as default.
 #' @return an object of class \sQuote{sf} with a set of polygons conforming to a
 #' grid of equal-area cells, with geodesic coordinates in WGS84 (ESPG:4326).
-#' @note Depending on the total number of grid cells the computations may take time.
-#' If there are more than 100 cells on any dimension a warning message will be displayed.
-#' Grid cells must be smaller than the sampling area. If the grid cell size is
-#' wider than the polygon on any dimension an error message will be displayed.
+#' @note Depending on the total number of grid cells the computations may take
+#' time. If there are more than 500 cells on any dimension a warning message will
+#' be displayed. Grid cells must be smaller than the sampling area. If the grid
+#' cell size is wider than the polygon on any dimension an error message will be
+#' displayed.
 #' @examples
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
-#' @importFrom sp coordinates proj4string spTransform CRS over
 #' @importFrom sf st_crs as_Spatial st_transform st_as_sf
 #' @export
-makeGrid <- function(polygon,
+makeGrid <- function(poly,
                      gridSize,
                      hexGrid = TRUE,
                      offset = NULL,
@@ -251,35 +251,54 @@ makeGrid <- function(polygon,
 
     gridSizeM <- gridSize * 1000 # in meters
 
-    if (!any(class(polygon) %in% c("sfc","sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+    if (!any(class(poly) %in% c("sfc","sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         stop("Entered polygon is not an sf, SpatialPolygon nor SpatialPolygonsDataFrame")
     }
 
-    if (any(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
-      polygon <- st_as_sf(polygon)
+    if (any(class(poly) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+      poly <- st_as_sf(poly)
     }
     ## error no CRS
-    if (is.na(st_crs(polygon))) {
+    if (is.na(st_crs(poly))) {
         stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
-    polygon <- st_transform(polygon,
-                            crs = st_crs(getUTMproj(polygon)))
+    if(is.null(offset)){
+      offset <- st_bbox(poly)[c("xmin", "ymin")]
+    } else {
+      if(length(offset) != 2|| !all(is.integer(offset)) ||!is.numeric(offset))
+        stop("Offset should be either NULL or numeric of length 2; lower left corner coordinates (x, y) of the grid")
+    }
+
+    poly <- st_transform(poly,
+                         crs = st_crs(getUTMproj(poly)))
+
+    # observe the grid cell and study area polygon get the difference in
+    # longitude/latitude to make the condition
+    dif <- as.numeric(diff(matrix(st_bbox(poly), ncol=2)))
+
+    if (any(gridSizeM >= dif)) {
+      stop("Grid cells must be smaller than the sampling area")
+    }
+    if (any(gridSizeM <= dif/500)) {
+      message("Grid cells are too many (>=500), this may result in very long computation times")
+    }
 
     if(simplify){
-      polygon <- st_simplify(polygon, dTolerance = tol)
-    }
-    
-    if (buffer) {
-      polygon <- st_buffer(polygon, dist = gridSizeM)
+      poly <- st_simplify(poly, dTolerance = tol)
     }
 
-    # polygon <- st_transform(polygon, crs = st_crs(4326))
-    
-    grid <- st_make_grid(polygon, 
-                         cellsize = gridSizeM, 
+    if (buffer) {
+      poly <- st_buffer(poly, dist = gridSizeM)
+    }
+
+    # poly <- st_transform(poly,
+    #                      crs = st_crs(4326))
+
+    grid <- st_make_grid(poly,
+                         cellsize = gridSizeM,
                          square = !hexGrid,
-                         offset = offset, 
+                         offset = offset,
                          what = "polygons")
 
     grid <- st_transform(grid, crs = st_crs(4326))
@@ -327,7 +346,7 @@ makeGrid <- function(polygon,
 # #' @importFrom rlang .data
 # #' @importFrom utils installed.packages
 # #' @export
-# makeDggrid <- function(polygon,
+# makeDggrid <- function(poly,
 #                      gridSize,
 #                      buffer = FALSE,
 #                      topology = "hexagon",
@@ -355,25 +374,25 @@ makeGrid <- function(polygon,
 #                       resround='nearest', topology = topology, aperture = aperture)
 #
 #   # error not a SpatialPolygon
-#   if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+#   if (!(class(poly) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
 #     stop("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame")
 #   }
 #
 #   ## error no CRS
-#   if (is.na(slot(polygon,"proj4string"))) {
+#   if (is.na(slot(poly,"proj4string"))) {
 #     stop("The polygon has no coordinate projection system (CRS) associated")
 #   }
 #
 #   ## simplify if takes too long to make the grid
 #   if (simplify) {
 #     ##TODO use tryCatch()
-#     polygon <- rgeos::gSimplify(polygon, tol = tol)
+#     poly <- rgeos::gSimplify(poly, tol = tol)
 #   }
 #
 #   # Transform to WGS84 pseudo-Mercator
 #   if (buffer) {
 #     # Needs to be projected
-#     polygonProj <- suppressWarnings(spTransform(polygon,
+#     polygonProj <- suppressWarnings(spTransform(poly,
 #                                                 CRSobj = CRS("+init=epsg:3857")) )
 #     polygonBuffer <- rgeos::gBuffer(polygonProj, width = gridSize*1000)
 #   } else {polygonBuffer <- polygon}

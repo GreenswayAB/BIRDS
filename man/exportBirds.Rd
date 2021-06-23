@@ -27,7 +27,7 @@ statistical method should be applied. The function accepts \code{"sum", "median"
 \value{
 an xts time series (if dimension = "temporal"),
 a named vector (if dimension = "temporal" and timeRes = "month"),
-or a SpatialPolygonsDataFrame (if dimension = "spatial")
+or a sf (if dimension = "spatial")
 }
 \description{
 Export single variables from SummarisedBirds objects

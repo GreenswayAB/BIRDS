@@ -8,7 +8,7 @@
 #' The 'BIRDS' packages provides a workflow for reproducable data review, involving
 #' three basic steps: organise data, summarise data, review data.
 #'
-#'
+#' @import sf
 #' @docType package
 #' @name BIRDS
 #' @examples
@@ -33,7 +33,7 @@
 
 #' EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 #' palBW <- leaflet::colorNumeric(c("white", "navyblue"),
-#'          c(0, max(EB@data, na.rm = TRUE)), na.color = "transparent")
+#'          c(0, max(st_drop_geometry(EB), na.rm = TRUE)), na.color = "transparent")
 #' library(sp)
 #' old.par <- par(no.readonly =TRUE)
 #' par(mfrow=c(1,2), mar=c(1,1,1,1))

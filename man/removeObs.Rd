@@ -15,7 +15,7 @@ removeObs(
 }
 \arguments{
 \item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
-Dataframe). See \code{\link{organizeBirds}}}
+data.frame). See \code{\link{organizeBirds}}}
 
 \item{ev}{an object of class \sQuote{data.frame} from exploreVisits.}
 

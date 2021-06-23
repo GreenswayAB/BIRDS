@@ -3,7 +3,7 @@
 #' A function to explore the definition of field visits. Visits are a central concept
 #' in the approach to species observation data used by the BIRDS package. In order to assess if your
 #' definition of visit aligns with your grid size, you must explore the spatial extent of visits.
-#' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial Dataframe).
+#' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial data frame).
 #' See \code{\link{organizeBirds}}.
 #' @param visitCol name of the column for the visits UID.
 #' @param sppCol name of the column for species names.
@@ -52,7 +52,6 @@
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarise n n_distinct sym
-#' @importFrom rgeos gCentroid
 #' @importFrom dbscan dbscan
 #' @importFrom lubridate date day month year ymd
 #' @importFrom geosphere distGeo distm
@@ -64,21 +63,20 @@ exploreVisits <- function(x,
 
   if (class(x) == "OrganizedBirds") {
     spdf<- x$spdf
-    dat <- slot(spdf, "data")
+    dat <- st_drop_geometry(spdf)
   } else {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
   if (is.null(visitCol)){
-    visitCol<-attr(x, "visitCol")
+    visitCol <- attr(x, "visitCol")
   }
-  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",
-                                                 visitCol, "in your organised dataset."))
+
+  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",visitCol, "in your organised dataset."))
 
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
 
-  # dat$date <- date(paste(dat$year, dat$month, dat$day, sep = "-"))
   dat$date <- ymd(paste(dat$year, dat$month, dat$day, sep = "-"))
 
   visitStat <- data.frame("visitUID" = uniqueUID,
@@ -99,7 +97,6 @@ exploreVisits <- function(x,
                           "nOutliers" = NA) # number of observations estimated to be outliers from the clusters
 
   message(paste("Analysing", nUID, "visits..."))
-  # datGBY <- group_by(dat, !!! rlang::syms(visitCol))
   datGBY <- group_by(dat, !! sym(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
@@ -114,28 +111,31 @@ exploreVisits <- function(x,
   ctrList <- lapply(uniqueUID, FUN = function(x){
     wVis <- which(dat[, visitCol] == x)
     spdfTmp <- spdf[wVis, ]
+    spdfTmpTr <- st_transform(spdfTmp,
+                              crs = st_crs(3857) )
 
-    coord <- sf::st_coordinates(spdfTmp)
+    coord <- st_coordinates(spdfTmp) # the unstransformed spdf
+    # coord <- do.call(rbind, st_geometry(spdfTmp)) #coordinates(spdf)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
     nUniqueLoc <- nrow(coordUnique)
 
-    ctr <- gCentroid(spdfTmp) ## still valid if two points
-    centroidX <- ctr@coords[1]
-    centroidY <- ctr@coords[2]
+    ctr <- spdfTmpTr %>%
+            st_union() %>%
+            st_convex_hull() %>%
+            st_centroid() %>%
+            st_transform( 4326 ) %>%
+            st_coordinates()
+
+    centroidX <- ctr[,"X"]
+    centroidY <- ctr[,"Y"]
 
     if (nUniqueLoc > 1) {
-      distances <- distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
-      distM <- distm(spdfTmp, spdfTmp) ## the unstransformed spdf
+      distances <- distGeo(ctr[, c("X", "Y")], coord)
+      distM <- distm(coord, coord) ## the unstransformed spdf
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
-      spdfTmpTr <- suppressWarnings(
-                    sf::as_Spatial(
-                      sf::st_transform(
-                        sf::st_as_sf(spdfTmp),
-                        crs = sf::st_crs(3857)$wkt) )
-                    )
 
       # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
       # this function is very much dependent on the projection
@@ -145,9 +145,9 @@ exploreVisits <- function(x,
       effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
-      # nOutliers  <- length(boxplot.stats(distancesOut)$out) ### TODO think another way to compute this
+
       if(nUniqueLoc >= minPts ){
-        clusters  <- dbscan(sp::coordinates(spdfTmpTr),
+        clusters  <- dbscan(st_coordinates(spdfTmpTr),
                             eps = median(distancesOut),
                             minPts = minPts)
         nOutliers <- sum(clusters$cluster==0)
@@ -167,10 +167,13 @@ exploreVisits <- function(x,
 
     return(c(centroidX, centroidY, effortDiam, medianDist,
            iqrDist, nUniqueLoc, nClusters, nOutliers))
-  } )
+  } ) #end lapply
+
   varsCtr <- c("centroidX", "centroidY","effortDiam", "medianDist","iqrDist",
              "nUniqueLoc", "nClusters", "nOutliers")
-  tmp <- matrix(unlist(ctrList), ncol = length(varsCtr), byrow = TRUE,
+  tmp <- matrix(unlist(ctrList),
+                ncol = length(varsCtr),
+                byrow = TRUE,
                 dimnames = list(uniqueUID, varsCtr))
 
   visitStat[, match(varsCtr, colnames(visitStat))] <- tmp
@@ -188,71 +191,63 @@ exploreVisits <- function(x,
 
 
 #' A function to convert visits into a spatial object
-#' @param x an object of class \sQuote{data.frame} from exploreVistis.
+#' @param x an object of class \sQuote{data.frame} from exploreVisits.
 #' @param xyCols a character vector with the column names for the coordinates.
 #' Default to \code{c("centroidX","centroidY")}
 #' @param dataCRS a character string or numeric with the original
-#' coordinate reference system (CRS). Default to \code{"4326"}
+#' coordinate reference system (CRS). Default to \code{4326}
 #' @param radius either a character string with the name of the column
 #' containing the radius of the visit circle, or a numeric vector with its value
 #' in meters. Default to \code{"medianDist"}
 #'
-#' @return a list with a \code{SpatialPointsDataFrame} (the centroids) and a
-#' \code{ "SpatialPolygonsDataFrame"} (the effort circles). Note that when plotted
+#' @return a list with the centroids and a the effort circles. Note that when plotted
 #' directly effort circles may not look like circles in the returned
 #' (Pseudo-Mercator) projection.
 #'
 #' @examples
 #' # create a visit-based data object from the original observation-based data
 #' library(sp)
-#' OB<-organizeBirds(bombusObsShort)
+#' OB <- organizeBirds(bombusObsShort)
 #' visitStats<-exploreVisits(OB)
 #' spV<-spatialVisits(visitStats)
-#' plot(spV$effort)
+#' plot(spV$effort$geometry)
 #' @export
 #' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
 spatialVisits <- function(x,
                           xyCols=c("centroidX","centroidY"),
                           dataCRS="4326",
                           radius="medianDist"){
-  crswkt <- sf::st_crs(as.numeric(dataCRS))$wkt
+  crs <- st_crs(as.numeric(dataCRS))
 
   if (class(x) == "data.frame") {
-    sp::coordinates(x) <- xyCols
-    sp::proj4string(x) <- CRS(crswkt) ## because I know where it comes from
+    x <- st_as_sf(x, coords = xyCols)
+    st_crs(x) <- st_crs(crs) ## because I know where it comes from
   } else {
     stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
   }
 
   if(radius=="" | is.na(radius) | is.null(radius)){
-    radiusVal<- rep(1, nrow(x@data))
-  } else if(radius %in% colnames(x@data)){
-    radiusVal<-x@data[,radius]
+    radiusVal <- rep(1, nrow(x))
+  } else if(radius %in% colnames(x)){
+    radiusVal <- st_drop_geometry(x[,radius])
     ## convert meters to degrees?
-  } else if(is.numeric(radius) & length(radius)==nrow(x@data)){
-    radiusVal<-radius
+  } else if(is.numeric(radius) & length(radius) == nrow(x)){
+    radiusVal <- radius
   } else {
     stop("The parameter 'radius' needs to be one od the column names or a numeric
          vector of length equal to the number of visits")
   }
 
-  utmCRS <- suppressWarnings(CRS(getUTMproj(x)))
-  # xTrans <- spTransform(x, CRSobj = utmCRS)
-  xTrans <- sf::as_Spatial(
-              sf::st_transform(
-                sf::st_as_sf(x),
-                crs = sf::st_crs(utmCRS)$wkt) )
+  utmCRS <- st_crs(getUTMproj(x))
+  xTrans <- st_transform(x,
+                         crs = utmCRS)
 
-  buff <- rgeos::gBuffer(xTrans,
-                         byid = TRUE,
-                         id = x@data$visitUID,
-                         width = radiusVal)
+  buff <- st_buffer(xTrans,
+                    dist = as.integer(unlist(radiusVal)))
 
-  # buff <- spTransform(buff, CRSobj = CRS(crswkt))
-  buff <- sf::as_Spatial(
-            sf::st_transform(
-              sf::st_as_sf(buff),
-              crs = crswkt) )
-  return(list("points"=x, "effort"=buff))
+  buff <- st_transform(buff,
+                       crs = crs)
+
+  return(list("points" = x, "effort"= buff))
 
 }

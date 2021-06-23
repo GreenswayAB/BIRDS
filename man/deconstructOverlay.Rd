@@ -2,7 +2,7 @@
 % Please edit documentation in R/exportBirds.R
 \name{deconstructOverlay}
 \alias{deconstructOverlay}
-\title{Decosntruction of the overlay}
+\title{Deconstruction of the overlay}
 \usage{
 deconstructOverlay(overlay, visitCol)
 }
@@ -16,6 +16,6 @@ a long data.frame
 }
 \description{
 This takes the overlay element of a summarisedBirds, reconstruct it as a
-long data.frame and removes duplicate visits in other gridcells.
+long data.frame and removes duplicate visits in other grid cells.
 }
 \keyword{internal}

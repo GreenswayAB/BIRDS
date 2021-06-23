@@ -16,4 +16,3 @@ The a \code{vector} with list elements IDs.
 This function returns the ID of those cells that have some data. It is used to
 speed up other functions
 }
-\keyword{internal}

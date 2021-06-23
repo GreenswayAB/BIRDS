@@ -5,18 +5,20 @@
 \alias{overlayBirds.OrganizedBirds}
 \title{Overlay BIRDS object and grid}
 \usage{
-overlayBirds(x, grid, spillOver = NULL)
+overlayBirds(x, grid, spillOver = NULL, cleanGrid = TRUE)
 
-\method{overlayBirds}{OrganizedBirds}(x, grid, spillOver = NULL)
+\method{overlayBirds}{OrganizedBirds}(x, grid, spillOver = NULL, cleanGrid = TRUE)
 }
 \arguments{
 \item{x}{An OrganizedBirds object}
 
-\item{grid}{A SpatialPolygonsDataFrame object of the grid over the study area}
+\item{grid}{A sf or SpatialPolygonsDataFrame object of the grid over the study area}
 
 \item{spillOver}{Specifies if the function should search for observations
 with the same visitUID over several grid cell, and what to do with them.
- Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.}
+It accepts \code{c(NULL, "unique", "duplicate")}. Default NULL.}
+
+\item{cleanGrid}{logical. Whether to remove all data from the grid.}
 }
 \value{
 The output is a OverlaidBirds-class object, which is a list
@@ -24,9 +26,8 @@ The output is a OverlaidBirds-class object, which is a list
   \describe{
     \item{\code{observationsInGrid}}{Is
       basically the data in the OrganizedBirds object split by each grid cell
-      (\emph{n.b.} the use of \code{spillOver = TRUE} discussed under "Usage")}
-    \item{\code{grid}}{The SpatialPolygonsDataFrame from the input, but cleared
-      of data to not waste unnecessary memory}
+      (\emph{n.b.} the use of \code{spillOver} discussed under "Usage")}
+    \item{\code{grid}}{The sf from the input, optionally cleared of data }
    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
   }
 }
@@ -50,12 +51,12 @@ there is a tie); or if \code{(spillOver = "duplicate")} duplicates all
 observations with same visitUID across all grid cells containing at least one
 observation with that visitUID.
 
-The later approach is usefull when the amount of observations spilled over
+The later approach is useful when the amount of observations spilled over
 neighbouring cells is minimal and information over the spatial extent of the
 sampling effort is more important than sample independence.
 }
 \examples{
 ob <- organizeBirds(bombusObs)
-grid <- makeGrid(gotaland, gridSize = 10)
+grid <- makeGrid(gotaland, 10)
 ovB <- overlayBirds(ob, grid)
 }

@@ -10,11 +10,27 @@
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 listSpecies<-function(x){
   if (class(x) == "OrganizedBirds") {
-    allSpecies<- sort(unique(as.character(x$spdf$scientificName)))
+    allSpecies <- sort(unique(as.character(x$spdf$scientificName)))
   } else if (class(x) == "SummarizedBirds") {
-    overList<-x$overlaid
-    allSpecies<-sort( unique( unlist(
-      lapply(overList, FUN=function(x)return(x$scientificName)))))
+    overList <- x$overlaid
+    allSpecies <- sort(
+                    as.character(
+                      na.omit(
+                        unique(
+                          unlist(
+                            lapply(overList,
+                                   function(x){
+                                     res <- ifelse(!is.na(x),
+                                                   x$scientificName,
+                                                   NA)
+                                     return(res)
+                                   }
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
   } else {
     stop("The object 'x' must be of class OrganizedBirds or SummarizedBirds.")
   }
@@ -34,7 +50,7 @@ listSpecies<-function(x){
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)
 #' allSpp <- listSpecies(SB)
-#' focal<-"Bombus campestris"
+#' focal <- "Bombus campestris"
 #' focalSpSummary(SB, focalSp=focal)
 #' }
 #' @export
@@ -46,33 +62,42 @@ focalSpSummary <- function(x, focalSp=NULL){
   if (is.null(focalSp)) {
     stop("Please, define the focal species to search for.")
   }
-  visitCol<-attr(x, "visitCol")
+  visitCol <- attr(x, "visitCol")
 
   allSpecies <- listSpecies(x)
 
   wFocal <- match(focalSp, allSpecies)
 
-  wOverFocal <- unname(unlist(lapply(x$overlaid,
-                                     FUN=function(x) {
-                                       return(focalSp %in% x$scientificName)
-                                     }
-                                     )
-                              )
-                       )
+  wOverFocal <- unname(
+                  unlist(
+                    lapply(x$overlaid,
+                           function(x) {
+                             res <- ifelse(length(x)>1,
+                                           focalSp %in% x$scientificName,
+                                           FALSE)
+                             return(res)
+                             }
+                           )
+                    )
+                  )
 
   if(sum(wOverFocal) == 0) stop("The focal species was not found in the data set.")
-  # overFocal <- lapply(x$overlaid, FUN=function(x) return(x[x$scientificName==focalSp,]))
   overFocal <- x$overlaid[wOverFocal]
 
 
   ## if there is a column for presence then remove absences
   if("presence" %in% colnames(overFocal[[1]]) ) {
-    overFocal <- lapply(overFocal, FUN=function(x){
-      wNotPres <- which(x$presence != 1 | is.na(x$presence))
-      if(length(wNotPres)>1){
-        return(x[-wNotPres,])
-      } else { return(x) }
-    })
+    overFocal <- lapply(overFocal,
+                        function(x){
+                          wNotPres <- which(x$presence != 1 | is.na(x$presence))
+                          if(length(wNotPres)>1){
+                            res <- x[-wNotPres,]
+                          } else {
+                            res <- x
+                          }
+                          return(res)
+                        }
+                      )
   }
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
@@ -88,15 +113,50 @@ focalSpSummary <- function(x, focalSp=NULL){
   # yearsFocal <- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"year"]) )))
   # monthsFocal <- sort(unique(unlist(lapply(overFocal[wNonEmptyFocal], FUN=function(x) x[,"month"]) )))
   nCells <- sum(wOverFocal)
-  nObs <- sum(unlist(lapply(overFocal,
-                            function(x) return(sum(x$scientificName == focalSp))) ))
-  visitsFocal <- unique(unname(unlist(lapply(overFocal,
-                                             FUN=function(x) x[x$scientificName == focalSp,visitCol]) )))
+  nObs <- sum(
+            unlist(
+              lapply(overFocal,
+                     function(x){
+                       res <- sum(x$scientificName == focalSp)
+                       return(res)
+                     }
+              )
+            )
+          )
+  visitsFocal <-  unique(
+                    unname(
+                      unlist(
+                        lapply(overFocal,
+                              function(x){
+                                x[x$scientificName == focalSp,visitCol]
+                              }
+                        )
+                      )
+                    )
+                  )
   nVis <- length(visitsFocal)
-  yearsFocal <- sort(unique(unlist(lapply(overFocal,
-                                          FUN=function(x) x[x$scientificName == focalSp,"year"]) )))
-  monthsFocal <- sort(unique(unlist(lapply(overFocal,
-                                           FUN=function(x) x[x$scientificName == focalSp,"month"]) )))
+  yearsFocal <- sort(
+                  unique(
+                    unlist(
+                      lapply(overFocal,
+                             function(x){
+                               x[x$scientificName == focalSp,"year"]
+                             }
+                      )
+                    )
+                  )
+                )
+  monthsFocal <-  sort(
+                    unique(
+                      unlist(
+                        lapply(overFocal,
+                              function(x){
+                                x[x$scientificName == focalSp,"month"]
+                              }
+                        )
+                      )
+                    )
+                  )
 
   return(data.frame("species"=focalSp,
                     "nCells"=nCells,
@@ -117,8 +177,8 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param focalSp the focal spp to look for.
 #' @param long whether the map should be long or wide.
-#' @param polygon (optional) an object of class \sQuote{SpatialPolygon} or
-#' \sQuote{SpatialPolygonDataFrame}. (Default is \code{NULL})
+#' @param polygon (optional) an object of class \sQuote{sf},
+#' \sQuote{SpatialPolygon} or \sQuote{SpatialPolygonDataFrame}. (Default is \code{NULL})
 #' @param colVis color to plot visited gird cells
 #' @param colPres color to plot grid cells where species is present
 #' @param ... further plot parameters
@@ -135,17 +195,21 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' }
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
-                          colVis = "grey", colPres = "red", ...){
+focalSpReport <- function(x,
+                          focalSp = NULL,
+                          long = TRUE,
+                          polygon = NULL,
+                          colVis = "grey",
+                          colPres = "red", ...){
   if (class(x) != "SummarizedBirds") {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
     stop("Please, define the focal species to search for.")
   }
-  visitCol<-attr(x, "visitCol")
+  visitCol <- attr(x, "visitCol")
   # wNonEmpty<-unname(which(unlist(lapply(x$overlaid, nrow))>0))
-  wNonEmpty<-attr(x, "nonEmptyGridCells")
+  wNonEmpty <- attr(x, "nonEmptyGridCells")
 
   allSpecies <- listSpecies(x)
 
@@ -153,8 +217,18 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
   if(!(focalSp %in% allSpecies)) stop(paste0("The focal species ", focalSp,
                                              " was not found among the species names in the data set."))
   # overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
-  wOverFocal <- unname(unlist(lapply(x$overlaid,
-                                     FUN=function(x) return(focalSp %in% x$scientificName))))
+  wOverFocal <- unname(
+                  unlist(
+                    lapply(x$overlaid,
+                           function(x){
+                             res <- ifelse(length(x)>1,
+                                           focalSp %in% x$scientificName,
+                                           FALSE)
+                             return(res)
+                           }
+                          )
+                  )
+                )
   overFocal <- x$overlaid[wOverFocal]
 
   yearsAll <- sort(unique(lubridate::year(x$temporal)))
@@ -163,54 +237,84 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
   yearMin <- min(yearsAll)
 
   wNonEmptyFocal <- wOverFocal #unname(which(unlist(lapply(overFocal, nrow))>0))
-  nObs <- sum(unlist(lapply(overFocal,
-                            function(x) return(sum(x$scientificName == focalSp))) ))
-  visitsFocal <- unique(unname(unlist(lapply(overFocal,
-                                      FUN=function(x) x[x$scientificName == focalSp, visitCol])
-                                      )))
-  nVis <- length(visitsFocal)
-  yearsFocal <- unname(unlist(lapply(overFocal,
-                              FUN=function(x) x[x$scientificName == focalSp,"year"]) ))
-  yearsFocalTbl <- table( factor(yearsFocal,
-                             levels = yearsAll)
+  nObs <- sum(
+            unlist(
+              lapply(overFocal,
+                     function(x){
+                       return(sum(x$scientificName == focalSp))
+                     }
+              )
+            )
+          )
+  visitsFocal <-  unique(
+                    unname(
+                      unlist(
+                        lapply(overFocal,
+                               function(x) {
+                                 x[x$scientificName == focalSp, visitCol]
+                               }
                         )
+                      )
+                    )
+                  )
+  nVis <- length(visitsFocal)
+  yearsFocal <- unname(
+                  unlist(
+                    lapply(overFocal,
+                           function(x){
+                             x[x$scientificName == focalSp,"year"]
+                           }
+                    )
+                  )
+                )
+  yearsFocalTbl <- table( factor(yearsFocal,
+                             levels = yearsAll) )
 
-  monthsFocal <- unname(unlist(lapply(overFocal,
-                                      FUN=function(x) x[x$scientificName == focalSp,"month"]) ))
+  monthsFocal <-  unname(
+                    unlist(
+                      lapply(overFocal,
+                             function(x){
+                               x[x$scientificName == focalSp,"month"]
+                             }
+                      )
+                    )
+                  )
   monthsFocalTbl <- table( factor(monthsFocal,
                                   levels=1:12,
-                                  labels = month.abb[1:12])
-                           )
+                                  labels = month.abb[1:12]) )
 
   reportStrg <- paste0("Number of observations: ", nObs)
 
   ### check the polygon
   if(!is.null(polygon)){
-    if (!(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
-      warning("Entered polygon is not a SpatialPolygon nor SpatialPolygonsDataFrame.")
+    if (!any(class(polygon) %in% c("sf", "sfc","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+      warning("Entered polygon is not a sf, SpatialPolygon nor SpatialPolygonsDataFrame.")
       polygon<-NULL
     }else{
+      if (!any(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+        polygon <- st_as_sf(polygon)
+      }
+      if (!any(st_geometry_type(polygon) %in% c("POLYGON", "MULTIPOLYGON"))) {
+        polygon <- polygon[which(st_geometry_type(polygon) %in% c("POLYGON", "MULTIPOLYGON")),]
+      }
       ## error no CRS
-      if (is.na(proj4string(polygon))) {
+      if (is.na(st_crs(polygon))) {
         warning("The polygon has no coordinate projection system (CRS) associated")
-        polygon<-NULL
+        polygon <- NULL
       } else {
         # Transform to SB$spatial projection
-        # polygon <- spTransform(polygon, CRSobj = slot(x$spatial, "proj4string"))
-        polygon <- sf::as_Spatial(
-                    sf::st_transform(
-                      sf::st_as_sf(polygon),
-                      crs = sf::st_crs(slot(x$spatial, "proj4string"))$wkt) )
+        polygon <- st_transform(polygon,
+                                crs = st_crs(x$spatial) )
       }
     }
   }
 
   oldpar <- par(no.readonly =TRUE)
-  on.exit(par(oldpar))
+  on.exit(suppressWarnings(par(oldpar)))
   layout(matrix(c(1,2,1,3), nrow = 2, byrow = long))
   par(mar=c(1,1,1,1))
-  plot(x$spatial[wNonEmpty,], col = colVis, border = NA, ...)
-  plot(x$spatial[wNonEmptyFocal,], col = colPres, border = NA, add=TRUE)
+  plot(x$spatial$geometry[wNonEmpty], col = colVis, border = NA, ...)
+  plot(x$spatial$geometry[wNonEmptyFocal], col = colPres, border = NA, add=TRUE)
   if(!is.null(polygon)) plot(polygon, col=NA, border=1, lwd=2, add=TRUE)
   mtext(focalSp, side=3, font = 3, line = -.5)
   mtext(reportStrg, side=3, font = 1, line = -1.5, cex = .8)
@@ -220,6 +324,7 @@ focalSpReport <- function(x, focalSp=NULL, long=TRUE, polygon = NULL,
   barplot(yearsFocalTbl, ylab = "n. visits", las=2)
   par(mar=c(4,4,1,1))
   barplot(monthsFocalTbl, ylab = "n. visits", las=2)
+
 }
 
 
@@ -257,13 +362,7 @@ speciesSummary <- function(x){
                   return(fsp)
                 }, simplify = FALSE)
   res <- do.call(rbind, tmp)
-  # res <- rbind(res, as.data.frame(tmp))
   rownames(res) <- NULL
-
-  # for(s in allSpecies){
-  #   res<-rbind(res, focalSpSummary(x, focalSp = s))
-  #   message(s,"\n")
-  # }
 
   return(res)
 }

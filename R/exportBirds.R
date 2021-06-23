@@ -1,8 +1,8 @@
 
-#' Decosntruction of the overlay
+#' Deconstruction of the overlay
 #'
 #' This takes the overlay element of a summarisedBirds, reconstruct it as a
-#' long data.frame and removes duplicate visits in other gridcells.
+#' long data.frame and removes duplicate visits in other grid cells.
 #'
 #' @param overlay A list with an element by grid cell
 #' @param visitCol A character string specifying the columns that identify a visit.
@@ -11,23 +11,30 @@
 #' @keywords internal
 deconstructOverlay <- function(overlay, visitCol){
 
-  #Add a grid id to every enlement (grid) in the overlay-list
-  for(i in 1:length(overlay)){
-    if(nrow(overlay[[i]])==0){
-      overlay[[i]]$grid <- integer(0)
-    }else{
+  wNonEmpty <- whichNonEmpty(overlay)
+
+  #Add a grid id to every element (grid) in the overlay-list
+  for(i in seq(length(overlay))){
+    # if(all(is.na(overlay[[i]]))){
+    #   overlay[[i]]$grid <- integer(0)
+    # }else{
+    #   overlay[[i]]$grid <- i
+    # }
+    if(!all(is.na(overlay[[i]]))){
       overlay[[i]]$grid <- i
     }
   }
 
+  overlay <- overlay[wNonEmpty]
+
   #Deconstruct the list
   overlay <- data.frame(data.table::rbindlist(overlay))
   #Result DF
-  res <- overlay[,]
+  res <- overlay
   #A to be array with visits where spillover has been removed from.
   visitList <- integer(0)
 
-  for(r in 1:nrow(overlay)){
+  for(r in seq(nrow(overlay))){
     visit <- overlay[r,visitCol]
     if(any(visit==visitList)){
       #If the visit has been removed from spillovers
@@ -39,7 +46,6 @@ deconstructOverlay <- function(overlay, visitCol){
     res <- res[!(res[,visitCol] == visit & res[,"grid"]!=grid),]
   }
 
-  res <-res
   cols <- c("scientificName", "year", "month", "day", visitCol)
 
   return(res[,cols])
@@ -49,7 +55,7 @@ deconstructOverlay <- function(overlay, visitCol){
 #' @importFrom rlang .data
 exportSpatial <- function(sb, timeRes, variable, method){
   spatial <- sb$spatial
-  resRowNames <- rownames(spatial@data)
+  resRowNames <- rownames(spatial)
   singleGrid <- ifelse(length(resRowNames)==1, TRUE, FALSE)
   yearsAll <- as.numeric(dimnames(sb$spatioTemporal)[[2]])
   nyears <- length(yearsAll)
@@ -59,35 +65,38 @@ exportSpatial <- function(sb, timeRes, variable, method){
   if(variable %in% c("nObs", "nVis","nSpp","nDays", "nYears")){
     if (is.null(timeRes)){
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-      tmp<-data.frame(spatial@data[,variable])
+      tmp<-st_drop_geometry(spatial)[,variable]
       colnames(tmp)<-variable
-      spatial@data<-tmp
+      spatial<-st_as_sf(cbind(tmp, st_geometry(spatial)))
     } else if(timeRes == "yearly"){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       tmp<-data.frame(sb$spatioTemporal[,,13, variable])## Already added accordingly
       colnames(tmp)<-if(!singleGrid) yearsAll else variable
-      spatial@data <- tmp
+      spatial<-st_as_sf(cbind(tmp, st_geometry(spatial)))
 
     } else if(timeRes == "monthly"){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
       dat <- sb$spatioTemporal[,, 1:12, variable]
-      spatial@data <- data.frame(matrix(NA, nrow=length(resRowNames), ncol=nyears*12))
-      colnames(spatial@data) <- paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12))
+      dftmp <- data.frame(matrix(NA, nrow=length(resRowNames), ncol=nyears*12))
+      colnames(dftmp) <- paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12))
+      spatial <- st_as_sf(cbind(dftmp, st_geometry(spatial)))
 
       for(i in 1:nyears){
         start <- (i - 1) * 12 + 1
         stop <- i * 12
-        spatial@data[,start:stop] <- (if(!singleGrid) {
-                                                        data.frame(dat[,i,])
-                                                      } else {
-                                                        if(nyears==1)
-                                                          data.frame(dat)
-                                                        else
-                                                          data.frame(dat[i,])
-                                                      })[[1]]
-      }
+        if(!singleGrid){
+          tmp <- data.frame(dat[,i,])
+        } else {
+          if(nyears==1) {
+            tmp <- data.frame(dat)
+          } else {
+            tmp <- data.frame(dat[i,])
+          }
+        }
+        spatial[,start:stop] <- tmp[[1]]
+      } #end for loop
 
     } else if(timeRes == "month"){
       sumDim<-if (singleGrid) 2 else c(1,3)
@@ -103,8 +112,11 @@ exportSpatial <- function(sb, timeRes, variable, method){
         }
       }
 
-      spatial@data <- data.frame("V1"=round(tmp, 2))
-      colnames(spatial@data) <- if(!singleGrid) month.abb else variable
+      dfs <- data.frame("V1"=round(tmp, 2))
+      colnames(dfs) <- if(!singleGrid) month.abb else variable
+
+      spatial <- st_as_sf(cbind(dfs, st_geometry(spatial)))
+
     }else{
       stop("Wrong input for variable timeRes. Try NULL, \"Yearly\", \"Monthly\" or \"Month\" for dimension = \"Spatial\".")
     }
@@ -113,9 +125,9 @@ exportSpatial <- function(sb, timeRes, variable, method){
   if(variable == "avgSll"){
     if (is.null(timeRes)){
       if (method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
-      tmp<-data.frame(spatial@data[,variable])
+      tmp<-st_drop_geometry(spatial)[,variable]
       colnames(tmp)<-variable
-      spatial@data<-tmp
+      spatial <- st_as_sf(cbind(tmp, st_geometry(spatial)))
     } else {
       if (timeRes %in% c("yearly", "monthly") & method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
       if (timeRes == "month" & !(method %in% c("median","mean"))) stop("This combination of variable and time resolution only accepts 'median' or 'mean' as summary method")
@@ -179,7 +191,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
                             "monthly"= paste0(rep(yearsAll, each=12), "-", sprintf("%02d", 1:12)),
                             "month"  = month.abb)
 
-      spatial@data<-tmp
+      spatial <- st_as_sf(cbind(tmp, st_geometry(spatial)))
     }
   }
   return(spatial)
@@ -329,7 +341,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
     ## actually this doesnt require the deconstrucOverlay from the begining
     if(method != "sum" && timeRes != "month")  stop("This combination of variable and time resolution only accepts 'sum' as summary method")
 
-    resRowNames <- rownames(sb$spatial@data)
+    resRowNames <- rownames(sb$spatial)
     singleGrid <- ifelse(length(resRowNames) == 1, TRUE, FALSE)
 
     if (timeRes == c("yearly")){
@@ -366,10 +378,12 @@ exportTemporal <- function(sb, timeRes, variable, method){
 
       all.Days <- as.character(sort(as.Date(unique(unlist(daygrid)))))
       resVar <- unlist(
-        lapply(all.Days, FUN=function(x){
-          sum(stringr::str_count(dayGridP, x), na.rm = TRUE)
-        })
-      )
+                  lapply(all.Days,
+                         function(x){
+                           sum(stringr::str_count(dayGridP, x), na.rm = TRUE)
+                         }
+                  )
+                )
       names(resVar) <- all.Days
     }
 
@@ -407,7 +421,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #' please refer to the vignette "Technical details".
 #' @return an xts time series (if dimension = "temporal"),
 #' a named vector (if dimension = "temporal" and timeRes = "month"),
-#' or a SpatialPolygonsDataFrame (if dimension = "spatial")
+#' or a sf (if dimension = "spatial")
 #' @export
 #'
 #' @examples

@@ -26,7 +26,7 @@ identify a visit.  If timeCols=NULL then time is ignored to create a visit ID.
 Default is the Darwin Core variables \code{c("day", "month", "year")}.}
 
 \item{grid}{Either \code{NULL} to be ignored or an object of class
-\code{sf}, \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining 
+\code{sf}, \code{SpatialPolygons} or \code{SpatialPolygonsDataFrame} defining
 the maximum extent of visits effort. Then x must be an object of class sf}
 }
 \value{
@@ -35,8 +35,8 @@ A vector of the same length as the number of rows as the data.frame
   columns.
 }
 \description{
-Takes a dataframe and a vector of column names and classifies each row of the
-dataframe based on the combination of values in the specified columns.
+Takes a data.frame and a vector of column names and classifies each row of the
+data.frame based on the combination of values in the specified columns.
 }
 \details{
 What a visit should be is not always clearly defined and extractable in a

@@ -7,7 +7,7 @@
 simplifySpp(df, sppCol)
 }
 \arguments{
-\item{df}{A dataframe with at least the column specified in sppCol}
+\item{df}{A data.frame with at least the column specified in sppCol}
 
 \item{sppCol}{A character vector with the column names for the species names.}
 }
