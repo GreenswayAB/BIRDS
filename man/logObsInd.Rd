@@ -2,7 +2,7 @@
 % Please edit documentation in R/observationIndex.R
 \name{logObsInd}
 \alias{logObsInd}
-\title{The actual observation idenx function}
+\title{The actual observation index function}
 \usage{
 logObsInd(focal, group, fs.rm = TRUE, norm = TRUE)
 }
@@ -14,7 +14,7 @@ logObsInd(focal, group, fs.rm = TRUE, norm = TRUE)
 \item{fs.rm}{if TRUE, assumes that the observations for the focal species are
 included in 'group' and will remove them}
 
-\item{norm}{if TRUE, the result is nomalized to a 0-1 range}
+\item{norm}{if TRUE, the result is normalized to a 0-1 range}
 }
 \value{
 a positive observation index

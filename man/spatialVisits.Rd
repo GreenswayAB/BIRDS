@@ -33,12 +33,14 @@ directly effort circles may not look like circles in the returned
 A function to convert visits into a spatial object
 }
 \examples{
+\donttest{
 # create a visit-based data object from the original observation-based data
-library(sp)
+library(sf)
 OB <- organizeBirds(bombusObsShort)
 visitStats<-exploreVisits(OB)
 spV<-spatialVisits(visitStats)
 plot(spV$effort$geometry)
+}
 }
 \seealso{
 \code{\link{exploreVisits}}, \code{\link{organiseBirds}}

@@ -205,12 +205,14 @@ exploreVisits <- function(x,
 #' (Pseudo-Mercator) projection.
 #'
 #' @examples
+#' \donttest{
 #' # create a visit-based data object from the original observation-based data
-#' library(sp)
+#' library(sf)
 #' OB <- organizeBirds(bombusObsShort)
 #' visitStats<-exploreVisits(OB)
 #' spV<-spatialVisits(visitStats)
 #' plot(spV$effort$geometry)
+#' }
 #' @export
 #' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
 spatialVisits <- function(x,
