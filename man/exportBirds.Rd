@@ -12,7 +12,7 @@ exportBirds(x, dimension, timeRes, variable, method = "sum")
 \item{dimension}{a character string indicating if the export should be
 \code{"spatial"} or \code{"temporal"}}
 
-\item{timeRes}{A character string indicating what tempral resolution should
+\item{timeRes}{A character string indicating what temporal resolution should
 be used. For Spatial export the function accepts \code{NULL, "yearly", "monthly"}
 or \code{"month"}. For temporal export the function accepts \code{"yearly",
 "monthly", "daily"} or \code{"month"}.}

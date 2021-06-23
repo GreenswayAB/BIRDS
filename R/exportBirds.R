@@ -27,7 +27,7 @@ deconstructOverlay <- function(overlay, visitCol){
 
   overlay <- overlay[wNonEmpty]
 
-  #Deconstruct the list
+  #De-construct the list
   overlay <- data.frame(data.table::rbindlist(overlay))
   #Result DF
   res <- overlay
@@ -65,12 +65,12 @@ exportSpatial <- function(sb, timeRes, variable, method){
   if(variable %in% c("nObs", "nVis","nSpp","nDays", "nYears")){
     if (is.null(timeRes)){
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-      tmp<-st_drop_geometry(spatial)[,variable]
-      colnames(tmp)<-variable
-      spatial<-st_as_sf(cbind(tmp, st_geometry(spatial)))
+      wCol<-findCols(variable, spatial, value = FALSE)
+      spatial<-spatial[,wCol]
     } else if(timeRes == "yearly"){
       if(variable == "nYears") stop("This combination of variable and time resolution is not defined because it has no meaning")
       if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+      wCol<-findCols(variable, spatial, value = FALSE)
       tmp<-data.frame(sb$spatioTemporal[,,13, variable])## Already added accordingly
       colnames(tmp)<-if(!singleGrid) yearsAll else variable
       spatial<-st_as_sf(cbind(tmp, st_geometry(spatial)))
@@ -101,16 +101,16 @@ exportSpatial <- function(sb, timeRes, variable, method){
     } else if(timeRes == "month"){
       sumDim<-if (singleGrid) 2 else c(1,3)
       tmp <- if(nyears==1){
-        sb$spatioTemporal[,,1:12, "nObs"]
-      } else {
-        if(variable == "nYears"){
-          if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
-          apply(sb$spatioTemporal[,,1:12, "nObs"], sumDim, function(x) sum(!is.na(x) & x!=0))
-        } else {
-          if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
-          apply(sb$spatioTemporal[,,1:12, variable], sumDim, method)
-        }
-      }
+              sb$spatioTemporal[,,1:12, "nObs"]
+            } else {
+              if(variable == "nYears"){
+                if (method != "sum") stop("This combination of variable and time resolution only accepts 'sum' as summary method")
+                apply(sb$spatioTemporal[,,1:12, "nObs"], sumDim, function(x) sum(!is.na(x) & x!=0))
+              } else {
+                if (!(method %in% c("sum", "median", "mean"))) stop("This combination of variable and time resolution only accepts 'sum', 'mean' or 'median' as summary method")
+                apply(sb$spatioTemporal[,,1:12, variable], sumDim, method)
+              }
+            }
 
       dfs <- data.frame("V1"=round(tmp, 2))
       colnames(dfs) <- if(!singleGrid) month.abb else variable
@@ -125,14 +125,13 @@ exportSpatial <- function(sb, timeRes, variable, method){
   if(variable == "avgSll"){
     if (is.null(timeRes)){
       if (method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
-      tmp<-st_drop_geometry(spatial)[,variable]
-      colnames(tmp)<-variable
-      spatial <- st_as_sf(cbind(tmp, st_geometry(spatial)))
+      wCol<-findCols(variable, spatial, value = FALSE)
+      spatial<-spatial[,wCol]
     } else {
       if (timeRes %in% c("yearly", "monthly") & method != "median") stop("This combination of variable and time resolution only accepts 'median' as summary method")
       if (timeRes == "month" & !(method %in% c("median","mean"))) stop("This combination of variable and time resolution only accepts 'median' or 'mean' as summary method")
 
-      wNonEmpty <- unlist(lapply(sb$overlaid, function(x) nrow(x)>0))
+      wNonEmpty <- whichNonEmpty(sb$overlaid)
 
       ncolumns <- switch(timeRes,
                          "yearly" = length(yearsAll),
@@ -405,7 +404,7 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #' @param x a SummarizedBirds-object
 #' @param dimension a character string indicating if the export should be
 #'   \code{"spatial"} or \code{"temporal"}
-#' @param timeRes A character string indicating what tempral resolution should
+#' @param timeRes A character string indicating what temporal resolution should
 #'   be used. For Spatial export the function accepts \code{NULL, "yearly", "monthly"}
 #'   or \code{"month"}. For temporal export the function accepts \code{"yearly",
 #'   "monthly", "daily"} or \code{"month"}.

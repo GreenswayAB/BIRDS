@@ -88,7 +88,7 @@ makeCircle<-function(spdf, crs=NULL){
                          crs = st_crs(crs))
 
 
-    if (!is.na(	st_is_longlat(x)) && st_is_longlat(spdf) )
+    if (!is.na(	st_is_longlat(spdf)) && st_is_longlat(spdf) )
       warning("Spatial object is not projected; this function expects planar coordinates")
 
     coord <- do.call(rbind, st_geometry(spdf)) #coordinates(spdf)
@@ -158,36 +158,37 @@ OB2Polygon <- function(x, shape="bBox") {
   if (is.na(st_crs(spdf)))
     stop("The polygon has no coordinate projection system (CRS) associated")
 
-   crs <- st_crs(getUTMproj(spdf))
+  crs <- st_crs(getUTMproj(spdf))
 
-    spdf <- st_transform(spdf,
-                         crs = crs)
+  spdf <- st_transform(spdf,
+                       crs = crs)
 
-    coord <- do.call(rbind, st_geometry(spdf))
-    coordPaste <- apply(coord, 1, paste0, collapse = ",")
-    coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
+  coord <- do.call(rbind, st_geometry(spdf))
+  coordPaste <- apply(coord, 1, paste0, collapse = ",")
+  coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
-    if (shape %in% c("bBox", "bounding box")){
-        polygon <- st_as_sfc(st_bbox(spdf))
-    }
-    if (shape %in% c("cHull", "convex hull")) {
-        if (nrow(coordUnique) > 2) {
-            polygon <- spdf %>%
-              dplyr::group_by() %>%
-              dplyr::summarise() %>%
-              st_convex_hull()
-        } else {
-            stop("More than two unique set of coordinates is needed to make a
-                 convex hull polygon.")
-        }
-    }
+  if (shape %in% c("bBox", "bounding box")){
+      polygon <- st_as_sfc(st_bbox(spdf))
+  }
+  if (shape %in% c("cHull", "convex hull")) {
+      if (nrow(coordUnique) > 2) {
+          polygon <- spdf %>%
+            st_union() %>%
+            # dplyr::group_by() %>%
+            # dplyr::summarise() %>%
+            st_convex_hull()
+      } else {
+          stop("More than two unique set of coordinates is needed to make a
+               convex hull polygon.")
+      }
+  }
 
-    if (shape %in% c("minCircle", "min circle")) {
-      polygon <- makeCircle(spdf, crs = crs)
-    } # end shape conditions
+  if (shape %in% c("minCircle", "min circle")) {
+    polygon <- makeCircle(spdf, crs = crs)
+  } # end shape conditions
 
-    polygon <- st_transform(polygon, crs = st_crs(4326))
-    return(polygon)
+  polygon <- st_transform(polygon, crs = st_crs(4326))
+  return(polygon)
 }
 
 #' Rename the cells in a grid
@@ -197,7 +198,7 @@ OB2Polygon <- function(x, shape="bBox") {
 #' @param idcol column name with names or ids
 #' @return the same input object with known names
 #' @keywords internal
-renameGrid <- function(grid, idcol){
+renameGrid <- function(grid, idcol="id"){
   nrows <- nrow(grid)
   grid[, idcol] <- paste0("ID", seq(nrows))
   return(grid)

@@ -10,7 +10,7 @@ getUTMzone <- function(sf){
     sf <- st_transform(sf, 3857)
   }
 
-  if(gmt != "POINT"){
+  if(unique(gmt) != "POINT"){
     ctr <- st_centroid(sf)
     points <- st_union(ctr)
   } else {

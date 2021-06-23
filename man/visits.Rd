@@ -33,7 +33,7 @@ vis <- visits(ob)
 tmp.vis <- createVisits(bombusObs,
                         idCols=c("locality"),
                         timeCols = c("day", "month", "year"),
-                        gridIdCols = "id")
+                        gridIdCol = "id")
 visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 vis2 <- visits(ob)
 attr(ob, "visitCol")

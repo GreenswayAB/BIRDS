@@ -4,7 +4,7 @@
 \alias{renameGrid}
 \title{Rename the cells in a grid}
 \usage{
-renameGrid(grid, idcol)
+renameGrid(grid, idcol = "id")
 }
 \arguments{
 \item{grid}{an object of class \sQuote{sf}.}
