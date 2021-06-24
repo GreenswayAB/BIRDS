@@ -3,7 +3,7 @@
 #' A function to explore the definition of field visits. Visits are a central concept
 #' in the approach to species observation data used by the BIRDS package. In order to assess if your
 #' definition of visit aligns with your grid size, you must explore the spatial extent of visits.
-#' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial Dataframe).
+#' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial data frame).
 #' See \code{\link{organizeBirds}}.
 #' @param visitCol name of the column for the visits UID.
 #' @param sppCol name of the column for species names.
@@ -52,7 +52,6 @@
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarise n n_distinct sym
-#' @importFrom rgeos gCentroid
 #' @importFrom dbscan dbscan
 #' @importFrom lubridate date day month year ymd
 #' @importFrom geosphere distGeo distm
@@ -64,21 +63,20 @@ exploreVisits <- function(x,
 
   if (class(x) == "OrganizedBirds") {
     spdf<- x$spdf
-    dat <- slot(spdf, "data")
+    dat <- st_drop_geometry(spdf)
   } else {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
   if (is.null(visitCol)){
-    visitCol<-attr(x, "visitCol")
+    visitCol <- attr(x, "visitCol")
   }
-  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",
-                                                 visitCol, "in your organised dataset."))
+
+  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",visitCol, "in your organised dataset."))
 
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)
   nUID <- length(uniqueUID)
 
-  # dat$date <- date(paste(dat$year, dat$month, dat$day, sep = "-"))
   dat$date <- ymd(paste(dat$year, dat$month, dat$day, sep = "-"))
 
   visitStat <- data.frame("visitUID" = uniqueUID,
@@ -99,7 +97,6 @@ exploreVisits <- function(x,
                           "nOutliers" = NA) # number of observations estimated to be outliers from the clusters
 
   message(paste("Analysing", nUID, "visits..."))
-  # datGBY <- group_by(dat, !!! rlang::syms(visitCol))
   datGBY <- group_by(dat, !! sym(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
@@ -114,28 +111,31 @@ exploreVisits <- function(x,
   ctrList <- lapply(uniqueUID, FUN = function(x){
     wVis <- which(dat[, visitCol] == x)
     spdfTmp <- spdf[wVis, ]
+    spdfTmpTr <- st_transform(spdfTmp,
+                              crs = st_crs(3857) )
 
-    coord <- sp::coordinates(spdfTmp)
+    coord <- st_coordinates(spdfTmp) # the unstransformed spdf
+    # coord <- do.call(rbind, st_geometry(spdfTmp)) #coordinates(spdf)
     coordPaste <- apply(coord, 1, paste0, collapse = ",")
     coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
     nUniqueLoc <- nrow(coordUnique)
 
-    ctr <- gCentroid(spdfTmp) ## still valid if two points
-    centroidX <- ctr@coords[1]
-    centroidY <- ctr@coords[2]
+    ctr <- spdfTmpTr %>%
+            st_union() %>%
+            st_convex_hull() %>%
+            st_centroid() %>%
+            st_transform( 4326 ) %>%
+            st_coordinates()
+
+    centroidX <- ctr[,"X"]
+    centroidY <- ctr[,"Y"]
 
     if (nUniqueLoc > 1) {
-      distances <- distGeo(ctr, sp::coordinates(spdfTmp)) ## the unstransformed spdf
-      distM <- distm(spdfTmp, spdfTmp) ## the unstransformed spdf
+      distances <- distGeo(ctr[, c("X", "Y")], coord)
+      distM <- distm(coord, coord) ## the unstransformed spdf
       distMLT <- distM[lower.tri(distM)]
       distancesOut <- distMLT[which(distMLT>0)]
 
-      spdfTmpTr <- suppressWarnings(
-                    sf::as_Spatial(
-                      sf::st_transform(
-                        sf::st_as_sf(spdfTmp),
-                        crs = sf::st_crs(3857)$wkt) )
-                    )
 
       # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
       # this function is very much dependent on the projection
@@ -145,9 +145,9 @@ exploreVisits <- function(x,
       effortDiam <- round(max(distances) * 2, 0)
       medianDist <- round(median(distances), 0)
       iqrDist    <- round(IQR(distances), 0)
-      # nOutliers  <- length(boxplot.stats(distancesOut)$out) ### TODO think another way to compute this
+
       if(nUniqueLoc >= minPts ){
-        clusters  <- dbscan(sp::coordinates(spdfTmpTr),
+        clusters  <- dbscan(st_coordinates(spdfTmpTr),
                             eps = median(distancesOut),
                             minPts = minPts)
         nOutliers <- sum(clusters$cluster==0)
@@ -167,10 +167,13 @@ exploreVisits <- function(x,
 
     return(c(centroidX, centroidY, effortDiam, medianDist,
            iqrDist, nUniqueLoc, nClusters, nOutliers))
-  } )
+  } ) #end lapply
+
   varsCtr <- c("centroidX", "centroidY","effortDiam", "medianDist","iqrDist",
              "nUniqueLoc", "nClusters", "nOutliers")
-  tmp <- matrix(unlist(ctrList), ncol = length(varsCtr), byrow = TRUE,
+  tmp <- matrix(unlist(ctrList),
+                ncol = length(varsCtr),
+                byrow = TRUE,
                 dimnames = list(uniqueUID, varsCtr))
 
   visitStat[, match(varsCtr, colnames(visitStat))] <- tmp
@@ -187,231 +190,66 @@ exploreVisits <- function(x,
 }
 
 
-
-## internal function. Depends on the polygon object utmZones
-#' @keywords internal
-getUTMzone <- function(points){
-  ##Find which UTM-zones that have the most points
-  # utmZonesTr <- suppressWarnings(spTransform(utmZones,
-  #                                            slot(points, "proj4string"))
-  #                             ) #To accept all reference systems for points.
-
-  utmZonesTr <- sf::as_Spatial(
-                  sf::st_transform(
-                    sf::st_as_sf(utmZones),
-                    crs = sf::st_crs(points)$wkt )
-                )
-
-  utmZone <- over(points, utmZonesTr)
-  freqZones <- table(utmZone$ZONE[utmZone$ZONE !=0 ]) ## Zone 0 is both norht and south so we check for it later
-  maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
-
-  alternatives <- rep(FALSE, length(maxZones))
-  names(alternatives) <- maxZones
-
-  ## To check on zone 0 points we need to check row A, B, Y and Z
-  freqRows <- table(utmZone$ROW_)
-
-  if(is.null(maxZones)){
-    ##First we need to check if there is points in any other zone.
-    ##If not we accept anything more than zero
-    if(any(sum(freqRows[c("A", "B")]) > 0, sum(freqRows[c("Y", "Z")]) > 0)){
-      alternatives<-c("0" = FALSE)
-    }
-  }else{
-    ##Else we check if there is more or as many points in zone 0 as in any other zone.
-    if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones],
-           sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
-      alternatives<-c("0" = FALSE)
-    }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones],
-                 sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
-      alternatives["0"]<-FALSE
-    }
-  }
-
-  ##Goes through the zones with most points and checks if other points are to far away.
-  for(a in names(alternatives)){
-    if(as.integer(a)>0){
-      ##If not in polar regions
-      if(a != "1" && a != "60"){
-          ##If not at the "edge" of the world
-          aint <- as.integer(a)
-          alternatives[a] <- all(as.integer(names(freqZones)) %in%  c(aint-1, aint, aint+1, 0))
-      }else{
-          ##We're at the edge of the world, or at least the edge of the UTM world map
-          if(a == "1"){
-            alternatives[a] <- all(names(freqZones) %in%  c("60", "1", "2", "0")) ##These are the zones we accept
-          }else{
-            alternatives[a] <- all(names(freqZones) %in%  c("59", "60", "1", "0")) ##These are the zones we accept
-          }
-        }
-    }else{
-      ## We are in the polar regions!
-      alternatives[a] <- any(
-        all(utmZone$ROW_ %in%  c("X", "Y", "Z")), ## We're in the nothern hemisphere!
-        all(utmZone$ROW_ %in%  c("A", "B", "C")) ## Now we're down south!
-      )
-    }
-  }
-
-  ##Results
-  res <- list("zone" = NULL) #, "msg" = NULL)
-  if(sum(alternatives) == 0){
-    ##No acceptable zones found
-    message("There is no UTM zone where all points overlap with or with its adjacent zones.\n")
-    # return(res)
-  }else if (sum(alternatives) == 1){
-    ## One zone found with points only in adjecent zone found.
-    if(all(names(alternatives) == "0")){
-      if(all(utmZone$ROW_ %in%  c("X", "Y", "Z"))){
-        res$zone <- "0N"
-      }else{
-        res$zone <- "0S"
-      }
-    }else{
-      res$zone <- as.integer(names(alternatives)[alternatives])
-    }
-  }else{
-    ## Two adjacent zones with same number of points were found.
-    ## If one of them is zone 0 the other must be in row X or Z, hence we choose zone 0
-    if("0" %in% names(alternatives)){
-      if(all(utmZone$ROW_ %in%  c("X", "Y", "Z"))){
-        res$zone <- "0N"
-      }else{
-        res$zone <- "0S"
-      }
-      message("The points are split over two UTM-zones but close to the polar regions. Therefor zone 0 is chosen.\n")
-    }
-
-    meanPoint <- sp::SpatialPoints(geosphere::geomean(points),
-                                   proj4string = slot(points, "proj4string"))
-    utmMeanZone <- sp::over(meanPoint, utmZones)
-    res$zone <- as.integer(utmMeanZone$ZONE)
-    message("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")
-  }
-  return(res$zone)
-}
-
-#' A wrapper around getUTMzone and produce a proj4 string
-#'
-#' @param x an object of class \sQuote{OrganizedBirds} or \sQuote{SpatialPointsDataFrame}
-#' @return a proj4 character string for an appropriate UTM zone
-#' @export
-#' @examples
-#' OB <- organizeBirds(bombusObs)
-#' getUTMproj(OB)
-getUTMproj<-function(x){
-  if (class(x) == "OrganizedBirds") {
-    spdf <- x$spdf
-  } else {
-    if(class(x) == "SpatialPointsDataFrame"){
-      spdf <- x
-    } else {
-      stop("Input data is neither an object of class 'OrganizedBirds' or 'SpatialPointsDataFrame'")
-    }
-  }
-
-
-  ## error no CRS
-  # if (is.na(proj4string(spdf))) { #slot(points, "proj4string") or soon wkt()
-  #   stop("The polygon has no coordinate projection system (CRS) associated")
-  # }
-  if (is.na(slot(spdf, "proj4string"))) {
-    stop("The polygon has no coordinate projection system (CRS) associated")
-  }
-
-  spdf <- sf::as_Spatial(
-            sf::st_transform(
-              sf::st_as_sf(spdf),
-              crs = sf::st_crs(4326)$wkt )
-  )
-
-  utmZone <- getUTMzone(spdf)
-  if(!is.null(utmZone)){
-    if(utmZone == "0N"){
-      #"+init=epsg:5041"
-      proj4 <- "+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs" #"+init=epsg:5041"
-    }
-    if(utmZone == "0S"){
-      #"+init=epsg:5042"
-      proj4 <- "+proj=stere +lat_0=-90 +lat_ts=-90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
-    }
-    if(is.integer(utmZone)){
-      proj4 <- paste0("+proj=utm +zone=", utmZone," +datum=WGS84")
-    }
-  }
-  return(proj4)
-}
-
-
-#' A function to make the exploreVisits Spatial
-#'
-#' A function to
-#' @param x an object of class \sQuote{data.frame} from exploreVistis.
+#' A function to convert visits into a spatial object
+#' @param x an object of class \sQuote{data.frame} from exploreVisits.
 #' @param xyCols a character vector with the column names for the coordinates.
 #' Default to \code{c("centroidX","centroidY")}
 #' @param dataCRS a character string or numeric with the original
-#' coordinate reference system (CRS). Default to \code{"4326"}
+#' coordinate reference system (CRS). Default to \code{4326}
 #' @param radius either a character string with the name of the column
 #' containing the radius of the visit circle, or a numeric vector with its value
 #' in meters. Default to \code{"medianDist"}
 #'
-#' @return a list with a \code{SpatialPointsDataFrame} (the centroids) and a
-#' \code{ "SpatialPolygonsDataFrame"} (the effort circles). Note that when plotted
+#' @return a list with the centroids and a the effort circles. Note that when plotted
 #' directly effort circles may not look like circles in the returned
 #' (Pseudo-Mercator) projection.
 #'
 #' @examples
+#' \donttest{
 #' # create a visit-based data object from the original observation-based data
-#' library(sp)
-#' OB<-organizeBirds(bombusObsShort)
+#' library(sf)
+#' OB <- organizeBirds(bombusObsShort)
 #' visitStats<-exploreVisits(OB)
 #' spV<-spatialVisits(visitStats)
-#' plot(spV$effort)
+#' plot(spV$effort$geometry)
+#' }
 #' @export
 #' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
 spatialVisits <- function(x,
                           xyCols=c("centroidX","centroidY"),
                           dataCRS="4326",
                           radius="medianDist"){
-  crswkt <- sf::st_crs(as.numeric(dataCRS))$wkt
+  crs <- st_crs(as.numeric(dataCRS))
 
   if (class(x) == "data.frame") {
-    sp::coordinates(x) <- xyCols
-    sp::proj4string(x) <- CRS(crswkt) ## because I know where it comes from
+    x <- st_as_sf(x, coords = xyCols)
+    st_crs(x) <- st_crs(crs) ## because I know where it comes from
   } else {
     stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
   }
 
   if(radius=="" | is.na(radius) | is.null(radius)){
-    radiusVal<- rep(1, nrow(x@data))
-  } else if(radius %in% colnames(x@data)){
-    radiusVal<-x@data[,radius]
+    radiusVal <- rep(1, nrow(x))
+  } else if(radius %in% colnames(x)){
+    radiusVal <- st_drop_geometry(x[,radius])
     ## convert meters to degrees?
-  } else if(is.numeric(radius) & length(radius)==nrow(x@data)){
-    radiusVal<-radius
+  } else if(is.numeric(radius) & length(radius) == nrow(x)){
+    radiusVal <- radius
   } else {
     stop("The parameter 'radius' needs to be one od the column names or a numeric
          vector of length equal to the number of visits")
   }
 
-  utmCRS <- suppressWarnings(CRS(getUTMproj(x)))
-  # xTrans <- spTransform(x, CRSobj = utmCRS)
-  xTrans <- sf::as_Spatial(
-              sf::st_transform(
-                sf::st_as_sf(x),
-                crs = sf::st_crs(utmCRS)$wkt) )
+  utmCRS <- st_crs(getUTMproj(x))
+  xTrans <- st_transform(x,
+                         crs = utmCRS)
 
-  buff <- rgeos::gBuffer(xTrans,
-                         byid = TRUE,
-                         id = x@data$visitUID,
-                         width = radiusVal)
+  buff <- st_buffer(xTrans,
+                    dist = as.integer(unlist(radiusVal)))
 
-  # buff <- spTransform(buff, CRSobj = CRS(crswkt))
-  buff <- sf::as_Spatial(
-            sf::st_transform(
-              sf::st_as_sf(buff),
-              crs = crswkt) )
-  return(list("points"=x, "effort"=buff))
+  buff <- st_transform(buff,
+                       crs = crs)
+
+  return(list("points" = x, "effort"= buff))
 
 }

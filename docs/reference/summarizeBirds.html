@@ -174,16 +174,16 @@ in spatial and  temporal dimensions.</p>
     </tr>
     <tr>
       <th>grid</th>
-      <td><p>A SpatialPolygons or SpatialPolygonsDataFrame-object whith
+      <td><p>A sf, SpatialPolygons or SpatialPolygonsDataFrame-object with
 grid cells for the study area. This variable is optional and can be set to
 NULL, which will treat the area for all observations as one single
 grid cell.</p></td>
     </tr>
     <tr>
       <th>spillOver</th>
-      <td><p>Specifies if the function should search for observations done during
-the same visit (identified by visit UID) but that fall outside the grid cell.
-Default is <code>NULL</code>. It also accepts <code><a href='https://rdrr.io/r/base/c.html'>c("unique", "duplicate")</a></code>.
+      <td><p>Specifies if the function should search for observations done
+during the same visit (identified by visit UID) but that fall outside the grid
+cell. Default is <code>NULL</code>. It also accepts <code><a href='https://rdrr.io/r/base/c.html'>c("unique", "duplicate")</a></code>.
 See Details for more information on how to use this.</p></td>
     </tr>
     </table>
@@ -197,12 +197,12 @@ See Details for more information on how to use this.</p></td>
 overlay of observations and grid cells, without further consideration of
 coherence for visits (visit UID). If <code>spillOver = c("unique", "duplicate")</code>
 the splitting will be done spatially in a first step, and then:
-if <code>(spillOver = "unique")</code> assigns (and moves) all observations with same visitUID
-to the grid cell with most observations (or picks one grid cell at random if
-there is a tie); or if <code>(spillOver = "duplicate")</code> duplicates all
-observations with same visitUID across all grid cells containing at least one
-observation with that visitUID.</p>
-<p>The later approach is usefull when the amount of observations spilled over
+if <code>(spillOver = "unique")</code> assigns (and moves) all observations with same
+visitUID to the grid cell with most observations (or picks one grid cell at
+random if there is a tie); or if <code>(spillOver = "duplicate")</code> duplicates
+all observations with same visitUID across all grid cells containing at least
+one observation with that visitUID.</p>
+<p>The later approach is useful when the amount of observations spilled over
 neighbouring cells is minimal and information over the spatial extent of the
 sampling effort is more important than sample independence.</p>
 
@@ -210,9 +210,9 @@ sampling effort is more important than sample independence.</p>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span><span class='op'>)</span>
 <span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'>summarizeBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>289 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>nObsG</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>SB</span><span class='op'>$</span><span class='va'>spatioTemporal</span><span class='op'>[</span>,,<span class='fl'>13</span>,<span class='st'>"nObs"</span><span class='op'>]</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>nObsG2</span> <span class='op'>&lt;-</span> <span class='va'>SB</span><span class='op'>$</span><span class='va'>spatial</span><span class='op'>@</span><span class='va'>data</span><span class='op'>$</span><span class='va'>nObs</span>
+</div><div class='output co'>#&gt; <span class='message'>Grid cells are too many (&gt;=500), this may result in very long computation times</span></div><div class='input'><span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'>summarizeBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>43 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>nObsG</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>SB</span><span class='op'>$</span><span class='va'>spatioTemporal</span><span class='op'>[</span>,,<span class='fl'>13</span>,<span class='st'>"nObs"</span><span class='op'>]</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>nObsG2</span> <span class='op'>&lt;-</span> <span class='va'>SB</span><span class='op'>$</span><span class='va'>spatial</span><span class='op'>$</span><span class='va'>nObs</span>
 <span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span><span class='op'>(</span><span class='va'>nObsG</span> <span class='op'>!=</span> <span class='va'>nObsG2</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'>## Check, two ways to obtain the same</span>
 </div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># }</span>
 </div></pre>

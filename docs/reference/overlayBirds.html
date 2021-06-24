@@ -158,10 +158,10 @@ observations that fall into which grid cell." />
 observations that fall into which grid cell.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>overlayBirds</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid</span>, spillOver <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>overlayBirds</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid</span>, spillOver <span class='op'>=</span> <span class='cn'>NULL</span>, cleanGrid <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for OrganizedBirds</span>
-<span class='fu'>overlayBirds</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid</span>, spillOver <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+<span class='fu'>overlayBirds</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid</span>, spillOver <span class='op'>=</span> <span class='cn'>NULL</span>, cleanGrid <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,13 +172,17 @@ observations that fall into which grid cell.</p>
     </tr>
     <tr>
       <th>grid</th>
-      <td><p>A SpatialPolygonsDataFrame object of the grid over the study area</p></td>
+      <td><p>A sf or SpatialPolygonsDataFrame object of the grid over the study area</p></td>
     </tr>
     <tr>
       <th>spillOver</th>
       <td><p>Specifies if the function should search for observations
 with the same visitUID over several grid cell, and what to do with them.
- Default is <code>NULL</code>. It also accepts <code><a href='https://rdrr.io/r/base/c.html'>c("unique", "duplicate")</a></code>.</p></td>
+It accepts <code><a href='https://rdrr.io/r/base/c.html'>c(NULL, "unique", "duplicate")</a></code>. Default NULL.</p></td>
+    </tr>
+    <tr>
+      <th>cleanGrid</th>
+      <td><p>logical. Whether to remove all data from the grid.</p></td>
     </tr>
     </table>
 
@@ -188,9 +192,8 @@ with the same visitUID over several grid cell, and what to do with them.
   containing three objects;</p><dl>
     <dt><code>observationsInGrid</code></dt><dd><p>Is
       basically the data in the OrganizedBirds object split by each grid cell
-      (<em>n.b.</em> the use of <code>spillOver = TRUE</code> discussed under "Usage")</p></dd>
-    <dt><code>grid</code></dt><dd><p>The SpatialPolygonsDataFrame from the input, but cleared
-      of data to not waste unnecessary memory</p></dd>
+      (<em>n.b.</em> the use of <code>spillOver</code> discussed under "Usage")</p></dd>
+    <dt><code>grid</code></dt><dd><p>The sf from the input, optionally cleared of data</p></dd>
    <dt><code>nonEmptyGridCells</code></dt><dd><p>An integer vector of which grid cells that have observations</p></dd>
   
 </dl>
@@ -210,15 +213,15 @@ to the grid cell with most observations (or picks one grid cell at random if
 there is a tie); or if <code>(spillOver = "duplicate")</code> duplicates all
 observations with same visitUID across all grid cells containing at least one
 observation with that visitUID.</p>
-<p>The later approach is usefull when the amount of observations spilled over
+<p>The later approach is useful when the amount of observations spilled over
 neighbouring cells is minimal and information over the spatial extent of the
 sampling effort is more important than sample independence.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>
-<span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='va'>ovB</span> <span class='op'>&lt;-</span> <span class='fu'>overlayBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>2635 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.06 % of the visits spill over neighbouring grid cells.</span></div></pre>
+<span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, <span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Grid cells are too many (&gt;=500), this may result in very long computation times</span></div><div class='input'><span class='va'>ovB</span> <span class='op'>&lt;-</span> <span class='fu'>overlayBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>474 observations did not overlap with the grid and will be discarded.</span></div><div class='output co'>#&gt; <span class='message'>0.045 % of the visits spill over neighbouring grid cells.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -12,10 +12,10 @@ getSpatial(birdOverlay, visitCol = NULL)
 \item{visitCol}{A character string for specifying the columns that identify a visit.}
 }
 \value{
-The a SpatialPolygonsDataFrame over the overlay gris with a dataframe
+The a sf over the overlay grid with a data.frame
 }
 \description{
-An internal function. Takes the dataframe resulting from the spatial overlay
+An internal function. Takes the data.frame resulting from the spatial overlay
 for a specific grid and summarises basic variables as a polygon spatial layer
 }
 \keyword{internal}

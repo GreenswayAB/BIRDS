@@ -13,7 +13,7 @@ obsData(x)
 \item{x}{An OrganizedBirds-object}
 }
 \value{
-A dataframe
+A data.frame
 }
 \description{
 Extract the observation data from a OrganizedBirds-object

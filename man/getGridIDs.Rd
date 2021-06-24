@@ -4,18 +4,20 @@
 \alias{getGridIDs}
 \title{Create unique IDs based on a grid}
 \usage{
-getGridIDs(x, grid)
+getGridIDs(x, grid, idcol = "id")
 }
 \arguments{
-\item{x}{a SpatialPointsDataFrame .}
+\item{x}{a SpatialPointsDataFrame ('sp') or sf ('sf') (with the observations).}
 
-\item{grid}{A a SpatialPolygon object (a grid is expected) defining the
+\item{grid}{a SpatialPolygon object ('sp') or sf ('sf') (a grid is expected) defining the
 maximum extent of visits effort.}
+
+\item{idcol}{column name for the grid names or ids}
 }
 \value{
 A vector of the same length as the number of rows (observations) as x
   with a unique number corresponding to the grid's ID.
 }
 \description{
-Takes a spatial points dataframe and a grid and gets the overlay IDs.
+Takes a spatial points data.frame and a grid and gets the overlay IDs.
 }

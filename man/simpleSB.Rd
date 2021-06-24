@@ -11,7 +11,7 @@ An object of class summarisedBirds
 simpleSB
 }
 \description{
-An empty summarisedBirds object used to dinamically test for validity
+An empty summarisedBirds object used to dynamically test for validity
 of export parameter combinations \code{exportBirds()} in the sister package shinyBirds
 }
 \keyword{datasets}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/exploreVisits.r
 \name{spatialVisits}
 \alias{spatialVisits}
-\title{A function to make the exploreVisits Spatial}
+\title{A function to convert visits into a spatial object}
 \usage{
 spatialVisits(
   x,
@@ -12,34 +12,35 @@ spatialVisits(
 )
 }
 \arguments{
-\item{x}{an object of class \sQuote{data.frame} from exploreVistis.}
+\item{x}{an object of class \sQuote{data.frame} from exploreVisits.}
 
 \item{xyCols}{a character vector with the column names for the coordinates.
 Default to \code{c("centroidX","centroidY")}}
 
 \item{dataCRS}{a character string or numeric with the original
-coordinate reference system (CRS). Default to \code{"4326"}}
+coordinate reference system (CRS). Default to \code{4326}}
 
 \item{radius}{either a character string with the name of the column
 containing the radius of the visit circle, or a numeric vector with its value
 in meters. Default to \code{"medianDist"}}
 }
 \value{
-a list with a \code{SpatialPointsDataFrame} (the centroids) and a
-\code{ "SpatialPolygonsDataFrame"} (the effort circles). Note that when plotted
+a list with the centroids and a the effort circles. Note that when plotted
 directly effort circles may not look like circles in the returned
 (Pseudo-Mercator) projection.
 }
 \description{
-A function to
+A function to convert visits into a spatial object
 }
 \examples{
+\donttest{
 # create a visit-based data object from the original observation-based data
-library(sp)
-OB<-organizeBirds(bombusObsShort)
+library(sf)
+OB <- organizeBirds(bombusObsShort)
 visitStats<-exploreVisits(OB)
 spV<-spatialVisits(visitStats)
-plot(spV$effort)
+plot(spV$effort$geometry)
+}
 }
 \seealso{
 \code{\link{exploreVisits}}, \code{\link{organiseBirds}}

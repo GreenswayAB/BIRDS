@@ -26,10 +26,9 @@ communityMatrix <- function(x, sampleUnit="observation"){
   visitCol<-attr(x, "visitCol")
 
   allSpecies <- listSpecies(x)
-  nCells <- length(x$spatial)
-  cellID <- sapply(slot(x$spatial, "polygons"),
-                   FUN = function(x) slot(x, "ID"))
-  wNonEmpty <- unname(which(unlist(lapply(x$overlaid, nrow)) > 0))
+  nCells <- nrow(x$spatial)
+  cellID <- rownames(x$spatial)
+  wNonEmpty <- whichNonEmpty(x$overlaid)
 
   res <- matrix(NA,
                 nrow=nCells,
@@ -93,9 +92,8 @@ communityMatrixGrid <- function(x){
   visitCol<-attr(x, "visitCol")
   overlaid <- x$overlaid
   allSpecies <- listSpecies(x)
-  nCells <- length(x$spatial)
-  cellID <- sapply(slot(x$spatial, "polygons"),
-                   FUN = function(x) slot(x, "ID"))
+  nCells <- nrow(x$spatial)
+  cellID <- rownames(x$spatial)
   res<-vector("list",nCells)
   names(res)<-cellID
 
@@ -160,10 +158,10 @@ recBySpp <- function(x, format="A", location="coordinates"){
   }
 
   ## paste coordinates
-  coord <- coordinates(x$spdf)
+  coord <- st_coordinates(x$spdf)
   obCoor <- cbind(coord,
                   apply(coord , 1 , paste , collapse = "-" ),
-                  slot(x$spdf, "data"))
+                  st_drop_geometry(x$spdf))
   colnames(obCoor)[3] <- "coordinates"
 
   ### typeA

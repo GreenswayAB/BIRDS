@@ -4,16 +4,17 @@
 \alias{renameGrid}
 \title{Rename the cells in a grid}
 \usage{
-renameGrid(grid)
+renameGrid(grid, idcol = "id")
 }
 \arguments{
-\item{grid}{an object of class \sQuote{SpatialPolygon-class} or
-\sQuote{SpatialPolygonDataFrame-class}.}
+\item{grid}{an object of class \sQuote{sf}.}
+
+\item{idcol}{column name with names or ids}
 }
 \value{
 the same input object with known names
 }
 \description{
-Takes a SpatialPolygon* and renames it to "ID1":"IDn".
+Takes a sf* and renames it to "ID1":"IDn".
 }
 \keyword{internal}

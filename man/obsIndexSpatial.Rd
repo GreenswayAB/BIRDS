@@ -17,7 +17,7 @@ of visits, else uses the number of observations.}
 \item{fs.rm}{if TRUE, assumes that the observations for the focal species are
 included in 'group' and will remove them}
 
-\item{norm}{if TRUE, the result is nomalized to a 0-1 range}
+\item{norm}{if TRUE, the result is normalized to a 0-1 range}
 }
 \value{
 A spatial object

@@ -21,8 +21,8 @@ focalSpReport(
 
 \item{long}{whether the map should be long or wide.}
 
-\item{polygon}{(optional) an object of class \sQuote{SpatialPolygon} or
-\sQuote{SpatialPolygonDataFrame}. (Default is \code{NULL})}
+\item{polygon}{(optional) an object of class \sQuote{sf},
+\sQuote{SpatialPolygon} or \sQuote{SpatialPolygonDataFrame}. (Default is \code{NULL})}
 
 \item{colVis}{color to plot visited gird cells}
 

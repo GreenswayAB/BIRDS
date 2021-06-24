@@ -47,8 +47,8 @@
 
 
 <meta property="og:title" content="Create unique visits IDs — createVisits" />
-<meta property="og:description" content="Takes a dataframe and a vector of column names and classifies each row of the
-dataframe based on the combination of values in the specified columns." />
+<meta property="og:description" content="Takes a data.frame and a vector of column names and classifies each row of the
+data.frame based on the combination of values in the specified columns." />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -154,15 +154,16 @@ dataframe based on the combination of values in the specified columns." />
     </div>
 
     <div class="ref-description">
-    <p>Takes a dataframe and a vector of column names and classifies each row of the
-dataframe based on the combination of values in the specified columns.</p>
+    <p>Takes a data.frame and a vector of column names and classifies each row of the
+data.frame based on the combination of values in the specified columns.</p>
     </div>
 
     <pre class="usage"><span class='fu'>createVisits</span><span class='op'>(</span>
   <span class='va'>x</span>,
   idCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"locality"</span>, <span class='st'>"recordedBy"</span><span class='op'>)</span>,
   timeCols <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span><span class='op'>)</span>,
-  grid <span class='op'>=</span> <span class='cn'>NULL</span>
+  grid <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>gridIdCol</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -170,7 +171,7 @@ dataframe based on the combination of values in the specified columns.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object of class <code>data.frame</code> or <code>SpatialPointsDataFrame</code>
+      <td><p>An object of class <code>data.frame</code>, <code>sf</code> or <code>SpatialPointsDataFrame</code>
 including at least the columns specified that are used to identify a visit.</p></td>
     </tr>
     <tr>
@@ -189,14 +190,18 @@ Default is the Darwin Core variables <code><a href='https://rdrr.io/r/base/c.htm
     <tr>
       <th>grid</th>
       <td><p>Either <code>NULL</code> to be ignored or an object of class
-<code>SpatialPolygons</code> or <code>SpatialPolygonsDataFrame</code> defining the maximum
- extent of visits effort. Then x must be an object of class SpatialPointsDataFrame</p></td>
+<code>sf</code>, <code>SpatialPolygons</code> or <code>SpatialPolygonsDataFrame</code> defining
+the maximum extent of visits effort. Then x must be an object of class sf</p></td>
+    </tr>
+    <tr>
+      <th>gridIdCol</th>
+      <td><p>column in grid with ids.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of the same length as the number of rows as the dataframe
+    <p>A vector of the same length as the number of rows as the data.frame
   with a unique number for each combination of the values in the specified
   columns.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -212,7 +217,8 @@ by the Darwin Core variables <code><a href='https://rdrr.io/r/base/c.html'>c("lo
     <pre class="examples"><div class='input'><span class='va'>OB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>
 <span class='va'>tmp.vis</span> <span class='op'>&lt;-</span> <span class='fu'>createVisits</span><span class='op'>(</span><span class='va'>bombusObs</span>,
                         idCols<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"locality"</span>, <span class='st'>"recordedBy"</span><span class='op'>)</span>,
-                        timeCols<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span><span class='op'>)</span><span class='op'>)</span>
+                        timeCols<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"day"</span>, <span class='st'>"month"</span>, <span class='st'>"year"</span><span class='op'>)</span>,
+                        gridIdCol <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span>
 <span class='fu'><a href='visits.html'>visits</a></span><span class='op'>(</span><span class='va'>OB</span>, name <span class='op'>=</span> <span class='st'>"visNoRecorder"</span>, useAsDefault <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>tmp.vis</span>
 </div></pre>
   </div>

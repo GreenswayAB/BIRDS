@@ -7,17 +7,17 @@
 createOverlayForGrid(x, birdData, visitCol)
 }
 \arguments{
-\item{x}{A dataframe for a specific grid without spillover.}
+\item{x}{A data.frame for a specific grid without spillover.}
 
 \item{birdData}{An OrganizedBirds object, which is the input to the \code{\link{overlayBirds}}-function.}
 
 \item{visitCol}{A character string specifying the columns that identify a visit.}
 }
 \value{
-The overlay dataframe for a specific grid, including the spillover visits.
+The overlay data.frame for a specific grid, including the spillover visits.
 }
 \description{
-An internal function. Takes the resulting dataframe from the spatial overlay
+An internal function. Takes the resulting data.frame from the spatial overlay
 for a specific grid cell and searches for spillover visits, i.e. visits that are split by grid cell boundaries.
 }
 \keyword{internal}

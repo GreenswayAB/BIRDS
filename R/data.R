@@ -1,14 +1,14 @@
 #' @title Searching polygon covering Götaland, Sweden.
 #'
 #' @description An arbitrary polygon covering a portion of Sweden, used as search parameter.
-#' @format A SpatialPolygonsDataFrame with 1 polygon with CRS(\dQuote{+init=epsg:4326})
+#' @format A sf with 1 polygon with CRS(epsg:4326)
 "searchPolygon"
 
 #' @title Götaland, Sweden.
 #'
 #' @description A polygon describing the territorial contour the collective province of Götaland, Sweden. Includes
 #' holes for water bodies.
-#' @format A SpatialPolygonsDataFrame with 1 polygon with CRS(\dQuote{+init=epsg:4326})
+#' @format A sf with 1 polygon with CRS(epsg:4326)
 "gotaland"
 
 #' @title Species observations of bryophytes in Götaland, Sweden
@@ -90,7 +90,7 @@
 
 #' @title A simple empty summarisedBirds object.
 #'
-#' @description An empty summarisedBirds object used to dinamically test for validity
+#' @description An empty summarisedBirds object used to dynamically test for validity
 #' of export parameter combinations \code{exportBirds()} in the sister package shinyBirds
 #' @format An object of class summarisedBirds
 'simpleSB'

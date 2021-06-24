@@ -26,13 +26,13 @@ of visits, else uses the number of observations.}
 \item{fs.rm}{if TRUE, assumes that the observations for the focal species are
 included in 'group' and will remove them}
 
-\item{norm}{if TRUE, the result is nomalized to a 0-1 range}
+\item{norm}{if TRUE, the result is normalized to a 0-1 range}
 }
 \value{
 An xts timeseries
 }
 \description{
-This function extracts the proportion of visitis (or observations) detecting
+This function extracts the proportion of visits (or observations) detecting
 a focal species to all visits (or observations) over time.
 }
 \keyword{internal}
