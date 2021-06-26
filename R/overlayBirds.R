@@ -16,7 +16,7 @@ whichNonEmpty <- function(x){
 
 #' Create spillover overlay for specific grid
 #'
-#' An internal function. Takes the resulting dataframe from the spatial overlay
+#' An internal function. Takes the resulting data.frame from the spatial overlay
 #' for a specific grid cell and searches for spillover visits, i.e. visits that are split by grid cell boundaries.
 #'
 #' @param x A data.frame for a specific grid without spillover.
