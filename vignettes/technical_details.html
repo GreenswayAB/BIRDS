@@ -12,27 +12,44 @@
 
 <meta name="author" content="Alejandro Ruete and Debora Arlt" />
 
-<meta name="date" content="2020-03-02" />
+<meta name="date" content="2021-06-26" />
 
 <title>BIRDS technical details</title>
 
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +69,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -109,187 +126,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
 
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; } 
-code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
 
@@ -303,7 +141,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">BIRDS technical details</h1>
 <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
-<h4 class="date">2020-03-02</h4>
+<h4 class="date">2021-06-26</h4>
 
 
 
@@ -334,10 +172,10 @@ It is important to keep in mind that, to keep the sampling bias consistent, the 
 <p>Once the data is in R as a <code>data.frame</code> and loaded the package BIRDS, the fun begins. The function <code>organiseBirds()</code> converts the <code>data.frame</code> into a <code>SpatialPointsDataFrame</code> using the specified coordinates. The function takes as default coordinates in geodesic WGS84 (epsg:4326), but other can be used too. It also adds to each observation a unique identifier for the assumed <em>visit</em> (sampling event) it belongs to, given some input parameters. There are a few options here depending on the variables included in the data set, but the default is the unique combination of “locality”, “day”, “month”, “year”, and “recordedBy”. Alternatives could be a known “eventID”, or using the “rightsHolder” instead of the recorder, if that matches the reality and better helps to identify unique visits. The overall idea is to separate unique sample units, i.e. a transect, a square, a combination of point samples, or a random walk along the river side. If you lack a clear spatial definition of a visit, there are a few things you can do in the next steps (visit exploration and summary).</p>
 <p>The <code>organiseBirds()</code> function will also help to keep those observation that are useful to you based on the level of taxonomical resolution or taxon rank (the level to which each species was identified). Sometimes, observers can only identify the species up to genus, but these observations are not always helping our analyses. Then, you can define which “taxonRank” should be kept specifying the column that should be read and the ranks to be kept. As default everything with species identifications or lower are kept (varietals and subspecies). At the same time, you may not want to differentiate among subspecies, because you know, accuracy can get shaky. Then, you can opt to simplify the names by removing all epithets and author names.</p>
 <p>The result is a <code>SpatialPointsDataFrame</code> wrapped into an object of class <code>OrganizedBirds</code>, with additional information. To save memory, only a few columns that will be used later are kept. The <code>OrganizedBirds</code> has as an attribute the variable “visitCol” that stores which is the column with the default ID for the visits in case the are many (see below).</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>?<span class="kw">organiseBirds</span>()</span>
-<span id="cb1-2"><a href="#cb1-2"></a>OB &lt;-<span class="st"> </span><span class="kw">organizeBirds</span>(bombusObs, <span class="dt">simplifySppName =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>OB &lt;-<span class="st"> </span><span class="kw">organizeBirds</span>(bombusObs, <span class="dt">sppCol =</span> <span class="st">&quot;species&quot;</span>, <span class="dt">simplifySppName =</span> <span class="ot">FALSE</span>, </span>
-<span id="cb1-4"><a href="#cb1-4"></a>                     <span class="dt">taxonRankCol =</span> <span class="st">&quot;taxonRank&quot;</span>, <span class="dt">taxonRank =</span> <span class="kw">c</span>(<span class="st">&quot;SPECIES&quot;</span>, <span class="st">&quot;SUBSPECIES&quot;</span>,<span class="st">&quot;VARIETY&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">organiseBirds</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>OB <span class="ot">&lt;-</span> <span class="fu">organizeBirds</span>(bombusObs, <span class="at">simplifySppName =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>OB <span class="ot">&lt;-</span> <span class="fu">organizeBirds</span>(bombusObs, <span class="at">sppCol =</span> <span class="st">&quot;species&quot;</span>, <span class="at">simplifySppName =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">taxonRankCol =</span> <span class="st">&quot;taxonRank&quot;</span>, <span class="at">taxonRank =</span> <span class="fu">c</span>(<span class="st">&quot;SPECIES&quot;</span>, <span class="st">&quot;SUBSPECIES&quot;</span>,<span class="st">&quot;VARIETY&quot;</span>))</span></code></pre></div>
 <blockquote>
 <p><strong>Field visit</strong><br />
 A central concept used by the <code>BIRDS</code> package is the “visit” – defining the sampling unit as a sampling event by a unique observer (or group of observers), at a unique unit of space and time (commonly a day). Visits can help us to summarize the amount of effort expended in the field. During a visit, the observer commonly samples (i.e. observes and records) species by similar methods. The sampling effort can vary among visits, with the amount of effort expended being greater when spending more time, and reporting more of the observed species. The same number of observations (records of species) at a unique unit of time and space could be made by either few observers reporting many species (greater effort by each observer) or many observers reporting few species (small effort by each observer). Using visits as sampling units allows separation of sampling effort into the effort that can be expressed through the number of visits by different observers and the effort per visit (e.g. species list length, or when available the time spent during a visit). Hence, the quality (completeness) of the data can be judged by using information for each visit and information from a collection of visits. Note that the term ‘checklists’ has also been used for this purpose although it is often confused with the ‘potential species list’ that a visitor may find.</p>
@@ -359,15 +197,15 @@ A central concept used by the <code>BIRDS</code> package is the “visit” – 
 </ul>
 <p>The idea is to see, for example, if the distribution of covered area (effortDiam) matches your expectations for how much terrain an observer can cover during a typical sampling event for species of the considered reference group.</p>
 <p>You can directly plot these variables or use the suggested package <code>esquisse</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>visitStats &lt;-<span class="st"> </span><span class="kw">exploreVisits</span>(OB)</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># open an interactive data explorer</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>esquisse<span class="op">::</span><span class="kw">esquisser</span>(visitStats)</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># alternativelly, plot the variable you want, e.g.:</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># to see the distribution of distances covered on each visit</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># hist(visitStat$effortDiam)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>visitStats <span class="ot">&lt;-</span> <span class="fu">exploreVisits</span>(OB)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># open an interactive data explorer</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>esquisse<span class="sc">::</span><span class="fu">esquisser</span>(visitStats)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># alternativelly, plot the variable you want, e.g.:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># to see the distribution of distances covered on each visit</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># hist(visitStat$effortDiam)</span></span></code></pre></div>
 <p>If you are not happy with how the observations ended up being grouped into visits, you can test another definition of visits with the following function:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">visits</span>(OB)&lt;-<span class="kw">createVisits</span>(x, <span class="dt">columns =</span> <span class="kw">c</span>(<span class="st">&quot;locality&quot;</span>, <span class="st">&quot;day&quot;</span>, <span class="st">&quot;month&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;recordedBy&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visits</span>(OB)<span class="ot">&lt;-</span><span class="fu">createVisits</span>(x, <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">&quot;locality&quot;</span>, <span class="st">&quot;day&quot;</span>, <span class="st">&quot;month&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;recordedBy&quot;</span>))</span></code></pre></div>
 <p>This script will create a new vector of unique visits IDs, and either add it to the organised data set or change the current with the new values. See <code>?visits()</code>.</p>
 </div>
 <div id="summaries" class="section level4">
@@ -387,8 +225,8 @@ If there is no common spatial identifier to define the visit extent, and the obs
 <p><img src="data:image/png;base64,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" alt="visits" /><br />
 <strong>Example of distribution of observations over visits, and overlay in a spatial grid</strong> In this example we see how given the definition of visits and the size of the grid cell, the observations in visit 1 are split over two grid cells.</p>
 </blockquote>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>grid &lt;-<span class="st"> </span><span class="kw">makeGrid</span>(searchPolygon, <span class="dt">gridSize =</span> <span class="dv">10</span>) <span class="co"># grid size in kilometers!</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>SB &lt;-<span class="st"> </span><span class="kw">summariseBirds</span>(OB, <span class="dt">grid=</span>grid)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">makeGrid</span>(searchPolygon, <span class="at">gridSize =</span> <span class="dv">10</span>) <span class="co"># grid size in kilometers!</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SB <span class="ot">&lt;-</span> <span class="fu">summariseBirds</span>(OB, <span class="at">grid=</span>grid)</span></code></pre></div>
 <p>It is important to note that after summarizing the data, NA are used for spatial gaps (no data at all in the grid cell), while 0 is used for temporal gaps (there is data for this grid cell but not in this time unit).</p>
 <p>The <code>SummarisedBirds</code> object, here called SB, is then a set of objects with different dimensions returning the variables:</p>
 <ul>
@@ -402,7 +240,7 @@ If there is no common spatial identifier to define the visit extent, and the obs
 </blockquote>
 <p>The objects within SB can be called with <code>SB$x</code> where x is the object name described below:</p>
 <ul>
-<li><code>spatial</code> is a <code>SpatialPolygonDataFrame</code> object with variables summarized per grid cell. As usual for an SPDF the values are stored in the slot <span class="citation">@data</span>, e.g. <a href="mailto:SB$Spatial@data" class="email">SB$Spatial@data</a><br />
+<li><code>spatial</code> is a <code>sf</code> object with variables summarized per grid cell. As usual for an sf object the values are stored as a data.frame<br />
 </li>
 <li><code>temporal</code> is an <code>xts</code> object with variables summarized per day. Read more about specific functions for extended time series <a href="https://CRAN.R-project.org/package=xts">here</a><br />
 </li>
@@ -452,21 +290,21 @@ It takes as parameters:</p>
 <p class="caption">Possible outcomes to the export function</p>
 </div>
 <p>Some examples of this function could be:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">exportBirds</span>(SB, <span class="dt">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="dt">timeRes =</span> <span class="st">&quot;yearly&quot;</span>, <span class="dt">variable =</span> <span class="st">&quot;nObs&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="co"># this is equivalent to </span></span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="kw">colSums</span>(SB<span class="op">$</span>spatioTemporal[,,<span class="st">&quot;Yearly&quot;</span>,<span class="st">&quot;nObs&quot;</span>], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb5-5"><a href="#cb5-5"></a></span>
-<span id="cb5-6"><a href="#cb5-6"></a></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="kw">exportBirds</span>(SB, <span class="dt">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="dt">timeRes =</span> <span class="st">&quot;month&quot;</span>, <span class="dt">variable =</span> <span class="st">&quot;nVis&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co"># that is wquivalent to </span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="kw">apply</span>(SB<span class="op">$</span>spatioTemporal[,,<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>,<span class="st">&quot;nVis&quot;</span>], <span class="dv">3</span>,  sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb5-10"><a href="#cb5-10"></a></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="kw">exportBirds</span>(SB, <span class="dt">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="dt">timeRes =</span> <span class="st">&quot;monthly&quot;</span>, <span class="dt">variable =</span> <span class="st">&quot;nVis&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co"># that is somehow equivalent to the xts method except the later excludes months without data</span></span>
-<span id="cb5-13"><a href="#cb5-13"></a>xts<span class="op">::</span><span class="kw">apply.monthly</span>(SB<span class="op">$</span>temporal[,<span class="st">&quot;nVis&quot;</span>], sum)</span>
-<span id="cb5-14"><a href="#cb5-14"></a></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="kw">exportBirds</span>(SB, <span class="dt">dimension =</span> <span class="st">&quot;spatial&quot;</span>, <span class="dt">timeRes =</span> <span class="st">&quot;NULL&quot;</span>, <span class="dt">variable =</span> <span class="st">&quot;nYears&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;sum&quot;</span>)<span class="op">@</span>data</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;yearly&quot;</span>, <span class="at">variable =</span> <span class="st">&quot;nObs&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this is equivalent to </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(SB<span class="sc">$</span>spatioTemporal[,,<span class="st">&quot;Yearly&quot;</span>,<span class="st">&quot;nObs&quot;</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;month&quot;</span>, <span class="at">variable =</span> <span class="st">&quot;nVis&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># that is wquivalent to </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(SB<span class="sc">$</span>spatioTemporal[,,<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>,<span class="st">&quot;nVis&quot;</span>], <span class="dv">3</span>,  sum, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;monthly&quot;</span>, <span class="at">variable =</span> <span class="st">&quot;nVis&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># that is somehow equivalent to the xts method except the later excludes months without data</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>xts<span class="sc">::</span><span class="fu">apply.monthly</span>(SB<span class="sc">$</span>temporal[,<span class="st">&quot;nVis&quot;</span>], sum)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;spatial&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;NULL&quot;</span>, <span class="at">variable =</span> <span class="st">&quot;nYears&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)<span class="sc">@</span>data</span></code></pre></div>
 </div>
 <div id="listspecies" class="section level5">
 <h5><code>listSpecies()</code></h5>
@@ -475,43 +313,43 @@ It takes as parameters:</p>
 <div id="focalspsummary" class="section level5">
 <h5><code>focalSpSummary()</code></h5>
 <p>If you are interested in a particular species, you can produce a summary of the number of cells, number of observations, numbers visits (and unique visit ID), number of years, and months where the focal species was observed.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">focalSpSummary</span>(SB, <span class="st">&quot;Bombus humilis&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">focalSpSummary</span>(SB, <span class="st">&quot;Bombus humilis&quot;</span>)</span></code></pre></div>
 <p>Its variant <code>speciesSummary()</code> will loop the function <code>focalSpSummary()</code> over for all species in the data set.</p>
 </div>
 <div id="focalspreport" class="section level5">
 <h5><code>focalSpReport()</code></h5>
 <p>This function will produce a simple visual report for the observation pattern of the focal species.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">focalSpReport</span>(SB, <span class="st">&quot;Bombus humilis&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">focalSpReport</span>(SB, <span class="st">&quot;Bombus humilis&quot;</span>)</span></code></pre></div>
 </div>
 <div id="exposeignorance" class="section level5">
 <h5><code>exposeIgnorance()</code></h5>
 <p>We could also map the ignorance scores based on the either the number of observations or visits using the function <code>exposeIgnorance()</code>. Ignorance scores are a proxy for the lack of sampling effort, computed by making the number of observations relative to a reference number of observations that is considered to be enough to reduce the ignorance score by half (henceforth the Half-ignorance approach). The algorithm behind the Ignorance Score is designed for comparison of bias and gaps in primary biodiversity data across taxonomy, time and space Read more here: Ruete (2015) Biodiv Data J 3:e5361 .</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb8-2"><a href="#cb8-2"></a>palBW &lt;-<span class="st"> </span>leaflet<span class="op">::</span><span class="kw">colorNumeric</span>(<span class="kw">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;navyblue&quot;</span>), </span>
-<span id="cb8-3"><a href="#cb8-3"></a>                               <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), </span>
-<span id="cb8-4"><a href="#cb8-4"></a>                               <span class="dt">na.color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
-<span id="cb8-5"><a href="#cb8-5"></a>seqNVis&lt;-<span class="kw">round</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="kw">max</span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">length.out =</span> <span class="dv">5</span>))</span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">plot</span>(SB<span class="op">$</span>spatial, <span class="dt">col=</span><span class="kw">palBW</span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis), <span class="dt">border =</span> <span class="ot">NA</span>)</span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="kw">plot</span>(gotaland, <span class="dt">col=</span><span class="ot">NA</span>, <span class="dt">border =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">lwd=</span><span class="dv">1</span>, <span class="dt">add=</span><span class="ot">TRUE</span>)</span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="kw">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="dt">legend=</span>seqNVis, <span class="dt">col =</span> <span class="kw">palBW</span>(seqNVis),</span>
-<span id="cb8-9"><a href="#cb8-9"></a>      <span class="dt">title =</span> <span class="st">&quot;Number of </span><span class="ch">\n</span><span class="st">observations&quot;</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)</span>
-<span id="cb8-10"><a href="#cb8-10"></a></span>
-<span id="cb8-11"><a href="#cb8-11"></a>ign&lt;-<span class="kw">exposeIgnorance</span>(SB<span class="op">$</span>spatial<span class="op">@</span>data<span class="op">$</span>nVis, <span class="dt">h =</span> <span class="dv">5</span>)</span>
-<span id="cb8-12"><a href="#cb8-12"></a>palBWR &lt;-<span class="st"> </span>leaflet<span class="op">::</span><span class="kw">colorNumeric</span>(<span class="kw">c</span>(<span class="st">&quot;navyblue&quot;</span>, <span class="st">&quot;white&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
-<span id="cb8-13"><a href="#cb8-13"></a>                                <span class="dt">na.color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
-<span id="cb8-14"><a href="#cb8-14"></a><span class="kw">plot</span>(gotaland, <span class="dt">col=</span><span class="st">&quot;grey90&quot;</span>, <span class="dt">border =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">lwd=</span><span class="dv">1</span>)</span>
-<span id="cb8-15"><a href="#cb8-15"></a><span class="kw">plot</span>(SB<span class="op">$</span>spatial, <span class="dt">col=</span><span class="kw">palBWR</span>(ign), <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">add=</span><span class="ot">TRUE</span>)</span>
-<span id="cb8-16"><a href="#cb8-16"></a><span class="kw">plot</span>(gotaland, <span class="dt">col=</span><span class="ot">NA</span>, <span class="dt">border =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">lwd=</span><span class="dv">1</span>, <span class="dt">add=</span><span class="ot">TRUE</span>)</span>
-<span id="cb8-17"><a href="#cb8-17"></a><span class="kw">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="dt">legend=</span><span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>), <span class="st">&quot;NA&quot;</span>),</span>
-<span id="cb8-18"><a href="#cb8-18"></a>      <span class="dt">col =</span> <span class="kw">c</span>(<span class="kw">palBWR</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>)), <span class="st">&quot;grey90&quot;</span>),</span>
-<span id="cb8-19"><a href="#cb8-19"></a>      <span class="dt">title =</span> <span class="st">&quot;Ignorance </span><span class="ch">\n</span><span class="st">nVis, </span><span class="ch">\n</span><span class="st">O0.5=5&quot;</span>, <span class="dt">pch =</span> <span class="dv">15</span>, <span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>palBW <span class="ot">&lt;-</span> leaflet<span class="sc">::</span><span class="fu">colorNumeric</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;navyblue&quot;</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(SB<span class="sc">$</span>spatial<span class="sc">@</span>data<span class="sc">$</span>nVis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>seqNVis<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(SB<span class="sc">$</span>spatial<span class="sc">@</span>data<span class="sc">$</span>nVis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">length.out =</span> <span class="dv">5</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(SB<span class="sc">$</span>spatial, <span class="at">col=</span><span class="fu">palBW</span>(SB<span class="sc">$</span>spatial<span class="sc">@</span>data<span class="sc">$</span>nVis), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gotaland, <span class="at">col=</span><span class="cn">NA</span>, <span class="at">border =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">lwd=</span><span class="dv">1</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend=</span>seqNVis, <span class="at">col =</span> <span class="fu">palBW</span>(seqNVis),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Number of </span><span class="sc">\n</span><span class="st">observations&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">bty=</span><span class="st">&quot;n&quot;</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>ign<span class="ot">&lt;-</span><span class="fu">exposeIgnorance</span>(SB<span class="sc">$</span>spatial<span class="sc">@</span>data<span class="sc">$</span>nVis, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>palBWR <span class="ot">&lt;-</span> leaflet<span class="sc">::</span><span class="fu">colorNumeric</span>(<span class="fu">c</span>(<span class="st">&quot;navyblue&quot;</span>, <span class="st">&quot;white&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                                <span class="at">na.color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gotaland, <span class="at">col=</span><span class="st">&quot;grey90&quot;</span>, <span class="at">border =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">lwd=</span><span class="dv">1</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(SB<span class="sc">$</span>spatial, <span class="at">col=</span><span class="fu">palBWR</span>(ign), <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gotaland, <span class="at">col=</span><span class="cn">NA</span>, <span class="at">border =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">lwd=</span><span class="dv">1</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">5</span>), <span class="st">&quot;NA&quot;</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">palBWR</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">5</span>)), <span class="st">&quot;grey90&quot;</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Ignorance </span><span class="sc">\n</span><span class="st">nVis, </span><span class="sc">\n</span><span class="st">O0.5=5&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">bty=</span><span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 </div>
 <div id="communitymatrix" class="section level5">
 <h5><code>communityMatrix()</code></h5>
 <p>In case you need to continue with community and biodiversity analyses, we made it easier for you to use the concept of visits as sampling units in other packages. These packages (e.g. vegan) take as input a matrix with n spatial sampling units by m species, summarizing the number of times a species has been observed in each spatial unit. These assume of course that the same sampling effort has been made in all spatial units. Unfortunately, it is very common in PBDs that the number of observations for a specie does not reflect the species abundance, because it is very bias by the species detectability, commonness and popularity, and overall sampling effort. Ideally, such a matrix would be constructed from species lists corrected by detectability (i.e. occupancy model). However, a first approximation can be done by summarizing the number of visits (instead of number of observations) where a species has been observed and weighing or filtering them by each visits effort. We are working on a function that could do exactly that. As of v.0.0.1, this function returns the number of visits where each species has been observed, without any filtering or compensating for sampling effort.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">## Community analysis --&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>CM &lt;-<span class="st"> </span><span class="kw">communityMatrix</span>(SB, <span class="dt">sampleUnit=</span><span class="st">&quot;visit&quot;</span>)</span>
-<span id="cb9-3"><a href="#cb9-3"></a>sp1 &lt;-<span class="st"> </span>vegan<span class="op">::</span><span class="kw">specaccum</span>(CM, <span class="dt">method =</span> <span class="st">&quot;exact&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Community analysis --&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>CM <span class="ot">&lt;-</span> <span class="fu">communityMatrix</span>(SB, <span class="at">sampleUnit=</span><span class="st">&quot;visit&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sp1 <span class="ot">&lt;-</span> vegan<span class="sc">::</span><span class="fu">specaccum</span>(CM, <span class="at">method =</span> <span class="st">&quot;exact&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div class="footnotes">
