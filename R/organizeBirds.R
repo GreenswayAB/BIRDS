@@ -202,13 +202,6 @@ All results will use this nomenclature, but the order of the cells will remain u
       }
   }
 
-
-  # if(! identical(st_crs(x), st_crs(grid))){
-  #   # grid <- spTransform(grid, slot(x,"proj4string"))
-  #   grid <- st_transform(grid,
-  #                        crs = st_crs(x)
-  #   )
-  # }
   x <- st_transform(x,
                     crs = st_crs(3857))
   grid <- st_transform(grid,
@@ -493,7 +486,6 @@ obsData.OrganizedBirds<-function(x){
 #' @importFrom stats IQR median na.omit  quantile var
 #' @importFrom grDevices boxplot.stats
 #' @importFrom graphics barplot layout legend mtext par plot
-#' @importFrom methods as slot slot<-
 #' @return a `SpatialPointsDataFrame` wrapped into an object of class OrganizedBirds,
 #' with additional attributes.
 #' @export

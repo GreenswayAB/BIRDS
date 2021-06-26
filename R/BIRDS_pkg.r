@@ -1,12 +1,12 @@
 #' BIRDS: Biodiversity Information Review and Decision Support.
 #'
 #' @description The primary aim of this package is to provide tools for Biodiversity Informatics
-#' in order to understand the specis information data and decide about what analyses
-#' we can perform and draw approriate conclusions. For this we need to understand
+#' in order to understand the species information data and decide about what analyses
+#' we can perform and draw appropriate conclusions. For this we need to understand
 #' the data generation process. With this R package we want to take the
-#' user a step closer to understanding the observers’ behaviour.
-#' The 'BIRDS' packages provides a workflow for reproducable data review, involving
-#' three basic steps: organise data, summarise data, review data.
+#' user a step closer to understanding the observers’ behavior.
+#' The 'BIRDS' packages provides a workflow for reproducible data review, involving
+#' three basic steps: organize, summarize, and review data.
 #'
 #' @import sf
 #' @docType package

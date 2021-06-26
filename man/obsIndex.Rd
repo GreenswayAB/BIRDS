@@ -62,7 +62,7 @@ spatOI <- obsIndex(SB, "spatial", focalSp=spp[3])
 minOI <- min(spatOI$relObs, na.rm=TRUE)
 maxOI <- max(spatOI$relObs, na.rm=TRUE)
 palRW <- leaflet::colorNumeric(c("white", "red"), c(minOI, maxOI), na.color = "transparent")
-sp::plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
+plot(spatOI, col=palRW(spatOI$relObs), border="grey", main=spp[3])
 legend("bottomleft", legend=seq(minOI, maxOI, length.out = 5),
        col = palRW(seq(minOI, maxOI, length.out = 5)), pch = 15, bty="n")
 }

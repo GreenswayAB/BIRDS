@@ -16,6 +16,8 @@ a EPSG integer code for an appropriate UTM zone
 A wrapper around getUTMzone and produce a crs object string
 }
 \examples{
-OB <- organizeBirds(bombusObs)
-getUTMproj(OB)
+\donttest{
+  OB <- organizeBirds(bombusObs)
+  getUTMproj(OB)
+}
 }

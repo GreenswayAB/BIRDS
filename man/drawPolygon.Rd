@@ -7,7 +7,7 @@
 drawPolygon(lat = 0, lng = 0, zoom = 1, editor = "leafpm")
 }
 \arguments{
-\item{lat}{initial geographical coordinate for latititude in decimal degrees (EPSG:4326)
+\item{lat}{initial geographical coordinate for latitude in decimal degrees (EPSG:4326)
 for the map to start at. Default = \dQuote{0}.}
 
 \item{lng}{initial geographical coordinate for longitude in decimal degrees (EPSG:4326)
@@ -20,8 +20,8 @@ and \dQuote{leaflet.extras}. Requires additional packages \code{leafpm} and
 \code{leaflet.extras}, respectively.}
 }
 \value{
-an object of class \sQuote{SpatialPolygon-class} with a polygon
-(only the first one drawn) with geodesic coordinates in WGS84 (ESPG:4326).
+an object of class \sQuote{sf} with a polygon (only the first one drawn)
+with geodesic coordinates in WGS84 (ESPG:4326).
 }
 \description{
 Create the polygon for the study area by drawing into a world map
