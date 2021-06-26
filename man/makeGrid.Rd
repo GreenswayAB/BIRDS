@@ -60,7 +60,9 @@ cell size is wider than the polygon on any dimension an error message will be
 displayed.
 }
 \examples{
+\donttest{
 grid <- makeGrid(gotaland, gridSize = 10)
+}
 }
 \seealso{
 \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}

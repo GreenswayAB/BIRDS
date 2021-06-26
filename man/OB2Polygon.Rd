@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeGrid.r
 \name{OB2Polygon}
 \alias{OB2Polygon}
-\title{Create the polygon for the study area from a dataset of class \sQuote{OrganizedBirds}}
+\title{Create the polygon for the study area from a data set of class \sQuote{OrganizedBirds}}
 \usage{
 OB2Polygon(x, shape = "bBox")
 }
@@ -24,9 +24,11 @@ an object of class \sQuote{sf} with a polygon with geodesic coordinates
  in WGS84 (ESPG:4326).
 }
 \description{
-Create the polygon for the study area from a dataset of class \sQuote{OrganizedBirds}
+Create the polygon for the study area from a data set of class \sQuote{OrganizedBirds}
 }
 \examples{
-ob <- organizeBirds(bombusObs)
-polygon <- OB2Polygon(ob, shape = "cHull")
+\donttest{
+  ob <- organizeBirds(bombusObs)
+  polygon <- OB2Polygon(ob, shape = "cHull")
+}
 }

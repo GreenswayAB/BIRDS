@@ -185,7 +185,6 @@ focalSpSummary <- function(x, focalSp=NULL){
 #' @return a plot with a brief species summary
 #' @examples
 #' \donttest{
-#' library(sp)
 #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summariseBirds(OB, grid=grid)

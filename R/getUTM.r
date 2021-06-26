@@ -127,10 +127,13 @@ getUTMzone <- function(sf){
 #'
 #' @param x an object of class \sQuote{OrganizedBirds}, \sQuote{sf} or \sQuote{SpatialPointsDataFrame}
 #' @return a EPSG integer code for an appropriate UTM zone
+#' @importFrom rgdal showEPSG
 #' @export
 #' @examples
-#' OB <- organizeBirds(bombusObs)
-#' getUTMproj(OB)
+#' \donttest{
+#'   OB <- organizeBirds(bombusObs)
+#'   getUTMproj(OB)
+#' }
 getUTMproj <- function(x){
   if (!any(class(x) %in% c("OrganizedBirds", "sf", "sfc", "SpatialPointsDataFrame")))
     stop("input data is neither an object of class 'OrganizedBirds', 'sf', 'sfc' or 'SpatialPointsDataFrame'")

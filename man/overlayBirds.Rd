@@ -56,7 +56,9 @@ neighbouring cells is minimal and information over the spatial extent of the
 sampling effort is more important than sample independence.
 }
 \examples{
+\donttest{
 ob <- organizeBirds(bombusObs)
 grid <- makeGrid(gotaland, 10)
-ovB <- overlayBirds(ob, grid)
+ovB <- overlayBirds(ob, grid) 
+}
 }

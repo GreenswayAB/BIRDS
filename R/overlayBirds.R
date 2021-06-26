@@ -174,9 +174,11 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 #'   }
 #' @export
 #' @examples
+#' \donttest{
 #' ob <- organizeBirds(bombusObs)
 #' grid <- makeGrid(gotaland, 10)
-#' ovB <- overlayBirds(ob, grid)
+#' ovB <- overlayBirds(ob, grid) 
+#' }
 overlayBirds <- function(x,
                          grid,
                          spillOver = NULL,

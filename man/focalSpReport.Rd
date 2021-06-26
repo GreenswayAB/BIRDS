@@ -40,7 +40,6 @@ and bar charts with number of records per year and month.
 }
 \examples{
 \donttest{
-library(sp)
 OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)

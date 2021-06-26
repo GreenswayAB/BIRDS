@@ -1,6 +1,6 @@
 #' Create the polygon for the study area by drawing into a world map
 #'
-#' @param lat initial geographical coordinate for latititude in decimal degrees (EPSG:4326)
+#' @param lat initial geographical coordinate for latitude in decimal degrees (EPSG:4326)
 #' for the map to start at. Default = \dQuote{0}.
 #' @param lng initial geographical coordinate for longitude in decimal degrees (EPSG:4326)
 #' for the map to start at. Default = \dQuote{0}.
@@ -8,8 +8,8 @@
 #' @param editor type of editor for the drawing tools. Options are \dQuote{leafpm} (default)
 #' and \dQuote{leaflet.extras}. Requires additional packages \code{leafpm} and
 #' \code{leaflet.extras}, respectively.
-#' @return an object of class \sQuote{SpatialPolygon-class} with a polygon
-#' (only the first one drawn) with geodesic coordinates in WGS84 (ESPG:4326).
+#' @return an object of class \sQuote{sf} with a polygon (only the first one drawn)
+#' with geodesic coordinates in WGS84 (ESPG:4326).
 #' @export
 #' @examples
 #' if(interactive()){
@@ -17,6 +17,7 @@
 #' }
 #' @importFrom magrittr %>%
 #' @importFrom sf st_transform st_crs st_geometry_type
+#' @importFrom mapedit editMap
 drawPolygon <- function(lat = 0,
                         lng = 0,
                         zoom = 1,
@@ -27,10 +28,10 @@ drawPolygon <- function(lat = 0,
       leaflet::setView(lng = lng, lat = lat, zoom = zoom) %>%
       leaflet::setMaxBounds(lng1 = -220, lat1 = 86, lng2 = 220, lat2 = -86)  #%>%
 
-    areaDrawn <- mapedit::editMap(map,
-                                  editor = "leafpm",
-                                  viewer = shiny::paneViewer(),
-                                  title = "Draw a polygon where to place the grid")
+    areaDrawn <- editMap(map,
+                         editor = "leafpm",
+                         viewer = shiny::paneViewer(),
+                         title = "Draw a polygon where to place the grid")
     area <- areaDrawn$finished$geometry
 
     # Observe the draw input
@@ -118,7 +119,7 @@ makeCircle<-function(spdf, crs=NULL){
 }
 
 
-#' Create the polygon for the study area from a dataset of class \sQuote{OrganizedBirds}
+#' Create the polygon for the study area from a data set of class \sQuote{OrganizedBirds}
 #'
 #' @param x an object of class \sQuote{OrganizedBirds}, \sQuote{sf} or \sQuote{SpatialPointsDataFrame}
 #' @param shape which type of polygon should be made from the data:
@@ -133,8 +134,10 @@ makeCircle<-function(spdf, crs=NULL){
 #' @return an object of class \sQuote{sf} with a polygon with geodesic coordinates
 #'  in WGS84 (ESPG:4326).
 #' @examples
-#' ob <- organizeBirds(bombusObs)
-#' polygon <- OB2Polygon(ob, shape = "cHull")
+#' \donttest{
+#'   ob <- organizeBirds(bombusObs)
+#'   polygon <- OB2Polygon(ob, shape = "cHull")
+#' }
 #' @export
 OB2Polygon <- function(x, shape="bBox") {
 
@@ -239,7 +242,9 @@ renameGrid <- function(grid, idcol="id"){
 #' cell size is wider than the polygon on any dimension an error message will be
 #' displayed.
 #' @examples
+#' \donttest{
 #' grid <- makeGrid(gotaland, gridSize = 10)
+#' }
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 #' @importFrom sf st_crs as_Spatial st_transform st_as_sf
 #' @export
@@ -343,7 +348,6 @@ makeGrid <- function(poly,
 # #' Grid cells must be smaller than the sampling area. If the grid cell size is wider than the polygon on any dimension
 # #' an error message will be displayed.
 # #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
-# #' @importFrom sp bbox coordinates proj4string spTransform CRS Polygon Polygons SpatialPolygons
 # #' @importFrom dplyr group_map
 # #' @importFrom rlang .data
 # #' @importFrom utils installed.packages
