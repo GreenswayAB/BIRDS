@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Create unique IDs based on a grid — getGridIDs" />
-<meta property="og:description" content="Takes a spatial points dataframe and a grid and gets the overlay IDs." />
+<meta property="og:description" content="Takes a spatial points data.frame and a grid and gets the overlay IDs." />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -153,22 +153,26 @@
     </div>
 
     <div class="ref-description">
-    <p>Takes a spatial points dataframe and a grid and gets the overlay IDs.</p>
+    <p>Takes a spatial points data.frame and a grid and gets the overlay IDs.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getGridIDs</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getGridIDs</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>grid</span>, idcol <span class='op'>=</span> <span class='st'>"id"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a SpatialPointsDataFrame .</p></td>
+      <td><p>a SpatialPointsDataFrame ('sp') or sf ('sf') (with the observations).</p></td>
     </tr>
     <tr>
       <th>grid</th>
-      <td><p>A a SpatialPolygon object (a grid is expected) defining the
+      <td><p>a SpatialPolygon object ('sp') or sf ('sf') (a grid is expected) defining the
 maximum extent of visits effort.</p></td>
+    </tr>
+    <tr>
+      <th>idcol</th>
+      <td><p>column name for the grid names or ids</p></td>
     </tr>
     </table>
 

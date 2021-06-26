@@ -18,7 +18,7 @@
 #' smaller datasets.
 #'
 #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
-#' Dataframe). See \code{\link{organizeBirds}}
+#' data.frame). See \code{\link{organizeBirds}}
 #' @param ev an object of class \sQuote{data.frame} from exploreVisits.
 #' @param criteria the criteria to rank "good visits". Accepts c("SLL", "nObs",
 #' "effortDiam", "medianDist")
@@ -52,7 +52,7 @@ removeObs <- function(x,
                       stepChunk=0.05){
   #check x class = Organised birds
   if (class(x) == "OrganizedBirds") {
-    obs <- x$spdf@data
+    obs <- st_drop_geometry(x$spdf)
     visitCol <- attr(x, "visitCol")
   } else {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
@@ -65,8 +65,8 @@ removeObs <- function(x,
   if(!(criteria %in% c("SLL", "nObs", "effortDiam", "medianDist"))) stop("The argument 'criteria' needs to be one of c('SLL', 'nObs', 'effortDiam', 'medianDist')")
 
   if(!is.null(percent)){ #check if percent use it else minCrit, else error
-    percent<-percent/100
-    if(0<=percent & percent <=1){#check percent between 0-1
+    percent <- percent/100
+    if(0 <= percent & percent <=1){#check percent between 0-1
       wEV <- match(obs[,visitCol], ev$visitUID)
       obs$crit <- ev[wEV,criteria]
 
@@ -151,7 +151,7 @@ removeObs <- function(x,
 
   x$spdf <- x$spdf[wKeep,]
   message(paste0("The result is ",
-                 round(percLeft*100, 2),
+                 round(percLeft * 100, 2),
                  "% of the original observations set"))
   return(x)
 }

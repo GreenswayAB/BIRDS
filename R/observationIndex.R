@@ -12,7 +12,7 @@ normalize <- function(x) {
   return (norm)
 }
 
-#' The actual observation idenx function
+#' The actual observation index function
 #'
 #' This function implements the algorithms to calculate the observation index.
 #' OI = log ( (At / (At + Rt) ) / ( A / (A + R) ) )
@@ -23,7 +23,7 @@ normalize <- function(x) {
 #' @param group observations/visits for the reference species group
 #' @param fs.rm if TRUE, assumes that the observations for the focal species are
 #' included in 'group' and will remove them
-#' @param norm if TRUE, the result is nomalized to a 0-1 range
+#' @param norm if TRUE, the result is normalized to a 0-1 range
 #' @return a positive observation index
 #' @references Telfer, Preston & Rothery (2002) <doi:10.1016/S0006-3207(02)00050-2>
 #' @keywords internal
@@ -39,6 +39,8 @@ logObsInd<-function(focal,
                             already removed? Try with 'fs.rm=FALSE'")
   }
   focalS <- sum(focal, na.rm=TRUE)
+  if(focalS==0) return(rep(0,length(focal)))
+
   groupS <- sum(group, na.rm=TRUE)
   res2log <- (focal / (focal + group)) / (focalS / (focalS + groupS))
 
@@ -49,11 +51,11 @@ logObsInd<-function(focal,
   return(res)
 }
 
-#' Extract precense from SB
+#' Extract presence from SB
 #'
-#' This function removes abcense observations of the focal species
+#' This function removes absence observations of the focal species
 #' @param x an object of class \sQuote{SummarizeBirds}.
-#' @return returns x without observations where the value precense is < 1
+#' @return returns x without observations where the value presence is < 1
 #'
 #' @keywords internal
 extractPresence<-function(x){
@@ -69,7 +71,7 @@ extractPresence<-function(x){
 
 #' Relative observation index (Temporal)
 #'
-#' This function extracts the proportion of visitis (or observations) detecting
+#' This function extracts the proportion of visits (or observations) detecting
 #' a focal species to all visits (or observations) over time.
 #' @param x an object of class \sQuote{SummarizeBirds}.
 #' @param timeRes the time resolution:  \code{"Yearly", "Monthly"} or \code{"Daily"}
@@ -78,7 +80,7 @@ extractPresence<-function(x){
 #' of visits, else uses the number of observations.
 #' @param fs.rm if TRUE, assumes that the observations for the focal species are
 #' included in 'group' and will remove them
-#' @param norm if TRUE, the result is nomalized to a 0-1 range
+#' @param norm if TRUE, the result is normalized to a 0-1 range
 #'
 #' @return An xts timeseries
 #'
@@ -125,18 +127,22 @@ obsIndexTemporal<-function(x,
   spNgby<-extractPresence(spNgby)
 
   if (visits){
-    allN <- summarise(group_by(spData, .data$dates), all= n_distinct(!!dplyr::sym(visitCol)))
-    spN <- summarise(spNgby, sp=n_distinct(!!dplyr::sym(visitCol)))
+    allN <- summarise(group_by(spData, .data$dates),
+                      all= n_distinct(!!dplyr::sym(visitCol)))
+    spN <- summarise(spNgby,
+                     sp=n_distinct(!!dplyr::sym(visitCol)))
   } else {
-    allN <- summarise(group_by(spData, .data$dates), all=n())
-    spN <- summarise(spNgby, sp=n())
+    allN <- summarise(group_by(spData, .data$dates),
+                      all=n())
+    spN <- summarise(spNgby,
+                     sp=n())
   }
 
   allN<-xts::xts(allN$all, allN$dates)
   spN<-xts::xts(spN$sp, spN$dates)
 
-  res<-merge(res,allN,join='left')
-  res<-merge(res,spN,join='left', fill=0)
+  res<-merge(res, allN, join='left')
+  res<-merge(res, spN, join='left', fill=0)
 
   res<-res[,-1]
 
@@ -166,7 +172,7 @@ obsIndexTemporal<-function(x,
 #' of visits, else uses the number of observations.
 #' @param fs.rm if TRUE, assumes that the observations for the focal species are
 #' included in 'group' and will remove them
-#' @param norm if TRUE, the result is nomalized to a 0-1 range
+#' @param norm if TRUE, the result is normalized to a 0-1 range
 #'
 #' @return A spatial object
 #'
@@ -185,34 +191,43 @@ obsIndexSpatial<-function(x,
   visitCol <- attr(x, "visitCol")
   overlaid<-x$overlaid
 
-  r<-lapply(overlaid, function(x){
-      spNgby<-group_by(x[x$scientificName==focalSp,])
-      ## if there is a column for presence then remove absences
-      spNgby<-extractPresence(spNgby)
-      if (visits){
-        allN <- summarise(group_by(x), n_distinct(!!dplyr::sym(visitCol)))
-        spN <- summarise(spNgby, n_distinct(!!dplyr::sym(visitCol)))
-      } else {
-        allN <- summarise(group_by(x), n())
-        spN <- summarise(spNgby, n())
-      }
+  r <- lapply(overlaid,
+            function(x){
+              if(!all(is.na(x))){
+                # spNgby<-group_by(x[x$scientificName==focalSp,])
+                spNgby<-x[x$scientificName==focalSp,]
+                ## if there is a column for presence then remove absences
+                spNgby<-extractPresence(spNgby)
+                if (visits){
+                  allN <- summarise(x, n_distinct(!!dplyr::sym(visitCol)))
+                  spN <- summarise(spNgby, n_distinct(!!dplyr::sym(visitCol)))
+                } else {
+                  allN <- summarise(x, n())
+                  spN <- summarise(spNgby, n())
+                }
 
-      return( unname(unlist( c(allN, spN) )) )
-    }
+                return( c(pull(allN), pull(spN) ) )
+              } else {
+                return(c(0,0))
+              }
+            }
   )
 
-  r<-data.frame(matrix(unlist(r), ncol = 2, byrow = TRUE))
+  r <- data.frame(
+          matrix(
+            unlist(r),
+            ncol = 2,
+            byrow = TRUE)
+          )
   colnames(r)<-c("allN", "spN")
 
-  # r$relObs <- r$spN/r$allN
-  r$relObs <-logObsInd(r$spN,
-                       r$allN,
-                       fs.rm=fs.rm,
-                       norm=norm)
+  r$relObs <- logObsInd(r$spN,
+                        r$allN,
+                        fs.rm=fs.rm,
+                        norm=norm)
 
   r[r$allN==0, ] <- NA
-  res <- x$spatial
-  res@data <- r
+  res <- st_sf(cbind(r, st_geometry(x$spatial)))
 
   return(res)
 }

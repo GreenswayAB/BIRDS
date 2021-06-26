@@ -7,7 +7,7 @@
 exploreVisits(x, visitCol = NULL, sppCol = "scientificName")
 }
 \arguments{
-\item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial Dataframe).
+\item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial data frame).
 See \code{\link{organizeBirds}}.}
 
 \item{visitCol}{name of the column for the visits UID.}

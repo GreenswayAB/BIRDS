@@ -12,10 +12,10 @@ getTemporal(birdOverlay, visitCol = NULL)
 \item{visitCol}{A character string for specifying the columns that identify a visit.}
 }
 \value{
-The overlay dataframe for a specific grid, including the spillover visits.
+The overlay data.frame for a specific grid, including the spillover visits.
 }
 \description{
-An internal function. Takes the dataframe resulting from the temporal overlay
+An internal function. Takes the data.frame resulting from the temporal overlay
 for a specific grid and summarises basic variables as a time series
 }
 \keyword{internal}

@@ -5,11 +5,19 @@
 #'
 #' @param x A list.
 #' @return The a \code{vector} with list elements IDs.
-#' @keywords internal
+#' @export
 whichNonEmpty <- function(x){
   # res <- which( lengths(x) > 1)
   # res <- unname(which(unlist(!is.null(lapply(x, nrow) > 0)))
-  res <- which(unlist(lapply(x, function(y) !all(is.na(y)))))
+  res <-  which(
+            unlist(
+              lapply(x,
+                     function(y){
+                        !all(is.na(y))
+                     }
+              )
+            )
+          )
 
   return(res)
 }
@@ -65,7 +73,7 @@ includeSpillover <- function(x, birdData, visitCol){
 #' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
-  if(!any(class(birdData) %in% c("sf","OrganizedBirds","SpatialPointsDataFrame"))) 
+  if(!any(class(birdData) %in% c("sf","OrganizedBirds","SpatialPointsDataFrame")))
     stop("Data must be of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
   if(any(class(birdData)=="OrganizedBirds")) birdData <- birdData$spdf
   if(any(class(birdData)=="SpatialPointsDataFrame")) birdData <- st_as_sf(birdData)
@@ -75,17 +83,22 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
   }
 
   if(any(class(grid)=="sfc")) grid <- st_as_sf(grid)
-     
+
   ## create ids
   if(length(grep("id", colnames(grid), ignore.case = TRUE)) ==0) {
     grid$id <- seq(nrow(grid))
   } else {
-    grid$id <- st_drop_geometry(grid[, grep("id", colnames(grid), ignore.case = TRUE)[1]])
+    grid$id <- st_drop_geometry(grid[, grep("id", colnames(grid),
+                                            ignore.case = TRUE)[1]])
   }
 
   obs <- st_drop_geometry(
-            suppressMessages(
-              st_intersection(birdData, grid)))
+            suppressWarnings(
+              suppressMessages(
+                st_intersection(birdData, grid)
+              )
+            )
+          )
 
   wNA <- which(is.na(obs$id))
   if(length(wNA)>0){
@@ -97,7 +110,7 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 
   visits <- unique(obs[, visitCol])
   visits <- cbind(visits, "grid" = NA)
-  
+
   for(v in dimnames(crossTab)$visits){
     visits[visits[, "visits"] == as.integer(v), "grid"] <- as.integer(dimnames(crossTab)$grid[nnet::which.is.max(crossTab[,v])])
     ##nnet::which.is.max is good since if it's equal number it takes one on random.
@@ -139,36 +152,39 @@ includeUniqueSpillover <- function(birdData, grid, visitCol){
 #' observations with same visitUID across all grid cells containing at least one
 #' observation with that visitUID.
 #'
-#' The later approach is usefull when the amount of observations spilled over
+#' The later approach is useful when the amount of observations spilled over
 #' neighbouring cells is minimal and information over the spatial extent of the
 #' sampling effort is more important than sample independence.
 #'
 #' @param x An OrganizedBirds object
-#' @param grid A SpatialPolygonsDataFrame object of the grid over the study area
+#' @param grid A sf or SpatialPolygonsDataFrame object of the grid over the study area
 #' @param spillOver Specifies if the function should search for observations
 #' with the same visitUID over several grid cell, and what to do with them.
-#'  Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.
+#' It accepts \code{c(NULL, "unique", "duplicate")}. Default NULL.
+#' @param cleanGrid logical. Whether to remove all data from the grid.
 #'
 #' @return The output is a OverlaidBirds-class object, which is a list
 #'   containing three objects;
 #'   \describe{
 #'     \item{\code{observationsInGrid}}{Is
 #'       basically the data in the OrganizedBirds object split by each grid cell
-#'       (\emph{n.b.} the use of \code{spillOver = TRUE} discussed under "Usage")}
-#'     \item{\code{grid}}{The SpatialPolygonsDataFrame from the input, but cleared
-#'       of data to not waste unnecessary memory}
+#'       (\emph{n.b.} the use of \code{spillOver} discussed under "Usage")}
+#'     \item{\code{grid}}{The sf from the input, optionally cleared of data }
 #'    \item{\code{nonEmptyGridCells}}{An integer vector of which grid cells that have observations}
 #'   }
 #' @export
 #' @examples
 #' ob <- organizeBirds(bombusObs)
-#' grid <- makeGrid(gotaland, gridSize = 10)
+#' grid <- makeGrid(gotaland, 10)
 #' ovB <- overlayBirds(ob, grid)
-overlayBirds <- function(x, grid, spillOver = NULL){
+overlayBirds <- function(x,
+                         grid,
+                         spillOver = NULL,
+                         cleanGrid = TRUE){
   if(!is.null(spillOver)){
     ### Bad spill over definition
     if (!spillOver %in% c("unique", "duplicate") ) stop("Unknown definition of 'spillOver'")
-  }
+  } #else {  stop("Unknown definition of 'spillOver'") }
   UseMethod("overlayBirds")
 }
 
@@ -176,7 +192,10 @@ overlayBirds <- function(x, grid, spillOver = NULL){
 
 #' @export
 #' @rdname overlayBirds
-overlayBirds.OrganizedBirds <- function(x, grid, spillOver = NULL){
+overlayBirds.OrganizedBirds <- function(x,
+                                        grid,
+                                        spillOver = NULL,
+                                        cleanGrid = TRUE){
   spBird <- x$spdf
 
   if(any(class(spBird) == "SpatialPointsDataFrame")){
@@ -185,6 +204,10 @@ overlayBirds.OrganizedBirds <- function(x, grid, spillOver = NULL){
 
   if(any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
     grid <- st_as_sf(grid)
+  }
+
+  if (cleanGrid){
+    grid <- st_geometry(grid) ##Removes unnecessary data from the input grid, if there is any
   }
 
   visitCol <- attr(x, "visitCol")
@@ -205,7 +228,6 @@ All results will use this nomenclature, but the order of the cells will remain u
 
   #### SPILL OVER
   ### Generic overlay
-  # ObsInGridList <- over(grid, spBird, returnList=TRUE)
   ## overlay the data with the grid
   listGrid <- suppressMessages(st_intersects(grid, spBird))
 
@@ -242,21 +264,18 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
     }
   }
 
-
   if(!is.null(spillOver)){
+  #   if (!spillOver %in% c("unique", "duplicate") ) stop("Unknown definition of 'spillOver'")
     ### Good definition
     if(spillOver == "unique"){ ### UNIQUE SPILL OVER
       ObsInGridList <- includeUniqueSpillover(spBird, grid, visitCol)
       wNonEmpty <- whichNonEmpty(ObsInGridList)
 
-    } else if(spillOver == "duplicate"){   ### DUPLICATE SPILL OVER
+    }
+    if(spillOver == "duplicate"){   ### DUPLICATE SPILL OVER
       ObsInGridList[wNonEmpty] <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
     }
-  }
-
-  if (class(grid) == "SpatialPolygonsDataFrame"){
-    grid@data <- grid@data[,-c(1:ncol(grid@data))] ##Removes unnecessary attribute data from the input grid, if there is any
-  }
+  } #else {stop("Unknown definition of 'spillOver'")}
 
   res <- list("observationsInGrid" = ObsInGridList,
               "grid"= grid,

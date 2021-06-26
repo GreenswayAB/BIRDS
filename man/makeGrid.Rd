@@ -5,7 +5,7 @@
 \title{Make a grid}
 \usage{
 makeGrid(
-  polygon,
+  poly,
   gridSize,
   hexGrid = TRUE,
   offset = NULL,
@@ -15,30 +15,30 @@ makeGrid(
 )
 }
 \arguments{
-\item{polygon}{an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
+\item{poly}{an object of class \sQuote{sf},  \sQuote{SpatialPolygon} or
 \sQuote{SpatialPolygonDataFrame}}
 
 \item{gridSize}{width of the cells in Km. It defines the central assumption
 of this package that is the maximum area a person can explore during a day.
-Be aware, that the spatial extent of a visit is dependent on the taxonomic group, and many other variables.
-Maximum recommended for this package 10 km if there is no reliable definition
-for the spatial extent for visits.}
+Be aware, that the spatial extent of a visit is dependent on the taxonomic
+group, and many other variables. Maximum recommended for this package 10 km
+if there is no reliable definition for the spatial extent for visits.}
 
 \item{hexGrid}{shall the grid cells be hexagonal? Then \code{TRUE} (default).
 Else squared grid cells.}
 
-\item{offset}{the offset (position) of the grid (from \code{spsample} methods).
-If it is left empty (\code{NULL}, default), then takes default values.
-For squared grid cells the default is set to \code{c(0.5,0.5)} ("centric systematic").
-For hexagonal grid cells the default is set to \code{c(0,0)}.}
+\item{offset}{numeric of length 2 with lower left corner coordinates (x, y)
+of the grid. If it is left empty (\code{NULL}, default), then takes default
+values \code{st_bbox(x)[c("xmin", "ymin")]}.}
 
 \item{buffer}{shall the grid cells include the polygon border? Then \code{TRUE}
 (default = \code{FALSE}).}
 
-\item{simplify}{simplifies the polygon geometry using the Douglas-Peuker algorithm  (from rgeos package).
-Complicated polygons (those with much detail) make this function run slower.}
+\item{simplify}{simplifies the polygon geometry. Complicated polygons (those
+with much detail) make this function run slower.}
 
-\item{tol}{numerical tolerance value for the simplification algorithm. Set to 0.01 as default.}
+\item{tol}{numerical tolerance value for the simplification algorithm. Set to
+0.01 as default.}
 }
 \value{
 an object of class \sQuote{sf} with a set of polygons conforming to a
@@ -53,10 +53,11 @@ maximum area a person can explore during a day. Use the function
  grid size.
 }
 \note{
-Depending on the total number of grid cells the computations may take time.
-If there are more than 100 cells on any dimension a warning message will be displayed.
-Grid cells must be smaller than the sampling area. If the grid cell size is
-wider than the polygon on any dimension an error message will be displayed.
+Depending on the total number of grid cells the computations may take
+time. If there are more than 500 cells on any dimension a warning message will
+be displayed. Grid cells must be smaller than the sampling area. If the grid
+cell size is wider than the polygon on any dimension an error message will be
+displayed.
 }
 \examples{
 grid <- makeGrid(gotaland, gridSize = 10)

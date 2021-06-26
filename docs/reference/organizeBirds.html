@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Organize a dataframe to a usable format — organizeBirds • BIRDS</title>
+<title>Organize a data.frame to a usable format — organizeBirds • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Organize a dataframe to a usable format — organizeBirds" />
-<meta property="og:description" content="Takes a dataframe with reported species observations and reformats it, using
+<meta property="og:title" content="Organize a data.frame to a usable format — organizeBirds" />
+<meta property="og:description" content="Takes a data.frame with reported species observations and reformats it, using
 visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package." />
 <meta property="og:image" content="/logo.svg" />
@@ -149,13 +149,13 @@ analyses with the BIRDS-package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Organize a dataframe to a usable format</h1>
+    <h1>Organize a data.frame to a usable format</h1>
     <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/organizeBirds.R'><code>R/organizeBirds.R</code></a></small>
     <div class="hidden name"><code>organizeBirds.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Takes a dataframe with reported species observations and reformats it, using
+    <p>Takes a data.frame with reported species observations and reformats it, using
 visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.</p>
     </div>
@@ -172,7 +172,8 @@ analyses with the BIRDS-package.</p>
   dataCRS <span class='op'>=</span> <span class='fl'>4326</span>,
   taxonRankCol <span class='op'>=</span> <span class='cn'>NULL</span>,
   taxonRank <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span><span class='op'>)</span>,
-  simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>
+  simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  spOut <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
 <span class='fu'>organiseBirds</span><span class='op'>(</span>
@@ -187,7 +188,8 @@ analyses with the BIRDS-package.</p>
   dataCRS <span class='op'>=</span> <span class='fl'>4326</span>,
   taxonRankCol <span class='op'>=</span> <span class='cn'>NULL</span>,
   taxonRank <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SPECIES"</span>, <span class='st'>"SUBSPECIES"</span>, <span class='st'>"VARIETY"</span><span class='op'>)</span>,
-  simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>
+  simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  spOut <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -195,7 +197,7 @@ analyses with the BIRDS-package.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A dataframe or a SpatialPointsDataFrame containing at least a
+      <td><p>A data.frame, sf or a SpatialPointsDataFrame containing at least a
 column for species name, one or several columns for date of observation, one or
 several columns for identifying a visit and, if it is not spatial, coordinate
 columns.</p></td>
@@ -228,13 +230,13 @@ organised into three columns year, month, day.</p></td>
     <tr>
       <th>grid</th>
       <td><p>Either <code>NULL</code> to be ignored or an object of class
-<code>SpatialPolygons</code> or <code>SpatialPolygonsDataFrame</code> as indetifier of
+<code>SpatialPolygons</code> or <code>SpatialPolygonsDataFrame</code> as identifier of
 the visits spatial extent.</p></td>
     </tr>
     <tr>
       <th>presenceCol</th>
       <td><p>A character string with the column name for the column for the
-precense status. Default is <code>NULL</code>.</p></td>
+presence status. Default is <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>xyCols</th>
@@ -242,13 +244,13 @@ precense status. Default is <code>NULL</code>.</p></td>
 the coordinates for the observations. The order should be longitude(x),
 latitude(y). Default is the Darwin Core standard column names
 <code><a href='https://rdrr.io/r/base/c.html'>c("decimalLongitude", "decimalLatitude")</a></code>. Only applicable to non-
-spatial dataframes.</p></td>
+spatial data.frames.</p></td>
     </tr>
     <tr>
       <th>dataCRS</th>
-      <td><p>A character string or numeric for the dataframe CRS (Coordinate Reference
-System). Default is <code>"4326"</code>, which is WGS 84. This is only
-applicable to non-spatial dataframes, since a spatial dataframes already
+      <td><p>A character string or numeric for the data.frame CRS (Coordinate Reference
+System). Default is <code>4326</code>, which is WGS 84. This is only
+applicable to non-spatial data.frames, since a spatial data.frames already
 should have this information.</p></td>
     </tr>
     <tr>
@@ -264,9 +266,13 @@ Only evaluated if taxonRankCol is not <code>NULL</code></p></td>
     </tr>
     <tr>
       <th>simplifySppName</th>
-      <td><p>whether to remove everything else that is not the species
+      <td><p>Logical. whether to remove everything else that is not the species
 name (authors, years). Default set to FALSE, else leaves a canonical name given
 by taxize::gbif_parse(), that is a scientific name with up to 3 elements.</p></td>
+    </tr>
+    <tr>
+      <th>spOut</th>
+      <td><p>Logical. Whether the result should be a SpatialPolygon (sp) or an sf.</p></td>
     </tr>
     </table>
 
@@ -276,13 +282,15 @@ by taxize::gbif_parse(), that is a scientific name with up to 3 elements.</p></t
 with additional attributes.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>An OrganizedBirds-class is essentially a list containing one element, a
-SpatialPointsDataFrame. This SpatialPointsDataFrame has its data formatted in
-a way that the other functions in the BIRDS-package can use further on. It
-also has the attribute <code>"visitCol"</code>, which indicates which column in the
-dataframe holds the visit identifier. The visit identifier is created by
-the function <code><a href='createVisits.html'>createVisits</a></code>, which creates a unique id for each
-combination of the values in the defined columns.</p>
+    <p>An OrganizedBirds-class is essentially a list containing a spatial element.
+After version 0.2, the resulting element is of class <code>sf</code>. However, we
+now add a parameter for backwards compatibility. It also accepts the inputs
+in both formats. This sf has its data formatted in a way that the other
+functions in the BIRDS-package can use further on. It also has the attribute
+<code>"visitCol"</code>, which indicates which column in the data.frame holds the
+visit identifier. The visit identifier is created by the function
+<code><a href='createVisits.html'>createVisits</a></code>, which creates a unique id for each combination of
+the values in the defined columns.</p>
 <p>The variable <code>timeCol</code> can be formatted differently. If the variable is a
 named vector with the names "Year", "Month" and "Day" (letter capitalization
 does not matter) it will use the variable named year as the year column and so
@@ -295,7 +303,7 @@ as "yyyy-mm-dd".</p>
     <div class='dont-index'><p><code><a href='createVisits.html'>createVisits</a></code> to create unique visits IDs,
  <code><a href='visits.html'>visits</a></code> to get or set the visit IDs to this class,
  <code><a href='simplifySpp.html'>simplifySpp</a></code> to simplify species names,
- <code><a href='obsData.html'>obsData</a></code> to retrieve the dataframe from this class.</p></div>
+ <code><a href='obsData.html'>obsData</a></code> to retrieve the data.frame from this class.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>OB</span> <span class='op'>&lt;-</span> <span class='fu'>organizeBirds</span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>

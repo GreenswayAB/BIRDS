@@ -8,11 +8,12 @@
 #' The 'BIRDS' packages provides a workflow for reproducable data review, involving
 #' three basic steps: organise data, summarise data, review data.
 #'
-#'
+#' @import sf
 #' @docType package
 #' @name BIRDS
 #' @examples
 #' \donttest{
+#' library(sf)
 #' # Organise the data
 #' OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 #'
@@ -33,16 +34,15 @@
 
 #' EB<-exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 #' palBW <- leaflet::colorNumeric(c("white", "navyblue"),
-#'          c(0, max(EB@data, na.rm = TRUE)), na.color = "transparent")
-#' library(sp)
+#'          c(0, max(st_drop_geometry(EB), na.rm = TRUE)), na.color = "transparent")
 #' old.par <- par(no.readonly =TRUE)
 #' par(mfrow=c(1,2), mar=c(1,1,1,1))
-#' plot(EB, col=palBW(EB@data$Jul))
+#' plot(EB, col=palBW(EB$Jul))
 #' mtext("July", 3)
-#' plot(EB, col=palBW(EB@data$Dec))
+#' plot(EB, col=palBW(EB$Dec))
 #' mtext("December", 3)
-#' legend("bottomleft", legend=seq(0, max(EB@data, na.rm = TRUE),length.out = 5),
-#'        col = palBW(seq(0, max(EB@data, na.rm = TRUE), length.out = 5)),
+#' legend("bottomleft", legend=seq(0, max(st_drop_geometry(EB), na.rm = TRUE),length.out = 5),
+#'        col = palBW(seq(0, max(st_drop_geometry(EB), na.rm = TRUE), length.out = 5)),
 #'        title = "Number of years", pch = 15, bty="n")
 #' par(old.par)
 #' }

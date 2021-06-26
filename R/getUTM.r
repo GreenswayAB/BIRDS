@@ -2,14 +2,28 @@
 #' @param sf a sf
 #' @keywords internal
 getUTMzone <- function(sf){
-  
-  points <- st_cast(sf, to = "POINT")
-  
-  ##Find which UTM-zones that have the most points
-  utmZonesTr <- st_transform(utmZones,
-                             crs = st_crs(points)  )
+  origcrs <- st_crs(sf)
+  gmt <- as.vector(st_geometry_type(sf, by_geometry = TRUE))
+  if(length(unique(gmt)) > 1 ) stop("pick a geometry type")
 
-  utmZone <- suppressMessages(suppressWarnings(st_intersection(points, utmZonesTr)))
+  if(st_is_longlat(sf)){
+    sf <- st_transform(sf, 3857)
+  }
+
+  if(unique(gmt) != "POINT"){
+    ctr <- st_centroid(sf)
+    points <- st_union(ctr)
+  } else {
+    points <- st_union(sf)
+  }
+
+  points <- st_transform(points, 4326)
+
+  ## Find which UTM-zones that have the most points
+  # utmZonesTr <- st_transform(utmZones,
+  #                            crs = st_crs(points)  )
+
+  utmZone <- suppressMessages(suppressWarnings(st_intersection(utmZones, points)))
   freqZones <- table(utmZone$ZONE[utmZone$ZONE != 0 ]) ## Zone 0 is both north and south so we check for it later
   maxZones <- names(freqZones)[which(freqZones == max(freqZones))]
 
@@ -91,11 +105,16 @@ getUTMzone <- function(sf){
       message("The points are split over two UTM-zones but close to the polar regions. Therefore zone 0 is chosen.\n")
     }
 
-    coord <- do.call(rbind, st_geometry(points)) #coordinates(spdf)
-    ctr <- geosphere::geomean(coord)
-    meanPoint<-st_as_sf(data.frame("X"=ctr[1], "Y"=ctr[2]), coords=c("X", "Y"))
-    st_crs(meanPoint) <- st_crs(points)
-    utmMeanZone <- suppressMessages(st_intersection(meanPoint, utmZones))
+    # coord <- do.call(rbind, st_geometry(points)) #coordinates(spdf)
+    # ctr <- geosphere::geomean(coord)
+    # meanPoint<-st_as_sf(data.frame("X"=ctr[1], "Y"=ctr[2]), coords=c("X", "Y"))
+    # st_crs(meanPoint) <- st_crs(points)
+    meanPoint <- points %>%
+                    st_transform(3857) %>%
+                    st_centroid() %>%
+                    st_transform(4326)
+
+    utmMeanZone <- suppressMessages(suppressWarnings(st_intersection(utmZones, meanPoint)))
     res$zone <- as.integer(utmMeanZone$ZONE)
     message("The points are split over two UTM-zones. The zone with the centroid for all the points was chosen.\n")
   }

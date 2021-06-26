@@ -30,7 +30,7 @@ taxonomy, time and space
 OB <- organizeBirds(bombusObsShort, sppCol = "scientificName", simplifySppName = TRUE)
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summariseBirds(OB, grid=grid)
-ignorance <- exposeIgnorance(nObs=SB$spatial@data$nObs)
+ignorance <- exposeIgnorance(nObs=SB$spatial$nObs)
 }
 }
 \references{

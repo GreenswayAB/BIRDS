@@ -2,7 +2,7 @@
 % Please edit documentation in R/observationIndex.R
 \name{extractPresence}
 \alias{extractPresence}
-\title{Extract precense from SB}
+\title{Extract presence from SB}
 \usage{
 extractPresence(x)
 }
@@ -10,9 +10,9 @@ extractPresence(x)
 \item{x}{an object of class \sQuote{SummarizeBirds}.}
 }
 \value{
-returns x without observations where the value precense is < 1
+returns x without observations where the value presence is < 1
 }
 \description{
-This function removes abcense observations of the focal species
+This function removes absence observations of the focal species
 }
 \keyword{internal}

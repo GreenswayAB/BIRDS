@@ -4,7 +4,7 @@
 \alias{getGridIDs}
 \title{Create unique IDs based on a grid}
 \usage{
-getGridIDs(x, grid, idcol)
+getGridIDs(x, grid, idcol = "id")
 }
 \arguments{
 \item{x}{a SpatialPointsDataFrame ('sp') or sf ('sf') (with the observations).}

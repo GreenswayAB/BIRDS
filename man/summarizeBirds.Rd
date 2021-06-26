@@ -15,14 +15,14 @@ summariseBirds(x, grid, spillOver = NULL)
 \arguments{
 \item{x}{An OrgnanizedBirds-object created by \code{\link{organizeBirds}}}
 
-\item{grid}{A SpatialPolygons or SpatialPolygonsDataFrame-object whith
+\item{grid}{A sf, SpatialPolygons or SpatialPolygonsDataFrame-object with
 grid cells for the study area. This variable is optional and can be set to
 NULL, which will treat the area for all observations as one single
 grid cell.}
 
-\item{spillOver}{Specifies if the function should search for observations done during
-the same visit (identified by visit UID) but that fall outside the grid cell.
-Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.
+\item{spillOver}{Specifies if the function should search for observations done
+during the same visit (identified by visit UID) but that fall outside the grid
+cell. Default is \code{NULL}. It also accepts \code{c("unique", "duplicate")}.
 See Details for more information on how to use this.}
 }
 \value{
@@ -37,13 +37,13 @@ If \code{spillOver = NULL} the splitting is done spatially according to the
 overlay of observations and grid cells, without further consideration of
 coherence for visits (visit UID). If \code{spillOver = c("unique", "duplicate")}
 the splitting will be done spatially in a first step, and then:
-if \code{(spillOver = "unique")} assigns (and moves) all observations with same visitUID
-to the grid cell with most observations (or picks one grid cell at random if
-there is a tie); or if \code{(spillOver = "duplicate")} duplicates all
-observations with same visitUID across all grid cells containing at least one
-observation with that visitUID.
+if \code{(spillOver = "unique")} assigns (and moves) all observations with same
+visitUID to the grid cell with most observations (or picks one grid cell at
+random if there is a tie); or if \code{(spillOver = "duplicate")} duplicates
+all observations with same visitUID across all grid cells containing at least
+one observation with that visitUID.
 
-The later approach is usefull when the amount of observations spilled over
+The later approach is useful when the amount of observations spilled over
 neighbouring cells is minimal and information over the spatial extent of the
 sampling effort is more important than sample independence.
 }
@@ -53,7 +53,7 @@ ob <- organizeBirds(bombusObsShort)
 grid <- makeGrid(gotaland, gridSize = 10)
 SB <- summarizeBirds(ob, grid)
 nObsG <- rowSums(SB$spatioTemporal[,,13,"nObs"], na.rm = FALSE)
-nObsG2 <- SB$spatial@data$nObs
+nObsG2 <- SB$spatial$nObs
 any(nObsG != nObsG2, na.rm = TRUE) ## Check, two ways to obtain the same
 }
 }

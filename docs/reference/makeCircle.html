@@ -158,17 +158,18 @@ the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/
 the Skyum algorithm based on the convex hull. http://www.cs.au.dk/~gerth/slides/sven14.pdf</p>
     </div>
 
-    <pre class="usage"><span class='fu'>makeCircle</span><span class='op'>(</span><span class='va'>spdf</span>, projCRS <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>makeCircle</span><span class='op'>(</span><span class='va'>spdf</span>, crs <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>spdf</th>
-      <td><p>an object of class &#8216;SpatialPointsDataFrame&#8217; with defined CRS.</p></td>
+      <td><p>an object of class &#8216;sf&#8217; or &#8216;SpatialPointsDataFrame&#8217;
+with defined CRS.</p></td>
     </tr>
     <tr>
-      <th>projCRS</th>
+      <th>crs</th>
       <td><p>a number defining a projected CRS. It is very important
 that the selected CRS is accurate in the study area. This is not the CRS for
 the argument 'spdf' which should be defined internally. This is the CRS used to
@@ -178,7 +179,7 @@ make a flat circle. Some UTM variant is recommended. See <code><a href='getUTMpr
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a polygon object of class &#8216;SpatialPolygon&#8217; with geodesic
+    <p>a polygon object of class &#8216;sf&#8217; with geodesic
 coordinates in WGS84 (ESPG:4326).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

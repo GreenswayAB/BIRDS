@@ -17,7 +17,7 @@ createOverlayForGrid(x, birdData, visitCol)
 The overlay data.frame for a specific grid, including the spillover visits.
 }
 \description{
-An internal function. Takes the resulting dataframe from the spatial overlay
+An internal function. Takes the resulting data.frame from the spatial overlay
 for a specific grid cell and searches for spillover visits, i.e. visits that are split by grid cell boundaries.
 }
 \keyword{internal}

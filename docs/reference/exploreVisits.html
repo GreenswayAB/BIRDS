@@ -167,7 +167,7 @@ definition of visit aligns with your grid size, you must explore the spatial ext
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>an object of class &#8216;OrganizedBirds&#8217; (organised BIRDS Spatial Dataframe).
+      <td><p>an object of class &#8216;OrganizedBirds&#8217; (organised BIRDS Spatial data frame).
 See <code><a href='organizeBirds.html'>organizeBirds</a></code>.</p></td>
     </tr>
     <tr>
@@ -223,10 +223,10 @@ See <code><a href='organizeBirds.html'>organizeBirds</a></code>.</p></td>
 <span class='co'># to identify suspicious visits reported the first day of each month or year</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>day</span><span class='op'>)</span>
 <span class='co'># to see correlations</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>nObs</span>, <span class='va'>visitStats</span><span class='op'>$</span><span class='va'>effortDiam</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>SLL</span>, <span class='va'>visitStats</span><span class='op'>$</span><span class='va'>effortDiam</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>nObs</span>, <span class='va'>visitStats</span><span class='op'>$</span><span class='va'>effortDiam</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>SLL</span>, <span class='va'>visitStats</span><span class='op'>$</span><span class='va'>effortDiam</span><span class='op'>)</span>
 <span class='co'># to see the ditributions of observations along the days of the month</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>day</span>, <span class='va'>visitStats</span><span class='op'>$</span><span class='va'>nObs</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>visitStats</span><span class='op'>$</span><span class='va'>day</span>, <span class='va'>visitStats</span><span class='op'>$</span><span class='va'>nObs</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

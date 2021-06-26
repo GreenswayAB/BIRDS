@@ -71,7 +71,7 @@ presence status. Default is \code{NULL}.}
 the coordinates for the observations. The order should be longitude(x),
 latitude(y). Default is the Darwin Core standard column names
 \code{c("decimalLongitude", "decimalLatitude")}. Only applicable to non-
-spatial dataframes.}
+spatial data.frames.}
 
 \item{dataCRS}{A character string or numeric for the data.frame CRS (Coordinate Reference
 System). Default is \code{4326}, which is WGS 84. This is only
@@ -101,14 +101,14 @@ visit identifiers, to an OrganizedBirds-class that can be used in further
 analyses with the BIRDS-package.
 }
 \details{
-An OrganizedBirds-class is essentially a list containing a spatial element. 
-After version 0.2, the resulting element is of class \code{sf}. However, we 
-now add a parameter for backwards compatibility. It also accepts the inputs 
-in both formats. This sf has its data formatted in a way that the other 
-functions in the BIRDS-package can use further on. It also has the attribute 
-\code{"visitCol"}, which indicates which column in the data.frame holds the 
-visit identifier. The visit identifier is created by the function 
-\code{\link{createVisits}}, which creates a unique id for each combination of 
+An OrganizedBirds-class is essentially a list containing a spatial element.
+After version 0.2, the resulting element is of class \code{sf}. However, we
+now add a parameter for backwards compatibility. It also accepts the inputs
+in both formats. This sf has its data formatted in a way that the other
+functions in the BIRDS-package can use further on. It also has the attribute
+\code{"visitCol"}, which indicates which column in the data.frame holds the
+visit identifier. The visit identifier is created by the function
+\code{\link{createVisits}}, which creates a unique id for each combination of
 the values in the defined columns.
 
 The variable \code{timeCol} can be formatted differently. If the variable is a
@@ -126,5 +126,5 @@ OB <- organizeBirds(bombusObs)
 \code{\link{createVisits}} to create unique visits IDs,
  \code{\link{visits}} to get or set the visit IDs to this class,
  \code{\link{simplifySpp}} to simplify species names,
- \code{\link{obsData}} to retrieve the dataframe from this class.
+ \code{\link{obsData}} to retrieve the data.frame from this class.
 }
