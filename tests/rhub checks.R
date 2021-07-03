@@ -1,6 +1,6 @@
 library(rhub)
 validate_email()
-mycheck <- check()
+mycheck <- check(path = ".", platform = "solaris-x86-patched")
 mycheck$browse()
 mycheck$print()
 mycheck$livelog()
