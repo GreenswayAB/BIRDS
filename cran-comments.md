@@ -1,5 +1,5 @@
 ## Test environment
-* local Windows 10,  R version 4.1.0
+* local Windows 10, R version 4.1.0
 * local Ubuntu 18.04.3 LTS, R version 4.1.0
 * remote win-builder.r-project.org (/M6NUwM96x3e4/)
 * remote Github Actions Windows, Mac, and Ubuntu 20.04 LTS, R version 4.1.2 and R devel
