@@ -47,7 +47,6 @@ Imports:
     mapedit,
     nnet,
     rgdal (>= 1.5), 
-    rhub,
     rlang,
     sf (>= 0.7),
     stringr (>= 1.4),
