@@ -11,6 +11,12 @@
 #' @format A sf with 1 polygon with CRS(epsg:4326)
 "gotaland"
 
+#' @title Götalands grid, Sweden.
+#'
+#' @description A polygon with a sample hexagonal grid over Götaland, Sweden.
+#' @format A sf with 1 polygon with CRS(epsg:4326)
+"gridGotaland"
+
 #' @title Species observations of bryophytes in Götaland, Sweden
 #'
 #' @description A random sample of 10,000 observations of bryophytes from an original dataset

@@ -25,9 +25,12 @@ If we start from the basic example
 ```{r SB, echo=TRUE, message=FALSE, warning=FALSE}
 library(BIRDS)
 library(xts)
-# Create a grid for your sample area that will be used to summarise the data:
-grid <- makeGrid(gotaland, gridSize = 10)
-# The grid can be easily created in different ways. 
+projVer <- sf::sf_extSoftVersion()["proj.4"]
+if(compareVersion("4.0.0", projVer) == -1){
+  # Create a grid for your sample area that will be used to summarise the data:
+  grid <- makeGrid(gotaland, gridSize = 10)
+  # The grid can be easily created in different ways. 
+} else grid <- gridGotaland
 
 # Import the species observation data:
 PBD <- bombusObs
@@ -45,7 +48,7 @@ SB <- summariseBirds(OB, grid=grid)
 we see that SB contains an element called `SB$temporal` that contains a daily time series with time specific rows when there is information. `xts` also supports time, but dating below day resolution is not yet implemented in the `BIRDS` package.  
 
 ```{r}
-sb.xts<-SB$temporal
+sb.xts <- SB$temporal
 head(sb.xts)
 dim(sb.xts)
 ```
