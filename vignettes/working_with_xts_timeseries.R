@@ -7,24 +7,30 @@ knitr::opts_chunk$set(
 ## ----SB, echo=TRUE, message=FALSE, warning=FALSE------------------------------
 library(BIRDS)
 library(xts)
-# Create a grid for your sample area that will be used to summarise the data:
-grid <- makeGrid(gotaland, gridSize = 10)
-# The grid can be easily created in different ways. 
+projVer <- sf::sf_extSoftVersion()["proj.4"]
+if(compareVersion("4.0.0", projVer) == -1){
+  # Create a grid for your sample area that will be used to summarise the data:
+  grid <- makeGrid(gotaland, gridSize = 10)
+  # The grid can be easily created in different ways. 
 
-# Import the species observation data:
-PBD <- bombusObs
-# alternatively, you could load a previously downloaded .CSV file 
-# PBD <- read.csv(file="path/to/your/file.csv)
-
-# Convert the data from an observation-based to a visit-based format, 
-# adding a unique identifier for each visit:
-OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
-
-# Summarise the data:
-SB <- summariseBirds(OB, grid=grid)
+  # Import the species observation data:
+  PBD <- bombusObs
+  # alternatively, you could load a previously downloaded .CSV file 
+  # PBD <- read.csv(file="path/to/your/file.csv)
+  
+  # Convert the data from an observation-based to a visit-based format, 
+  # adding a unique identifier for each visit:
+  OB <- organizeBirds(PBD, sppCol = "scientificName")
+  
+  # Summarise the data:
+  SB <- summariseBirds(OB, grid=grid)
+} else {
+  grid <- gridGotaland
+  SB <- SB
+}
 
 ## -----------------------------------------------------------------------------
-sb.xts<-SB$temporal
+sb.xts <- SB$temporal
 head(sb.xts)
 dim(sb.xts)
 

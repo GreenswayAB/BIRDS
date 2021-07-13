@@ -12,7 +12,7 @@
 
 <meta name="author" content="Alejandro Ruete and Debora Arlt" />
 
-<meta name="date" content="2021-06-23" />
+<meta name="date" content="2021-07-12" />
 
 <title>Introduction to BIRDS</title>
 
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Introduction to BIRDS</h1>
 <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
-<h4 class="date">2021-06-23</h4>
+<h4 class="date">2021-07-12</h4>
 
 
 
@@ -169,37 +169,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: package &#39;sf&#39; was built under R version 4.0.5</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">makeGrid</span>(gotaland, <span class="at">gridSize =</span> <span class="dv">10</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Grid cells are too many (&gt;=500), this may result in very long computation times</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The grid can be easily created in different ways. </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the species observation data:</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>PBD <span class="ot">&lt;-</span> bombusObs</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the data from an observation-based to a visit-based format, adding a </span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># unique identifier for each visit:</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>OB <span class="ot">&lt;-</span> <span class="fu">organizeBirds</span>(PBD, <span class="at">sppCol =</span> <span class="st">&quot;scientificName&quot;</span>, <span class="at">simplifySppName =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarise the data:</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>SB <span class="ot">&lt;-</span> <span class="fu">summariseBirds</span>(OB, <span class="at">grid=</span>grid)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 474 observations did not overlap with the grid and will be discarded.</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.045 % of the visits spill over neighbouring grid cells.</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at some summarised variables:</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of observations</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>EBnObs <span class="ot">&lt;-</span> <span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;yearly&quot;</span>, </span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">variable =</span> <span class="st">&quot;nObs&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of visits</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>EBnVis <span class="ot">&lt;-</span> <span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;yearly&quot;</span>, </span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                      <span class="at">variable =</span> <span class="st">&quot;nVis&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># The ratio of number of observations over number of visits</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>relObs <span class="ot">&lt;-</span> EBnObs<span class="sc">/</span>EBnVis</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># over cell values for the median SLL from all visits per year and cell) </span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>EBavgSll <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(SB<span class="sc">$</span>spatioTemporal[,,<span class="st">&quot;Yearly&quot;</span>,<span class="st">&quot;avgSll&quot;</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>projVer <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">sf_extSoftVersion</span>()[<span class="st">&quot;proj.4&quot;</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">compareVersion</span>(<span class="st">&quot;4.0.0&quot;</span>, projVer) <span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span>){</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> <span class="fu">makeGrid</span>(gotaland, <span class="at">gridSize =</span> <span class="dv">10</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The grid can be easily created in different ways. </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Import the species observation data:</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  PBD <span class="ot">&lt;-</span> bombusObs</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert the data from an observation-based to a visit-based format, adding a </span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># unique identifier for each visit:</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  OB <span class="ot">&lt;-</span> <span class="fu">organizeBirds</span>(PBD, <span class="at">sppCol =</span> <span class="st">&quot;scientificName&quot;</span>, <span class="at">simplifySppName =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Summarise the data:</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  SB <span class="ot">&lt;-</span> <span class="fu">summariseBirds</span>(OB, <span class="at">grid=</span>grid)  </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  grid <span class="ot">&lt;-</span> gridGotaland</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  SB <span class="ot">&lt;-</span> SB</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Grid cells are too many (&gt;=500), this may result in very long computation times</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 474 observations did not overlap with the grid and will be discarded.</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.045 % of the visits spill over neighbouring grid cells.</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at some summarised variables:</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of observations</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>EBnObs <span class="ot">&lt;-</span> <span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;yearly&quot;</span>, </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                      <span class="at">variable =</span> <span class="st">&quot;nObs&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of visits</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>EBnVis <span class="ot">&lt;-</span> <span class="fu">exportBirds</span>(SB, <span class="at">dimension =</span> <span class="st">&quot;temporal&quot;</span>, <span class="at">timeRes =</span> <span class="st">&quot;yearly&quot;</span>, </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                      <span class="at">variable =</span> <span class="st">&quot;nVis&quot;</span>, <span class="at">method =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co"># The ratio of number of observations over number of visits</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>relObs <span class="ot">&lt;-</span> EBnObs<span class="sc">/</span>EBnVis</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Average species list length (SLL) per year (a double-average, i.e. the mean </span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co"># over cell values for the median SLL from all visits per year and cell) </span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>EBavgSll <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(SB<span class="sc">$</span>spatioTemporal[,,<span class="st">&quot;Yearly&quot;</span>,<span class="st">&quot;avgSll&quot;</span>], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Then, with functions you already know, plot this into a time series.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>oldpar <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span><span class="cn">TRUE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">6</span>), <span class="at">las=</span><span class="dv">1</span>)</span>
@@ -258,13 +264,13 @@ We can see that over the years there are on average more observations, more visi
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>palBW <span class="ot">&lt;-</span> leaflet<span class="sc">::</span><span class="fu">colorNumeric</span>(<span class="fu">c</span>(<span class="st">&quot;white&quot;</span>, <span class="st">&quot;navyblue&quot;</span>), </span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>nVis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), </span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">na.color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>seqNVis<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>nVis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">length.out =</span> <span class="dv">5</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>seqNVis <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>nVis, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">length.out =</span> <span class="dv">5</span>))</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>geometry, <span class="at">col=</span><span class="fu">palBW</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>nVis), <span class="at">border =</span> <span class="cn">NA</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gotaland<span class="sc">$</span>geometry, <span class="at">col=</span><span class="cn">NA</span>, <span class="at">border =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">lwd=</span><span class="dv">1</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend=</span>seqNVis, <span class="at">col =</span> <span class="fu">palBW</span>(seqNVis),</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Number of </span><span class="sc">\n</span><span class="st">observations&quot;</span>, <span class="at">pch =</span> <span class="dv">15</span>, <span class="at">bty=</span><span class="st">&quot;n&quot;</span>)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ign<span class="ot">&lt;-</span><span class="fu">exposeIgnorance</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>nVis, <span class="at">h =</span> <span class="dv">5</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ign <span class="ot">&lt;-</span> <span class="fu">exposeIgnorance</span>(SB<span class="sc">$</span>spatial<span class="sc">$</span>nVis, <span class="at">h =</span> <span class="dv">5</span>)</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>palBWR <span class="ot">&lt;-</span> leaflet<span class="sc">::</span><span class="fu">colorNumeric</span>(<span class="fu">c</span>(<span class="st">&quot;navyblue&quot;</span>, <span class="st">&quot;white&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                                <span class="at">na.color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gotaland<span class="sc">$</span>geometry, <span class="at">col=</span><span class="st">&quot;grey90&quot;</span>, <span class="at">border =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">lwd=</span><span class="dv">1</span>)</span>

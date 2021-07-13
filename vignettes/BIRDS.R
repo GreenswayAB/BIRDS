@@ -10,20 +10,26 @@ knitr::opts_chunk$set(
 ## ----basic example, eval = TRUE-----------------------------------------------
 library(BIRDS)
 library(sf)
-# Create a grid for your sample area that will be used to summarise the data:
-grid <- makeGrid(gotaland, gridSize = 10)
-# The grid can be easily created in different ways. 
-
-# Import the species observation data:
-PBD <- bombusObs
-# alternatively, you could load a previously downloaded .CSV file 
-
-# Convert the data from an observation-based to a visit-based format, adding a 
-# unique identifier for each visit:
-OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
-
-# Summarise the data:
-SB <- summariseBirds(OB, grid=grid)
+projVer <- sf::sf_extSoftVersion()["proj.4"]
+if(compareVersion("4.0.0", projVer) == -1){
+  # Create a grid for your sample area that will be used to summarise the data:
+  grid <- makeGrid(gotaland, gridSize = 10)
+  # The grid can be easily created in different ways. 
+  
+  # Import the species observation data:
+  PBD <- bombusObs
+  # alternatively, you could load a previously downloaded .CSV file 
+  
+  # Convert the data from an observation-based to a visit-based format, adding a 
+  # unique identifier for each visit:
+  OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
+  
+  # Summarise the data:
+  SB <- summariseBirds(OB, grid=grid)  
+} else {
+  grid <- gridGotaland
+  SB <- SB
+}
 
 # Look at some summarised variables:
 # Number of observations
@@ -92,13 +98,13 @@ par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(SB$spatial$nVis, na.rm = TRUE)), 
                                na.color = "transparent")
-seqNVis<-round(seq(0, max(SB$spatial$nVis, na.rm = TRUE), length.out = 5))
+seqNVis <- round(seq(0, max(SB$spatial$nVis, na.rm = TRUE), length.out = 5))
 plot(SB$spatial$geometry, col=palBW(SB$spatial$nVis), border = NA)
 plot(gotaland$geometry, col=NA, border = "grey", lwd=1, add=TRUE)
 legend("bottomleft", legend=seqNVis, col = palBW(seqNVis),
       title = "Number of \nobservations", pch = 15, bty="n")
 
-ign<-exposeIgnorance(SB$spatial$nVis, h = 5)
+ign <- exposeIgnorance(SB$spatial$nVis, h = 5)
 palBWR <- leaflet::colorNumeric(c("navyblue", "white","red"), c(0, 1), 
                                 na.color = "transparent")
 plot(gotaland$geometry, col="grey90", border = "grey90", lwd=1)
