@@ -19,19 +19,25 @@ knitr::opts_chunk$set(
 This vignette is adapted from [https://rpubs.com/RLodge/timeseriesintro](https://rpubs.com/RLodge/timeseriesintro)
 
 ## xts Objects
-One of the objects that comes out of the `summariseBirds()` function is `$temporal`, a `xts` object. A `xts` is a time series (a series of data points in chronological order, where time is the independent variable). The ‘x’ in xts stands for extensible, because it is an extension of `zoo` (another package). An `xts` object is formed just as a `zoo` object is. However, an `xts` object is in matrix form and thus is easier to subset through.
+One of the objects that comes out of the `summariseBirds()` function is `$temporal`, 
+a `xts` object. A `xts` is a time series (a series of data points in chronological 
+order, where time is the independent variable). The ‘x’ in xts stands for extensible,
+because it is an extension of `zoo` (another package). An `xts` object is formed 
+just as a `zoo` object is. However, an `xts` object is in matrix form and thus 
+is easier to subset through.
 
 If we start from the basic example
-```{r SB, echo=TRUE, message=FALSE, warning=FALSE}
+```{r checkProj2, echo=FALSE}
+projVer <- sf::sf_extSoftVersion()["PROJ"]
+doNextChunk <- as.logical(compareVersion("5.1.0", projVer) == -1)
+```
+
+```{r SB, eval = doNextChunk, echo=TRUE, message=FALSE, warning=FALSE}
 library(BIRDS)
 library(xts)
-projVer <- sf::sf_extSoftVersion()["proj.4"]
-if(compareVersion("4.0.0", projVer) == -1){
-  # Create a grid for your sample area that will be used to summarise the data:
-  grid <- makeGrid(gotaland, gridSize = 10)
-  # The grid can be easily created in different ways. 
-} else grid <- gridGotaland
-
+# Create a grid for your sample area that will be used to summarise the data:
+grid <- makeGrid(gotaland, gridSize = 10)
+# The grid can be easily created in different ways. 
 # Import the species observation data:
 PBD <- bombusObs
 # alternatively, you could load a previously downloaded .CSV file 
@@ -45,44 +51,57 @@ OB <- organizeBirds(PBD, sppCol = "scientificName")
 SB <- summariseBirds(OB, grid=grid)
 ```  
 
-we see that SB contains an element called `SB$temporal` that contains a daily time series with time specific rows when there is information. `xts` also supports time, but dating below day resolution is not yet implemented in the `BIRDS` package.  
+we see that SB contains an element called `SB$temporal` that contains a daily 
+time series with time specific rows when there is information. `xts` also supports
+time, but dating below day resolution is not yet implemented in the `BIRDS` package.  
 
-```{r}
+```{r head, eval = doNextChunk}
 sb.xts <- SB$temporal
 head(sb.xts)
 dim(sb.xts)
 ```
 
 
-Sub-setting is convenient in `xts` as you can do it with its dates and with a `/` for a range of dates.  
+Sub-setting is convenient in `xts` as you can do it with its dates and with a 
+`/` for a range of dates.  
 
-```{r subsetting, echo=TRUE, message=FALSE, warning=FALSE}
+```{r subsetting, eval = doNextChunk, echo=TRUE, message=FALSE, warning=FALSE}
 sb.xts["2017-09"] #a specific month
 sb.xts["2017-09-07"] #a specific day
 sb.xts["2017-01-01/2017-05-01"] #for a period
 ```
 
-`xts` has several tools for converting to different periods. Here we will use `to.monthly`. This provides, the first, min, max, and last of the data. We can plot the daily maximum number of observations. The plot command with an `xts` object provides a TON of features. This makes it fairly easy to customize your plots. Read more in `?plot.xts`.  
+`xts` has several tools for converting to different periods. Here we will use 
+`to.monthly`. This provides, the first, min, max, and last of the data. We can 
+plot the daily maximum number of observations. The plot command with an `xts` 
+object provides a TON of features. This makes it fairly easy to customize your 
+plots. Read more in `?plot.xts`.  
 
-```{r monthly and plot, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
+```{r monthly and plot, eval = doNextChunk, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
 obs.m <- to.monthly(sb.xts$nObs) 
 obs.m["2017-04"]
 sb.xts["2017-04"]
 
-plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   major.ticks = "month", grid.col = "lightgrey",  main = "Maximum number of daily observations per month")
+plot(obs.m["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   
+     major.ticks = "month", grid.col = "lightgrey",  
+     main = "Maximum number of daily observations per month")
 ```
 
-Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too?
-in the original time series there is not data for every day, therefore the time series is incomplete. 
+Only months with data are plotted in this figure. What if we want to complete 
+the time series and plot all zeros too? In the original time series there is not
+data for every day, therefore the time series is incomplete. 
 
-```{r completting, echo=TRUE, message=FALSE, warning=FALSE}
+```{r completting, eval = doNextChunk, echo=TRUE, message=FALSE, warning=FALSE}
 # sb.xts.na is same as sb.xts but with all missing days added (with NAs)
 rng <- range(time(sb.xts))
 sb.xts.na <- merge(sb.xts, xts(, seq(rng[1], rng[2], by = "day")))
 ```
-However, in our monthly example we may not need data for every day, but month, and this time we need 0s instead of NAs. Even more, we don't want to add zeros for the months we already have data, because that will change the summary statistics. Then we add 0s for the months we have no data.
+However, in our monthly example we may not need data for every day, but month, 
+and this time we need 0s instead of NAs. Even more, we don't want to add zeros 
+for the months we already have data, because that will change the summary 
+statistics. Then we add 0s for the months we have no data.
 
-```{r completting2, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
+```{r completting2, eval = doNextChunk, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
 z.seq <- seq(rng[1], rng[2], by = "month")
 YM.sb.xts<-unique(as.Date(as.yearmon(index(sb.xts))))
 YM.z.seq<-as.Date(as.yearmon(z.seq))
@@ -94,6 +113,8 @@ z <- xts(, z.seq)
 sb.xts.0 <- merge(sb.xts, z, fill = 0)
 
 obs.m.0 <- to.monthly(sb.xts.0$nObs)
-plot(obs.m.0["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   major.ticks = "month", grid.col = "lightgrey",  main = "Maximum number of daily observations per month")
+plot(obs.m.0["2010/2017",2], col = "darkblue", grid.ticks.on = "month",   
+     major.ticks = "month", grid.col = "lightgrey", 
+     main = "Maximum number of daily observations per month")
 ```
 

@@ -70,8 +70,12 @@ can be found in the data set help page `?bombusObs`.
 
 You can easily create a grid over a sample area (i.e. `gotaland`), organize and 
 summarize the data, and export the variables you want to plot:
+```{r checkPROJ, echo=FALSE}
+projVer <- sf::sf_extSoftVersion()["PROJ"]
+doNextChunk <- as.logical(compareVersion("5.1.0", projVer) == -1)
+```
 
-```{r basic example, eval = TRUE}
+```{r basic example, eval = doNextChunk}
 library(BIRDS)
 library(sf)
 # Create a grid for your sample area that will be used to summarise the data:
@@ -105,7 +109,7 @@ EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 ```
 
 Then, with functions you already know, plot this into a time series.
-```{r figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."}
+```{r figure 1, eval = doNextChunk, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."}
 oldpar <- par(no.readonly =TRUE)
 par(mar=c(4,4,1,6), las=1)
 plot(time(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
@@ -138,7 +142,7 @@ There seem to be also few visits with long species lists driving the increase of
 Then, we can summarize spatial data in some maps, to review, for example, 
 Where do we have visits at all?, or How often are visits performed in July vs December?  
 
-```{r figure 2, fig.show='hold', fig.width= 7, fig.height= 3}
+```{r figure 2, eval = doNextChunk, fig.show='hold', fig.width= 7, fig.height= 3}
 wNonEmpty <- whichNonEmpty( SB$overlaid )
 EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 # because the dimension is "spatial", the result is a 'SpatialPolygonDataFrame'
@@ -176,7 +180,7 @@ The algorithm behind the Ignorance Score is designed for comparison of bias and
 gaps in primary biodiversity data across taxonomy, time and space
  Read more here: Ruete (2015) Biodiv Data J 3:e5361 \doi{10.3897/BDJ.3.e5361}.
  
-```{r figure 3, fig.show='hold', fig.width= 7, fig.height= 4}
+```{r figure 3, eval = doNextChunk, fig.show='hold', fig.width= 7, fig.height= 4}
 oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 

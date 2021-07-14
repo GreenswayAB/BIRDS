@@ -35,7 +35,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)
-SystemRequirements: GDAL (>= 2.0.1)
+SystemRequirements: GEOS (>= 3.4.0), PROJ (>= 4.8.0), GDAL (>= 2.0.1)
 Imports:
     data.table, 
     dbscan, 
