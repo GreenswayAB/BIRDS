@@ -78,8 +78,6 @@ doNextChunk <- as.logical(compareVersion("5.1.0", projVer) == -1)
 ```{r basic example, eval = doNextChunk}
 library(BIRDS)
 library(sf)
-projVer <- sf::sf_extSoftVersion()["proj.4"]
-if(compareVersion("4.0.0", projVer) == -1){
   # Create a grid for your sample area that will be used to summarise the data:
   grid <- makeGrid(gotaland, gridSize = 10)
   # The grid can be easily created in different ways. 
@@ -94,10 +92,6 @@ if(compareVersion("4.0.0", projVer) == -1){
   
   # Summarise the data:
   SB <- summariseBirds(OB, grid=grid)  
-} else {
-  grid <- gridGotaland
-  SB <- SB
-}
 
 # Look at some summarised variables:
 # Number of observations
