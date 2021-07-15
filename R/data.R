@@ -43,6 +43,7 @@
 #'   \item{Has geospatial issue}{false}
 #' }
 #'
+#' @note some special characters have been transformed to ASCII to comply with CRAN requirements
 #' @format A data frame with 10,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}.
 #' @source \url{https://www.gbif.org/occurrence/download/0007732-190320150433242}
 "bryophytaObs"
@@ -73,7 +74,7 @@
 #'   \item{Scientific name}{Bombus Latreille, 1802}
 #'   \item{Has geospatial issue}{false}
 #' }
-#'
+#' @note some special characters have been transformed to ASCII to comply with CRAN requirements
 #' @format A data frame with 10,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}
 #' @source \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
 "bombusObs"
@@ -81,6 +82,7 @@
 #' @title A short version of bombusObs dataset for faster examples.
 #'
 #' @description A random sample of 1,000 observations for the genus \emph{Bombus} spp.
+#' @note some special characters have been transformed to ASCII to comply with CRAN requirements
 #' @format A data frame with 1,000 rows and 45 variables following DarwinCore standard \url{https://dwc.tdwg.org/}
 #' @source \url{https://www.gbif.org/occurrence/download/0007731-190320150433242}
 #' @seealso \code{\link{bombusObs}}
@@ -91,6 +93,7 @@
 #' @description A summarisedBirds object based on bombusObsShort for faster examples
 #' grid <- makeGrid(searchPolygon, gridSize = 10)
 #' SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
+#' @note some special characters have been transformed to ASCII to comply with CRAN requirements
 #' @format An object of class summarisedBirds
 'SB'
 
@@ -98,5 +101,6 @@
 #'
 #' @description An empty summarisedBirds object used to dynamically test for validity
 #' of export parameter combinations \code{exportBirds()} in the sister package shinyBirds
+#' @note some special characters have been transformed to ASCII to comply with CRAN requirements
 #' @format An object of class summarisedBirds
 'simpleSB'
