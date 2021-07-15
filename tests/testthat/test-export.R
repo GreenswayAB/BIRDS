@@ -2,8 +2,7 @@ context("Export BIRDS")
 
 library(BIRDS)
 
-SB<-summariseBirds(x=organiseBirds(bombusObsShort),
-                   grid=makeGrid(gotaland, 50, buffer = TRUE, simplify=TRUE))
+data("SB", package = "BIRDS")
 
 sampleGridCell<-sample(which(unlist(lapply(SB$overlaid, nrow))!=0),1)
 
@@ -50,7 +49,7 @@ exportShouldWork[,c("NULL", "Yearly","Monthly", "Daily"),"avgSll", c("mean")]<-F
 exportShouldWork[,"Month", "nYears", c("median", "mean")]<-FALSE
 
 test_that("Test valid export variables", {
-
+  skip_on_os("solaris")
   for(s in 1:length(dimVar)){
     for(t in 1:length(timeResVar)){
       for(v in 1:length(varVar)){
@@ -81,6 +80,7 @@ test_that("Test valid export variables", {
 
 test_that("Test correct export object classes", {
 skip_on_cran()
+skip_on_os("solaris")
   for(s in 1:length(dimVar)){
     for(t in 1:length(timeResVar)){
       for(v in 1:length(varVar)){

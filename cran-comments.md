@@ -1,11 +1,13 @@
 ## Test environment
 * local Windows 10, R version 4.1.0
-* local Ubuntu 18.04.3 LTS, R version 4.1.0
-* remote win-builder.r-project.org (/M6NUwM96x3e4/)
+* r-hub check_for_cran()
+* r-hub check(path = ".", platform = "solaris-x86-patched")
 * remote Github Actions Windows, Mac, and Ubuntu 20.04 LTS, R version 4.1.2 and R devel
 
 ## R CMF check results
-There where no ERRORs, WARNINGs or NOTES on local or remote builds RMD check, 
+There where no ERRORs, WARNINGs or NOTES on local or remote builds RMD check
+checking data for non-ASCII characters (2.2s)
+     Note: found 27976 marked UTF-8 strings
 
 We did the following changes based on the package since last: 
 ###Note: 
