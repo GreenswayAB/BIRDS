@@ -4,7 +4,13 @@
 \alias{exploreVisits}
 \title{A function to explore the definition of field visits}
 \usage{
-exploreVisits(x, visitCol = NULL, sppCol = "scientificName")
+exploreVisits(
+  x,
+  visitCol = NULL,
+  sppCol = "scientificName",
+  parallel = FALSE,
+  nc = NULL
+)
 }
 \arguments{
 \item{x}{an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial data frame).
@@ -13,6 +19,11 @@ See \code{\link{organizeBirds}}.}
 \item{visitCol}{name of the column for the visits UID.}
 
 \item{sppCol}{name of the column for species names.}
+
+\item{parallel}{logic. Whether to run in parallel (then the package 'parallel'
+is required). Default is FALSE#'}
+
+\item{nc}{integer or NULL}
 }
 \value{
 a \code{data.frame} with summarized data per visit:

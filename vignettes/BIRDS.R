@@ -24,7 +24,7 @@ doNextChunk <- as.logical(compareVersion("5.1.0", projVer) == -1)
 #  
 #    # Convert the data from an observation-based to a visit-based format, adding a
 #    # unique identifier for each visit:
-#    OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
+#    OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = FALSE)
 #  
 #    # Summarise the data:
 #    SB <- summariseBirds(OB, grid=grid)

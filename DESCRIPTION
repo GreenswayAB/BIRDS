@@ -61,6 +61,7 @@ Suggests:
     leaflet.extras,
     leafpm,
     maps, 
+    parallel,
     rmarkdown, 
     shiny (>= 1.0),
     testthat,

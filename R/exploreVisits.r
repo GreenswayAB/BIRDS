@@ -1,3 +1,93 @@
+#' An internal function to explore the definition of field visits
+#'
+#' @param x an subset object to pass to apply
+#' @param dat an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial data frame).
+#' @param visitCol name of the column for the visits UID.
+#' @param spdf spatial object of dat.
+#' @param minPts minimum number of points, default to 3.
+#' @return a \code{data.frame} with summarized data per visit:
+#' \itemize{
+#'   \item \dQuote{effortDiam}: the 2 times the maximum of the distances between
+#'   the centroid of all observation points and any individual observation.
+#'   \item \dQuote{medianDist}: the median (Q2) of the distances between the
+#'   centroid and the observations, in meters.
+#'   \item \dQuote{iqrDist}: the interquartile range of the distances between the
+#'    centroid the observations, in meters.
+#'   \item \dQuote{nUniqueLoc}: the number of unique combination of coordinates (locations).
+#'   \item \dQuote{nClusters}: the number of clusters defined by the DBSCAN algorithm,
+#'   a minimum of 3 observations per cluster within the median distance between
+#'   all observations. If the number of clusters is = 0 means that there are at
+#'   least 3 unique locations but observations are too spread and no cluster was
+#'   found. If the number of unique locations is less than 3, observations are
+#'   considered as a single cluster without outliers.
+#'   \item \dQuote{nOutliers}: the number of observations whose distance to any
+#'   cluster is beyond the median distance between all observations.
+#'}
+#' @importFrom rlang .data
+#' @importFrom dplyr group_by summarise n n_distinct sym
+#' @importFrom dbscan dbscan
+#' @importFrom lubridate date day month year ymd
+#' @importFrom geosphere distGeo distm
+#' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
+lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
+  wVis <- which(dat[, visitCol] == x)
+  spdfTmp <- spdf[wVis, ]
+  spdfTmpTr <- st_transform(spdfTmp,
+                            crs = st_crs(3857) )
+
+  coord <- st_coordinates(spdfTmp) # the unstransformed spdf
+  coordPaste <- apply(coord, 1, paste0, collapse = ",")
+  coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
+  nUniqueLoc <- nrow(coordUnique)
+
+  ctr <- spdfTmpTr %>%
+    st_union() %>%
+    st_convex_hull() %>%
+    st_centroid() %>%
+    st_transform( 4326 ) %>%
+    st_coordinates()
+
+  centroidX <- ctr[,"X"]
+  centroidY <- ctr[,"Y"]
+
+  if (nUniqueLoc > 1) {
+    distances <- distGeo(ctr[, c("X", "Y")], coord)
+    distM <- distm(coord, coord) ## the unstransformed spdf
+    distMLT <- distM[lower.tri(distM)]
+    distancesOut <- distMLT[which(distMLT>0)]
+
+    # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
+    # this function is very much dependent on the projection
+    # issue #4 the function shotgun::minCircle() is not reliable for extreme
+    # cases with few points or with outliers. We stick to max distance from centroid.
+
+    effortDiam <- round(max(distances) * 2, 0)
+    medianDist <- round(median(distances), 0)
+    iqrDist    <- round(IQR(distances), 0)
+
+    if(nUniqueLoc >= minPts ){
+      clusters  <- dbscan(st_coordinates(spdfTmpTr),
+                          eps = median(distancesOut),
+                          minPts = minPts)
+      nOutliers <- sum(clusters$cluster==0)
+      nClusters  <- sum(unique(clusters$cluster)!=0)
+    } else {
+      nClusters  <- 1
+      nOutliers  <- 0
+    }
+
+  } else {
+    effortDiam <- 1 # 1m
+    medianDist <- 1
+    iqrDist    <- 1
+    nClusters  <- 1
+    nOutliers  <- 0
+  }
+
+  return(c(centroidX, centroidY, effortDiam, medianDist,
+           iqrDist, nUniqueLoc, nClusters, nOutliers))
+}
+
 #' A function to explore the definition of field visits
 #'
 #' A function to explore the definition of field visits. Visits are a central concept
@@ -7,6 +97,9 @@
 #' See \code{\link{organizeBirds}}.
 #' @param visitCol name of the column for the visits UID.
 #' @param sppCol name of the column for species names.
+#' @param parallel logic. Whether to run in parallel (then the package 'parallel'
+#' is required). Default is FALSE#'
+#' @param nc integer or NULL
 #' @return a \code{data.frame} with summarized data per visit:
 #' \itemize{
 #'   \item \dQuote{day}
@@ -58,8 +151,39 @@
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 exploreVisits <- function(x,
                         visitCol=NULL, #visitCol=attr(x, "visitCol"),
-                        sppCol="scientificName"){
-  minPts <- 3 ## Minumin number of points required for clustering
+                        sppCol="scientificName",
+                        parallel = FALSE,
+                        nc = NULL){
+  if(!is.logical(parallel)) stop("Argument 'parallel' is required and needs to be 'logical'")
+
+  if(parallel){
+    if(!"parallel" %in% installed.packages()) stop("The package 'parallel' is required if the argument 'parallel' is set to TRUE")
+
+    ### handling cores
+    ncDet <- parallel::detectCores()
+    if(is.null(nc)){
+      nc <- ncDet-1
+    }else{
+      if(is.integer(nc) | is.numeric(nc)){
+        nc <- max(1, round(nc))
+      }else{
+        stop("'nc' need to be integer or numeric")
+      }
+    }
+
+    if(ncDet < nc){
+      nc <- ncDet-1
+      warning("The number of detected cores is smaller than the required by 'nc'. Falling back to nc = 'number of cores - 1'")
+    }
+
+    if(parallel & nc == 1){
+      parallel <- FALSE
+      message("Use 'nc' > 1 to take advantage of parallel")
+    }
+  }
+
+  ## Other requirements
+  minPts <- 3 ## Minimum number of points required for clustering
 
   if (class(x) == "OrganizedBirds") {
     spdf<- x$spdf
@@ -71,7 +195,8 @@ exploreVisits <- function(x,
     visitCol <- attr(x, "visitCol")
   }
 
-  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",visitCol, "in your organised dataset."))
+  if (!(visitCol %in% colnames(dat))) stop(paste("There is no column called",
+                                                 visitCol, "in your organised dataset."))
 
   uniqueUID <- unique(dat[, visitCol])
   uniqueUID <- sort(uniqueUID)
@@ -108,66 +233,25 @@ exploreVisits <- function(x,
   rm(datGBY)
 
   ### TODO? can this lapply be done with dplyr?
-  ctrList <- lapply(uniqueUID, FUN = function(x){
-    wVis <- which(dat[, visitCol] == x)
-    spdfTmp <- spdf[wVis, ]
-    spdfTmpTr <- st_transform(spdfTmp,
-                              crs = st_crs(3857) )
-
-    coord <- st_coordinates(spdfTmp) # the unstransformed spdf
-    # coord <- do.call(rbind, st_geometry(spdfTmp)) #coordinates(spdf)
-    coordPaste <- apply(coord, 1, paste0, collapse = ",")
-    coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
-    nUniqueLoc <- nrow(coordUnique)
-
-    ctr <- spdfTmpTr %>%
-            st_union() %>%
-            st_convex_hull() %>%
-            st_centroid() %>%
-            st_transform( 4326 ) %>%
-            st_coordinates()
-
-    centroidX <- ctr[,"X"]
-    centroidY <- ctr[,"Y"]
-
-    if (nUniqueLoc > 1) {
-      distances <- distGeo(ctr[, c("X", "Y")], coord)
-      distM <- distm(coord, coord) ## the unstransformed spdf
-      distMLT <- distM[lower.tri(distM)]
-      distancesOut <- distMLT[which(distMLT>0)]
-
-
-      # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
-      # this function is very much dependent on the projection
-      # issue #4 the function shotgun::minCircle() is not reliable for extreme
-      # cases with few points or with outliers. We stick to max distance from centroid.
-
-      effortDiam <- round(max(distances) * 2, 0)
-      medianDist <- round(median(distances), 0)
-      iqrDist    <- round(IQR(distances), 0)
-
-      if(nUniqueLoc >= minPts ){
-        clusters  <- dbscan(st_coordinates(spdfTmpTr),
-                            eps = median(distancesOut),
-                            minPts = minPts)
-        nOutliers <- sum(clusters$cluster==0)
-        nClusters  <- sum(unique(clusters$cluster)!=0)
-      } else {
-        nClusters  <- 1
-        nOutliers  <- 0
-      }
-
-    } else {
-      effortDiam <- 1 # 1m
-      medianDist <- 1
-      iqrDist    <- 1
-      nClusters  <- 1
-      nOutliers  <- 0
-    }
-
-    return(c(centroidX, centroidY, effortDiam, medianDist,
-           iqrDist, nUniqueLoc, nClusters, nOutliers))
-  } ) #end lapply
+  if(!parallel){
+    ctrList <- lapply(uniqueUID,
+                      FUN = lapplyVisits,
+                      dat=dat, visitCol=visitCol, spdf=spdf, minPts=minPts ) #end lapply
+  }else{
+    cl <- parallel::makeCluster(nc)
+    clusterExport(cl, list("dat", "visitCol", "spdf", "minPts"))
+    clusterEvalQ(cl, {
+                        library("sf")
+                        library("dbscan")
+                      }
+      )
+    message("Running in parallel with ", nc, " cores")
+    ctrList <- parallel::parLapply(cl,
+                                   uniqueUID,
+                                   fun = lapplyVisits,
+                                   dat = dat, visitCol = visitCol, spdf = spdf, minPts = minPts)
+    parallel::stopCluster(cl)
+  }
 
   varsCtr <- c("centroidX", "centroidY","effortDiam", "medianDist","iqrDist",
              "nUniqueLoc", "nClusters", "nOutliers")
