@@ -144,6 +144,7 @@ lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
 #' }
 #' @export
 #' @importFrom rlang .data
+#' @importFrom utils installed.packages
 #' @importFrom dplyr group_by summarise n n_distinct sym
 #' @importFrom dbscan dbscan
 #' @importFrom lubridate date day month year ymd
@@ -240,8 +241,8 @@ exploreVisits <- function(x,
                       dat=dat, visitCol=visitCol, spdf=spdf, minPts=minPts ) #end lapply
   }else{
     cl <- parallel::makeCluster(nc)
-    clusterExport(cl, varlist = list("uniqueUID", "dat", "visitCol", "spdf", "minPts"), envir = envirFunc)
-    clusterEvalQ(cl, {
+    parallel::clusterExport(cl, varlist = list("uniqueUID", "dat", "visitCol", "spdf", "minPts"), envir = envirFunc)
+    parallel::clusterEvalQ(cl, {
                         library("sf")
                         library("dbscan")
                       }

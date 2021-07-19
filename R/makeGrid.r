@@ -247,7 +247,7 @@ renameGrid <- function(grid, idcol="id"){
 #' grid <- makeGrid(gotaland, gridSize = 10)
 #' }
 #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
-#' @importFrom sf st_crs as_Spatial st_transform st_as_sf
+#' @import sf
 #' @export
 makeGrid <- function(poly,
                      gridSize,
@@ -275,7 +275,8 @@ makeGrid <- function(poly,
                          crs = st_crs(getUTMproj(poly)))
 
     ## If many polygons instead of a multipolygon
-    if(nrow(poly) > 1) poly <- st_union(poly)
+    
+    if(length(st_geometry(poly)) > 1) poly <- st_union(poly)
 
     if(is.null(offset)){
       offset <- st_bbox(poly)[c("xmin", "ymin")]
