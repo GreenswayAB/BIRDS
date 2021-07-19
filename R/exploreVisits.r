@@ -225,13 +225,14 @@ exploreVisits <- function(x,
   datGBY <- group_by(dat, !! sym(visitCol))
 
   visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
-  visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName)  )$SLL
+  visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName))$SLL
   dates <- summarise(datGBY, date = min(date)) ##If the visits are over multiple days, we take the first.
   visitStat$day  <- day(dates$date)
   visitStat$month<- month(dates$date)
   visitStat$year <- year(dates$date)
   rm(datGBY)
 
+  envirFunc <- environment()
   ### TODO? can this lapply be done with dplyr?
   if(!parallel){
     ctrList <- lapply(uniqueUID,
@@ -239,7 +240,7 @@ exploreVisits <- function(x,
                       dat=dat, visitCol=visitCol, spdf=spdf, minPts=minPts ) #end lapply
   }else{
     cl <- parallel::makeCluster(nc)
-    clusterExport(cl, list("dat", "visitCol", "spdf", "minPts"))
+    clusterExport(cl, varlist = list("uniqueUID", "dat", "visitCol", "spdf", "minPts"), envir = envirFunc)
     clusterEvalQ(cl, {
                         library("sf")
                         library("dbscan")

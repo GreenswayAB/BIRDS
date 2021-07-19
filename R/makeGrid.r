@@ -98,6 +98,7 @@ makeCircle<-function(spdf, crs=NULL){
 
     if (nrow(coordUnique) > 1) {
       # the minumum circle that covers all points
+      # lwgeom::st_minimum_bounding_circle
       mincirc <- getMinCircle(coordUnique)
       mincircSP<-st_as_sf(data.frame("X"=mincirc$ctr[1], "Y"=mincirc$ctr[2]),
                           coords=c("X", "Y"))
@@ -270,6 +271,12 @@ makeGrid <- function(poly,
         stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
+    poly <- st_transform(poly,
+                         crs = st_crs(getUTMproj(poly)))
+
+    ## If many polygons instead of a multipolygon
+    if(nrow(poly) > 1) poly <- st_union(poly)
+
     if(is.null(offset)){
       offset <- st_bbox(poly)[c("xmin", "ymin")]
     } else {
@@ -277,12 +284,12 @@ makeGrid <- function(poly,
         stop("Offset should be either NULL or numeric of length 2; lower left corner coordinates (x, y) of the grid")
     }
 
-    poly <- st_transform(poly,
-                         crs = st_crs(getUTMproj(poly)))
-
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
-    dif <- as.numeric(diff(matrix(st_bbox(poly), ncol=2)))
+    corners <- st_as_sfc(st_bbox(poly)) %>% st_cast("POINT")
+    distCor <- st_distance(corners[c(1,2,3)])
+    dif <- as.numeric(c(distCor[1,2], distCor[3,2]))
+    # dif <- as.numeric(abs(diff(matrix(st_bbox(poly), ncol=2))))
 
     if (any(gridSizeM >= dif)) {
       stop("Grid cells must be smaller than the sampling area")
@@ -299,14 +306,14 @@ makeGrid <- function(poly,
       poly <- st_buffer(poly, dist = gridSizeM)
     }
 
-    # poly <- st_transform(poly,
-    #                      crs = st_crs(4326))
-
     grid <- st_make_grid(poly,
                          cellsize = gridSizeM,
                          square = !hexGrid,
                          offset = offset,
                          what = "polygons")
+
+    cells <- st_intersects(poly, grid)[[1]]
+    grid <- grid[cells]
 
     grid <- st_transform(grid, crs = st_crs(4326))
     return(grid)
