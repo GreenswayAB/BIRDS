@@ -2,10 +2,21 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+# BIRDS 0.2.1
+
+### Bug Fixes
+* fixed github issue #27 that introduced errors in function summarizeBirds().  
+* fixed github issue #33 that returned an error when making grid for negative coordinates (thanks to Ricardo Correira).  
+
+### Additions
+* The function exploreVisits() can now be run in parallel.  
+* We translated all spatial functions and data from package sp to sf. Functions still accept sp objects for backwards compatibility.  
+
+
 # BIRDS 0.1.27
 
 ### Breaking changes
-* we sadly had to remove the function makeDggrid() because of persistent dependency issues. You can check the commented function from the repository.  
+* sadly we had to remove the function makeDggrid() because of persistent dependency issues. You can check the commented function from the repository.  
 
 # BIRDS 0.1
 
