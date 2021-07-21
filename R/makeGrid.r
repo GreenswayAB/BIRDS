@@ -358,7 +358,6 @@ makeGrid <- function(poly,
 # #' @seealso \code{\link{drawPolygon}}, \code{\link{renameGrid}}, \code{\link{OB2Polygon}}, \code{\link{exploreVisits}}
 # #' @importFrom dplyr group_map
 # #' @importFrom rlang .data
-# #' @importFrom utils installed.packages
 # #' @export
 # makeDggrid <- function(poly,
 #                      gridSize,
@@ -368,8 +367,8 @@ makeGrid <- function(poly,
 #                      simplify=FALSE,
 #                      tol=0.01) {
 #
-#   if(!"dggridR" %in% names(installed.packages()[,1])) stop("This function requires the package 'dggridR' that is not currently installed.
-# intalled. As this package may not currently be on CRAN, please consider installing it with 'remotes::install_github('r-barnes/dggridR')'")
+#   if(length(find.package(package = "dggridR", quiet = TRUE, verbose = FALSE)) == 0) stop("This function requires the package 'dggridR' that is not currently installed.
+# installed. As this package may not currently be on CRAN, please consider installing it with 'remotes::install_github('r-barnes/dggridR')'")
 #
 #   #Construct a global grid with cells approximately 1000 m across
 #   topology <- toupper(topology)

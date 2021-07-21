@@ -65,7 +65,6 @@ Suggests:
     rmarkdown, 
     shiny (>= 1.0),
     testthat,
-    utils,
     vegan
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

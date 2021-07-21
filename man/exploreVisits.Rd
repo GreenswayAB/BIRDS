@@ -71,7 +71,7 @@ hist(visitStats$day)
 # to see correlations
 plot(visitStats$nObs, visitStats$effortDiam)
 plot(visitStats$SLL, visitStats$effortDiam)
-# to see the ditributions of observations along the days of the month
+# to see the distributions of observations along the days of the month
 plot(visitStats$day, visitStats$nObs)
 }
 }

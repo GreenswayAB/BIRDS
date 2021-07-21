@@ -1,10 +1,11 @@
-#' internal function. Depends on the polygon object utmZones
-#' @param sf a sf
+#' An internal function. Depends on the polygon object utmZones
+#' @param sf a simple feature (sf') object. It should consist of only one geometry type
+#' @return a list with an element 'zone' with an integer for the UTM zone value
 #' @keywords internal
 getUTMzone <- function(sf){
   origcrs <- st_crs(sf)
   gmt <- as.vector(st_geometry_type(sf, by_geometry = TRUE))
-  if(length(unique(gmt)) > 1 ) stop("pick a geometry type")
+  if(length(unique(gmt)) > 1 ) stop("Pick an object with only one geometry type")
 
   if(st_is_longlat(sf)){
     sf <- st_transform(sf, 3857)

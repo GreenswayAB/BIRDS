@@ -29,13 +29,14 @@
 #' @importFrom lubridate date day month year ymd
 #' @importFrom geosphere distGeo distm
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
+#' @keywords internal
 lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
   wVis <- which(dat[, visitCol] == x)
   spdfTmp <- spdf[wVis, ]
   spdfTmpTr <- st_transform(spdfTmp,
                             crs = st_crs(3857) )
 
-  coord <- st_coordinates(spdfTmp) # the unstransformed spdf
+  coord <- st_coordinates(spdfTmp) # the untransformed spdf
   coordPaste <- apply(coord, 1, paste0, collapse = ",")
   coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
   nUniqueLoc <- nrow(coordUnique)
@@ -52,7 +53,7 @@ lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
 
   if (nUniqueLoc > 1) {
     distances <- distGeo(ctr[, c("X", "Y")], coord)
-    distM <- distm(coord, coord) ## the unstransformed spdf
+    distM <- distm(coord, coord) ## the untransformed spdf
     distMLT <- distM[lower.tri(distM)]
     distancesOut <- distMLT[which(distMLT>0)]
 
@@ -139,12 +140,11 @@ lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
 #' # to see correlations
 #' plot(visitStats$nObs, visitStats$effortDiam)
 #' plot(visitStats$SLL, visitStats$effortDiam)
-#' # to see the ditributions of observations along the days of the month
+#' # to see the distributions of observations along the days of the month
 #' plot(visitStats$day, visitStats$nObs)
 #' }
 #' @export
 #' @importFrom rlang .data
-#' @importFrom utils installed.packages
 #' @importFrom dplyr group_by summarise n n_distinct sym
 #' @importFrom dbscan dbscan
 #' @importFrom lubridate date day month year ymd
@@ -158,7 +158,10 @@ exploreVisits <- function(x,
   if(!is.logical(parallel)) stop("Argument 'parallel' is required and needs to be 'logical'")
 
   if(parallel){
-    if(!"parallel" %in% installed.packages()) stop("The package 'parallel' is required if the argument 'parallel' is set to TRUE")
+    # if(!"parallel" %in% installed.packages()) stop("The package 'parallel' is required if the argument 'parallel' is set to TRUE")
+    if(length(find.package(package = "parallel", 
+                           quiet = TRUE, 
+                           verbose = FALSE)) == 0) stop("The package 'parallel' is required if the argument 'parallel' is set to TRUE")
 
     ### handling cores
     ncDet <- parallel::detectCores()

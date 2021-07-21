@@ -10,13 +10,13 @@ This note corresponds to 'sf' objects provided as data for the examples and vign
 
 Regarding the archival reason "X-CRAN-Comment: Archived on 2021-07-13 for policy violation." I have tried to contact CRAN without reply.
 
-We did the following changes based on the package since last: 
 ## Note: 
-We translated all spatial functions and data from package sp to sf. Functions still accept sp objects for backwards compatibility.
-We fixed github issue #27 that introduced errors in function summarizeBirds()
-We fixed github issue #33 that returned an error when making grid for negative coordinates
-The function exploreVisits() can now be run in parallel
+We did the following changes based on the package since last: 
+Some of the functions with missing Rd-tags were not meant to have .Rd files. Else we added the tag as suggested
 
+We now use find.package() as suggested instead of installed.packages()
+
+The function that can be run in parallel has a default an argument 'parallel=FALSE' to prevent using more than 2 cores in examples, vignettes, etc.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package in CRAN

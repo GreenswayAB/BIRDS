@@ -16,6 +16,6 @@ The a sf over the overlay grid with a data.frame
 }
 \description{
 An internal function. Takes the data.frame resulting from the spatial overlay
-for a specific grid and summarises basic variables as a polygon spatial layer
+for a specific grid and summarizes basic variables as a polygon spatial layer
 }
 \keyword{internal}

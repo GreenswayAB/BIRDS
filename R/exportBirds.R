@@ -2,11 +2,10 @@
 #' Deconstruction of the overlay
 #'
 #' This takes the overlay element of a summarisedBirds, reconstruct it as a
-#' long data.frame and removes duplicate visits in other grid cells.
-#'
+#' A long data.frame and removes duplicate visits in other grid cells.
 #' @param overlay A list with an element by grid cell
 #' @param visitCol A character string specifying the columns that identify a visit.
-#'
+#
 #' @return a long data.frame
 #' @keywords internal
 deconstructOverlay <- function(overlay, visitCol){
@@ -196,7 +195,7 @@ exportSpatial <- function(sb, timeRes, variable, method){
   return(spatial)
 }
 
-#' A funciton to remove inexistent combination of days like april 31. X is the result of group by with dates as factors
+# A function to remove nonexistent combination of days like April 31. X is the result of group by with dates as factors
 #' @keywords internal
 removeInexDays<-function(x){
   if (!all(c("year", "month", "day") %in% colnames(x) )) stop("Input data must have the columns 'year', 'month' and 'day'")
@@ -235,7 +234,7 @@ getTemporalAvgSll<-function(obsData, timeRes, visitCol, yearsAll){
   return(res)
 }
 
-#' A function to count pixels with data
+# A function to count pixels with data
 #' @keywords internal
 countIfHigher <- function(x, thr, na.rm = TRUE) {
   tmp <- ifelse(x>=thr, 1, 0)
@@ -418,9 +417,8 @@ exportTemporal <- function(sb, timeRes, variable, method){
 #' years and returns only 12 values aplying the method among years.
 #' For more details over the possible combinations of dimensions and variables
 #' please refer to the vignette "Technical details".
-#' @return an xts time series (if dimension = "temporal"),
-#' a named vector (if dimension = "temporal" and timeRes = "month"),
-#' or a sf (if dimension = "spatial")
+#' @return an xts time series (if dimension = "temporal"), a named vector (if 
+#' dimension = "temporal" and timeRes = "month"), or a sf (if dimension = "spatial")
 #' @export
 #'
 #' @examples

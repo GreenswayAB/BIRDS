@@ -166,9 +166,9 @@ simplifySpp <- function(df, sppCol){
 #'
 #' Takes a spatial points data.frame and a grid and gets the overlay IDs.
 #'
-#' @param x a SpatialPointsDataFrame ('sp') or sf ('sf') (with the observations).
-#' @param grid a SpatialPolygon object ('sp') or sf ('sf') (a grid is expected) defining the
-#' maximum extent of visits effort.
+#' @param x a sf ('sf') or a SpatialPointsDataFrame ('sp') (with the observations).
+#' @param grid a sf ('sf') or a SpatialPolygon object ('sp') (a grid is expected) 
+#' defining the maximum extent of visits effort.
 #' @param idcol column name for the grid names or ids
 #'
 #' @return A vector of the same length as the number of rows (observations) as x
@@ -317,13 +317,16 @@ createVisits<-function(x,
 #' @aliases \sQuote{visits<-}
 #' @param x An OrganizedBirds-object
 #' @param name The name of the visit column. Default is \code{NULL}, which will
-#'   get/write to the predefined visit column (\code{visitUID}).
-#' @param useAsDefault Specifies if the defined column in \code{name} should be used as
-#'   the default column for the visits in further analysis. If name is
-#'   \code{NULL} and \code{useAsDefault = TRUE}, \code{value} will be written to
-#'   column (\code{visitUID}) and that column will be set to default.
+#' get/write to the predefined visit column (\code{visitUID}).
+#' @param useAsDefault Specifies if the defined column in \code{name} should be 
+#' used as the default column for the visits in further analysis. If name is
+#' \code{NULL} and \code{useAsDefault = TRUE}, \code{value} will be written to
+#' column (\code{visitUID}) and that column will be set as default.
 #' @param value the value to assign
-#'
+#' @return Either extracts a vector with visits IDs from an object of class 
+#' 'OrganizedBirds' if used as \code{visits()}, or it binds a column with visit 
+#' IDs to the spatial data.frame within the OrganizedBirds-object if used as 
+#' \code{'visits<-'}
 #' @export
 #' @examples
 #' ob <- organizeBirds(bombusObs)
@@ -336,7 +339,7 @@ createVisits<-function(x,
 #' visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 #' vis2 <- visits(ob)
 #' attr(ob, "visitCol")
-visits<-function(x, name=NULL){
+visits <- function(x, name=NULL){
 
   if(class(x)!="OrganizedBirds"){
     stop("Cannot get the visits from other than a OrganizedBirds-class")
@@ -351,7 +354,7 @@ visits<-function(x, name=NULL){
 
 #' @rdname visits
 #' @export
-'visits<-'<-function(x,
+"visits<-"<-function(x,
                      name=NULL,
                      useAsDefault = TRUE,
                      value){

@@ -29,7 +29,7 @@ data.frame). See \code{\link{organizeBirds}}}
 (default = NULL).}
 
 \item{stepChunk}{if the search for observations includes too many in a given
-quality stage, the search takes progressively smaller fractions of the dataset
+quality stage, the search takes progressively smaller fractions of the data set
 in steps. This argument controls for how small fractions are discarded on
 each step. If stepChunk = 0.05 (default) means that in the first step 95% of
 the observations will be tested, then 95% x 95% = 90.25%, and so on until an
@@ -51,19 +51,19 @@ the "worst" observations, then this function will help.
 }
 \details{
 Please note: this function removes all observations belonging to visits
-that fulfil the criteria. Also, the percentage of "lower quality" visits in
+that fulfill the criteria. Also, the percentage of "lower quality" visits in
 the sample is not necessarily the same as the the percentage of "lower quality"
-observations. The removal of observations is done stepwise by quantile therefore
+observations. The removal of observations is done step wise by quantile therefore
 you may get a lower percentage than the aimed given than all remaining visits
 are too large to be included completely. This may happen particularly with
-smaller datasets.
+smaller data sets.
 }
 \note{
 If both 'percent' and 'minCrit' are defined then 'percent' prevails.
 }
 \examples{
 \donttest{
-OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = TRUE)
+OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = FALSE)
 EV <- exploreVisits(OB)
 OBshorter <- removeObs(OB, EV, percent = 75)
 }

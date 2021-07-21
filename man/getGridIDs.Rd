@@ -7,10 +7,10 @@
 getGridIDs(x, grid, idcol = "id")
 }
 \arguments{
-\item{x}{a SpatialPointsDataFrame ('sp') or sf ('sf') (with the observations).}
+\item{x}{a sf ('sf') or a SpatialPointsDataFrame ('sp') (with the observations).}
 
-\item{grid}{a SpatialPolygon object ('sp') or sf ('sf') (a grid is expected) defining the
-maximum extent of visits effort.}
+\item{grid}{a sf ('sf') or a SpatialPolygon object ('sp') (a grid is expected) 
+defining the maximum extent of visits effort.}
 
 \item{idcol}{column name for the grid names or ids}
 }

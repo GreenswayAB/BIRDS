@@ -43,3 +43,4 @@ An internal function to explore the definition of field visits
 \seealso{
 \code{\link{createVisits}}, \code{\link{organiseBirds}}
 }
+\keyword{internal}
