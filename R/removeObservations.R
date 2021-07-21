@@ -79,7 +79,7 @@ removeObs <- function(x,
 
       while(round(percLeft, 3) < percent){ # while 1
         cat(".")
-        if(nextStep <= 0) break(paste0("Nothing else to remove. The result is ",
+        if(nextStep <= 0) break(paste0("\nNothing else to remove. The result is ",
                                        round(percLeft*100, 2),
                                        "% of the original observations set"))
         nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1),
@@ -87,7 +87,7 @@ removeObs <- function(x,
         wKeepNext <- which(obs[,visitCol] %in% nextVisits)
         nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
 
-        if(nToAdd < 1) break(paste0("Nothing else to remove. The result is ",
+        if(nToAdd < 1) break(paste0("\nNothing else to remove. The result is ",
                                     round(percLeft*100, 2),
                                     "% of the original observations set"))
 
@@ -118,7 +118,7 @@ removeObs <- function(x,
 
           ### Slowly complete until reaching the target
           i=0
-          message("Testing if it could be completed by chunks \n")
+          message("\nTesting if it could be completed by chunks \n")
           while(round(percLeft, 3) < percent){ # while 2
             cat(".")
             i=i+1
@@ -132,7 +132,7 @@ removeObs <- function(x,
               wKeep <- c(wKeep, wKeepSample)
               percLeft <- length(wKeep) / nrow(obs)
             } else {
-              message("Chunks are too big, next...\n")
+              message("\nChunks are too big, next...\n")
               next()
             }
           } ## end while 2
@@ -152,7 +152,7 @@ removeObs <- function(x,
   }else{stop("Either 'percent' or 'minCrit' must be supplied")}
 
   x$spdf <- x$spdf[wKeep,]
-  message(paste0("The result is ",
+  message(paste0("\nThe result is ",
                  round(percLeft * 100, 2),
                  "% of the original observations set"))
   return(x)
