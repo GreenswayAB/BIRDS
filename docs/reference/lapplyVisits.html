@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect spatial data — getSpatial • BIRDS</title>
+<title>An internal function to explore the definition of field visits — lapplyVisits • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="Collect spatial data — getSpatial" />
-<meta property="og:description" content="An internal function. Takes the data.frame resulting from the spatial overlay
-for a specific grid and summarizes basic variables as a polygon spatial layer" />
+<meta property="og:title" content="An internal function to explore the definition of field visits — lapplyVisits" />
+<meta property="og:description" content="An internal function to explore the definition of field visits" />
 
 
 
@@ -147,34 +146,65 @@ for a specific grid and summarizes basic variables as a polygon spatial layer" /
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect spatial data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
-    <div class="hidden name"><code>getSpatial.Rd</code></div>
+    <h1>An internal function to explore the definition of field visits</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/exploreVisits.r'><code>R/exploreVisits.r</code></a></small>
+    <div class="hidden name"><code>lapplyVisits.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An internal function. Takes the data.frame resulting from the spatial overlay
-for a specific grid and summarizes basic variables as a polygon spatial layer</p>
+    <p>An internal function to explore the definition of field visits</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getSpatial</span><span class='op'>(</span><span class='va'>birdOverlay</span>, visitCol <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>lapplyVisits</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>dat</span>, <span class='va'>visitCol</span>, <span class='va'>spdf</span>, <span class='va'>minPts</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>birdOverlay</th>
-      <td><p>An birdOverlay which is the result of the <code><a href='overlayBirds.html'>overlayBirds</a></code>-function.</p></td>
+      <th>x</th>
+      <td><p>an subset object to pass to apply</p></td>
+    </tr>
+    <tr>
+      <th>dat</th>
+      <td><p>an object of class &#8216;OrganizedBirds&#8217; (organised BIRDS Spatial data frame).</p></td>
     </tr>
     <tr>
       <th>visitCol</th>
-      <td><p>A character string for specifying the columns that identify a visit.</p></td>
+      <td><p>name of the column for the visits UID.</p></td>
+    </tr>
+    <tr>
+      <th>spdf</th>
+      <td><p>spatial object of dat.</p></td>
+    </tr>
+    <tr>
+      <th>minPts</th>
+      <td><p>minimum number of points, default to 3.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The a sf over the overlay grid with a data.frame</p>
+    <p>a <code>data.frame</code> with summarized data per visit:</p><ul>
+<li><p>&#8220;effortDiam&#8221;: the 2 times the maximum of the distances between
+  the centroid of all observation points and any individual observation.</p></li>
+<li><p>&#8220;medianDist&#8221;: the median (Q2) of the distances between the
+  centroid and the observations, in meters.</p></li>
+<li><p>&#8220;iqrDist&#8221;: the interquartile range of the distances between the
+   centroid the observations, in meters.</p></li>
+<li><p>&#8220;nUniqueLoc&#8221;: the number of unique combination of coordinates (locations).</p></li>
+<li><p>&#8220;nClusters&#8221;: the number of clusters defined by the DBSCAN algorithm,
+  a minimum of 3 observations per cluster within the median distance between
+  all observations. If the number of clusters is = 0 means that there are at
+  least 3 unique locations but observations are too spread and no cluster was
+  found. If the number of unique locations is less than 3, observations are
+  considered as a single cluster without outliers.</p></li>
+<li><p>&#8220;nOutliers&#8221;: the number of observations whose distance to any
+  cluster is beyond the median distance between all observations.</p></li>
+</ul>
+
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='createVisits.html'>createVisits</a></code>, <code><a href='organizeBirds.html'>organiseBirds</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

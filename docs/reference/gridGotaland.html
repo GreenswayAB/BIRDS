@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect spatial data — getSpatial • BIRDS</title>
+<title>Götalands grid, Sweden. — gridGotaland • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="Collect spatial data — getSpatial" />
-<meta property="og:description" content="An internal function. Takes the data.frame resulting from the spatial overlay
-for a specific grid and summarizes basic variables as a polygon spatial layer" />
+<meta property="og:title" content="Götalands grid, Sweden. — gridGotaland" />
+<meta property="og:description" content="A polygon with a sample hexagonal grid over Götaland, Sweden." />
 
 
 
@@ -147,34 +146,21 @@ for a specific grid and summarizes basic variables as a polygon spatial layer" /
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect spatial data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/summarizeBirds.R'><code>R/summarizeBirds.R</code></a></small>
-    <div class="hidden name"><code>getSpatial.Rd</code></div>
+    <h1>Götalands grid, Sweden.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>gridGotaland.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An internal function. Takes the data.frame resulting from the spatial overlay
-for a specific grid and summarizes basic variables as a polygon spatial layer</p>
+    <p>A polygon with a sample hexagonal grid over Götaland, Sweden.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>getSpatial</span><span class='op'>(</span><span class='va'>birdOverlay</span>, visitCol <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='va'>gridGotaland</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>birdOverlay</th>
-      <td><p>An birdOverlay which is the result of the <code><a href='overlayBirds.html'>overlayBirds</a></code>-function.</p></td>
-    </tr>
-    <tr>
-      <th>visitCol</th>
-      <td><p>A character string for specifying the columns that identify a visit.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>The a sf over the overlay grid with a data.frame</p>
+    <p>A sf with 1 polygon with CRS(epsg:4326)</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

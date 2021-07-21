@@ -53,7 +53,6 @@ definition of the field visit, and most likely, your grid size will define the
 maximum area a person can explore during a day. Use the function
 exploreVisits() to assess if your definition of visit aligns with your
  grid size." />
-<meta property="og:image" content="/logo.svg" />
 
 
 
@@ -95,7 +94,7 @@ exploreVisits() to assess if your definition of visit aligns with your
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -103,7 +102,7 @@ exploreVisits() to assess if your definition of visit aligns with your
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -135,7 +134,7 @@ exploreVisits() to assess if your definition of visit aligns with your
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -236,8 +235,10 @@ displayed.</p>
     <div class='dont-index'><p><code><a href='drawPolygon.html'>drawPolygon</a></code>, <code><a href='renameGrid.html'>renameGrid</a></code>, <code><a href='OB2Polygon.html'>OB2Polygon</a></code>, <code><a href='exploreVisits.html'>exploreVisits</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'>makeGrid</span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Grid cells are too many (&gt;=500), this may result in very long computation times</span></div></pre>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'>makeGrid</span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>internal function. Depends on the polygon object utmZones — getUTMzone • BIRDS</title>
+<title>An internal function. Depends on the polygon object utmZones — getUTMzone • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="internal function. Depends on the polygon object utmZones — getUTMzone" />
-<meta property="og:description" content="internal function. Depends on the polygon object utmZones" />
-<meta property="og:image" content="/logo.svg" />
+<meta property="og:title" content="An internal function. Depends on the polygon object utmZones — getUTMzone" />
+<meta property="og:description" content="An internal function. Depends on the polygon object utmZones" />
 
 
 
@@ -90,7 +89,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -98,7 +97,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -130,7 +129,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -147,13 +146,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>internal function. Depends on the polygon object utmZones</h1>
+    <h1>An internal function. Depends on the polygon object utmZones</h1>
     <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/getUTM.r'><code>R/getUTM.r</code></a></small>
     <div class="hidden name"><code>getUTMzone.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>internal function. Depends on the polygon object utmZones</p>
+    <p>An internal function. Depends on the polygon object utmZones</p>
     </div>
 
     <pre class="usage"><span class='fu'>getUTMzone</span><span class='op'>(</span><span class='va'>sf</span><span class='op'>)</span></pre>
@@ -163,10 +162,13 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sf</th>
-      <td><p>a sf</p></td>
+      <td><p>a simple feature (sf') object. It should consist of only one geometry type</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a list with an element 'zone' with an integer for the UTM zone value</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

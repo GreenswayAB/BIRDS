@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217; — OB2Polygon • BIRDS</title>
+<title>Create the polygon for the study area from a data set of class &#8216;OrganizedBirds&#8217; — OB2Polygon • BIRDS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217; — OB2Polygon" />
-<meta property="og:description" content="Create the polygon for the study area from a dataset of class &amp;#8216;OrganizedBirds&amp;#8217;" />
-<meta property="og:image" content="/logo.svg" />
+<meta property="og:title" content="Create the polygon for the study area from a data set of class &#8216;OrganizedBirds&#8217; — OB2Polygon" />
+<meta property="og:description" content="Create the polygon for the study area from a data set of class &amp;#8216;OrganizedBirds&amp;#8217;" />
 
 
 
@@ -90,7 +89,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -98,7 +97,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -130,7 +129,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -147,13 +146,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217;</h1>
+    <h1>Create the polygon for the study area from a data set of class &#8216;OrganizedBirds&#8217;</h1>
     <small class="dont-index">Source: <a href='https://github.com/Greensway/BIRDS/blob/master/R/makeGrid.r'><code>R/makeGrid.r</code></a></small>
     <div class="hidden name"><code>OB2Polygon.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create the polygon for the study area from a dataset of class &#8216;OrganizedBirds&#8217;</p>
+    <p>Create the polygon for the study area from a data set of class &#8216;OrganizedBirds&#8217;</p>
     </div>
 
     <pre class="usage"><span class='fu'>OB2Polygon</span><span class='op'>(</span><span class='va'>x</span>, shape <span class='op'>=</span> <span class='st'>"bBox"</span><span class='op'>)</span></pre>
@@ -184,8 +183,10 @@
  in WGS84 (ESPG:4326).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>
-<span class='va'>polygon</span> <span class='op'>&lt;-</span> <span class='fu'>OB2Polygon</span><span class='op'>(</span><span class='va'>ob</span>, shape <span class='op'>=</span> <span class='st'>"cHull"</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+  <span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>
+  <span class='va'>polygon</span> <span class='op'>&lt;-</span> <span class='fu'>OB2Polygon</span><span class='op'>(</span><span class='va'>ob</span>, shape <span class='op'>=</span> <span class='st'>"cHull"</span><span class='op'>)</span>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

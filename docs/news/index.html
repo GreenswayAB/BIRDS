@@ -47,7 +47,6 @@
 
 
 <meta property="og:title" content="Changelog" />
-<meta property="og:image" content="/logo.svg" />
 
 
 
@@ -89,7 +88,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -97,7 +96,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -129,7 +128,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -150,6 +149,29 @@
       <small>Source: <a href='https://github.com/Greensway/BIRDS/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="birds-021" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.1">
+<a href="#birds-021" class="anchor"></a>BIRDS 0.2.1<small> Unreleased </small>
+</h1>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h3>
+<ul>
+<li>fixed github issue <a href='https://github.com/Greensway/BIRDS/issues/27'>#27</a> that introduced errors in function summarizeBirds().<br>
+</li>
+<li>fixed github issue <a href='https://github.com/Greensway/BIRDS/issues/33'>#33</a> that returned an error when making grid for negative coordinates (thanks to Ricardo Correira).</li>
+</ul>
+</div>
+<div id="additions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additions" class="anchor"></a>Additions</h3>
+<ul>
+<li>The function exploreVisits() can now be run in parallel.<br>
+</li>
+<li>We translated all spatial functions and data from package sp to sf. Functions still accept sp objects for backwards compatibility.</li>
+</ul>
+</div>
+</div>
     <div id="birds-0127" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.27">
 <a href="#birds-0127" class="anchor"></a>BIRDS 0.1.27<small> Unreleased </small>
@@ -158,7 +180,7 @@
 <h3 class="hasAnchor">
 <a href="#breaking-changes" class="anchor"></a>Breaking changes</h3>
 <ul>
-<li>we sadly had to remove the function makeDggrid() because of persistent dependency issues. You can check the commented function from the repository.</li>
+<li>sadly we had to remove the function makeDggrid() because of persistent dependency issues. You can check the commented function from the repository.</li>
 </ul>
 </div>
 </div>
@@ -175,9 +197,9 @@
 <li>as of 2020-03-03 dggridR is no longer available in CRAN. To use the function makeDggrid() you need to get the packages from here <a href="https://github.com/r-barnes/dggridR/" class="uri">https://github.com/r-barnes/dggridR/</a>.</li>
 </ul>
 </div>
-<div id="additions" class="section level3">
+<div id="additions-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#additions" class="anchor"></a>Additions</h3>
+<a href="#additions-1" class="anchor"></a>Additions</h3>
 <ul>
 <li>removeObs() a function to remove observations from an OrganisedBirds dataset based on the visits effort (measured with exploreVisits())</li>
 <li>obsIndex() a function retrieving the Relative Reporting Frequency Index (obsIndex). This retrieves both spatial and temporal observation patterns for a focal species compared to a group of species.</li>
@@ -192,9 +214,9 @@
 <h1 class="page-header" data-toc-text="0.0.3">
 <a href="#birds-003" class="anchor"></a>BIRDS 0.0.3<small> Unreleased </small>
 </h1>
-<div id="additions-1" class="section level3">
+<div id="additions-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#additions-1" class="anchor"></a>Additions</h3>
+<a href="#additions-2" class="anchor"></a>Additions</h3>
 <ul>
 <li>organizeBirds() now is more tolerant to casing in the column names and has better warning messages.</li>
 <li>organizeBirds() now has an argument that accepts a column names for the variable stating the presence status if there is such (useful for FocalSp* and Observation index)</li>
@@ -211,16 +233,16 @@
 <h1 class="page-header" data-toc-text="0.0.2">
 <a href="#birds-002" class="anchor"></a>BIRDS 0.0.2<small> Unreleased </small>
 </h1>
-<div id="bug-fixes" class="section level3">
+<div id="bug-fixes-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h3>
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h3>
 <ul>
 <li>fix and simplify structure of exportBirds() function</li>
 </ul>
 </div>
-<div id="additions-2" class="section level3">
+<div id="additions-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#additions-2" class="anchor"></a>Additions</h3>
+<a href="#additions-3" class="anchor"></a>Additions</h3>
 <ul>
 <li>function exportBirds() - add number of spatial units with observations (grid cells nCells) as variable to temporal exports</li>
 <li>new function spatialVisits() to plot the spatial representaion of the visits effort</li>

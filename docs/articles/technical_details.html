@@ -19,7 +19,6 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="BIRDS technical details">
 <meta property="og:description" content="BIRDS">
-<meta property="og:image" content="/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -44,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -52,7 +51,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +83,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,13 +97,13 @@
 
       
 
-      </header><script src="technical_details_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="technical_details_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>BIRDS technical details</h1>
                         <h4 class="author">Alejandro Ruete and Debora Arlt</h4>
             
-            <h4 class="date">2021-06-24</h4>
+            <h4 class="date">2021-07-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Greensway/BIRDS/blob/master/vignettes/technical_details.Rmd"><code>vignettes/technical_details.Rmd</code></a></small>
       <div class="hidden name"><code>technical_details.Rmd</code></div>
@@ -213,7 +212,7 @@ If there is no common spatial identifier to define the visit extent, and the obs
 <p>The objects within SB can be called with <code>SB$x</code> where x is the object name described below:</p>
 <ul>
 <li>
-<code>spatial</code> is a <code>SpatialPolygonDataFrame</code> object with variables summarized per grid cell. As usual for an SPDF the values are stored in the slot <span class="citation">@data</span>, e.g. <a href="mailto:SB%24Spatial@data" class="email">SB$Spatial@data</a><br>
+<code>spatial</code> is a <code>sf</code> object with variables summarized per grid cell. As usual for an sf object the values are stored as a data.frame<br>
 </li>
 <li>
 <code>temporal</code> is an <code>xts</code> object with variables summarized per day. Read more about specific functions for extended time series <a href="https://CRAN.R-project.org/package=xts">here</a><br>

@@ -48,13 +48,12 @@
 
 <meta property="og:title" content="BIRDS: Biodiversity Information Review and Decision Support. — BIRDS" />
 <meta property="og:description" content="The primary aim of this package is to provide tools for Biodiversity Informatics
-in order to understand the specis information data and decide about what analyses
-we can perform and draw approriate conclusions. For this we need to understand
+in order to understand the species information data and decide about what analyses
+we can perform and draw appropriate conclusions. For this we need to understand
 the data generation process. With this R package we want to take the
-user a step closer to understanding the observers’ behaviour.
-The 'BIRDS' packages provides a workflow for reproducable data review, involving
-three basic steps: organise data, summarise data, review data." />
-<meta property="og:image" content="/logo.svg" />
+user a step closer to understanding the observers’ behavior.
+The 'BIRDS' packages provides a workflow for reproducible data review, involving
+three basic steps: organize, summarize, and review data." />
 
 
 
@@ -96,7 +95,7 @@ three basic steps: organise data, summarise data, review data." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -104,7 +103,7 @@ three basic steps: organise data, summarise data, review data." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -136,7 +135,7 @@ three basic steps: organise data, summarise data, review data." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -160,12 +159,12 @@ three basic steps: organise data, summarise data, review data." />
 
     <div class="ref-description">
     <p>The primary aim of this package is to provide tools for Biodiversity Informatics
-in order to understand the specis information data and decide about what analyses
-we can perform and draw approriate conclusions. For this we need to understand
+in order to understand the species information data and decide about what analyses
+we can perform and draw appropriate conclusions. For this we need to understand
 the data generation process. With this R package we want to take the
-user a step closer to understanding the observers’ behaviour.
-The 'BIRDS' packages provides a workflow for reproducable data review, involving
-three basic steps: organise data, summarise data, review data.</p>
+user a step closer to understanding the observers’ behavior.
+The 'BIRDS' packages provides a workflow for reproducible data review, involving
+three basic steps: organize, summarize, and review data.</p>
     </div>
 
 
@@ -174,7 +173,7 @@ three basic steps: organise data, summarise data, review data.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'sf' was built under R version 4.0.5</span></div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1</span></div><div class='input'><span class='co'># Organise the data</span>
+</div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1</span></div><div class='input'><span class='co'># Organise the data</span>
 <span class='va'>OB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span>, sppCol <span class='op'>=</span> <span class='st'>"scientificName"</span>, simplifySppName <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='va'>OB2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bryophytaObs</span>, sppCol <span class='op'>=</span> <span class='st'>"species"</span>, simplifySppName <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -183,10 +182,10 @@ three basic steps: organise data, summarise data, review data.</p>
 <span class='co'># Make a grid that can be used by summariseBirds()</span>
 <span class='co'># gotaland is a SpatialPolygonDataFrame provided as an example</span>
 <span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Grid cells are too many (&gt;=500), this may result in very long computation times</span></div><div class='input'>
+
 <span class='co'># Summarise the data (using the grid to overlay with the organised data)</span>
 <span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span><span class='op'>(</span><span class='va'>OB</span>, grid<span class='op'>=</span><span class='va'>grid</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>43 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>EBnObs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span><span class='op'>(</span><span class='va'>SB</span>, dimension <span class='op'>=</span> <span class='st'>"temporal"</span>, timeRes <span class='op'>=</span> <span class='st'>"yearly"</span>,
+</div><div class='output co'>#&gt; <span class='message'>149 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>EBnObs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span><span class='op'>(</span><span class='va'>SB</span>, dimension <span class='op'>=</span> <span class='st'>"temporal"</span>, timeRes <span class='op'>=</span> <span class='st'>"yearly"</span>,
 variable <span class='op'>=</span> <span class='st'>"nObs"</span>, method <span class='op'>=</span> <span class='st'>"sum"</span><span class='op'>)</span>
 <span class='va'>EBnVis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='exportBirds.html'>exportBirds</a></span><span class='op'>(</span><span class='va'>SB</span>, dimension <span class='op'>=</span> <span class='st'>"temporal"</span>, timeRes <span class='op'>=</span> <span class='st'>"yearly"</span>,
 variable <span class='op'>=</span> <span class='st'>"nVis"</span>, method <span class='op'>=</span> <span class='st'>"sum"</span><span class='op'>)</span>

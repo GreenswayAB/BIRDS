@@ -49,7 +49,6 @@
 <meta property="og:title" content="Summarize the OrganizedBirds — summarizeBirds" />
 <meta property="og:description" content="Takes a OrganizedBirds-object and a SpatialPolygons*-grid and summarizes it
 in spatial and  temporal dimensions." />
-<meta property="og:image" content="/logo.svg" />
 
 
 
@@ -91,7 +90,7 @@ in spatial and  temporal dimensions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -99,7 +98,7 @@ in spatial and  temporal dimensions." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -131,7 +130,7 @@ in spatial and  temporal dimensions." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -210,8 +209,8 @@ sampling effort is more important than sample independence.</p>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span><span class='op'>)</span>
 <span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>gotaland</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Grid cells are too many (&gt;=500), this may result in very long computation times</span></div><div class='input'><span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'>summarizeBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>43 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>nObsG</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>SB</span><span class='op'>$</span><span class='va'>spatioTemporal</span><span class='op'>[</span>,,<span class='fl'>13</span>,<span class='st'>"nObs"</span><span class='op'>]</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'>summarizeBirds</span><span class='op'>(</span><span class='va'>ob</span>, <span class='va'>grid</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>149 observations did not overlap with the grid and will be discarded.</span></div><div class='input'><span class='va'>nObsG</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colSums.html'>rowSums</a></span><span class='op'>(</span><span class='va'>SB</span><span class='op'>$</span><span class='va'>spatioTemporal</span><span class='op'>[</span>,,<span class='fl'>13</span>,<span class='st'>"nObs"</span><span class='op'>]</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>nObsG2</span> <span class='op'>&lt;-</span> <span class='va'>SB</span><span class='op'>$</span><span class='va'>spatial</span><span class='op'>$</span><span class='va'>nObs</span>
 <span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span><span class='op'>(</span><span class='va'>nObsG</span> <span class='op'>!=</span> <span class='va'>nObsG2</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'>## Check, two ways to obtain the same</span>
 </div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># }</span>
