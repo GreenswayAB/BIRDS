@@ -275,7 +275,7 @@ makeGrid <- function(poly,
                          crs = st_crs(getUTMproj(poly)))
 
     ## If many polygons instead of a multipolygon
-    
+
     if(length(st_geometry(poly)) > 1) poly <- st_union(poly)
 
     if(is.null(offset)){
@@ -313,10 +313,16 @@ makeGrid <- function(poly,
                          offset = offset,
                          what = "polygons")
 
+    ### Transform to original
+    grid <- st_transform(grid, crs = st_crs(4326))
+
+
+    poly <- st_transform(poly,
+                         crs = st_crs(4326))
+
     cells <- st_intersects(poly, grid)[[1]]
     grid <- grid[cells]
 
-    grid <- st_transform(grid, crs = st_crs(4326))
     return(grid)
 }
 
