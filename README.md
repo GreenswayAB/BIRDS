@@ -1,5 +1,5 @@
 
-# BIRDS <img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/logo.png" align="right" width="120"/>
+# BIRDS <img src="https://github.com/GreenswayAB/BIRDS/raw/master/man/figures/logo.png" align="right" width="120"/>
 
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -8,7 +8,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecy
 [![CRAN
 Status](https://www.r-pkg.org/badges/version/BIRDS)](https://cran.r-project.org/package=BIRDS)
 [![Downloads](https://cranlogs.r-pkg.org/badges/BIRDS?color=blue)](https://cranlogs.r-pkg.org/)
-[![R-CMD-check](https://github.com/Greensway/BIRDS/workflows/R-CMD-check/badge.svg)](https://github.com/Greensway/BIRDS/actions)
+[![R-CMD-check](https://github.com/GreenswayAB/BIRDS/workflows/R-CMD-check/badge.svg)](https://github.com/Greensway/BIRDS/actions)
 
 ### A set of tools for Biodiversity Informatics in R
 
@@ -58,7 +58,7 @@ effort and data completeness (or data gaps).
 The `BIRDS` package is **not** concerned with data accuracy, which can
 be evaluated and improved using other existing packages (as outlined in
 the [technical
-details](https://greensway.github.io/BIRDS/articles/technical_details.html)
+details](https://greenswayab.github.io/BIRDS/articles/technical_details.html)
 vignette), before processing the data using `BIRDS`.
 
 The concepts and methods, and examples are described after a short
@@ -73,7 +73,7 @@ Install `remotes` if you have not already installed it
 (`install.packages('remotes')`):
 
 ``` r
-remotes::install_github('Greensway/BIRDS')
+remotes::install_github('GreenswayAB/BIRDS')
 library(BIRDS)
 ```
 
@@ -90,7 +90,7 @@ steps and tools for optionally cleaning the data before processing by
 start by optionally cleaning the data, then use `BIRDS` to organize,
 summarize and review the data:
 
-<img src="https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png"/>
+<img src="https://github.com/GreenswayAB/BIRDS/raw/master/man/figures/BIRDs.png"/>
 
 Then, use your review to evaluate sampling effort and data gaps, and to
 inform decisions about whether the data are fit-for-purpose and how to
@@ -118,7 +118,7 @@ using information for each visit and information from a collection of
 visits.
 
 You can examine this in the [technical
-details](https://greensway.github.io/BIRDS/articles/technical_details.html)
+details](https://greenswayab.github.io/BIRDS/articles/technical_details.html)
 vignette.
 
 ##### Spatial grid and spillover
@@ -150,7 +150,7 @@ This process can be repeated with a set of grids with different offset
 to explore the sensitivity of the results to the size of the grid cells.
 
 You can examine this in the [technical
-details](https://greensway.github.io/BIRDS/articles/technical_details.html)
+details](https://greenswayab.github.io/BIRDS/articles/technical_details.html)
 vignette.
 
 ##### Reference species group
@@ -250,14 +250,14 @@ volunteer‐collected long‐term data using List Length Analysis, Ecol Appl
 
 You can find an overview of the `BIRDS` main components and functions,
 organised as an [overview workflow
-here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDs.png)
+here](https://github.com/GreenswayAB/BIRDS/raw/master/man/figures/BIRDs.png)
 and a [workflow highlighting the decisions to be taking when using BIRDS
-here](https://github.com/Greensway/BIRDS/raw/master/man/figures/BIRDsDecision.png).
+here](https://github.com/GreenswayAB/BIRDS/raw/master/man/figures/BIRDsDecision.png).
 
 ### Example
 
 The [Intro to
-BIRDS](https://greensway.github.io/BIRDS/articles/BIRDS.html) vignette
+BIRDS](https://greenswayab.github.io/BIRDS/articles/BIRDS.html) vignette
 provides a useful walk through the package tools using an example data
 set.
 
@@ -267,11 +267,11 @@ here](https://www.dropbox.com/s/fxg1t9vl4ainipy/BirdsLR.mp4?dl=0).
 ### What is new - latest changes and additions
 
 We continuously update and improve the BIRDS package. Check the
-[changelog](https://greensway.github.io/BIRDS/news/index.html)
+[changelog](https://greenswayab.github.io/BIRDS/news/index.html)
 
 ### In the TODO LIST
 
-Check [here](https://github.com/Greensway/BIRDS/projects/1) for a list
+Check [here](https://github.com/GreenswayAB/BIRDS/projects/4) for a list
 of future features to be added, and don't hesitate sending your
 suggestions by [e-mail](mailto:alejandro@greensway.se)
 

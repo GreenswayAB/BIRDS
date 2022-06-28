@@ -2,14 +2,14 @@ Package: BIRDS
 Type: Package
 Title: Biodiversity Information Review and Decision Support 
 Version: 0.2.2
-URL: https://github.com/greensway/BIRDS
+URL: https://github.com/GreenswayAB/BIRDS
 BugReports: https://github.com/Greensway/BIRDS/issues
 Authors@R: c(
     person("Debora", "Arlt", email = "debora.arlt@slu.se", role = "aut",
             comment = c(ORCID = "0000-0003-0874-4250")),
     person("Alejandro", "Ruete", email = "aleruete@gmail.com", role = c("aut","cre"),
             comment = c(ORCID = "0000-0001-7681-2812")),
-    person("Anton", "Hammarström", email = "anton@greensway.se", role = "aut"))
+    person("Anton", "Hammarström", role = "aut"))
 Description: It helps making the evaluation and preparation of biodiversity data
    easy, systematic and reproducible. It also helps the users to overlay the 
    point observations into a custom grid that is useful for further analysis. 

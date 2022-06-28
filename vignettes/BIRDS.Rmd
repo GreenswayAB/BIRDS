@@ -20,18 +20,18 @@ knitr::opts_chunk$set(
 ## Installing 'BIRDS'
 
 The package 'BIRDS' is currently available on GitHub and you can freely download 
-the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
+the source code here [BIRDS on GitHub](https://github.com/GreenswayAB/BIRDS)
 
 The easiest option is to install the package directly from GitHub using the 
 package 'remotes'.  Install 'remotes as usual `install.packages('remotes')` 
 if you do not already have installed it. 
 
 ```{r install package, eval = F}
-remotes::install_github('Greensway/BIRDS')
+remotes::install_github('GreenswayAB/BIRDS')
 ```
 
 If you receive an error we would love to receive your bug report 
-[here](https://github.com/Greensway/BIRDS/issues)
+[here](https://github.com/GreenswayAB/BIRDS/issues)
 
 ## Basic example and data requirements
 
@@ -54,7 +54,7 @@ adding to each observation a unique identifier for the assumed visit (sampling e
 it belongs to, given some input parameters. The function `organizeBirds()` will interpret 
 the DarwinCore standard for column names as default, but other names can be specified 
 too. For more details on how a visit is defined and options for each function please
-refer to the [technical vignette](https://greensway.github.io/BIRDS/articles/technical_details.html) and to 
+refer to the [technical vignette](https://greenswayab.github.io/BIRDS/articles/technical_details.html) and to 
 each function's help page.  
 
 Then, the function `summariseBirds()` will overlay the data with a given spatial

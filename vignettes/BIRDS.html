@@ -147,21 +147,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="installing-birds" class="section level2">
 <h2>Installing ‘BIRDS’</h2>
-<p>The package ‘BIRDS’ is currently available on GitHub and you can freely download the source code here <a href="https://github.com/Greensway/BIRDS">BIRDS on GitHub</a></p>
+<p>The package ‘BIRDS’ is currently available on GitHub and you can freely download the source code here <a href="https://github.com/GreenswayAB/BIRDS">BIRDS on GitHub</a></p>
 <p>The easiest option is to install the package directly from GitHub using the package ‘remotes’. Install ’remotes as usual <code>install.packages(&#39;remotes&#39;)</code> if you do not already have installed it.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&#39;Greensway/BIRDS&#39;</span>)</span></code></pre></div>
-<p>If you receive an error we would love to receive your bug report <a href="https://github.com/Greensway/BIRDS/issues">here</a></p>
+<p>If you receive an error we would love to receive your bug report <a href="https://github.com/GreenswayAB/BIRDS/issues">here</a></p>
 </div>
 <div id="basic-example-and-data-requirements" class="section level2">
 <h2>Basic example and data requirements</h2>
 <p>Starting with a primary biodiversity data set (species observations) <code>BIRDS</code> employs three basic steps: organizing the data into a sampling event-based format, summarizing the data producing summary variables that inform about sampling effort and data completeness, and reviewing the summarized variables.</p>
-<p>This package works with <code>data.frame</code> and <code>data.table</code> tables containing raw species observations as rows (i.e. primary biodiversity data, PBD), with minimal information required for each observation in the following columns:</p>
+<p>This package works with <code>data.frame</code> and <code>data.table</code> tables containing raw species observations as rows (i.e. primary biodiversity data, PBD), with minimal information required for each observation in the following columns:</p>
 <ol style="list-style-type: decimal">
 <li>species identification</li>
 <li>x and y spatial coordinates in two columns (epsg:4326 assumed if not otherwise specified)</li>
 <li>date of the observation (either in one formatted column or three columns y-m-d)</li>
 </ol>
-<p>The function <code>organiseBirds()</code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code>organizeBirds()</code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="https://greensway.github.io/BIRDS/articles/technical_details.html">technical vignette</a> and to each function’s help page.</p>
+<p>The function <code>organiseBirds()</code> converts ‘data.frame’ into a <code>SpatialPointsDataFrame</code> adding to each observation a unique identifier for the assumed visit (sampling event) it belongs to, given some input parameters. The function <code>organizeBirds()</code> will interpret the DarwinCore standard for column names as default, but other names can be specified too. For more details on how a visit is defined and options for each function please refer to the <a href="https://greenswayab.github.io/BIRDS/articles/technical_details.html">technical vignette</a> and to each function’s help page.</p>
 <p>Then, the function <code>summariseBirds()</code> will overlay the data with a given spatial grid and create a set of objects that summarize the data spatially, temporally, and spatio-temporally, and also provide other intermediate results useful for later analyses. Finally, the function <code>exportBirds()</code> helps the user to obtain the data ready to be plotted with widely known functions.</p>
 <p>We use as an example a data set consisting of 10k species observations of bumblebees (i.e. <em>Bombus</em> spp.) in Götaland (the southern part of Sweden) during 2000-2018. The data set <code>bombusObs</code> is part of this package and its metadata can be found in the data set help page <code>?bombusObs</code>.</p>
 <p>You can easily create a grid over a sample area (i.e. <code>gotaland</code>), organize and summarize the data, and export the variables you want to plot:</p>
