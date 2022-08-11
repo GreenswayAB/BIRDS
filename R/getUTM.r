@@ -169,7 +169,8 @@ getUTMproj <- function(x){
     }
     if(is.integer(utmZone)){
       proj4 <- paste0("+proj=utm +zone=", utmZone)
-      epsg <- as.numeric(rgdal::showEPSG(proj4))
+      crs <- st_crs(proj4)
+      epsg <- as.numeric(rgdal::showEPSG(crs$wkt))
     }
   } else { epsg <- NULL}
   return(epsg)
