@@ -37,16 +37,17 @@ getUTMzone <- function(sf){
   if(is.null(maxZones)){
     ##First we need to check if there is points in any other zone.
     ##If not we accept anything more than zero
-    if(any(sum(freqRows[c("A", "B")]) > 0, sum(freqRows[c("Y", "Z")]) > 0)){
+    if(any(sum(freqRows[c("A", "B")], na.rm = TRUE) > 0, 
+           sum(freqRows[c("Y", "Z")], na.rm = TRUE) > 0)){
       alternatives<-c("0" = FALSE)
     }
   }else{
     ##Else we check if there is more or as many points in zone 0 as in any other zone.
-    if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones],
-           sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
+    if(any(sum(freqRows[c("A", "B")], na.rm = TRUE) > freqZones[maxZones],
+           sum(freqRows[c("Y", "Z")], na.rm = TRUE) > freqZones[maxZones])){
       alternatives<-c("0" = FALSE)
-    }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones],
-                 sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
+    }else if(any(sum(freqRows[c("A", "B")], na.rm = TRUE) == freqZones[maxZones],
+                 sum(freqRows[c("Y", "Z")], na.rm = TRUE) == freqZones[maxZones])){
       alternatives["0"]<-FALSE
     }
   }
