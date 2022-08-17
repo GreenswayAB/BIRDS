@@ -20,18 +20,18 @@ knitr::opts_chunk$set(
 ## Installing 'BIRDS'
 
 The package 'BIRDS' is currently available on GitHub and you can freely download 
-the source code here [BIRDS on GitHub](https://github.com/Greensway/BIRDS)
+the source code here [BIRDS on GitHub](https://github.com/GreenswayAB/BIRDS)
 
 The easiest option is to install the package directly from GitHub using the 
 package 'remotes'.  Install 'remotes as usual `install.packages('remotes')` 
 if you do not already have installed it. 
 
 ```{r install package, eval = F}
-remotes::install_github('Greensway/BIRDS')
+remotes::install_github('GreenswayAB/BIRDS')
 ```
 
 If you receive an error we would love to receive your bug report 
-[here](https://github.com/Greensway/BIRDS/issues)
+[here](https://github.com/GreenswayAB/BIRDS/issues)
 
 ## Basic example and data requirements
 
@@ -54,7 +54,7 @@ adding to each observation a unique identifier for the assumed visit (sampling e
 it belongs to, given some input parameters. The function `organizeBirds()` will interpret 
 the DarwinCore standard for column names as default, but other names can be specified 
 too. For more details on how a visit is defined and options for each function please
-refer to the [technical vignette](https://greensway.github.io/BIRDS/articles/technical_details.html) and to 
+refer to the [technical vignette](https://greenswayab.github.io/BIRDS/articles/technical_details.html) and to 
 each function's help page.  
 
 Then, the function `summariseBirds()` will overlay the data with a given spatial
@@ -70,24 +70,28 @@ can be found in the data set help page `?bombusObs`.
 
 You can easily create a grid over a sample area (i.e. `gotaland`), organize and 
 summarize the data, and export the variables you want to plot:
+```{r checkPROJ, echo=FALSE}
+projVer <- sf::sf_extSoftVersion()["PROJ"]
+doNextChunk <- as.logical(compareVersion("5.1.0", projVer) == -1)
+```
 
-```{r basic example, eval = TRUE}
+```{r basic example, eval = doNextChunk}
 library(BIRDS)
 library(sf)
-# Create a grid for your sample area that will be used to summarise the data:
-grid <- makeGrid(gotaland, gridSize = 10)
-# The grid can be easily created in different ways. 
-
-# Import the species observation data:
-PBD <- bombusObs
-# alternatively, you could load a previously downloaded .CSV file 
-
-# Convert the data from an observation-based to a visit-based format, adding a 
-# unique identifier for each visit:
-OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = TRUE)
-
-# Summarise the data:
-SB <- summariseBirds(OB, grid=grid)
+  # Create a grid for your sample area that will be used to summarise the data:
+  grid <- makeGrid(gotaland, gridSize = 10)
+  # The grid can be easily created in different ways. 
+  
+  # Import the species observation data:
+  PBD <- bombusObs
+  # alternatively, you could load a previously downloaded .CSV file 
+  
+  # Convert the data from an observation-based to a visit-based format, adding a 
+  # unique identifier for each visit:
+  OB <- organizeBirds(PBD, sppCol = "scientificName", simplifySppName = FALSE)
+  
+  # Summarise the data:
+  SB <- summariseBirds(OB, grid=grid)  
 
 # Look at some summarised variables:
 # Number of observations
@@ -105,7 +109,7 @@ EBavgSll <- colMeans(SB$spatioTemporal[,,"Yearly","avgSll"], na.rm = TRUE)
 ```
 
 Then, with functions you already know, plot this into a time series.
-```{r figure 1, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."}
+```{r figure 1, eval = doNextChunk, fig.show='hold', fig.width= 7, fig.height= 5, fig.cap = "Time series for *Bombus* spp. dataset."}
 oldpar <- par(no.readonly =TRUE)
 par(mar=c(4,4,1,6), las=1)
 plot(time(EBnObs), EBnObs, type = "l", lwd = 3, xlab = "Year", ylab = "Number", 
@@ -138,7 +142,7 @@ There seem to be also few visits with long species lists driving the increase of
 Then, we can summarize spatial data in some maps, to review, for example, 
 Where do we have visits at all?, or How often are visits performed in July vs December?  
 
-```{r figure 2, fig.show='hold', fig.width= 7, fig.height= 3}
+```{r figure 2, eval = doNextChunk, fig.show='hold', fig.width= 7, fig.height= 3}
 wNonEmpty <- whichNonEmpty( SB$overlaid )
 EB <- exportBirds(SB, "Spatial", "Month", "nYears", "sum")
 # because the dimension is "spatial", the result is a 'SpatialPolygonDataFrame'
@@ -176,19 +180,19 @@ The algorithm behind the Ignorance Score is designed for comparison of bias and
 gaps in primary biodiversity data across taxonomy, time and space
  Read more here: Ruete (2015) Biodiv Data J 3:e5361 \doi{10.3897/BDJ.3.e5361}.
  
-```{r figure 3, fig.show='hold', fig.width= 7, fig.height= 4}
+```{r figure 3, eval = doNextChunk, fig.show='hold', fig.width= 7, fig.height= 4}
 oldpar <- par(no.readonly =TRUE)
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 palBW <- leaflet::colorNumeric(c("white", "navyblue"), 
                                c(0, max(SB$spatial$nVis, na.rm = TRUE)), 
                                na.color = "transparent")
-seqNVis<-round(seq(0, max(SB$spatial$nVis, na.rm = TRUE), length.out = 5))
+seqNVis <- round(seq(0, max(SB$spatial$nVis, na.rm = TRUE), length.out = 5))
 plot(SB$spatial$geometry, col=palBW(SB$spatial$nVis), border = NA)
 plot(gotaland$geometry, col=NA, border = "grey", lwd=1, add=TRUE)
 legend("bottomleft", legend=seqNVis, col = palBW(seqNVis),
       title = "Number of \nobservations", pch = 15, bty="n")
 
-ign<-exposeIgnorance(SB$spatial$nVis, h = 5)
+ign <- exposeIgnorance(SB$spatial$nVis, h = 5)
 palBWR <- leaflet::colorNumeric(c("navyblue", "white","red"), c(0, 1), 
                                 na.color = "transparent")
 plot(gotaland$geometry, col="grey90", border = "grey90", lwd=1)

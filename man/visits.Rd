@@ -16,12 +16,18 @@ visits(x, name = NULL, useAsDefault = TRUE) <- value
 \item{name}{The name of the visit column. Default is \code{NULL}, which will
 get/write to the predefined visit column (\code{visitUID}).}
 
-\item{useAsDefault}{Specifies if the defined column in \code{name} should be used as
-the default column for the visits in further analysis. If name is
+\item{useAsDefault}{Specifies if the defined column in \code{name} should be 
+used as the default column for the visits in further analysis. If name is
 \code{NULL} and \code{useAsDefault = TRUE}, \code{value} will be written to
-column (\code{visitUID}) and that column will be set to default.}
+column (\code{visitUID}) and that column will be set as default.}
 
 \item{value}{the value to assign}
+}
+\value{
+Either extracts a vector with visits IDs from an object of class 
+'OrganizedBirds' if used as \code{visits()}, or it binds a column with visit 
+IDs to the spatial data.frame within the OrganizedBirds-object if used as 
+\code{'visits<-'}
 }
 \description{
 Gets or sets the visits identifier for a OrganizedBirds-class.

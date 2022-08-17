@@ -15,4 +15,7 @@ A summarisedBirds object based on bombusObsShort for faster examples
 grid <- makeGrid(searchPolygon, gridSize = 10)
 SB <- summarizeBirds(organizeBirds(bombusObsShort), grid=grid)
 }
+\note{
+some special characters have been transformed to ASCII to comply with CRAN requirements
+}
 \keyword{datasets}

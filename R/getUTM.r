@@ -1,10 +1,11 @@
-#' internal function. Depends on the polygon object utmZones
-#' @param sf a sf
+#' An internal function. Depends on the polygon object utmZones
+#' @param sf a simple feature (sf') object. It should consist of only one geometry type
+#' @return a list with an element 'zone' with an integer for the UTM zone value
 #' @keywords internal
 getUTMzone <- function(sf){
   origcrs <- st_crs(sf)
   gmt <- as.vector(st_geometry_type(sf, by_geometry = TRUE))
-  if(length(unique(gmt)) > 1 ) stop("pick a geometry type")
+  if(length(unique(gmt)) > 1 ) stop("Pick an object with only one geometry type")
 
   if(st_is_longlat(sf)){
     sf <- st_transform(sf, 3857)
@@ -36,16 +37,17 @@ getUTMzone <- function(sf){
   if(is.null(maxZones)){
     ##First we need to check if there is points in any other zone.
     ##If not we accept anything more than zero
-    if(any(sum(freqRows[c("A", "B")]) > 0, sum(freqRows[c("Y", "Z")]) > 0)){
+    if(any(sum(freqRows[c("A", "B")], na.rm = TRUE) > 0, 
+           sum(freqRows[c("Y", "Z")], na.rm = TRUE) > 0)){
       alternatives<-c("0" = FALSE)
     }
   }else{
     ##Else we check if there is more or as many points in zone 0 as in any other zone.
-    if(any(sum(freqRows[c("A", "B")]) > freqZones[maxZones],
-           sum(freqRows[c("Y", "Z")]) > freqZones[maxZones])){
+    if(any(sum(freqRows[c("A", "B")], na.rm = TRUE) > freqZones[maxZones],
+           sum(freqRows[c("Y", "Z")], na.rm = TRUE) > freqZones[maxZones])){
       alternatives<-c("0" = FALSE)
-    }else if(any(sum(freqRows[c("A", "B")]) == freqZones[maxZones],
-                 sum(freqRows[c("Y", "Z")]) == freqZones[maxZones])){
+    }else if(any(sum(freqRows[c("A", "B")], na.rm = TRUE) == freqZones[maxZones],
+                 sum(freqRows[c("Y", "Z")], na.rm = TRUE) == freqZones[maxZones])){
       alternatives["0"]<-FALSE
     }
   }
@@ -168,7 +170,8 @@ getUTMproj <- function(x){
     }
     if(is.integer(utmZone)){
       proj4 <- paste0("+proj=utm +zone=", utmZone)
-      epsg <- as.numeric(rgdal::showEPSG(proj4))
+      crs <- st_crs(proj4)
+      epsg <- as.numeric(rgdal::showEPSG(crs$wkt))
     }
   } else { epsg <- NULL}
   return(epsg)

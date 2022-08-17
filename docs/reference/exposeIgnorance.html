@@ -53,7 +53,6 @@ is considered to be enough to reduce the ignorance score by half (henceforth
 the Half-ignorance approach). The algorithm behind the Ignorance Score is
 designed for comparison of bias and gaps in primary biodiversity data across
 taxonomy, time and space" />
-<meta property="og:image" content="/logo.svg" />
 
 
 
@@ -95,7 +94,7 @@ taxonomy, time and space" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -103,7 +102,7 @@ taxonomy, time and space" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -135,7 +134,7 @@ taxonomy, time and space" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -200,7 +199,7 @@ taxonomy, time and space</p>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='va'>OB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObsShort</span>, sppCol <span class='op'>=</span> <span class='st'>"scientificName"</span>, simplifySppName <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGrid.html'>makeGrid</a></span><span class='op'>(</span><span class='va'>searchPolygon</span>, gridSize <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Grid cells are too many (&gt;=500), this may result in very long computation times</span></div><div class='input'><span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span><span class='op'>(</span><span class='va'>OB</span>, grid<span class='op'>=</span><span class='va'>grid</span><span class='op'>)</span>
+<span class='va'>SB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='summarizeBirds.html'>summariseBirds</a></span><span class='op'>(</span><span class='va'>OB</span>, grid<span class='op'>=</span><span class='va'>grid</span><span class='op'>)</span>
 <span class='va'>ignorance</span> <span class='op'>&lt;-</span> <span class='fu'>exposeIgnorance</span><span class='op'>(</span>nObs<span class='op'>=</span><span class='va'>SB</span><span class='op'>$</span><span class='va'>spatial</span><span class='op'>$</span><span class='va'>nObs</span><span class='op'>)</span>
 <span class='co'># }</span>
 </div></pre>

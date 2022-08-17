@@ -2,14 +2,17 @@
 % Please edit documentation in R/getUTM.r
 \name{getUTMzone}
 \alias{getUTMzone}
-\title{internal function. Depends on the polygon object utmZones}
+\title{An internal function. Depends on the polygon object utmZones}
 \usage{
 getUTMzone(sf)
 }
 \arguments{
-\item{sf}{a sf}
+\item{sf}{a simple feature (sf') object. It should consist of only one geometry type}
+}
+\value{
+a list with an element 'zone' with an integer for the UTM zone value
 }
 \description{
-internal function. Depends on the polygon object utmZones
+An internal function. Depends on the polygon object utmZones
 }
 \keyword{internal}

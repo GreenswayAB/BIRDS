@@ -19,7 +19,6 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Working with xts time series">
 <meta property="og:description" content="BIRDS">
-<meta property="og:image" content="/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -44,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -52,7 +51,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +83,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,13 +97,13 @@
 
       
 
-      </header><script src="working_with_xts_timeseries_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="working_with_xts_timeseries_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Working with xts time series</h1>
                         <h4 class="author">Alejandro Ruete</h4>
             
-            <h4 class="date">2021-06-24</h4>
+            <h4 class="date">2021-07-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Greensway/BIRDS/blob/master/vignettes/working_with_xts_timeseries.Rmd"><code>vignettes/working_with_xts_timeseries.Rmd</code></a></small>
       <div class="hidden name"><code>working_with_xts_timeseries.Rmd</code></div>
@@ -125,7 +124,6 @@
 <span class="co"># Create a grid for your sample area that will be used to summarise the data:</span>
 <span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeGrid.html">makeGrid</a></span><span class="op">(</span><span class="va">gotaland</span>, gridSize <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="co"># The grid can be easily created in different ways. </span>
-
 <span class="co"># Import the species observation data:</span>
 <span class="va">PBD</span> <span class="op">&lt;-</span> <span class="va">bombusObs</span>
 <span class="co"># alternatively, you could load a previously downloaded .CSV file </span>
@@ -133,13 +131,13 @@
 
 <span class="co"># Convert the data from an observation-based to a visit-based format, </span>
 <span class="co"># adding a unique identifier for each visit:</span>
-<span class="va">OB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/organizeBirds.html">organizeBirds</a></span><span class="op">(</span><span class="va">PBD</span>, sppCol <span class="op">=</span> <span class="st">"scientificName"</span>, simplifySppName <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">OB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/organizeBirds.html">organizeBirds</a></span><span class="op">(</span><span class="va">PBD</span>, sppCol <span class="op">=</span> <span class="st">"scientificName"</span><span class="op">)</span>
 
 <span class="co"># Summarise the data:</span>
 <span class="va">SB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarizeBirds.html">summariseBirds</a></span><span class="op">(</span><span class="va">OB</span>, grid<span class="op">=</span><span class="va">grid</span><span class="op">)</span></code></pre></div>
 <p>we see that SB contains an element called <code>SB$temporal</code> that contains a daily time series with time specific rows when there is information. <code>xts</code> also supports time, but dating below day resolution is not yet implemented in the <code>BIRDS</code> package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sb.xts</span><span class="op">&lt;-</span><span class="va">SB</span><span class="op">$</span><span class="va">temporal</span>
+<code class="sourceCode R"><span class="va">sb.xts</span> <span class="op">&lt;-</span> <span class="va">SB</span><span class="op">$</span><span class="va">temporal</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sb.xts</span><span class="op">)</span>
 <span class="co">#&gt;            nObs nVis nSpp</span>
 <span class="co">#&gt; 2000-04-21    1    1    1</span>
@@ -149,12 +147,12 @@
 <span class="co">#&gt; 2000-05-05    1    1    1</span>
 <span class="co">#&gt; 2000-05-28    3    2    3</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">sb.xts</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1940    3</span></code></pre></div>
+<span class="co">#&gt; [1] 1865    3</span></code></pre></div>
 <p>Sub-setting is convenient in <code>xts</code> as you can do it with its dates and with a <code><a href="https://rdrr.io/r/base/Arithmetic.html">/</a></code> for a range of dates.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sb.xts</span><span class="op">[</span><span class="st">"2017-09"</span><span class="op">]</span> <span class="co">#a specific month</span>
 <span class="co">#&gt;            nObs nVis nSpp</span>
-<span class="co">#&gt; 2017-09-01    2    2    2</span>
+<span class="co">#&gt; 2017-09-01    1    1    1</span>
 <span class="co">#&gt; 2017-09-03    3    3    2</span>
 <span class="co">#&gt; 2017-09-07    1    1    1</span>
 <span class="co">#&gt; 2017-09-09    1    1    1</span>
@@ -163,7 +161,6 @@
 <span class="co">#&gt; 2017-09-17    2    2    2</span>
 <span class="co">#&gt; 2017-09-19    4    2    4</span>
 <span class="co">#&gt; 2017-09-20    1    1    1</span>
-<span class="co">#&gt; 2017-09-25    1    1    1</span>
 <span class="va">sb.xts</span><span class="op">[</span><span class="st">"2017-09-07"</span><span class="op">]</span> <span class="co">#a specific day</span>
 <span class="co">#&gt;            nObs nVis nSpp</span>
 <span class="co">#&gt; 2017-09-07    1    1    1</span>
@@ -175,30 +172,28 @@
 <span class="co">#&gt; 2017-03-23    2    2    2</span>
 <span class="co">#&gt; 2017-03-24    2    2    2</span>
 <span class="co">#&gt; 2017-03-25    5    5    3</span>
-<span class="co">#&gt; 2017-03-26    8    8    4</span>
-<span class="co">#&gt; 2017-03-27    4    3    2</span>
-<span class="co">#&gt; 2017-03-28    3    3    3</span>
+<span class="co">#&gt; 2017-03-26    6    6    4</span>
+<span class="co">#&gt; 2017-03-27    1    1    1</span>
+<span class="co">#&gt; 2017-03-28    2    2    2</span>
 <span class="co">#&gt; 2017-03-31    3    3    2</span>
 <span class="co">#&gt; 2017-04-01    7    7    5</span>
-<span class="co">#&gt; 2017-04-02   11   10    4</span>
+<span class="co">#&gt; 2017-04-02    9    9    3</span>
 <span class="co">#&gt; 2017-04-03    8    8    5</span>
 <span class="co">#&gt; 2017-04-04    1    1    1</span>
-<span class="co">#&gt; 2017-04-05    2    2    2</span>
+<span class="co">#&gt; 2017-04-05    1    1    1</span>
 <span class="co">#&gt; 2017-04-06    2    2    2</span>
 <span class="co">#&gt; 2017-04-07    3    3    2</span>
-<span class="co">#&gt; 2017-04-08    5    5    4</span>
-<span class="co">#&gt; 2017-04-09   14   14    5</span>
-<span class="co">#&gt; 2017-04-10    1    1    1</span>
+<span class="co">#&gt; 2017-04-08    3    3    2</span>
+<span class="co">#&gt; 2017-04-09   10   10    5</span>
 <span class="co">#&gt; 2017-04-11    6    6    4</span>
 <span class="co">#&gt; 2017-04-12    1    1    1</span>
 <span class="co">#&gt; 2017-04-13    1    1    1</span>
 <span class="co">#&gt; 2017-04-14    6    6    4</span>
 <span class="co">#&gt; 2017-04-16    2    2    1</span>
-<span class="co">#&gt; 2017-04-17    3    2    2</span>
 <span class="co">#&gt; 2017-04-19    3    3    2</span>
 <span class="co">#&gt; 2017-04-20    1    1    1</span>
 <span class="co">#&gt; 2017-04-21    1    1    1</span>
-<span class="co">#&gt; 2017-04-22    4    4    4</span>
+<span class="co">#&gt; 2017-04-22    3    3    3</span>
 <span class="co">#&gt; 2017-04-23    3    3    2</span>
 <span class="co">#&gt; 2017-04-26    4    4    3</span>
 <span class="co">#&gt; 2017-04-27    1    1    1</span>
@@ -210,42 +205,42 @@
 <code class="sourceCode R"><span class="va">obs.m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xts/man/to.period.html">to.monthly</a></span><span class="op">(</span><span class="va">sb.xts</span><span class="op">$</span><span class="va">nObs</span><span class="op">)</span> 
 <span class="va">obs.m</span><span class="op">[</span><span class="st">"2017-04"</span><span class="op">]</span>
 <span class="co">#&gt;          sb.xts$nObs.Open sb.xts$nObs.High sb.xts$nObs.Low sb.xts$nObs.Close</span>
-<span class="co">#&gt; Apr 2017                7               14               1                13</span>
+<span class="co">#&gt; Apr 2017                7               13               1                13</span>
 <span class="va">sb.xts</span><span class="op">[</span><span class="st">"2017-04"</span><span class="op">]</span>
 <span class="co">#&gt;            nObs nVis nSpp</span>
 <span class="co">#&gt; 2017-04-01    7    7    5</span>
-<span class="co">#&gt; 2017-04-02   11   10    4</span>
+<span class="co">#&gt; 2017-04-02    9    9    3</span>
 <span class="co">#&gt; 2017-04-03    8    8    5</span>
 <span class="co">#&gt; 2017-04-04    1    1    1</span>
-<span class="co">#&gt; 2017-04-05    2    2    2</span>
+<span class="co">#&gt; 2017-04-05    1    1    1</span>
 <span class="co">#&gt; 2017-04-06    2    2    2</span>
 <span class="co">#&gt; 2017-04-07    3    3    2</span>
-<span class="co">#&gt; 2017-04-08    5    5    4</span>
-<span class="co">#&gt; 2017-04-09   14   14    5</span>
-<span class="co">#&gt; 2017-04-10    1    1    1</span>
+<span class="co">#&gt; 2017-04-08    3    3    2</span>
+<span class="co">#&gt; 2017-04-09   10   10    5</span>
 <span class="co">#&gt; 2017-04-11    6    6    4</span>
 <span class="co">#&gt; 2017-04-12    1    1    1</span>
 <span class="co">#&gt; 2017-04-13    1    1    1</span>
 <span class="co">#&gt; 2017-04-14    6    6    4</span>
 <span class="co">#&gt; 2017-04-16    2    2    1</span>
-<span class="co">#&gt; 2017-04-17    3    2    2</span>
 <span class="co">#&gt; 2017-04-19    3    3    2</span>
 <span class="co">#&gt; 2017-04-20    1    1    1</span>
 <span class="co">#&gt; 2017-04-21    1    1    1</span>
-<span class="co">#&gt; 2017-04-22    4    4    4</span>
+<span class="co">#&gt; 2017-04-22    3    3    3</span>
 <span class="co">#&gt; 2017-04-23    3    3    2</span>
 <span class="co">#&gt; 2017-04-26    4    4    3</span>
 <span class="co">#&gt; 2017-04-27    1    1    1</span>
 <span class="co">#&gt; 2017-04-29    5    5    4</span>
 <span class="co">#&gt; 2017-04-30   13   12    6</span>
 
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">obs.m</span><span class="op">[</span><span class="st">"2010/2017"</span>,<span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"darkblue"</span>, grid.ticks.on <span class="op">=</span> <span class="st">"month"</span>,   major.ticks <span class="op">=</span> <span class="st">"month"</span>, grid.col <span class="op">=</span> <span class="st">"lightgrey"</span>,  main <span class="op">=</span> <span class="st">"Maximum number of daily observations per month"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">obs.m</span><span class="op">[</span><span class="st">"2010/2017"</span>,<span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"darkblue"</span>, grid.ticks.on <span class="op">=</span> <span class="st">"month"</span>,   
+     major.ticks <span class="op">=</span> <span class="st">"month"</span>, grid.col <span class="op">=</span> <span class="st">"lightgrey"</span>,  
+     main <span class="op">=</span> <span class="st">"Maximum number of daily observations per month"</span><span class="op">)</span></code></pre></div>
 <p><img src="working_with_xts_timeseries_files/figure-html/monthly%20and%20plot-1.png" width="864"></p>
-<p>Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too? in the original time series there is not data for every day, therefore the time series is incomplete.</p>
+<p>Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too? In the original time series there is not data for every day, therefore the time series is incomplete.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># sb.xts.na is same as sb.xts but with all missing days added (with NAs)</span>
 <span class="va">rng</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">sb.xts</span><span class="op">)</span><span class="op">)</span>
-<span class="va">sb.xts.na</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/merge.html">merge</a></span><span class="op">(</span><span class="va">sb.xts</span>, <span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html">xts</a></span><span class="op">(</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">rng</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">rng</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, by <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">sb.xts.na</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">sb.xts</span>, <span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html">xts</a></span><span class="op">(</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">rng</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">rng</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, by <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>However, in our monthly example we may not need data for every day, but month, and this time we need 0s instead of NAs. Even more, we don’t want to add zeros for the months we already have data, because that will change the summary statistics. Then we add 0s for the months we have no data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">z.seq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">rng</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">rng</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, by <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span>
@@ -256,10 +251,12 @@
 
 <span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html">xts</a></span><span class="op">(</span>, <span class="va">z.seq</span><span class="op">)</span>
 
-<span class="va">sb.xts.0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/merge.html">merge</a></span><span class="op">(</span><span class="va">sb.xts</span>, <span class="va">z</span>, fill <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+<span class="va">sb.xts.0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">sb.xts</span>, <span class="va">z</span>, fill <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
 
 <span class="va">obs.m.0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xts/man/to.period.html">to.monthly</a></span><span class="op">(</span><span class="va">sb.xts.0</span><span class="op">$</span><span class="va">nObs</span><span class="op">)</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">obs.m.0</span><span class="op">[</span><span class="st">"2010/2017"</span>,<span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"darkblue"</span>, grid.ticks.on <span class="op">=</span> <span class="st">"month"</span>,   major.ticks <span class="op">=</span> <span class="st">"month"</span>, grid.col <span class="op">=</span> <span class="st">"lightgrey"</span>,  main <span class="op">=</span> <span class="st">"Maximum number of daily observations per month"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">obs.m.0</span><span class="op">[</span><span class="st">"2010/2017"</span>,<span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"darkblue"</span>, grid.ticks.on <span class="op">=</span> <span class="st">"month"</span>,   
+     major.ticks <span class="op">=</span> <span class="st">"month"</span>, grid.col <span class="op">=</span> <span class="st">"lightgrey"</span>, 
+     main <span class="op">=</span> <span class="st">"Maximum number of daily observations per month"</span><span class="op">)</span></code></pre></div>
 <p><img src="working_with_xts_timeseries_files/figure-html/completting2-1.png" width="864"></p>
 </div>
   </div>

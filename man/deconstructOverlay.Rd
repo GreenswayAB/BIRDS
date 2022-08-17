@@ -16,6 +16,6 @@ a long data.frame
 }
 \description{
 This takes the overlay element of a summarisedBirds, reconstruct it as a
-long data.frame and removes duplicate visits in other grid cells.
+A long data.frame and removes duplicate visits in other grid cells.
 }
 \keyword{internal}

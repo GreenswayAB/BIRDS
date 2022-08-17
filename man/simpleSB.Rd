@@ -14,4 +14,7 @@ simpleSB
 An empty summarisedBirds object used to dynamically test for validity
 of export parameter combinations \code{exportBirds()} in the sister package shinyBirds
 }
+\note{
+some special characters have been transformed to ASCII to comply with CRAN requirements
+}
 \keyword{datasets}

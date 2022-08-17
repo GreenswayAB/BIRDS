@@ -48,7 +48,6 @@
 
 <meta property="og:title" content="Get/set the visits — visits" />
 <meta property="og:description" content="Gets or sets the visits identifier for a OrganizedBirds-class." />
-<meta property="og:image" content="/logo.svg" />
 
 
 
@@ -90,7 +89,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BIRDS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -98,7 +97,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -130,7 +129,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/greensway/BIRDS">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -174,10 +173,10 @@ get/write to the predefined visit column (<code>visitUID</code>).</p></td>
     </tr>
     <tr>
       <th>useAsDefault</th>
-      <td><p>Specifies if the defined column in <code>name</code> should be used as
-the default column for the visits in further analysis. If name is
+      <td><p>Specifies if the defined column in <code>name</code> should be 
+used as the default column for the visits in further analysis. If name is
 <code>NULL</code> and <code>useAsDefault = TRUE</code>, <code>value</code> will be written to
-column (<code>visitUID</code>) and that column will be set to default.</p></td>
+column (<code>visitUID</code>) and that column will be set as default.</p></td>
     </tr>
     <tr>
       <th>value</th>
@@ -185,6 +184,12 @@ column (<code>visitUID</code>) and that column will be set to default.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Either extracts a vector with visits IDs from an object of class 
+'OrganizedBirds' if used as <code>visits()</code>, or it binds a column with visit 
+IDs to the spatial data.frame within the OrganizedBirds-object if used as 
+<code>'visits&lt;-'</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>ob</span> <span class='op'>&lt;-</span> <span class='fu'><a href='organizeBirds.html'>organizeBirds</a></span><span class='op'>(</span><span class='va'>bombusObs</span><span class='op'>)</span>

@@ -16,6 +16,9 @@ bombusObsShort
 \description{
 A random sample of 1,000 observations for the genus \emph{Bombus} spp.
 }
+\note{
+some special characters have been transformed to ASCII to comply with CRAN requirements
+}
 \seealso{
 \code{\link{bombusObs}}
 }

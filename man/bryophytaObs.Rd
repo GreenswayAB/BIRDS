@@ -38,4 +38,7 @@ And: (All must apply)
   \item{Has geospatial issue}{false}
 }
 }
+\note{
+some special characters have been transformed to ASCII to comply with CRAN requirements
+}
 \keyword{datasets}

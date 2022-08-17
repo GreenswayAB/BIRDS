@@ -10,12 +10,12 @@
 #' the "worst" observations, then this function will help.
 #'
 #' Please note: this function removes all observations belonging to visits
-#' that fulfil the criteria. Also, the percentage of "lower quality" visits in
+#' that fulfill the criteria. Also, the percentage of "lower quality" visits in
 #' the sample is not necessarily the same as the the percentage of "lower quality"
-#' observations. The removal of observations is done stepwise by quantile therefore
+#' observations. The removal of observations is done step wise by quantile therefore
 #' you may get a lower percentage than the aimed given than all remaining visits
 #' are too large to be included completely. This may happen particularly with
-#' smaller datasets.
+#' smaller data sets.
 #'
 #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
 #' data.frame). See \code{\link{organizeBirds}}
@@ -27,7 +27,7 @@
 #' @param minCrit the minimum accepted of a given criteria in the data set
 #' (default = NULL).
 #' @param stepChunk if the search for observations includes too many in a given
-#' quality stage, the search takes progressively smaller fractions of the dataset
+#' quality stage, the search takes progressively smaller fractions of the data set
 #' in steps. This argument controls for how small fractions are discarded on
 #' each step. If stepChunk = 0.05 (default) means that in the first step 95% of
 #' the observations will be tested, then 95% x 95% = 90.25%, and so on until an
@@ -38,7 +38,7 @@
 #' @return An updated OrganisedBirds dataset
 #' @examples
 #' \donttest{
-#' OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = TRUE)
+#' OB <- organizeBirds(bombusObs, sppCol = "scientificName", simplifySppName = FALSE)
 #' EV <- exploreVisits(OB)
 #' OBshorter <- removeObs(OB, EV, percent = 75)
 #' }
@@ -78,7 +78,8 @@ removeObs <- function(x,
       nextStep <- q
 
       while(round(percLeft, 3) < percent){ # while 1
-        if(nextStep <= 0) break(paste0("Nothing else to remove. The result is ",
+        cat(".")
+        if(nextStep <= 0) break(paste0("\nNothing else to remove. The result is ",
                                        round(percLeft*100, 2),
                                        "% of the original observations set"))
         nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1),
@@ -86,7 +87,7 @@ removeObs <- function(x,
         wKeepNext <- which(obs[,visitCol] %in% nextVisits)
         nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
 
-        if(nToAdd < 1) break(paste0("Nothing else to remove. The result is ",
+        if(nToAdd < 1) break(paste0("\nNothing else to remove. The result is ",
                                     round(percLeft*100, 2),
                                     "% of the original observations set"))
 
@@ -117,8 +118,9 @@ removeObs <- function(x,
 
           ### Slowly complete until reaching the target
           i=0
-          message("Testing if it could be completed by chunks \n")
+          message("\nTesting if it could be completed by chunks \n")
           while(round(percLeft, 3) < percent){ # while 2
+            cat(".")
             i=i+1
             if(i > length(nextVisitSample)){
               break() # nothing left to add, lets look at the next class
@@ -130,7 +132,7 @@ removeObs <- function(x,
               wKeep <- c(wKeep, wKeepSample)
               percLeft <- length(wKeep) / nrow(obs)
             } else {
-              message("Chunks are too big, next...\n")
+              message("\nChunks are too big, next...\n")
               next()
             }
           } ## end while 2
@@ -150,7 +152,7 @@ removeObs <- function(x,
   }else{stop("Either 'percent' or 'minCrit' must be supplied")}
 
   x$spdf <- x$spdf[wKeep,]
-  message(paste0("The result is ",
+  message(paste0("\nThe result is ",
                  round(percLeft * 100, 2),
                  "% of the original observations set"))
   return(x)
@@ -161,7 +163,7 @@ removeObs <- function(x,
 # #'
 # #' The function \code{\link{exploreVisits}}, among other things, identifies
 # #' observations considered to be outliers on each visits.  WHAT IS OUTLIER?
-# #' This function removes those observations from the original dataset.
+# #' This function removes those observations from the original data set.
 # #'
 # #' @param x an object of class \sQuote{OrganizedBirds} (organised BIRDS Spatial
 # #' Dataframe). See \code{\link{organizeBirds}}

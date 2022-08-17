@@ -25,9 +25,8 @@ For \code{timeRes = c(NULL, "month")} the function also accepts \code{"nYears"}.
 statistical method should be applied. The function accepts \code{"sum", "median", "mean"}.}
 }
 \value{
-an xts time series (if dimension = "temporal"),
-a named vector (if dimension = "temporal" and timeRes = "month"),
-or a sf (if dimension = "spatial")
+an xts time series (if dimension = "temporal"), a named vector (if 
+dimension = "temporal" and timeRes = "month"), or a sf (if dimension = "spatial")
 }
 \description{
 Export single variables from SummarisedBirds objects

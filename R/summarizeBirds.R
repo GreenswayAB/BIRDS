@@ -1,9 +1,9 @@
 #' Collect temporal data
 #'
 #' An internal function. Takes the data.frame resulting from the temporal overlay
-#' for a specific grid and summarises basic variables as a time series
+#' for a specific grid and summarizes basic variables as a time series
 #'
-#' @param birdOverlay An birdOverlay which is the result of the \code{\link{overlayBirds}}-function.
+#' @param birdOverlay A birdOverlay which is the result of the \code{\link{overlayBirds}}-function.
 #' @param visitCol A character string for specifying the columns that identify a visit.
 #'
 #' @return The overlay data.frame for a specific grid, including the spillover visits.
@@ -39,7 +39,7 @@ getTemporal <- function(birdOverlay, visitCol = NULL){
 #' Collect spatial data
 #'
 #' An internal function. Takes the data.frame resulting from the spatial overlay
-#' for a specific grid and summarises basic variables as a polygon spatial layer
+#' for a specific grid and summarizes basic variables as a polygon spatial layer
 #'
 #' @param birdOverlay An birdOverlay which is the result of the \code{\link{overlayBirds}}-function.
 #' @param visitCol A character string for specifying the columns that identify a visit.
@@ -107,13 +107,10 @@ getSpatial<-function(birdOverlay, visitCol=NULL){
 
 }
 
-#' Internal function for getSpatiotemporal()
-#'
-#' An internal function to be applied in a lapply
-#'
+# Internal function for getSpatiotemporal()
+# An internal function to be applied in a lapply
 #' @importFrom dplyr group_by summarise n n_distinct
 #' @importFrom rlang .data
-#' @keywords internal
 countsYearMonth<-function(x, yearsAll, visitCol){
   ## Yearly Monthly
 
