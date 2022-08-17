@@ -15,7 +15,7 @@
 #' if(interactive()){
 #'  polygon <- drawPolygon()
 #' }
-#' @importFrom magrittr %>%
+#' @importFrom magrittr |>
 #' @importFrom sf st_transform st_crs st_geometry_type
 #' @importFrom mapedit editMap
 drawPolygon <- function(lat = 0,
@@ -23,10 +23,10 @@ drawPolygon <- function(lat = 0,
                         zoom = 1,
                         editor = "leafpm") {
     # Maybe add possibility to specify center coordinates and zoom
-    map <- leaflet::leaflet() %>%
-      leaflet::addTiles(options = leaflet::tileOptions(minZoom = 1, continuousWorld = FALSE)) %>%
-      leaflet::setView(lng = lng, lat = lat, zoom = zoom) %>%
-      leaflet::setMaxBounds(lng1 = -220, lat1 = 86, lng2 = 220, lat2 = -86)  #%>%
+    map <- leaflet::leaflet()  |>
+      leaflet::addTiles(options = leaflet::tileOptions(minZoom = 1, continuousWorld = FALSE)) |>
+      leaflet::setView(lng = lng, lat = lat, zoom = zoom) |>
+      leaflet::setMaxBounds(lng1 = -220, lat1 = 86, lng2 = 220, lat2 = -86)  #|>
 
     areaDrawn <- editMap(map,
                          editor = "leafpm",
@@ -69,12 +69,12 @@ drawPolygon <- function(lat = 0,
 #' @seealso \code{\link{getUTMproj}}
 #' @importFrom shotGroups getMinCircle
 #' @export
-makeCircle<-function(spdf, crs=NULL){
+makeCircle <- function(spdf, crs=NULL) {
     # error not a SpatialPolygon
-    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
+    if (any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
       stop("The input object is neither of class 'sf', SpatialPoints' nor 'SpatialPointsDataFrame'")
 
-    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame") )){
+    if (any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame") )) {
       spdf <- st_as_sf(spdf)
     }
 
@@ -100,8 +100,9 @@ makeCircle<-function(spdf, crs=NULL){
       # the minumum circle that covers all points
       # lwgeom::st_minimum_bounding_circle
       mincirc <- getMinCircle(coordUnique)
-      mincircSP<-st_as_sf(data.frame("X"=mincirc$ctr[1], "Y"=mincirc$ctr[2]),
-                          coords=c("X", "Y"))
+      mincircSP <- st_as_sf(data.frame("X" = mincirc$ctr[1],
+                                       "Y" = mincirc$ctr[2]),
+                            coords = c("X", "Y"))
       st_crs(mincircSP) <- st_crs(crs)
 
       circle <- st_buffer(mincircSP,
@@ -149,13 +150,13 @@ OB2Polygon <- function(x, shape="bBox") {
 
   if (class(x) == "OrganizedBirds") {
       spdf <- x$spdf
-      if(any(class(spdf) == "SpatialPointsDataFrame")){
+      if (any(class(spdf) == "SpatialPointsDataFrame")) {
         spdf <- st_as_sf(spdf)
       }
-  } else if(any(class(x) == "SpatialPointsDataFrame")){
+  } else if (any(class(x) == "SpatialPointsDataFrame")) {
           spdf <- x
           spdf <- st_as_sf(spdf)
-  } else if(any(class(x) == "sf")){
+  } else if (any(class(x) == "sf")) {
     spdf <- x
   }
 
@@ -171,15 +172,15 @@ OB2Polygon <- function(x, shape="bBox") {
   coordPaste <- apply(coord, 1, paste0, collapse = ",")
   coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
-  if (shape %in% c("bBox", "bounding box")){
+  if (shape %in% c("bBox", "bounding box")) {
       polygon <- st_as_sfc(st_bbox(spdf))
   }
   if (shape %in% c("cHull", "convex hull")) {
       if (nrow(coordUnique) > 2) {
-          polygon <- spdf %>%
-            st_union() %>%
-            # dplyr::group_by() %>%
-            # dplyr::summarise() %>%
+          polygon <- spdf |>
+            st_union() |>
+            # dplyr::group_by() |>
+            # dplyr::summarise() |>
             st_convex_hull()
       } else {
           stop("More than two unique set of coordinates is needed to make a
@@ -276,30 +277,30 @@ makeGrid <- function(poly,
 
     ## If many polygons instead of a multipolygon
 
-    if(length(st_geometry(poly)) > 1) poly <- st_union(poly)
+    if (length(st_geometry(poly)) > 1) poly <- st_union(poly)
 
-    if(is.null(offset)){
+    if (is.null(offset)) {
       offset <- st_bbox(poly)[c("xmin", "ymin")]
     } else {
-      if(length(offset) != 2|| !all(is.integer(offset)) ||!is.numeric(offset))
+      if (length(offset) != 2 || !all(is.integer(offset)) || !is.numeric(offset))
         stop("Offset should be either NULL or numeric of length 2; lower left corner coordinates (x, y) of the grid")
     }
 
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
-    corners <- st_as_sfc(st_bbox(poly)) %>% st_cast("POINT")
+    corners <- st_as_sfc(st_bbox(poly)) |> st_cast("POINT")
     distCor <- st_distance(corners[c(1,2,3)])
-    dif <- as.numeric(c(distCor[1,2], distCor[3,2]))
+    dist <- as.numeric(c(distCor[1,2], distCor[3,2]))
     # dif <- as.numeric(abs(diff(matrix(st_bbox(poly), ncol=2))))
 
-    if (any(gridSizeM >= dif)) {
+    if (any(gridSizeM >= dist)) {
       stop("Grid cells must be smaller than the sampling area")
     }
-    if (any(gridSizeM <= dif/500)) {
+    if (any(gridSizeM <= dist / 500)) {
       message("Grid cells are too many (>=500), this may result in very long computation times")
     }
 
-    if(simplify){
+    if (simplify) {
       poly <- st_simplify(poly, dTolerance = tol)
     }
 
@@ -423,8 +424,8 @@ makeGrid <- function(poly,
 #   #Get the grid cell boundaries for cells on the polygon extent
 #   grid <- dggridR::dgrectgrid(dggs, extent[2,1], extent[1,1], extent[2,2], extent[1,2])
 #
-#   gridPolList <- grid %>%
-#     group_by(.data$cell) %>%
+#   gridPolList <- grid |>
+#     group_by(.data$cell) |>
 #     group_map(.f=function(.x,...){
 #       Polygons(
 #         list(Polygon(cbind(.x$long, .x$lat))),
@@ -462,17 +463,17 @@ gridAsString <- function(grid) {
 
     ncells <- length(grid)
     polyStrg <- list()
-    for (i in 1:ncells){
+    for (i in 1:ncells) {
 
       polyStrg[[i]] <- gsub(" ","%20",
                             gsub(", ", ",",
                                  gsub( "))", "",
                                        gsub("POLYGON ((", "",
                                             st_as_text(grid[i]),
-                                            fixed=TRUE),
-                                       fixed=TRUE),
-                                 fixed=TRUE),
-                            fixed=TRUE)
+                                            fixed = TRUE),
+                                       fixed = TRUE),
+                                 fixed = TRUE),
+                            fixed = TRUE)
 
     }
 
