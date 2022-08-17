@@ -289,12 +289,13 @@ makeGrid <- function(poly,
     # observe the grid cell and study area polygon get the difference in
     # longitude/latitude to make the condition
     corners <- st_as_sfc(st_bbox(poly)) |> st_cast("POINT")
-    distCor <- st_distance(corners[c(1,2,3)])
-    dist <- as.numeric(c(distCor[1,2], distCor[3,2]))
-    # dif <- as.numeric(abs(diff(matrix(st_bbox(poly), ncol=2))))
+    distCor <- as.numeric(st_distance(corners[c(1,2,3)]))
+    # dist <- as.numeric(c(distCor[1,2], distCor[3,2]))
+    dist <- unique(distCor[distCor > 0])
 
-    if (any(gridSizeM >= dist)) {
-      stop("Grid cells must be smaller than the sampling area")
+    # if (any(gridSizeM >= dist)) {
+    if (all(gridSizeM >= dist)) {
+      stop("Grid cells must be smaller than any dimension of the sampling area")
     }
     if (any(gridSizeM <= dist / 500)) {
       message("Grid cells are too many (>=500), this may result in very long computation times")
