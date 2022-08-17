@@ -69,12 +69,12 @@ drawPolygon <- function(lat = 0,
 #' @seealso \code{\link{getUTMproj}}
 #' @importFrom shotGroups getMinCircle
 #' @export
-makeCircle<-function(spdf, crs=NULL){
+makeCircle <- function(spdf, crs=NULL) {
     # error not a SpatialPolygon
-    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
+    if (any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
       stop("The input object is neither of class 'sf', SpatialPoints' nor 'SpatialPointsDataFrame'")
 
-    if(any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame") )){
+    if (any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame") )) {
       spdf <- st_as_sf(spdf)
     }
 
@@ -100,8 +100,9 @@ makeCircle<-function(spdf, crs=NULL){
       # the minumum circle that covers all points
       # lwgeom::st_minimum_bounding_circle
       mincirc <- getMinCircle(coordUnique)
-      mincircSP<-st_as_sf(data.frame("X"=mincirc$ctr[1], "Y"=mincirc$ctr[2]),
-                          coords=c("X", "Y"))
+      mincircSP <- st_as_sf(data.frame("X" = mincirc$ctr[1],
+                                       "Y" = mincirc$ctr[2]),
+                            coords = c("X", "Y"))
       st_crs(mincircSP) <- st_crs(crs)
 
       circle <- st_buffer(mincircSP,
@@ -149,13 +150,13 @@ OB2Polygon <- function(x, shape="bBox") {
 
   if (class(x) == "OrganizedBirds") {
       spdf <- x$spdf
-      if(any(class(spdf) == "SpatialPointsDataFrame")){
+      if (any(class(spdf) == "SpatialPointsDataFrame")) {
         spdf <- st_as_sf(spdf)
       }
-  } else if(any(class(x) == "SpatialPointsDataFrame")){
+  } else if (any(class(x) == "SpatialPointsDataFrame")) {
           spdf <- x
           spdf <- st_as_sf(spdf)
-  } else if(any(class(x) == "sf")){
+  } else if (any(class(x) == "sf")) {
     spdf <- x
   }
 
@@ -171,7 +172,7 @@ OB2Polygon <- function(x, shape="bBox") {
   coordPaste <- apply(coord, 1, paste0, collapse = ",")
   coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
 
-  if (shape %in% c("bBox", "bounding box")){
+  if (shape %in% c("bBox", "bounding box")) {
       polygon <- st_as_sfc(st_bbox(spdf))
   }
   if (shape %in% c("cHull", "convex hull")) {
@@ -276,12 +277,12 @@ makeGrid <- function(poly,
 
     ## If many polygons instead of a multipolygon
 
-    if(length(st_geometry(poly)) > 1) poly <- st_union(poly)
+    if (length(st_geometry(poly)) > 1) poly <- st_union(poly)
 
-    if(is.null(offset)){
+    if (is.null(offset)) {
       offset <- st_bbox(poly)[c("xmin", "ymin")]
     } else {
-      if(length(offset) != 2|| !all(is.integer(offset)) ||!is.numeric(offset))
+      if (length(offset) != 2 || !all(is.integer(offset)) || !is.numeric(offset))
         stop("Offset should be either NULL or numeric of length 2; lower left corner coordinates (x, y) of the grid")
     }
 
@@ -295,11 +296,11 @@ makeGrid <- function(poly,
     if (any(gridSizeM >= dif)) {
       stop("Grid cells must be smaller than the sampling area")
     }
-    if (any(gridSizeM <= dif/500)) {
+    if (any(gridSizeM <= dif / 500)) {
       message("Grid cells are too many (>=500), this may result in very long computation times")
     }
 
-    if(simplify){
+    if (simplify) {
       poly <- st_simplify(poly, dTolerance = tol)
     }
 
