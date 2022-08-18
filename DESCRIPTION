@@ -43,7 +43,6 @@ Imports:
     geosphere (>= 1.5),
     leaflet (>= 2.0),
     lubridate (>= 1.7.4),
-    magrittr,
     mapedit,
     nnet,
     rgdal (>= 1.5), 
@@ -66,5 +65,5 @@ Suggests:
     shiny (>= 1.0),
     testthat,
     vegan
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr

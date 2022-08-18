@@ -15,7 +15,6 @@
 #' if(interactive()){
 #'  polygon <- drawPolygon()
 #' }
-#' @importFrom magrittr |>
 #' @importFrom sf st_transform st_crs st_geometry_type
 #' @importFrom mapedit editMap
 drawPolygon <- function(lat = 0,
