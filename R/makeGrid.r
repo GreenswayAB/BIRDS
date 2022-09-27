@@ -273,7 +273,7 @@ makeGrid <- function(poly,
 
     distPoly <- as.numeric(st_distance(st_cast(poly, "POINT")) / 1000)
     targetCRS <- if (any(distPoly >= 2000)) { ## any distance between points is longer than 2000 km
-      "ESRI:54076"
+      "ESRI:53035"
     } else {
       getUTMproj(poly)
     }
