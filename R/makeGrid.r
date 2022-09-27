@@ -271,8 +271,12 @@ makeGrid <- function(poly,
         stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
-    poly <- st_transform(poly,
-                         crs = st_crs(getUTMproj(poly)))
+    targetCRS <- if (any(st_distance(st_cast(pol, "POINT"))/1000) >= 2000) { ## any distance between points is longer than 2000 km
+      "ESRI:54076"
+    } else {
+      getUTMproj(poly)
+    }
+    poly <- st_transform(poly, crs = st_crs(targetCRS))
 
     ## If many polygons instead of a multipolygon
 
@@ -289,10 +293,8 @@ makeGrid <- function(poly,
     # longitude/latitude to make the condition
     corners <- st_as_sfc(st_bbox(poly)) |> st_cast("POINT")
     distCor <- as.numeric(st_distance(corners[c(1,2,3)]))
-    # dist <- as.numeric(c(distCor[1,2], distCor[3,2]))
     dist <- unique(distCor[distCor > 0])
 
-    # if (any(gridSizeM >= dist)) {
     if (all(gridSizeM >= dist)) {
       stop("Grid cells must be smaller than any dimension of the sampling area")
     }

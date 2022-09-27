@@ -1,7 +1,7 @@
 Package: BIRDS
 Type: Package
 Title: Biodiversity Information Review and Decision Support 
-Version: 0.2.3
+Version: 0.2.4
 URL: https://github.com/GreenswayAB/BIRDS
 BugReports: https://github.com/Greensway/BIRDS/issues
 Authors@R: c(
