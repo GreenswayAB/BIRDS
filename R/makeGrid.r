@@ -271,7 +271,7 @@ makeGrid <- function(poly,
         stop("The polygon has no coordinate projection system (CRS) associated")
     }
 
-    targetCRS <- if (any(st_distance(st_cast(pol, "POINT"))/1000) >= 2000) { ## any distance between points is longer than 2000 km
+    targetCRS <- if (any(st_distance(st_cast(poly, "POINT")) / 1000) >= 2000) { ## any distance between points is longer than 2000 km
       "ESRI:54076"
     } else {
       getUTMproj(poly)
