@@ -45,7 +45,6 @@ Imports:
     lubridate (>= 1.7.4),
     mapedit,
     nnet,
-    rgdal (>= 1.5), 
     rlang,
     sf (>= 0.7),
     stringr (>= 1.4),
@@ -65,5 +64,5 @@ Suggests:
     shiny (>= 1.0),
     testthat,
     vegan
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr

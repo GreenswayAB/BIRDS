@@ -49,9 +49,9 @@ removeObs <- function(x,
                       criteria = "SLL",
                       percent = 75,
                       minCrit = NULL,
-                      stepChunk=0.05){
+                      stepChunk=0.05) {
   #check x class = Organised birds
-  if (class(x) == "OrganizedBirds") {
+  if (inherits(x, "OrganizedBirds")) {
     obs <- st_drop_geometry(x$spdf)
     visitCol <- attr(x, "visitCol")
   } else {
@@ -59,14 +59,14 @@ removeObs <- function(x,
   }
 
   #check x class = Organised birds
-  if (class(ev) != "data.frame") {
+  if (!inherits(ev, "data.frame")) {
     stop("The object 'ev' must be of class data.frame resulting from exploreVisits(). See the function 'exploreVisits()'.")
   }
-  if(!(criteria %in% c("SLL", "nObs", "effortDiam", "medianDist"))) stop("The argument 'criteria' needs to be one of c('SLL', 'nObs', 'effortDiam', 'medianDist')")
+  if (!(criteria %in% c("SLL", "nObs", "effortDiam", "medianDist"))) stop("The argument 'criteria' needs to be one of c('SLL', 'nObs', 'effortDiam', 'medianDist')")
 
-  if(!is.null(percent)){ #check if percent use it else minCrit, else error
+  if (!is.null(percent)) { #check if percent use it else minCrit, else error
     percent <- percent/100
-    if(0 <= percent & percent <=1){#check percent between 0-1
+    if (0 <= percent & percent <= 1) {#check percent between 0-1
       wEV <- match(obs[,visitCol], ev$visitUID)
       obs$crit <- ev[wEV,criteria]
 
@@ -77,9 +77,9 @@ removeObs <- function(x,
       percLeft <- length(wKeep) / nrow(obs)
       nextStep <- q
 
-      while(round(percLeft, 3) < percent){ # while 1
+      while (round(percLeft, 3) < percent) { # while 1
         cat(".")
-        if(nextStep <= 0) break(paste0("\nNothing else to remove. The result is ",
+        if (nextStep <= 0) break(paste0("\nNothing else to remove. The result is ",
                                        round(percLeft*100, 2),
                                        "% of the original observations set"))
         nextVisits <- unique(obs[which( obs$crit >= nextStep &  obs$crit < nextStep + 1),
@@ -87,11 +87,11 @@ removeObs <- function(x,
         wKeepNext <- which(obs[,visitCol] %in% nextVisits)
         nToAdd <- (percent - percLeft) * nrow(obs) ## if those to add are less
 
-        if(nToAdd < 1) break(paste0("\nNothing else to remove. The result is ",
+        if (nToAdd < 1) break(paste0("\nNothing else to remove. The result is ",
                                     round(percLeft*100, 2),
                                     "% of the original observations set"))
 
-        if(length(wKeepNext)<=nToAdd){
+        if (length(wKeepNext) <= nToAdd) {
           wKeep <- c(wKeep, wKeepNext)
         }else{
           # nextVisitSample <- sample(nextVisits)
@@ -99,36 +99,36 @@ removeObs <- function(x,
           wKeepSample <- which(obs[,visitCol] %in% nextVisitSample)
           # pick a big chunk
           chunkPerc <- 1
-          while(length(wKeepSample) >= nToAdd){
-            chunkPerc <- chunkPerc * (1-stepChunk)
+          while (length(wKeepSample) >= nToAdd) {
+            chunkPerc <- chunkPerc * (1 - stepChunk)
             chunk <- floor(length(nextVisitSample) * chunkPerc)
             wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[1:chunk])
           }
           #redefine which visits are left
-          if(exists("chunk")){
+          if (exists("chunk")) {
             nextVisitSample <- nextVisitSample[-(1:chunk)]
           }
 
           nObs2keep <- length(wKeep) + length(wKeepSample)
           percLeft.tmp <- nObs2keep / nrow(obs)
-          if(percLeft.tmp <= percent){
+          if (percLeft.tmp <= percent) {
             wKeep <- c(wKeep, wKeepSample)
             percLeft <- length(wKeep) / nrow(obs)
           }
 
           ### Slowly complete until reaching the target
-          i=0
+          i = 0
           message("\nTesting if it could be completed by chunks \n")
-          while(round(percLeft, 3) < percent){ # while 2
+          while (round(percLeft, 3) < percent) { # while 2
             cat(".")
-            i=i+1
-            if(i > length(nextVisitSample)){
+            i = i + 1
+            if (i > length(nextVisitSample)) {
               break() # nothing left to add, lets look at the next class
             }
             wKeepSample <- which(obs[,visitCol] %in% nextVisitSample[i])
             nObs2keep <- length(wKeep) + length(wKeepSample)
             percLeft.tmp <- nObs2keep / nrow(obs)
-            if(percLeft.tmp <= percent){
+            if (percLeft.tmp <= percent) {
               wKeep <- c(wKeep, wKeepSample)
               percLeft <- length(wKeep) / nrow(obs)
             } else {
@@ -142,9 +142,9 @@ removeObs <- function(x,
       } # end of while 1
     }else{ stop("The argument 'percent' must be a number between 0 and 1")}
     # if percent is NULL
-  }else if(!is.null(minCrit)){
+  }else if (!is.null(minCrit)) {
     # check minCrit integer >1
-    if(minCrit > 0){
+    if (minCrit > 0) {
       goodVisits <- ev[which(ev[,criteria] >= minCrit),"visitUID"]
       wKeep <- which(obs[,visitCol] %in% goodVisits)
       percLeft <- length(wKeep) / nrow(obs)
@@ -180,7 +180,7 @@ removeObs <- function(x,
 #
 # removeOutliers <- function(x, ev){
 #   #check x class = Organised birds
-#   if (class(x) == "OrganizedBirds") {
+#   if (inherits(x, "OrganizedBirds")) {
 #     obs <- x$spdf@data
 #     visitCol <- attr(x, "visitCol")
 #   } else {
@@ -188,7 +188,7 @@ removeObs <- function(x,
 #   }
 #
 #   #check x class = Organised birds
-#   if (class(ev) != "data.frame") {
+#   if (inherits(ev, "data.frame")) {
 #     stop("The object 'ev' must be of class data.frame resulting from exploreVisits(). See the function 'exploreVisits()'.")
 #   }
 #

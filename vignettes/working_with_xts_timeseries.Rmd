@@ -48,7 +48,7 @@ PBD <- bombusObs
 OB <- organizeBirds(PBD, sppCol = "scientificName")
 
 # Summarise the data:
-SB <- summariseBirds(OB, grid=grid)
+SB <- summariseBirds(OB, grid = grid)
 ```  
 
 we see that SB contains an element called `SB$temporal` that contains a daily 
@@ -103,8 +103,8 @@ statistics. Then we add 0s for the months we have no data.
 
 ```{r completting2, eval = doNextChunk, echo=TRUE, fig.height=5, fig.width=9, message=FALSE, warning=FALSE}
 z.seq <- seq(rng[1], rng[2], by = "month")
-YM.sb.xts<-unique(as.Date(as.yearmon(index(sb.xts))))
-YM.z.seq<-as.Date(as.yearmon(z.seq))
+YM.sb.xts <- unique(as.Date(as.yearmon(index(sb.xts))))
+YM.z.seq <- as.Date(as.yearmon(z.seq))
 wTrm <- which(YM.z.seq %in% YM.sb.xts)
 z.seq <- z.seq[-wTrm] ## remove the days for which 
 

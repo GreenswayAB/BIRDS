@@ -8,10 +8,10 @@
 #' allSpp <- listSpecies(OB)
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-listSpecies<-function(x){
-  if (class(x) == "OrganizedBirds") {
+listSpecies <- function(x) {
+  if (inherits(x, "OrganizedBirds")) {
     allSpecies <- sort(unique(as.character(x$spdf$scientificName)))
-  } else if (class(x) == "SummarizedBirds") {
+  } else if (inherits(x, "SummarizedBirds")) {
     overList <- x$overlaid
     allSpecies <- sort(
                     as.character(
@@ -56,7 +56,7 @@ listSpecies<-function(x){
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 focalSpSummary <- function(x, focalSp=NULL){
-  if (class(x) != "SummarizedBirds") {
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
@@ -72,7 +72,7 @@ focalSpSummary <- function(x, focalSp=NULL){
                   unlist(
                     lapply(x$overlaid,
                            function(x) {
-                             res <- ifelse(length(x)>1,
+                             res <- ifelse(length(x) > 1,
                                            focalSp %in% x$scientificName,
                                            FALSE)
                              return(res)
@@ -81,16 +81,16 @@ focalSpSummary <- function(x, focalSp=NULL){
                     )
                   )
 
-  if(sum(wOverFocal) == 0) stop("The focal species was not found in the data set.")
+  if (sum(wOverFocal) == 0) stop("The focal species was not found in the data set.")
   overFocal <- x$overlaid[wOverFocal]
 
 
   ## if there is a column for presence then remove absences
-  if("presence" %in% colnames(overFocal[[1]]) ) {
+  if ("presence" %in% colnames(overFocal[[1]]) ) {
     overFocal <- lapply(overFocal,
                         function(x){
                           wNotPres <- which(x$presence != 1 | is.na(x$presence))
-                          if(length(wNotPres)>1){
+                          if (length(wNotPres) > 1) {
                             res <- x[-wNotPres,]
                           } else {
                             res <- x
@@ -200,7 +200,7 @@ focalSpReport <- function(x,
                           polygon = NULL,
                           colVis = "grey",
                           colPres = "red", ...){
-  if (class(x) != "SummarizedBirds") {
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
@@ -213,14 +213,14 @@ focalSpReport <- function(x,
   allSpecies <- listSpecies(x)
 
   wFocal <- match(focalSp, allSpecies)
-  if(!(focalSp %in% allSpecies)) stop(paste0("The focal species ", focalSp,
+  if (!(focalSp %in% allSpecies)) stop(paste0("The focal species ", focalSp,
                                              " was not found among the species names in the data set."))
   # overFocal <- lapply(x$overlaid, FUN=function(x)return(x[x$scientificName==focalSp,]))
   wOverFocal <- unname(
                   unlist(
                     lapply(x$overlaid,
                            function(x){
-                             res <- ifelse(length(x)>1,
+                             res <- ifelse(length(x) > 1,
                                            focalSp %in% x$scientificName,
                                            FALSE)
                              return(res)
@@ -285,12 +285,12 @@ focalSpReport <- function(x,
   reportStrg <- paste0("Number of observations: ", nObs)
 
   ### check the polygon
-  if(!is.null(polygon)){
-    if (!any(class(polygon) %in% c("sf", "sfc","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+  if (!is.null(polygon)) {
+    if (!inherits(polygon, c("sf", "sfc","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
       warning("Entered polygon is not a sf, SpatialPolygon nor SpatialPolygonsDataFrame.")
-      polygon<-NULL
+      polygon <- NULL
     }else{
-      if (!any(class(polygon) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+      if (!inherits(polygon, c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         polygon <- st_as_sf(polygon)
       }
       if (!any(st_geometry_type(polygon) %in% c("POLYGON", "MULTIPOLYGON"))) {
@@ -308,21 +308,21 @@ focalSpReport <- function(x,
     }
   }
 
-  oldpar <- par(no.readonly =TRUE)
+  oldpar <- par(no.readonly = TRUE)
   on.exit(suppressWarnings(par(oldpar)))
   layout(matrix(c(1,2,1,3), nrow = 2, byrow = long))
-  par(mar=c(1,1,1,1))
+  par(mar = c(1,1,1,1))
   plot(x$spatial$geometry[wNonEmpty], col = colVis, border = NA, ...)
-  plot(x$spatial$geometry[wNonEmptyFocal], col = colPres, border = NA, add=TRUE)
-  if(!is.null(polygon)) plot(polygon, col=NA, border=1, lwd=2, add=TRUE)
-  mtext(focalSp, side=3, font = 3, line = -.5)
-  mtext(reportStrg, side=3, font = 1, line = -1.5, cex = .8)
-  legend("bottomleft", legend=c("visited", "present"), col = c(colVis, colPres), pch = 15, bty="n")
+  plot(x$spatial$geometry[wNonEmptyFocal], col = colPres, border = NA, add = TRUE)
+  if (!is.null(polygon)) plot(polygon, col = NA, border = 1, lwd = 2, add = TRUE)
+  mtext(focalSp, side = 3, font = 3, line = -.5)
+  mtext(reportStrg, side = 3, font = 1, line = -1.5, cex = .8)
+  legend("bottomleft", legend = c("visited", "present"), col = c(colVis, colPres), pch = 15, bty = "n")
 
-  par(mar=c(3,4,1,1))
-  barplot(yearsFocalTbl, ylab = "n. visits", las=2)
-  par(mar=c(4,4,1,1))
-  barplot(monthsFocalTbl, ylab = "n. visits", las=2)
+  par(mar = c(3,4,1,1))
+  barplot(yearsFocalTbl, ylab = "n. visits", las = 2)
+  par(mar = c(4,4,1,1))
+  barplot(monthsFocalTbl, ylab = "n. visits", las = 2)
 
 }
 
@@ -341,18 +341,18 @@ focalSpReport <- function(x,
 #' @export
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
 speciesSummary <- function(x){
-  if (class(x) != "SummarizedBirds") {
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   allSpecies <- listSpecies(x)
-  res <- data.frame("species"=character(0),
-                  "nCells"=numeric(0),
-                  "nObs"=numeric(0),
-                  "nVis"=numeric(0),
-                  "visitsUID"=character(0),
-                  "nYears"=numeric(0),
-                  "nMonths"=numeric(0),
-                  stringsAsFactors = FALSE)
+  res <- data.frame("species" = character(0),
+                    "nCells" = numeric(0),
+                    "nObs" = numeric(0),
+                    "nVis" = numeric(0),
+                    "visitsUID" = character(0),
+                    "nYears" = numeric(0),
+                    "nMonths" = numeric(0),
+                    stringsAsFactors = FALSE)
 
   tmp <- sapply(allSpecies,
                 function(y){

@@ -73,19 +73,19 @@ includeSpillover <- function(x, birdData, visitCol){
 #' @importFrom nnet which.is.max
 #' @keywords internal
 includeUniqueSpillover <- function(birdData, grid, visitCol){
-  if(!any(class(birdData) %in% c("sf","OrganizedBirds","SpatialPointsDataFrame")))
+  if (!inherits(birdData, c("sf","OrganizedBirds","SpatialPointsDataFrame")))
     stop("Data must be of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
-  if(any(class(birdData)=="OrganizedBirds")) birdData <- birdData$spdf
-  if(any(class(birdData)=="SpatialPointsDataFrame")) birdData <- st_as_sf(birdData)
+  if (inherits(birdData, "OrganizedBirds")) birdData <- birdData$spdf
+  if (inherits(birdData, "SpatialPointsDataFrame")) birdData <- st_as_sf(birdData)
 
-  if(!identical(st_crs(birdData), st_crs(grid))){
+  if (!identical(st_crs(birdData), st_crs(grid))) {
     stop("Organized data and grid do not share the same CRS")
   }
 
-  if(any(class(grid)=="sfc")) grid <- st_as_sf(grid)
+  if (inherits(grid, "sfc")) grid <- st_as_sf(grid)
 
   ## create ids
-  if(length(grep("id", colnames(grid), ignore.case = TRUE)) ==0) {
+  if (length(grep("id", colnames(grid), ignore.case = TRUE)) == 0) {
     grid$id <- seq(nrow(grid))
   } else {
     grid$id <- st_drop_geometry(grid[, grep("id", colnames(grid),
@@ -200,15 +200,15 @@ overlayBirds.OrganizedBirds <- function(x,
                                         cleanGrid = TRUE){
   spBird <- x$spdf
 
-  if(any(class(spBird) == "SpatialPointsDataFrame")){
+  if (inherits(spBird, "SpatialPointsDataFrame")) {
     spBird <- st_as_sf(spBird)
   }
 
-  if(any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
+  if (inherits(grid, c("SpatialPolygonsDataFrame", "SpatialPolygons"))) {
     grid <- st_as_sf(grid)
   }
 
-  if (cleanGrid){
+  if (cleanGrid) {
     grid <- st_geometry(grid) ##Removes unnecessary data from the input grid, if there is any
   }
 
@@ -216,13 +216,13 @@ overlayBirds.OrganizedBirds <- function(x,
   nVis <- length(unique(st_drop_geometry(spBird)[,visitCol]))
   nObs <- nrow(spBird)
 
-  if(!identical(st_crs(spBird), st_crs(grid))){
+  if (!identical(st_crs(spBird), st_crs(grid))) {
     grid <- st_transform(grid,
                          crs = st_crs(spBird))
   }
 
   #### Rename grid
-  if (any(duplicated(names(grid)))){
+  if (any(duplicated(names(grid)))) {
     grid <- renameGrid(grid)
     warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
 All results will use this nomenclature, but the order of the cells will remain unaltered.")
@@ -235,8 +235,8 @@ All results will use this nomenclature, but the order of the cells will remain u
 
   ObsInGridList <- list()
 
-  for(i in seq(length(listGrid))){
-    if(length(listGrid[[i]]) == 0){
+  for (i in seq(length(listGrid))) {
+    if (length(listGrid[[i]]) == 0) {
       ObsInGridList[[i]] <- NA
     } else {
       ObsInGridList[[i]] <- st_drop_geometry(spBird[listGrid[[i]],])
@@ -244,19 +244,19 @@ All results will use this nomenclature, but the order of the cells will remain u
   }
   wNonEmpty <- whichNonEmpty(ObsInGridList)
 
-  if(length(wNonEmpty) == 0) stop("Observations don't overlap any grid cell.")
+  if (length(wNonEmpty) == 0) stop("Observations don't overlap any grid cell.")
   ### Check nObs
   nObsInGrid <- sum(unlist(lapply(ObsInGridList, nrow)))
 
-  if((nObs-nObsInGrid)>0){
-    message(paste((nObs-nObsInGrid), "observations did not overlap with the grid and will be discarded."))
+  if ((nObs - nObsInGrid) > 0) {
+    message(paste((nObs - nObsInGrid), "observations did not overlap with the grid and will be discarded."))
   }
 
   visitsIDGrid <- lapply(ObsInGridList[wNonEmpty], function(x) unique(x[,visitCol]))
   nSpill <- sum(duplicated(unlist(visitsIDGrid)))
 
-  if(nSpill>0){
-    porcSpill<-round(nSpill/nVis*100,3)
+  if (nSpill > 0) {
+    porcSpill <- round(nSpill/nVis*100,3)
     message(paste(porcSpill, "% of the visits spill over neighbouring grid cells."))
     if (porcSpill >= 20) {
       message("20% or more of the visits spill observations over other grid cells.
@@ -266,21 +266,21 @@ Please, consider using 'exploreVisits()' to double check your assumptions.")
     }
   }
 
-  if(!is.null(spillOver)){
+  if (!is.null(spillOver)) {
   #   if (!spillOver %in% c("unique", "duplicate") ) stop("Unknown definition of 'spillOver'")
     ### Good definition
-    if(spillOver == "unique"){ ### UNIQUE SPILL OVER
+    if (spillOver == "unique") { ### UNIQUE SPILL OVER
       ObsInGridList <- includeUniqueSpillover(spBird, grid, visitCol)
       wNonEmpty <- whichNonEmpty(ObsInGridList)
 
     }
-    if(spillOver == "duplicate"){   ### DUPLICATE SPILL OVER
+    if (spillOver == "duplicate") {   ### DUPLICATE SPILL OVER
       ObsInGridList[wNonEmpty] <- includeSpillover(ObsInGridList[wNonEmpty], x, visitCol)
     }
   } #else {stop("Unknown definition of 'spillOver'")}
 
   res <- list("observationsInGrid" = ObsInGridList,
-              "grid"= grid,
+              "grid" = grid,
               "nonEmptyGridCells" = wNonEmpty)
 
   attr(res, "visitCol") <- visitCol ##An attribute to indicate which of the visits-column should be used in further analyses

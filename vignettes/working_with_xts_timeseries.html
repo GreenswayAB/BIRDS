@@ -12,29 +12,42 @@
 
 <meta name="author" content="Alejandro Ruete" />
 
-<meta name="date" content="2021-07-15" />
+<meta name="date" content="2023-10-04" />
 
 <title>Working with xts time series</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -52,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -109,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -127,7 +146,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -141,66 +340,173 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Working with xts time series</h1>
 <h4 class="author">Alejandro Ruete</h4>
-<h4 class="date">2021-07-15</h4>
+<h4 class="date">2023-10-04</h4>
 
 
 
 <p>This vignette is adapted from <a href="https://rpubs.com/RLodge/timeseriesintro">https://rpubs.com/RLodge/timeseriesintro</a></p>
 <div id="xts-objects" class="section level2">
 <h2>xts Objects</h2>
-<p>One of the objects that comes out of the <code>summariseBirds()</code> function is <code>$temporal</code>, a <code>xts</code> object. A <code>xts</code> is a time series (a series of data points in chronological order, where time is the independent variable). The ‘x’ in xts stands for extensible, because it is an extension of <code>zoo</code> (another package). An <code>xts</code> object is formed just as a <code>zoo</code> object is. However, an <code>xts</code> object is in matrix form and thus is easier to subset through.</p>
+<p>One of the objects that comes out of the
+<code>summariseBirds()</code> function is <code>$temporal</code>, a
+<code>xts</code> object. A <code>xts</code> is a time series (a series
+of data points in chronological order, where time is the independent
+variable). The ‘x’ in xts stands for extensible, because it is an
+extension of <code>zoo</code> (another package). An <code>xts</code>
+object is formed just as a <code>zoo</code> object is. However, an
+<code>xts</code> object is in matrix form and thus is easier to subset
+through.</p>
 <p>If we start from the basic example</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BIRDS)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">makeGrid</span>(gotaland, <span class="at">gridSize =</span> <span class="dv">10</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The grid can be easily created in different ways. </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the species observation data:</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>PBD <span class="ot">&lt;-</span> bombusObs</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># PBD &lt;- read.csv(file=&quot;path/to/your/file.csv)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the data from an observation-based to a visit-based format, </span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># adding a unique identifier for each visit:</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>OB <span class="ot">&lt;-</span> <span class="fu">organizeBirds</span>(PBD, <span class="at">sppCol =</span> <span class="st">&quot;scientificName&quot;</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarise the data:</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>SB <span class="ot">&lt;-</span> <span class="fu">summariseBirds</span>(OB, <span class="at">grid=</span>grid)</span></code></pre></div>
-<p>we see that SB contains an element called <code>SB$temporal</code> that contains a daily time series with time specific rows when there is information. <code>xts</code> also supports time, but dating below day resolution is not yet implemented in the <code>BIRDS</code> package.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sb.xts <span class="ot">&lt;-</span> SB<span class="sc">$</span>temporal</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sb.xts)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sb.xts)</span></code></pre></div>
-<p>Sub-setting is convenient in <code>xts</code> as you can do it with its dates and with a <code>/</code> for a range of dates.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-09&quot;</span>] <span class="co">#a specific month</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-09-07&quot;</span>] <span class="co">#a specific day</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-01-01/2017-05-01&quot;</span>] <span class="co">#for a period</span></span></code></pre></div>
-<p><code>xts</code> has several tools for converting to different periods. Here we will use <code>to.monthly</code>. This provides, the first, min, max, and last of the data. We can plot the daily maximum number of observations. The plot command with an <code>xts</code> object provides a TON of features. This makes it fairly easy to customize your plots. Read more in <code>?plot.xts</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>obs.m <span class="ot">&lt;-</span> <span class="fu">to.monthly</span>(sb.xts<span class="sc">$</span>nObs) </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>obs.m[<span class="st">&quot;2017-04&quot;</span>]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-04&quot;</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(obs.m[<span class="st">&quot;2010/2017&quot;</span>,<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="at">grid.ticks.on =</span> <span class="st">&quot;month&quot;</span>,   </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">major.ticks =</span> <span class="st">&quot;month&quot;</span>, <span class="at">grid.col =</span> <span class="st">&quot;lightgrey&quot;</span>,  </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Maximum number of daily observations per month&quot;</span>)</span></code></pre></div>
-<p>Only months with data are plotted in this figure. What if we want to complete the time series and plot all zeros too? In the original time series there is not data for every day, therefore the time series is incomplete.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sb.xts.na is same as sb.xts but with all missing days added (with NAs)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>rng <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">time</span>(sb.xts))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>sb.xts.na <span class="ot">&lt;-</span> <span class="fu">merge</span>(sb.xts, <span class="fu">xts</span>(, <span class="fu">seq</span>(rng[<span class="dv">1</span>], rng[<span class="dv">2</span>], <span class="at">by =</span> <span class="st">&quot;day&quot;</span>)))</span></code></pre></div>
-<p>However, in our monthly example we may not need data for every day, but month, and this time we need 0s instead of NAs. Even more, we don’t want to add zeros for the months we already have data, because that will change the summary statistics. Then we add 0s for the months we have no data.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>z.seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(rng[<span class="dv">1</span>], rng[<span class="dv">2</span>], <span class="at">by =</span> <span class="st">&quot;month&quot;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>YM.sb.xts<span class="ot">&lt;-</span><span class="fu">unique</span>(<span class="fu">as.Date</span>(<span class="fu">as.yearmon</span>(<span class="fu">index</span>(sb.xts))))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>YM.z.seq<span class="ot">&lt;-</span><span class="fu">as.Date</span>(<span class="fu">as.yearmon</span>(z.seq))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>wTrm <span class="ot">&lt;-</span> <span class="fu">which</span>(YM.z.seq <span class="sc">%in%</span> YM.sb.xts)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>z.seq <span class="ot">&lt;-</span> z.seq[<span class="sc">-</span>wTrm] <span class="do">## remove the days for which </span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">xts</span>(, z.seq)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>sb.xts<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">merge</span>(sb.xts, z, <span class="at">fill =</span> <span class="dv">0</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>obs.m<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">to.monthly</span>(sb.xts<span class="fl">.0</span><span class="sc">$</span>nObs)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(obs.m<span class="fl">.0</span>[<span class="st">&quot;2010/2017&quot;</span>,<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="at">grid.ticks.on =</span> <span class="st">&quot;month&quot;</span>,   </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">major.ticks =</span> <span class="st">&quot;month&quot;</span>, <span class="at">grid.col =</span> <span class="st">&quot;lightgrey&quot;</span>, </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Maximum number of daily observations per month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(BIRDS)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># Create a grid for your sample area that will be used to summarise the data:</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">makeGrid</span>(gotaland, <span class="at">gridSize =</span> <span class="dv">10</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co"># The grid can be easily created in different ways. </span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co"># Import the species observation data:</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>PBD <span class="ot">&lt;-</span> bombusObs</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co"># alternatively, you could load a previously downloaded .CSV file </span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co"># PBD &lt;- read.csv(file=&quot;path/to/your/file.csv)</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co"># Convert the data from an observation-based to a visit-based format, </span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co"># adding a unique identifier for each visit:</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>OB <span class="ot">&lt;-</span> <span class="fu">organizeBirds</span>(PBD, <span class="at">sppCol =</span> <span class="st">&quot;scientificName&quot;</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co"># Summarise the data:</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>SB <span class="ot">&lt;-</span> <span class="fu">summariseBirds</span>(OB, <span class="at">grid =</span> grid)</span></code></pre></div>
+<p>we see that SB contains an element called <code>SB$temporal</code>
+that contains a daily time series with time specific rows when there is
+information. <code>xts</code> also supports time, but dating below day
+resolution is not yet implemented in the <code>BIRDS</code> package.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>sb.xts <span class="ot">&lt;-</span> SB<span class="sc">$</span>temporal</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">head</span>(sb.xts)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; 2000-04-21    1    1    1</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 2000-04-24    1    1    1</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 2000-04-25   11    6    6</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 2000-04-26    7    4    5</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 2000-05-05    1    1    1</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 2000-05-28    3    2    3</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">dim</span>(sb.xts)</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; [1] 1865    3</span></span></code></pre></div>
+<p>Sub-setting is convenient in <code>xts</code> as you can do it with
+its dates and with a <code>/</code> for a range of dates.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-09&quot;</span>] <span class="co">#a specific month</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; 2017-09-01    1    1    1</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; 2017-09-03    3    3    2</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 2017-09-07    1    1    1</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 2017-09-09    1    1    1</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 2017-09-12    1    1    1</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 2017-09-16    1    1    1</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 2017-09-17    2    2    2</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 2017-09-19    4    2    4</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 2017-09-20    1    1    1</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-09-07&quot;</span>] <span class="co">#a specific day</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 2017-09-07    1    1    1</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-01-01/2017-05-01&quot;</span>] <span class="co">#for a period</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 2017-03-10    1    1    1</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 2017-03-15    1    1    1</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; 2017-03-22    1    1    1</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 2017-03-23    2    2    2</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 2017-03-24    2    2    2</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; 2017-03-25    5    5    3</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; 2017-03-26    6    6    4</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; 2017-03-27    1    1    1</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; 2017-03-28    2    2    2</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; 2017-03-31    3    3    2</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; 2017-04-01    7    7    5</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; 2017-04-02    9    9    3</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; 2017-04-03    8    8    5</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; 2017-04-04    1    1    1</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; 2017-04-05    1    1    1</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; 2017-04-06    2    2    2</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; 2017-04-07    3    3    2</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; 2017-04-08    3    3    2</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt; 2017-04-09   10   10    5</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt; 2017-04-11    6    6    4</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt; 2017-04-12    1    1    1</span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt; 2017-04-13    1    1    1</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt; 2017-04-14    6    6    4</span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt; 2017-04-16    2    2    1</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt; 2017-04-19    3    3    2</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt; 2017-04-20    1    1    1</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt; 2017-04-21    1    1    1</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt; 2017-04-22    3    3    3</span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt; 2017-04-23    3    3    2</span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co">#&gt; 2017-04-26    4    4    3</span></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="co">#&gt; 2017-04-27    1    1    1</span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#&gt; 2017-04-29    5    5    4</span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">#&gt; 2017-04-30   13   12    6</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co">#&gt; 2017-05-01    6    5    3</span></span></code></pre></div>
+<p><code>xts</code> has several tools for converting to different
+periods. Here we will use <code>to.monthly</code>. This provides, the
+first, min, max, and last of the data. We can plot the daily maximum
+number of observations. The plot command with an <code>xts</code> object
+provides a TON of features. This makes it fairly easy to customize your
+plots. Read more in <code>?plot.xts</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>obs.m <span class="ot">&lt;-</span> <span class="fu">to.monthly</span>(sb.xts<span class="sc">$</span>nObs) </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>obs.m[<span class="st">&quot;2017-04&quot;</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;          sb.xts$nObs.Open sb.xts$nObs.High sb.xts$nObs.Low sb.xts$nObs.Close</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; Apr 2017                7               13               1                13</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>sb.xts[<span class="st">&quot;2017-04&quot;</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;            nObs nVis nSpp</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 2017-04-01    7    7    5</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 2017-04-02    9    9    3</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 2017-04-03    8    8    5</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 2017-04-04    1    1    1</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 2017-04-05    1    1    1</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 2017-04-06    2    2    2</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 2017-04-07    3    3    2</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 2017-04-08    3    3    2</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; 2017-04-09   10   10    5</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 2017-04-11    6    6    4</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 2017-04-12    1    1    1</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; 2017-04-13    1    1    1</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; 2017-04-14    6    6    4</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; 2017-04-16    2    2    1</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; 2017-04-19    3    3    2</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; 2017-04-20    1    1    1</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; 2017-04-21    1    1    1</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; 2017-04-22    3    3    3</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; 2017-04-23    3    3    2</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; 2017-04-26    4    4    3</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; 2017-04-27    1    1    1</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt; 2017-04-29    5    5    4</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt; 2017-04-30   13   12    6</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="fu">plot</span>(obs.m[<span class="st">&quot;2010/2017&quot;</span>,<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="at">grid.ticks.on =</span> <span class="st">&quot;month&quot;</span>,   </span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>     <span class="at">major.ticks =</span> <span class="st">&quot;month&quot;</span>, <span class="at">grid.col =</span> <span class="st">&quot;lightgrey&quot;</span>,  </span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Maximum number of daily observations per month&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA2AAAAHgCAMAAAD0Y/5nAAAA8FBMVEUAAIszMzMzM1ozM38zWlozWn8zWqAzf38zf8FaMzNaM1paM39aWjNaWlpaWn9aWqBaf39af6Baf8FaoKBaoMFaoOF/MzN/M1p/M39/WjN/Wlp/WqB/f1p/f39/oKB/oMF/oOF/weF/wf+gWjOgWlqgWn+gfzOgf1qgoFqgoH+gwaCgweGg4cGg4eGg4f/BfzPBf1rBoFrBoH/BwX/BwaDB4aDB4cHB4f/B/8HB/+HB///T09PhoFrhoH/hoKDhwX/hwaDhwcHh4aDh4eHh4f/h/8Hh/+Hh///19fX/wX//4aD/4cH/4eH//8H//+H///8TcQtEAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO3dCXsjx3GHcYC0GK7WycYHuVJ8RaQUR7JDWI5lxVw4duzENGCT8/2/TebGTFfXTNdMN4jj/T/2gmwCVXP95gJILTJCSLIsXnsCCDnlAIyQhAEYIQkDMEISBmCEJAzACEkYgBGSMAAjJGEARkjCAIyQhAEYIQkDMEISBmCEJAzACEkYgBGSMAAjJGEARkjCAIyQhAEYIQkDMEISBmCEJAzACEkYgBGSMAAjJGEARkjCAIyQhAEYIQkDMEISBmCEJAzACEkYgBGSMAAjJGEARkjCAIyQhAEYIQkDMEISBmCEJMxcYM+3y+VN/rheLi8e5I+3by4fZ3Zw292FPO9vny6X32+/2yw7U1FM0sBkhXbo5e+/uos+q2qjSVNImvx5v+1iALt6yrLVYQHLJ6d0XyU1sJf75X6AlY3OANjzbbksX+59i7TY5IrxfGHU6/jl/i7rfp9n++6p/tGy2kDrvNzfDFbZLMvEW8AxgOXTWTz4gMVOOLCbznc9YEVSANtHzgbY++8Ws7j9x7dyNT3f5qt2ffn4cn9dfV0v/t33RdY39ZOv839Xu02zAaZVKbPqiJyb+cAufpxP2Gb5D7f5XLz8Ktf/vad8Ay7HLh6qw8XFV58uP/p2m//zWG8exSbfH6+KLT/7eVlAe1Y+/rNPlxc/LBbA798sL/61nIIv31x+WxbIn7T86BfVbqteqPmzPvp1AWw3beUR7L+qzbSVWL+02+Fv/5JX+SxzW31avKRcHXXJst3lNyXaTpl6VjplsuHpdxeIqFU1yqf8s19VpU81z++/LGCsf5oDy7el4ojy8vmX1SrdFIv5+f3D9uP8u01OYb386NN8Vbbfl1mVWBpO66tym7wql2BRWa3S/ixWIgD7Mt/g1ssfFMBW5fH1uthuL393n49XW3M5+p035Y+6dLrjVbFlXUB71u4Zda+baqharvXx/bMOsHU1lC+yZtqaU8R1UeT5tnbYvLQ/DfXZQr/VH5ZXFdOmZAfYYJneHHqm31kgslYLrKlxqnl+/8tP8l3iF9+8fXy+LVZAcajpHlZyF6WlbS7wvx+rk7vm+7LAJ4/105qn53UKbu0polIly/pPmZ0IwH55e/WX+/zfi3wm8j3x75tTxuKxBnb99Ifl8vtP63yoR6czXhVbXn37shp4VvWMr6tj47dl+Xzo+ul/65dfP+U/LDf95kygGLovX1lPWwNsW4GoVtvupd0OOb51/gSnVYlyXdKpS7bXYG6ZVXUIrsrs5lCZfjGrolZzinj1bfa1e9p7SskPLfkhaPv9xsummPXOZl+c2K1LGqWgkkbn+/wF183rqnq3d/WX3TK+KlnkA1gMYP9R6Mr3q8Wx4OU3P66uHTfVTrs+RXzIyn82Dp3ueFWs+Zn2rGq8+Lfevy/vdpck1ZVV+X0DrBqq6tfT1uAqN9ZV/drdS3cd8v9ffO8XT+2hpG2VF69P2OuSLTC3TD3JVZndHKrT351VX63ONZi4rjyl5MDyi6j1TQmsusxvNv8ihYxhYKu+lRzYutrDdYB5q8Q+gMUA9rBe/mR5XXxRXpNUwPKlUl6SRAdWMs63s/VuA20uYTfNbaGbFtimnYp22loI62Ki6zWwe+muQ3kNtCzPf/ut8sPen940V3U9YN0yrYKmTLO41Onvz6qv1hkB2777y+cP2+IUMV90mx6w7ZtiYXZOCcUpYn2G2D1FFMD8VXaviZQYwIqd8U31xcXP/lydda2rbaoDrDwh89Cpx6tiKrDeq4t/m5OurLuBeo5gxQ+r7bWethZY/s9/NhcyviNYPvz3/AhV7ED6rV7uL35c1G9LDh7B2jK7OVSnvzurZ34Ee/n8q3dP+ZZfCugB21TLq1RR3dQof9b5vr1Jn62q9Zvrck8RlSqd+yRxEgNYcRL0UB3KPnp8+bfqHkB+VKs3l/52k28j109/ux8Bpj2rODB+m62ra7PPsj+0B7X65d5rsLJOO207CJ337noXPHWHvF91QBGt6nfV25Ivzf2cXpm7RnZdpu6jT7+YVVGrbHQewPKFdFNs/ptyV5ifHTXAmiNM57Z8+bPubfp1c5ja3aYvbpasr1tgWpXWZKzEAFbfRKgOZc0503W+/TZbcw/Satmeq+nAtGd578K173Ls3iVs7763dxE3u4INsE3nLcj2pbsO5T278iluq/KOb/uaamovvurcRbzr7yuWzX3CtvqNb/qdBeKpVTb65XkAKwgUx5dVeeP0rgW2bhaL/kbzy+e7s7zVcnePtlhi6+qkRa2SraJegkUBVt9Sy78o3nT6bXkoK/c7yxsPsJefL5fvfj0GTHlW8z5S/uSXr9v3kdrF+cf6naPOG83t+2DNtPVO5XYL84/O+2BFh3wayreb3FblgaSuXZQsLrMuf1PW7JTpzkrzrlX1llZRyzP97gLx1Coa/fb0gZ1QzvnDvs152x5zBp/CIL2cL7Dibd29v1cLsHPLWQP7aO8nWQA7t5wvMEL2EIARkjAAIyRhAEZIwgCMkIQBGCEJAzBCEgZghCQMwAhJGIARkjAAIyRhAEZIwgCMkIQBGCEJAzBCEgZghCQMwAhJGIARkjAAIyRh5gL74H5hfTR3it7AXPBD4gZaQ9FxbmExB9osRZsDLdEKTpyDxcIZN69kLQADmCyojZ8wsIW/AcAABjBPIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWMDgAHM0xFgaiFjA4ABzNMRYGohYwOAAczTEWBqIWOD1wS2fbO8eMiyl/vl5aP8KcDiNwDYQQMbBuFmFNjz7V22ziutrov/qRMOsHgNAHbIwEZAuBkFtn37mD2/f8j/V36pTTjA4jUA2CEDGwHhZhTYy/1dtrl6qsuqEw6weA0AdsjARkC4Gb8Gy881r54yFRghx58cmPITKwgzsOfbm+KUkyMYRzCOYEVGQLgJvQYDGMAAVmQEhBtucgBMFtTGAZbiJscNt+n7BQF2asAWppscgyDcBL/R/HzLG839LwB2lsBGQLjho1IAkwW18dMF9qEWNnklawEYwGRBbRxg5gAMYLKgNg4wcwAGMFlQGweYOQADmCyojQPMHIABTBbUxgFmDsAAJgtq4wAzB2AAkwW1cYCZAzCAyYLaOMDMARjAZEFtHGDmAAxgsqA2DjBzAAYwWVAbB5g5AAOYLKiNA8wcgAFMFtTGAWYOwAAmC2rjADMHYACTBbVxgJkDMIDJgto4wMwBGMBkQW0cYOYADGCyoDYOMHMABjBZUBsHmDkAA5gsqI0DzByAAUwW1MYBZg7AACYLauMAMwdgAJMFtXGAmQMwgMmC2jjAzAEYwGRBbRxg5gAMYLKgNg4wcwAGMFlQGweYOQADmCyojQPMHIABTBbUxgFmDsAAJgtq4wAzB2AAkwW1cYCZAzCAyYLaOMDMARjAZEFt/ESB5bgABjCAAWzCo7kTwKIVBhjAZCeARSsMsB2wrBIGMIDFKwwwgMlOAItWGGAAk50AFq0wwAAmOwEsWmGAAUx2Ali0wgADmOwEsGiFAQYw2Qlg0QoDDGCyE8CiFQYYwGQngEUrDDCAyU4Ai1YYYACTnQAWrTDAACY7ASxaYYABTHYCWLTCAAOY7ASwaIUBBjDZCWDRCgMMYLITwKIVBhjAZCeARSsMMIDJTgCLVhhgAJOdABatMMAAJjsBLFphgAFMdgJYtMIAA5jsBLBohQEGMNkJYNEKAwxgshPAohUGGMBkJ4BFKwwwgMlOAItWGGAAk50AFq0wwAAmOwEsWmGAAUx2Ali0wgADmOwEsGiFAQYw2Qlg0QoDrHwsaL0isJf75fKmfLh8lD8FWPwGADtoYMMg3IwDW109bT9+yFbXxf/UCQdYvAYAO2hgwyDcjAJ7fv/QPGzfSrEAi98AYIcMbASEm1FgdZHioS7tnXCAxWsAsEMGNgLCzSiwzdXXy+WdDoyQI89i0X1wYgVhB5Zf0G0uHjiCcQQ77SNYdQgbX8kjINwEHMGespf7O4ABDGBFRkC4CboGy+txkwNgACsyAsJNwG36/Ih4+chteoABrMwwCDdhbzTfZdnzLW80978A2HkCGwbhho9KAUwW1MYBZg7AACYLauMAMwdgAJMFtXGAmQMwgMmC2jjAzAEYwGRBbRxg5gAMYLKgNg4wcwAGMFlQGweYOQADmCyojQPMHIABTBbUxgFmDsAAJgtq4wAzB2AAkwW1cYCZAzCAyYLaOMDMARjAZEFtHGDmAAxgsqA2DjBzAAYwWVAbB5g5AAOYLKiNA8wcgAFMFtTGAWYOwAAmC2rjADMHYACTBbVxgJkDMIDJgto4wMwBGMBkQW0cYOYADGCyoDYOMHMABjBZUBsHmDkAA5gsqI0DzByAAUwW1MZPElgDC2CJGgBMFNTGAWYOwAAmC2rjADMHYACTBbVxgJkDMIDJgto4wMwBGMBkQW0cYOakBrZYDP/c3glg0QoDrAervl3fe8IRAFsM/tzeCWDRCgMMYLITwKIVBhjAZCeARSsMMIDJTgCLVhhgAJOdABatMMAAJjsBLFphgAFMdgJYtMIAA5jsBLBohQEGMNkJYNEKAwxgshPAohUGGMBkJ4BFKwwwgMlOAItWGGAAk50AFq0wwE4C2GLo5/ZOAItWGGAAk50AFq0wwAAmOwEsWmGAAUx2Ali0wgADmOwEsGiFAQYw2Qlg0QoDDGCyE8CiFQbY0QNbLD4ADGAAmxyAxW8AMIC1AVj8BgADWBuAxW8AMIC1AVj8BgADWBuAxW8AMIC1AVj8BgADWJtxYPWfpwcYwPQATAvA4jcA2D6B7TZPgE16jF4YYAALD8AAJgtq4wAzB2AAkwW1cYCZAzCAyYLaOMDMARjAZEFtHGDmAAxgsqA2DjBzAAYwWVAbP21gxZcAA1i8wgA7DGDbt49Z9nK/vHyUPwNY/AYAO3BgQyDchABbFYVW18X/1AkHWLwGADtwYEMg3AQA23wnB/v8/qGCq0w4wOI1ANhhAxsE4WYc2MsX3+R1tnVNbcIHgO0+Tel7XnAABrCDADYMws04sPXNdgjYYHJf7b/kZHPUK7gz8b75sIIwA3v+0dMgMPeL3mO1S+AINu/x4I9g4/8JnRM6go2AcDMKbHWXAaxfEGDnDGwEhJsxYM+3yyJ3025yAGxKA4AdMLAxEG6C3webdJseYFMaAOyAgRUZAuEmGFgu1/5GM8CmNADYMQBTQLhJ+1EpgE1pALADB2YJwAAmC2rjADMHYACTBbVxHdjI3+YD2NQALH4DgAGsDcDiNwAYwNoALH6DYwMW8OebATY1AIvfAGAAaxMCrPfHDgAGMGsDgGXKHABsSgOAAawNwOI3OEJgY79VC7CpAVj8BgADWBuAxW8AMIC1AVj8BgADWBuAxW8AMIC1AVj8BgADWJtBYA0sgM16BFhCYN03GAA25TF6YYD1H8vNEmBKAAYwWVAb14GNfB4OYFNz+sCaXyYEGMAmBGDjwJxf1wUYwMIDMIDJgto4wMzZC7DulAMMYMYGloIAAxjAjA0sBQEGMIAZG1gKAgxgpwls+EL7OICVb5n3nwAwgAHMUyi4AcCGGoQ8zi0MMIDNCMACgPV/Hx5g3pUMMG8ABjBZUBsHmDkAA5gsqI0DzByAAUwW1MYBZg7ARgrIv0kGMPtKBtjUAGxuA4BNmWKAASywAcCmTDHAesu+M+UAA5itgakgwAAGMFsDU8GzAtb5/OdRA3P+4ATAABYegAFMFtTGB1cywHwBGMBkQW0cYOYADGCyoDY+eSUDbGoANrcBwKZMMcAAFtgAYFOmGGAAC2wAsClTDDCABTYA2JQpBtiJAFvIP7wOMICFB2ABwLpzktmXPcAANjkAm9kg4PFYgGXNXy8B2C4AA5gsqI0DzJw9ARtY9tZOAItWOAKw3uUpwGQABjBZUBsHmDkAA5gsqI2fHrBmkgEGMIABrP8IMNuUAgxgIgCb2WBg0QAMYGcCLNv98YPMvuxHgS2Gn3c0wDJtTgA2OQCb2QBgk6YYYKcBrIEFMOURYCNJCCzw9NzaCWChhUeXPcAAJjsBLLRweAO3oDYOMHMA9trAFscMrPc5CIB5AjCAyYLa+KkD222mADshYO5mCjCAtQkFpi97a6dXAdbcru8+AWAAGw/AACYLBs+BO+XKnABscgA2r8GegI00cAsGzwHAxgKwVwZWFE4LLECwWzB4DlIDM59zAgxgAAtuoB57AQawsAYAG2pQTPnC9/NTArZ9s1zeZdnL/fLyUf4UYPMaVIX9W9HZA6v+6OvCUnAPwIZBuBkF9nx7l20uHrLVdfE/dcJPE9hu5QLM+5gYWLUOFoaC6YGNgHAzCmxz9ZRjvXt+/5Bt30qxAJvV4MiBiZUaFdii+VUh+R8ee0VgIyDcBF2D5WiLWkVNbcJHganLPjSvC2zOx9SGprDaPacGNtbALRg6B4mBtdDEX9V8RWBFBkC4CQK2vnoCGMACgCmNJgHbnRq275QfCrABEG5CgK3zizkVmJ58xQ58exTpTHOiya/Kplw2Ze2kUz88EqN2uuUzupFaQUwAts6v6HRg7hccwSwN9nAEC7nIcwuGzkHKI9jgFfyrHsEGQbgZB7Yub0bOvskBMIDpGd96AgvuAdgwCDejwLYfV0rn3qYH2ACwbiOAVYX63ztbzysCGwHhZhTYalnkLnu+nfdGM8CGGgDMeRRby8EAGwHhJt1HpULfg7R2AlhI4d3jQv7p1GMANlz4FYEZAzCAyYKhc5AMmOdjCQBzHk8M2Ixlf8LAxHgcYOJ9L3cOAOY7i/Yve2sngIUUbh+D7qK4BQPnYNRBTGCdN54DpnSkAcD0TnsE1ptigEkHI/ukuMAygPUeAWZp0N09Hwsw7394OwYw+dGoCpj8wLVaaLgBwAY6ASyg8O4xJTDfeBxgYw1jAXMlAwxgQYV3j03hwQZuwaA5WOwfmLiTqxYabgCwgU4ACyi8e0wIzDueElgGMIBNbHB8wJSCEYB5fv9LWwdqocEG7aO42AOYcoNp4DG08GkCa7f3+MBGGnrnQIsDbPSAEw3YWINzBCbf5B98DC08BkzQnt+gs4iODph21yQpMLl71QoNNmgfASY6LUb/TO1xAhvaqg4T2FhD7xxo6R0aAdaJAZiy7G2dyt9/9zdUHgMLA8w3oBb27y21RkZg+pTGBSYv9gCm/YEJ5b3J8MKnDmywgVtwfA70ndxRAXPHzx5Ytc8RhRYL/T9jF1bY+wiwkCl3HgHWy9EBq9ZBr1ClKz4wdw6cDmcNTG88F5j3D40mAea52Dt3YM0i6a6D5uB1fMB69Y4K2NCd3PnAlMLlo9tZKzTQYGhKAeZuLbtzw1jAdueaJwCsc5IbD5h+vXsCwKZeB2g5UmBZ+1eV2yUCsP0A6y7zBMD8/7GHfQGbfqGt5aiAdU7P6//wRmerOXJg8j2ZgwTWX+ZJgGmFy8eIwLwXe8cDzLO9RwC2e2F743BAdHDhzmPnnezTAjbUwC2ojYtl7nk8ImCe8bMG1l+54hMdsYB90IBl/YGZwNwTrSMAFvYpGs8R7mCAdZe5AmziXlTLPoH5d27hncKW/XEAk1cyRwEspPEsYMp/0VJbB2ohZbzjRzkWAywtsMVi958tTQfMdyUDsExfiRGBNa9XtqYzBja2c4sEbLfsUwHzX8kALEsOrPxAQq8QwHadxpb9sQBTrmSiAeuce/YazQY2fHu+fZwDbPwibyawHSyAOQld9rOALWpg5QEmDTB1M1U3XxOw3scyYwMbP2Rmc4GNNZgNLGtWrgZs2krWckzA/I0iAysfFWD9DlMPkaO/Dz8DWH1x5wU20MAt6B8/EWCZsnK9DQAWFdiiC0x7o2EWsIG3aecDay/u/PdBTwKYs5a1Qt7xeudWrmSAOQn4UwExgDWPizTAhj4qHgVY/f2RAgv5exCzgLWP+gXHeQIb+fxb9RgPWJYI2ODnIGYD6xTw3qaZCUw/uXUe5fPCgY03iAAs03+5qVlHxwnMu3MLySJo5c4GtugA866DmcCG32iYC6y3iJIAG4F16MB2p+f6r+dOXslajgLY4O/gRQXWnVLtGDwZ2Mh90JnA+svWd5vm4IEFvQ8wB1hnUQBsl/EPmNaP3ueNZl/Axi4w9D96EAZMTqlTcPyvKrw6sNCVPBfY0N2UcwO2GD6xighs0QPm3RznAdOnvPeEScDEQd5zFTkL2Nivqewe0wLrr2V/Ie944HlQf39++sDCPsGdxQHW+f5VgPnnNASYnHXPMXgmsKB1kE0HFngXZTqw0SmfsZK1HDqwwI/nZKcATP2wVwgw+TwfMKWBW9A3vg9g5u3fX8g/DjDf5LVbZXpgi7TAAnYV04H5zqI9cwAwgPUmruNrH8B63/tvCXQ2MzOw0TlQrjbHgfnhRAUWegWTTQYWepE3EVjwrbIDB7Zo0x+fAKznK3jRHDEw7Y2GMWDKtVVkYINT7jTW5kCL5RA5GVjAlLfSDxXYwvU1A1iPV3pg7uaozkFSYN5j8Agw9dxTjGuHSLeRZzw5sPBDZPeJnkLKeDiwSStZS1RgKqz20XP2oE5Z39cegIU0SgtMOcmdCiz4EOk28ozvAVhog0nAwt/sOVhgvt+Dnwxs4fpKDSz8twmnAQu7Bw2wgAYTgYVM+QEDa39VwvnBNGDSV3pgyZZ988IgYL45GAZmeSdDOQd1G8nx8FsE2TRghgZ7ANaurIMC1huYBUzyOhRg2YRlbwDmn4MxYIHbvXqccAr65sBwgjUVWHCD5MCmrGQtsYAF7kXDgPl8BS/7acAMv4uRGNjAb1MBbDIww+eBssMEFjrl49u/5/RwvPB8YOmWvQYneA7OAJjlHkR3Gckp9Ud5J+NogM34XTwxRX5faYFZPsk6EVjwHOhv03qBBR97a2BDZ9HqZmva/qcBCym8P2DNMj0QYIbNc2z7V3glB5Zw52ZtYAUWut2rE9Iv6JsD0/Yv3lJ8fWAhf4ug+3hwwGZsPc70aL4OBdiEZX92wMTxYnRZTb1EklM6WP5Ygc3aenpTo/tKCszwQbtpwEyf5FNPsHzAwk9u9ef3CnrnID2wsMKTgC1sZ9HVSw4LWGaYcme8NzEDvhIDC20wGZilgTM+Aix8ux9dRPGA9Z//qsACPv9w4MDmbT2daRngFekQ6S9sfBf1/IDZzuAkyJFlpXw0XH/crWU3cty0cncN3GPw1EQB1p2S6cCGfaUFFt4gPTD9BCsSMH0R6cAMDbJM3HUcXFbjn2CdA8x2/1NfB1MTAdjMO7jNhIz4OiNgHwzALFeP44soGrAsGFjIJ1hnADMfe9vXjU14YGIA603JRGCjvhICM+7kzMveeA6qn2B5gVkK19N/OMDCPsE6GZj53PMQgVnfInHGm+HRCUkJzNBgIjBLgw/ZYQGbspn23QwUnnSACQRmP/c8QGDmy1NnvB4dn45kwKwreR/A/Pt/CWzK/t/zPoDbqJsJl0hCfszC1UtDgHW3Kisw97gxOfOBNV+EPfpW7vjp4cwGw7HunvcALAsHZizcnYEQYJMukSpgC88cuIXdn1vXgUh/s5LjwcA+HAgw+/0fZzzU1zEDs9/J6u//F03cwqmBTbxEKh8HgblzkwDYvAbNqdnrA2u+CF657uYZxisNsN52G75yjTs360VeuXn2G/qJTQam7SL6A5MvkcaA+ebE9jgKzO1gB+bs5KYmxvtgvS+sm2eor9jAdtusedm7b/KMTvkUYIvOHDWzJPb7k9/kUXYR3YEZl0j1HHQ+b6EVdn8eC9hswcUXxwmsv1EEnh4aGgQAc44H9mW/sO3cpgDbfX66twtwrlymHmC0XcRuYN4lUjUHXmA+XtGBzRdcAlt4FpE1+wfWvfNl8BUHmO9ca8Ky3wewRXMc6N9j6B1YJp/BKbuIziFu1hVMs3LF1uHnFRuYp8cUYNmRAtvdYDLwMgBTzn+U65g97NymHSoX9aJaiB+08zDjEmnhnQO3QX/cPAcuMI3XFGBKLW2zmgZM/1BxcF4DWHN6bvJlW/bdKRuwZZ7y5ouFZdlb76LsNk/lGquZlWmFe+ugnw+ZX0EUYDqvCetgsfCv1A/KWdEkYAPvtwXnVYCVZw+W00Nbg0XnvGrYln3Kmy8WhmU/0cGiuVSSU1DP4hxg3jlwL/Ky7gvMj51KWuGpDcTabRdFpHPQpsGRAstGtvmhToG7Z20XN6/w7ouFJZMa6S/c9Z82B3LrHFla0xoYVsPE7T+8zWTBAxMdlFcCZjw9tDcIszWhsOiQDJj+Jn7z43nA/HOQ+RKjgbfw1AbOoug2i9vg1Y9ghJCBAIyQhAEYIQkDMEISBmCEJAzACEkYgBGSMAAjJGEARkjCzAX2V/cL66O5U/QG5oJ/TdxAayg6zi0s5kCbpWhzoCVawVhzYF7JWgAGMFlQGweYOQADmCyojQPMHIABTBbUxgFmDsAAJgtq4wAzB2AAkwW1cYCZMxfYkpBTzqsDc7+wPpo7RW9gLrhM3EBrKDrOLSzmQJulaHOgJVrBWHNgXslaAAYwWVAbB5g5AAOYLKiNA8wcgAFMFtTGAWYOwAAmC2rjADMHYACTBbVxgJkDMIDJgto4wMzh11UISRiAEZIwACMkYQBGSMIAjJCEARghCQMwQhIGYIQkDMAISRiAEZIwACMkYQBGSMIAjJCEARghCQMwQhIGYIQkDMAISRiAEZIwACMkYQBGSMIAjJCEARghCRMEbCGXFf4AAAQBSURBVPvm8jF/eL4tH5wfLZd3WfZyv6x+tn372PluUjYXD95p8DRqH6LPQj0YHmuDzXLZn8/tmxtlfsJeXz+3fX3zVfCCm7KIrp6mz4F4vWkO8u+WN/PmYFP+51PcIpETBuzj7xYb2+Y7Ytk9396VIFbXxf+aeWu+m5SX+594Xutv5F2WMWahGQyPscH244ds05v2auvwbJ6Br6+ruJunsuCylXixdS1v3NVkmwP5etMcrK6eimUwaw6K5844EgQlDNjbfy+cr34qJnyT74Je7u+e3z+Ui2O9/Of83+a7adm+/cbzWm+j5iH+LNSDpsk2NShSjLgFPMst8PVNFWfzVF7t2Qitc7ASBxDbHIjXW+bAN+8T1kEBL20CgX3z7il7/uSb+rh6nW3/6dOWfj6R23qW/+ep+GqrLYCgrK/LRf/y+ZejjZqH+LNQDxome0KDdf8E6+3vvqiWXX46c/FQfLEjHvD6pspjvQo6S0a++uULuRczzsHL5+4ats2BfL1lDrzr3b4OfIswbgKB/S5fGpvrfKrqY+32zW7jyydyR2o2sOKF1f7mMm92M9go8+4vY8xCPWiYbnOD7RvnGuztY37S1Lz88nf5prl99xT++raK3Dzlq9c3nmsw2xw8v/+uexVpmgP5esscbK6+lhfJ5nVgO0mZlEBgj+ubbHXXnBS/f+ic/q4vu6RmAytwFUunnPf19WCjzALMNAv1oCH2Bu412NvHfKdeb1f5E/Mj+frG8Pq2itg85auff+Q59FvXcv7D50+mz4F8vWUONssbeZFsXgehW8+MhALbvvu/Tx7ro399+K+yLuYyHrDi5lB5cC+Bba7+NNQoMwGzzEI9aIi5gbwGy1/4/eIoUF0vbN/9pTmJCnr9bjKczdPz6tWdZ8Ed1Rx4L5LtK3nyrbjghAJ7fv/Vu2KvV+533u8mvNrP725rNLMwdd9QV/n4oTmCDTXKTMAss2A9ftkbZL7Ns7w+bxbhr76qz6/CXt/u3JzN0/Pq59tyLyY3z6OZg/L/PmC2OVDus8RMKLBslR+Ti51TPqGr3Z6hOQS3N+arhTz9Nn39utXNy/3VU31ZqjcyAbPMgrgDHLtB8ZzdBUo7J8Wd7uoKpjoLMry+uiuzLpdasT01Cyh4wR3XHOQ2xCmydTvdwyVYOLDihDd/LE7hfnjfbvereleY7xM7bwK235nT7NKKS+SfLKtlNdDIBswwCyvfLj5mg2y9dJZRfdJyWd+Dy9oLlMDXZ+Wbz5fVj37wSbN5hi+445qDYhLlTQ7jdjr5Vnd4DvajUvvYuxCSOgAjJGEARkjCHCwwQk4hACMkYQBGSMIAjJCEARghCQMwQhIGYIQkDMAISRiAEZIw/w8YQXA8QjgtawAAAABJRU5ErkJggg==" /><!-- --></p>
+<p>Only months with data are plotted in this figure. What if we want to
+complete the time series and plot all zeros too? In the original time
+series there is not data for every day, therefore the time series is
+incomplete.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># sb.xts.na is same as sb.xts but with all missing days added (with NAs)</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>rng <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">time</span>(sb.xts))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>sb.xts.na <span class="ot">&lt;-</span> <span class="fu">merge</span>(sb.xts, <span class="fu">xts</span>(, <span class="fu">seq</span>(rng[<span class="dv">1</span>], rng[<span class="dv">2</span>], <span class="at">by =</span> <span class="st">&quot;day&quot;</span>)))</span></code></pre></div>
+<p>However, in our monthly example we may not need data for every day,
+but month, and this time we need 0s instead of NAs. Even more, we don’t
+want to add zeros for the months we already have data, because that will
+change the summary statistics. Then we add 0s for the months we have no
+data.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>z.seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(rng[<span class="dv">1</span>], rng[<span class="dv">2</span>], <span class="at">by =</span> <span class="st">&quot;month&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>YM.sb.xts <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">as.Date</span>(<span class="fu">as.yearmon</span>(<span class="fu">index</span>(sb.xts))))</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>YM.z.seq <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">as.yearmon</span>(z.seq))</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>wTrm <span class="ot">&lt;-</span> <span class="fu">which</span>(YM.z.seq <span class="sc">%in%</span> YM.sb.xts)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>z.seq <span class="ot">&lt;-</span> z.seq[<span class="sc">-</span>wTrm] <span class="do">## remove the days for which </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">xts</span>(, z.seq)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>sb.xts<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">merge</span>(sb.xts, z, <span class="at">fill =</span> <span class="dv">0</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>obs.m<span class="fl">.0</span> <span class="ot">&lt;-</span> <span class="fu">to.monthly</span>(sb.xts<span class="fl">.0</span><span class="sc">$</span>nObs)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="fu">plot</span>(obs.m<span class="fl">.0</span>[<span class="st">&quot;2010/2017&quot;</span>,<span class="dv">2</span>], <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="at">grid.ticks.on =</span> <span class="st">&quot;month&quot;</span>,   </span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>     <span class="at">major.ticks =</span> <span class="st">&quot;month&quot;</span>, <span class="at">grid.col =</span> <span class="st">&quot;lightgrey&quot;</span>, </span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Maximum number of daily observations per month&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 
 

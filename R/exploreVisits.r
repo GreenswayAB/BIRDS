@@ -55,7 +55,7 @@ lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
     distances <- distGeo(ctr[, c("X", "Y")], coord)
     distM <- distm(coord, coord) ## the untransformed spdf
     distMLT <- distM[lower.tri(distM)]
-    distancesOut <- distMLT[which(distMLT>0)]
+    distancesOut <- distMLT[which(distMLT > 0)]
 
     # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
     # this function is very much dependent on the projection
@@ -189,13 +189,13 @@ exploreVisits <- function(x,
   ## Other requirements
   minPts <- 3 ## Minimum number of points required for clustering
 
-  if (class(x) == "OrganizedBirds") {
-    spdf<- x$spdf
+  if (inherits(x, "OrganizedBirds")) {
+    spdf <- x$spdf
     dat <- st_drop_geometry(spdf)
   } else {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
-  if (is.null(visitCol)){
+  if (is.null(visitCol)) {
     visitCol <- attr(x, "visitCol")
   }
 
@@ -216,7 +216,7 @@ exploreVisits <- function(x,
                           "date" = NA,
                           "centroidX" = NA,
                           "centroidY" = NA,
-                          "nObs"= NA, # number of records per visit, NOT species list length  #as.numeric(tbl),
+                          "nObs" = NA, # number of records per visit, NOT species list length  #as.numeric(tbl),
                           "SLL" = NA, # species list length, i.e. number of observed species
                           "effortDiam" = NA, # the diameter of the minumum circle that covers all points, in meters
                           "medianDist" = NA, # the median (Q2) of the distances between the centroid and all points
@@ -228,20 +228,21 @@ exploreVisits <- function(x,
   message(paste("Analysing", nUID, "visits..."))
   datGBY <- group_by(dat, !! sym(visitCol))
 
-  visitStat$nObs <- summarise(datGBY, nObs= n())$nObs
+  visitStat$nObs <- summarise(datGBY, nObs = n())$nObs
   visitStat$SLL  <- summarise(datGBY, SLL = n_distinct(.data$scientificName))$SLL
   dates <- summarise(datGBY, date = min(date)) ##If the visits are over multiple days, we take the first.
-  visitStat$day  <- day(dates$date)
-  visitStat$month<- month(dates$date)
-  visitStat$year <- year(dates$date)
+  visitStat$day   <- day(dates$date)
+  visitStat$month <- month(dates$date)
+  visitStat$year  <- year(dates$date)
   rm(datGBY)
 
   envirFunc <- environment()
   ### TODO? can this lapply be done with dplyr?
-  if(!parallel){
+  if (!parallel) {
     ctrList <- lapply(uniqueUID,
                       FUN = lapplyVisits,
-                      dat=dat, visitCol=visitCol, spdf=spdf, minPts=minPts ) #end lapply
+                      dat = dat, visitCol = visitCol, 
+                      spdf = spdf, minPts = minPts ) #end lapply
   }else{
     cl <- parallel::makeCluster(nc)
     parallel::clusterExport(cl, varlist = list("uniqueUID", "dat", "visitCol", "spdf", "minPts"), envir = envirFunc)
@@ -270,7 +271,7 @@ exploreVisits <- function(x,
   visitStat$date <- lubridate::ymd(paste(visitStat$year,
                                          visitStat$month,
                                          visitStat$day,
-                                         sep="-"))
+                                         sep = "-"))
   visitStat$Month <- as.factor(months(visitStat$date, abbreviate = FALSE))
   levels(visitStat$Month) <- month.name
 
@@ -310,19 +311,19 @@ spatialVisits <- function(x,
                           radius="medianDist"){
   crs <- st_crs(as.numeric(dataCRS))
 
-  if (class(x) == "data.frame") {
+  if (inherits(x, "data.frame")) {
     x <- st_as_sf(x, coords = xyCols)
     st_crs(x) <- st_crs(crs) ## because I know where it comes from
   } else {
     stop("The object 'x' must be of class data.frame (after exploreVisits). See the function 'exploreVisits()'.")
   }
 
-  if(radius=="" | is.na(radius) | is.null(radius)){
+  if (radius == "" | is.na(radius) | is.null(radius)) {
     radiusVal <- rep(1, nrow(x))
-  } else if(radius %in% colnames(x)){
+  } else if (radius %in% colnames(x)) {
     radiusVal <- st_drop_geometry(x[,radius])
     ## convert meters to degrees?
-  } else if(is.numeric(radius) & length(radius) == nrow(x)){
+  } else if (is.numeric(radius) & length(radius) == nrow(x)) {
     radiusVal <- radius
   } else {
     stop("The parameter 'radius' needs to be one od the column names or a numeric
@@ -339,6 +340,6 @@ spatialVisits <- function(x,
   buff <- st_transform(buff,
                        crs = crs)
 
-  return(list("points" = x, "effort"= buff))
+  return(list("points" = x, "effort" = buff))
 
 }

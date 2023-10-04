@@ -70,10 +70,10 @@ drawPolygon <- function(lat = 0,
 #' @export
 makeCircle <- function(spdf, crs=NULL) {
     # error not a SpatialPolygon
-    if (any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
+    if (!inherits(spdf, c("SpatialPoints", "SpatialPointsDataFrame", "sf", "sfc")))
       stop("The input object is neither of class 'sf', SpatialPoints' nor 'SpatialPointsDataFrame'")
 
-    if (any(class(spdf) %in% c("SpatialPoints", "SpatialPointsDataFrame") )) {
+    if (inherits(spdf,  c("SpatialPoints", "SpatialPointsDataFrame"))) {
       spdf <- st_as_sf(spdf)
     }
 
@@ -144,18 +144,18 @@ OB2Polygon <- function(x, shape="bBox") {
 
   if (is.null(shape)) shape <- "bBox"
 
-  if (!any(class(x) %in% c("OrganizedBirds", "sf", "SpatialPointsDataFrame")))
-           stop("input data is neither an object of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
+  if (!inherits(x, c("OrganizedBirds", "sf", "SpatialPointsDataFrame")))
+           stop("Input data is neither an object of class 'OrganizedBirds', 'sf' or 'SpatialPointsDataFrame'")
 
-  if (class(x) == "OrganizedBirds") {
+  if (inherits(x, "OrganizedBirds")) {
       spdf <- x$spdf
-      if (any(class(spdf) == "SpatialPointsDataFrame")) {
+      if (inherits(spdf, "SpatialPointsDataFrame")) {
         spdf <- st_as_sf(spdf)
       }
-  } else if (any(class(x) == "SpatialPointsDataFrame")) {
+  } else if (inherits(x, "SpatialPointsDataFrame")) {
           spdf <- x
           spdf <- st_as_sf(spdf)
-  } else if (any(class(x) == "sf")) {
+  } else if (inherits(x, "sf")) {
     spdf <- x
   }
 
@@ -259,11 +259,11 @@ makeGrid <- function(poly,
 
     gridSizeM <- gridSize * 1000 # in meters
 
-    if (!any(class(poly) %in% c("sfc","sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+    if (!inherits(poly, c("sfc","sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         stop("Entered polygon is not an sf, SpatialPolygon nor SpatialPolygonsDataFrame")
     }
 
-    if (any(class(poly) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+    if (inherits(poly, c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
       poly <- st_as_sf(poly)
     }
     ## error no CRS
@@ -456,10 +456,10 @@ makeGrid <- function(poly,
 #' @export
 gridAsString <- function(grid) {
     # error not a SpatialPolygon
-    if (!any(class(grid) %in% c("sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+    if (!inherits(grid, c("sf","SpatialPolygons", "SpatialPolygonsDataFrame"))) {
         stop("Entered grid is not a sf, SpatialPolygon nor SpatialPolygonsDataFrame")
     }
-    if (any(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
+    if (inherits(grid, c("SpatialPolygons", "SpatialPolygonsDataFrame"))) {
       grid <- st_as_sf(grid)
     }
     grid <- st_transform(grid, crs = st_crs(4326))

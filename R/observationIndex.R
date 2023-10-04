@@ -92,7 +92,7 @@ obsIndexTemporal<-function(x,
                            visits = TRUE,
                            fs.rm = TRUE,
                            norm = TRUE){
-  if (class(x) != "SummarizedBirds") {
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
@@ -105,60 +105,60 @@ obsIndexTemporal<-function(x,
   spData <- deconstructOverlay(x$overlaid, attr(x, "visitCol"))
 
   spData$dates <- as.Date(switch(timeRes,
-                     "yearly" = paste0(spData$year, "-01-01"),
-                     "monthly"= paste0(spData$year, "-", sprintf("%02d", spData$month), "-01"),
-                     "daily"  = paste0(spData$year, "-", sprintf("%02d", spData$month), "-", sprintf("%02d", spData$day))))
+                     "yearly"  = paste0(spData$year, "-01-01"),
+                     "monthly" = paste0(spData$year, "-", sprintf("%02d", spData$month), "-01"),
+                     "daily"   = paste0(spData$year, "-", sprintf("%02d", spData$month), "-", sprintf("%02d", spData$day))))
 
-  res <- if(timeRes=="yearly"){
-    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="year"))),
-             seq(min(spData$dates), max(spData$dates), by="year"))
-  }else if (timeRes=="monthly"){
-    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="month"))),
-             seq(min(spData$dates), max(spData$dates), by="month"))
-  }else if(timeRes=="daily"){
-    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by="day"))),
-             seq(min(spData$dates), max(spData$dates), by="day"))
+  res <- if (timeRes == "yearly") {
+    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by = "year"))),
+             seq(min(spData$dates), max(spData$dates), by = "year"))
+  }else if (timeRes == "monthly") {
+    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by = "month"))),
+             seq(min(spData$dates), max(spData$dates), by = "month"))
+  }else if (timeRes == "daily") {
+    xts::xts(rep(NA, length(seq(min(spData$dates), max(spData$dates), by = "day"))),
+             seq(min(spData$dates), max(spData$dates), by = "day"))
   }else{
     stop("Unknown time resolution")
   }
 
-  spNgby<-group_by(spData[spData$scientificName==focalSp,], .data$dates)
+  spNgby <- group_by(spData[spData$scientificName == focalSp,], .data$dates)
   ## if there is a column for presence then remove absences
-  spNgby<-extractPresence(spNgby)
+  spNgby <- extractPresence(spNgby)
 
-  if (visits){
+  if (visits) {
     allN <- summarise(group_by(spData, .data$dates),
-                      all= n_distinct(!!dplyr::sym(visitCol)))
+                      all = n_distinct(!!dplyr::sym(visitCol)))
     spN <- summarise(spNgby,
-                     sp=n_distinct(!!dplyr::sym(visitCol)))
+                     sp = n_distinct(!!dplyr::sym(visitCol)))
   } else {
     allN <- summarise(group_by(spData, .data$dates),
-                      all=n())
+                      all = n())
     spN <- summarise(spNgby,
-                     sp=n())
+                     sp = n())
   }
 
-  allN<-xts::xts(allN$all, allN$dates)
-  spN<-xts::xts(spN$sp, spN$dates)
+  allN <- xts::xts(allN$all, allN$dates)
+  spN <- xts::xts(spN$sp, spN$dates)
 
-  res<-merge(res, allN, join='left')
-  res<-merge(res, spN, join='left', fill=0)
+  res <- merge(res, allN, join = 'left')
+  res <- merge(res, spN, join = 'left', fill = 0)
 
-  res<-res[,-1]
+  res <- res[,-1]
 
-  if(! "allN" %in% colnames(res)){
-    res$spN<-NA
+  if (!"allN" %in% colnames(res)) {
+    res$spN <- NA
   }
 
-  if(! "spN" %in% colnames(res)){
-    res$spN<-0
+  if (!"spN" %in% colnames(res)) {
+    res$spN <- 0
   }
 
   # res$relObs<-res$spN/res$allN
-  res$relObs<-logObsInd(res$spN,
-                        res$allN,
-                        fs.rm=fs.rm,
-                        norm=norm)
+  res$relObs <- logObsInd(res$spN,
+                          res$allN,
+                          fs.rm = fs.rm,
+                          norm = norm)
   return(res)
 }
 
@@ -177,28 +177,27 @@ obsIndexTemporal<-function(x,
 #' @return A spatial object
 #'
 #' @keywords internal
-obsIndexSpatial<-function(x,
-                          focalSp = NULL,
-                          visits = TRUE,
-                          fs.rm = TRUE,
-                          norm = TRUE){
-  if (class(x) != "SummarizedBirds") {
+obsIndexSpatial <- function(x,
+                            focalSp = NULL,
+                            visits = TRUE,
+                            fs.rm = TRUE,
+                            norm = TRUE){
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
   if (is.null(focalSp)) {
     stop("Please, define the focal species to search for.")
   }
   visitCol <- attr(x, "visitCol")
-  overlaid<-x$overlaid
+  overlaid <- x$overlaid
 
   r <- lapply(overlaid,
             function(x){
-              if(!all(is.na(x))){
-                # spNgby<-group_by(x[x$scientificName==focalSp,])
-                spNgby<-x[x$scientificName==focalSp,]
+              if (!all(is.na(x))) {
+                spNgby <- x[x$scientificName == focalSp,]
                 ## if there is a column for presence then remove absences
-                spNgby<-extractPresence(spNgby)
-                if (visits){
+                spNgby <- extractPresence(spNgby)
+                if (visits) {
                   allN <- summarise(x, n_distinct(!!dplyr::sym(visitCol)))
                   spN <- summarise(spNgby, n_distinct(!!dplyr::sym(visitCol)))
                 } else {
@@ -219,14 +218,14 @@ obsIndexSpatial<-function(x,
             ncol = 2,
             byrow = TRUE)
           )
-  colnames(r)<-c("allN", "spN")
+  colnames(r) <- c("allN", "spN")
 
   r$relObs <- logObsInd(r$spN,
                         r$allN,
-                        fs.rm=fs.rm,
-                        norm=norm)
+                        fs.rm = fs.rm,
+                        norm = norm)
 
-  r[r$allN==0, ] <- NA
+  r[r$allN == 0, ] <- NA
   res <- st_sf(cbind(r, st_geometry(x$spatial)))
 
   return(res)

@@ -15,16 +15,16 @@
 #' @export
 #' @keywords internal
 findCols <- function(pattern, df, exact=FALSE, value = TRUE){
-  if(missing(pattern)) stop("The argument 'pattern' must be supplied.")
-  if(missing(df)) stop("The argument 'df' must be supplied.")
+  if (missing(pattern)) stop("The argument 'pattern' must be supplied.")
+  if (missing(df)) stop("The argument 'df' must be supplied.")
 
-  patternE <-if (exact) paste("^", pattern, "$", sep="") else pattern
+  patternE <- if (exact) paste("^", pattern, "$", sep = "") else pattern
 
-  if(length(patternE) == 1){
-    res <- grep(patternE, names(df), ignore.case=TRUE, value=value)
+  if (length(patternE) == 1) {
+    res <- grep(patternE, names(df), ignore.case = TRUE, value = value)
   }
-  if(length(patternE) > 1){
-    res<- lapply(patternE, grep, names(df), ignore.case=TRUE, value=value)
+  if (length(patternE) > 1) {
+    res <- lapply(patternE, grep, names(df), ignore.case = TRUE, value = value)
   }
   return(res)
 }
@@ -56,26 +56,26 @@ organizeDate <- function(x, columns){
 
   cols.df <- findCols(columns, x, exact = TRUE)
 
-  if(all(lengths(cols.df) > 0)){
+  if (all(lengths(cols.df) > 0)) {
     cols.df <- unlist(cols.df)
 
-    if(ncol(x)>1) x <- x[,cols.df]
-    cols.df<-tolower(cols.df)
+    if (ncol(x) > 1) x <- x[,cols.df]
+    cols.df <- tolower(cols.df)
 
-    if(length(cols.df) == 3){
-      colnames(x)<-tolower(colnames(x))
-      if(all(stdTimeCols %in% cols.df)){
+    if (length(cols.df) == 3) {
+      colnames(x) <- tolower(colnames(x))
+      if (all(stdTimeCols %in% cols.df)) {
         ## all is just fine
-        x<-x[,stdTimeCols]
+        x <- x[,stdTimeCols]
         return(x)
-      } else{
+      } else {
         ### This part here assumes the 3 defined columns are in the right order
         ### and gives the standard name
         message("This function assumes that the 3 given column names represent 'year', 'month' and 'day' in that specific order.")
-        if(any(stdTimeCols %in% cols.df)){
+        if (any(stdTimeCols %in% cols.df)) {
 
           wColNot <- which(!(stdTimeCols %in% cols.df))
-          for(i in 1:length(wColNot)){
+          for (i in 1:length(wColNot)) {
             # x$placeholder <- as.matrix(x[, cols.df[wColNot[i]]])
             x$placeholder <- x[, cols.df[wColNot[i]]]
             names(x)[names(x) == "placeholder"] <- stdTimeCols[wColNot[i]]
@@ -90,17 +90,16 @@ organizeDate <- function(x, columns){
       }
 
       ## empty years are not tolerated! but days and months are given value 1
-      if(sum(is.na(x$day))>0) message(paste("There were", sum(is.na(x$day)),"empty days that were given the value 1"))
-      if(sum(is.na(x$month))>0) message(paste("There were", sum(is.na(x$month)),"empty months that were given the value 1"))
+      if (sum(is.na(x$day)) > 0) message(paste("There were", sum(is.na(x$day)),"empty days that were given the value 1"))
+      if (sum(is.na(x$month)) > 0) message(paste("There were", sum(is.na(x$month)),"empty months that were given the value 1"))
       x$day <- ifelse(is.na(x$day), 1, x$day)
       x$month <- ifelse(is.na(x$month), 1, x$month)
-print(x)
-      res<-x
+      res <- x
     }
 
-    if(length(cols.df) == 1){
-      res <- data.frame(matrix(nrow = length(x), ncol=length(stdTimeCols)))
-      colnames(res)<-stdTimeCols
+    if (length(cols.df) == 1) {
+      res <- data.frame(matrix(nrow = length(x), ncol = length(stdTimeCols)))
+      colnames(res) <- stdTimeCols
       dateYMD <- as.Date(x)
 
       res$year  <- lubridate::year(dateYMD)
@@ -114,11 +113,10 @@ print(x)
   }
   ## clean unreadable dates (cleaning also the spatial points)
   wNA <- is.na(res)
-  if (sum(wNA) > 1){
+  if (sum(wNA) > 1) {
     res <- res[-wNA,]
     message(paste(length(wNA), " records deleted because the date was unreadable."))
   }
-print(res)
   return(res)
 }
 
@@ -176,39 +174,39 @@ simplifySpp <- function(df, sppCol){
 #'
 #' @export
 getGridIDs <- function(x, grid, idcol="id"){
-  if(!any(class(x) %in% c("SpatialPointsDataFrame", "sf"))) {
+  if (!inherits(x, c("SpatialPointsDataFrame", "sf"))) {
     stop("The argument 'x' can only be of class sf or SpatialPointsDataFrame")
   }
 
-  if(any(class(x) == "SpatialPointsDataFrame")) x <- st_as_sf(x)
+  if (inherits(x, "SpatialPointsDataFrame")) x <- st_as_sf(x)
 
-  if(!any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons", "sf"))){
+  if (!inherits(grid, c("SpatialPolygonsDataFrame", "SpatialPolygons", "sf"))) {
     stop("The argument 'grid' can only be of class sf, SpatialPolygonsDataFrame or SpatialPolygons")
   }
 
-  if(any(class(grid) %in% c("SpatialPolygonsDataFrame", "SpatialPolygons"))) grid <- st_as_sf(grid)
+  if (inherits(grid, c("SpatialPolygonsDataFrame", "SpatialPolygons"))) grid <- st_as_sf(grid)
 
-  if(is.null(idcol)) idcol="id"
+  if (is.null(idcol)) idcol = "id"
   #### Rename grid
-  if(is.null(colnames(grid))){
+  if (is.null(colnames(grid))) {
     grid <- st_sf(data.frame(paste0("ID", seq(length(grid))), st_geometry(grid)))
-    colnames(grid)[1]<-idcol
+    colnames(grid)[1] <- idcol
   } else {
-    if(!idcol %in% colnames(grid)) stop(paste0("The column '",idcol,"' was not found in the grid"))
-    if (any(duplicated(grid[,idcol]))){
+    if (!idcol %in% colnames(grid)) stop(paste0("The column '",idcol,"' was not found in the grid"))
+    if (any(duplicated(grid[,idcol]))) {
       grid <- renameGrid(grid, idcol)
       warning("There are duplicated cell names in your grid. We rename them internally to 'ID1'...'IDn'.
 All results will use this nomenclature, but the order of the cells will remain unaltered.")
-      }
+    }
   }
 
   x <- st_transform(x,
                     crs = st_crs(3857))
   grid <- st_transform(grid,
                        crs = st_crs(3857))
-  inter <-st_intersects(x, grid)
+  inter <- st_intersects(x, grid)
   res <- sapply(inter,
-                function(z) if (length(z)==0) NA_integer_ else z[1])
+                function(z) if (length(z) == 0) NA_integer_ else z[1])
   return(res)
 
 }
@@ -252,33 +250,33 @@ All results will use this nomenclature, but the order of the cells will remain u
 #'                         timeCols=c("day", "month", "year"),
 #'                         gridIdCol = "id")
 #' visits(OB, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
-createVisits<-function(x,
-                       idCols = c("locality", "recordedBy"),
-                       timeCols = c("day", "month", "year"),
-                       grid = NULL,
-                       gridIdCol){
+createVisits <- function(x,
+                         idCols = c("locality", "recordedBy"),
+                         timeCols = c("day", "month", "year"),
+                         grid = NULL,
+                         gridIdCol){
 
-  if(any(class(x) %in% c("data.frame", "SpatialPointsDataFrame", "sf"))){
-    if (any(class(x)=="sf")){
+  if (inherits(x, c("data.frame", "SpatialPointsDataFrame", "sf"))) {
+    if (inherits(x, "sf")) {
       df <- st_drop_geometry(x)
       sfdf <- x
-    } else if (any(class(x)=="SpatialPointsDataFrame")){
+    } else if (inherits(x, "SpatialPointsDataFrame")) {
       df <- x@data
       sfdf <- st_as_sf(x)
-    } else if(class(x)=="data.frame"){
+    } else if (inherits(x, "data.frame")) {
       df <- as.data.frame(x) ## in case it is a data.table or some other weird class
       sfdf <- NULL
     }
 
     if (all(idCols == "")) idCols <- NULL
-    if (all(timeCols=="")) timeCols <- NULL
+    if (all(timeCols == "")) timeCols <- NULL
 
-    if(!is.null(grid)) {
-      if(any(class(grid) %in% c("SpatialPolygons", "SpatialPolygonsDataFrame", "sf"))
-         & !is.null(sfdf)){
+    if (!is.null(grid)) {
+      if (inherits(grid, c("SpatialPolygons", "SpatialPolygonsDataFrame", "sf"))
+         & !is.null(sfdf)) {
         df[,"gridID"] <- getGridIDs(sfdf, grid, gridIdCol)
-      } else if(class(grid %in% c("character", "numeric"))){
-        if(length(grid) == nrow(df)) {
+      } else if (inherits(grid, c("character", "numeric"))) {
+        if (length(grid) == nrow(df)) {
           df[,"gridID"] <- grid
         } else stop("If grid is a vector it should be as long as the number of observations.")
       } else stop("The argument 'grid' should be a geometry or a vector with IDs.")
@@ -294,9 +292,9 @@ createVisits<-function(x,
 
     cols.df <- findCols(columns, df, exact = TRUE)
 
-    if(all(lengths(cols.df) > 0)){
+    if (all(lengths(cols.df) > 0)) {
       cols.df <- unlist(cols.df)
-      res <- as.integer(factor(apply(df[cols.df], 1, paste0, collapse="")))
+      res <- as.integer(factor(apply(df[cols.df], 1, paste0, collapse = "")))
       return(res)
     } else {
       stop("Some or any of the column names were not found in the data set.")
@@ -339,14 +337,14 @@ createVisits<-function(x,
 #' visits(ob, name = "visNoRecorder", useAsDefault = TRUE) <- tmp.vis
 #' vis2 <- visits(ob)
 #' attr(ob, "visitCol")
-visits <- function(x, name=NULL){
+visits <- function(x, name=NULL) {
 
-  if(class(x)!="OrganizedBirds"){
+  if (!inherits(x, "OrganizedBirds")) {
     stop("Cannot get the visits from other than a OrganizedBirds-class")
   }
 
-  if(is.null(name)){
-    name<-attr(x, "visitCol")
+  if (is.null(name)) {
+    name <- attr(x, "visitCol")
   }
 
   return(st_drop_geometry(x[[1]][,name]))
@@ -354,25 +352,25 @@ visits <- function(x, name=NULL){
 
 #' @rdname visits
 #' @export
-"visits<-"<-function(x,
-                     name=NULL,
-                     useAsDefault = TRUE,
-                     value){
+"visits<-" <- function(x,
+                       name=NULL,
+                       useAsDefault = TRUE,
+                       value){
 
-  if(is.null(name)){
+  if (is.null(name)) {
     name <- "visitUID"
   }
 
-  if(class(x)=="OrganizedBirds"){
+  if (inherits(x, "OrganizedBirds")) {
 
     x$spdf[,name] <- value
 
-    if(useAsDefault){
+    if (useAsDefault) {
       attr(x, "visitCol") <- name
     }
 
-  }else if(length(dim(x)) == 2){
-    if(any(colnames(x) == name)){
+  }else if (length(dim(x)) == 2) {
+    if (any(colnames(x) == name)) {
       x[,name] <- value
     }else{
       cName <- colnames(x)
@@ -381,7 +379,7 @@ visits <- function(x, name=NULL){
       colnames(x) <- cName
     }
 
-    if(useAsDefault){
+    if (useAsDefault) {
       warning("Cannot set the default visit column for any object other than a OrganizedBirds. useAsDefault=TRUE will not be used.")
     }
 
@@ -391,8 +389,6 @@ visits <- function(x, name=NULL){
 
   return(x)
 }
-
-
 
 
 #' Extract observation data
@@ -406,15 +402,15 @@ visits <- function(x, name=NULL){
 #' @examples
 #' ob <- organizeBirds(bombusObs)
 #' head(obsData(ob))
-obsData<-function(x){
+obsData <- function(x) {
   UseMethod("obsData")
 }
 
 #' @rdname obsData
 #' @export
-obsData.OrganizedBirds<-function(x){
-  if(any(class(x$spdf) == "SpatialPointsDataFrame")) return(x$spdf@data)
-  if(any(class(x$spdf) == "sf")) return(st_drop_geometry(x$spdf))
+obsData.OrganizedBirds <- function(x) {
+  if (inherits(x$spdf, "SpatialPointsDataFrame")) return(x$spdf@data)
+  if (inherits(x$spdf, "sf")) return(st_drop_geometry(x$spdf))
 }
 
 
@@ -500,34 +496,34 @@ obsData.OrganizedBirds<-function(x){
 #'  \code{\link{obsData}} to retrieve the data.frame from this class.
 #' @aliases organiseBirds
 organizeBirds <- function(x,
-                        sppCol = "scientificName",
-                        idCols = c("locality", "recordedBy"),
-                        timeCols = c("year", "month", "day"),
-                        timeInVisits = "day",
-                        grid = NULL,
-                        presenceCol = NULL,
-                        xyCols = c("decimalLongitude", "decimalLatitude"),
-                        dataCRS = 4326,
-                        taxonRankCol=NULL,
-                        taxonRank=c("SPECIES","SUBSPECIES","VARIETY"),
-                        simplifySppName=FALSE,
-                        spOut=FALSE){
+                          sppCol = "scientificName",
+                          idCols = c("locality", "recordedBy"),
+                          timeCols = c("year", "month", "day"),
+                          timeInVisits = "day",
+                          grid = NULL,
+                          presenceCol = NULL,
+                          xyCols = c("decimalLongitude", "decimalLatitude"),
+                          dataCRS = 4326,
+                          taxonRankCol = NULL,
+                          taxonRank = c("SPECIES","SUBSPECIES","VARIETY"),
+                          simplifySppName = FALSE,
+                          spOut = FALSE){
 
   crs <- st_crs(as.numeric(dataCRS))
   stdTimeCols <- c("year", "month", "day")
 
   # Check the type of data
-  if(any(class(x) == "data.frame")){
+  if (inherits(x, "data.frame")) {
     x <- as.data.frame(x)
 
     xyColsl.df <- unlist(findCols(xyCols, x))
-    if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
-    if(length(xyColsl.df) == 1) stop("The column names defined for the coordinates must be two. Check your values")
+    if (length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
+    if (length(xyColsl.df) == 1) stop("The column names defined for the coordinates must be two. Check your values")
 
-    if (length(xyColsl.df) > 0){
-      if (length(xyColsl.df) > 2){ ## if too many matches try exact=TRUE
-        xyColsl.df <- unlist(findCols(xyCols, x, exact=TRUE))
-        if(length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
+    if (length(xyColsl.df) > 0) {
+      if (length(xyColsl.df) > 2) { ## if too many matches try exact=TRUE
+        xyColsl.df <- unlist(findCols(xyCols, x, exact = TRUE))
+        if (length(xyColsl.df) == 0) stop("The column names defined for the coordinates could not be found in the data set")
       }
       x <- st_as_sf(x, coords = xyColsl.df)
       st_crs(x) <- st_crs(as.numeric(dataCRS))
@@ -536,28 +532,28 @@ organizeBirds <- function(x,
     ### TODO Add message if CRS is not compatible with coordinates?? Do it with try.catch
 
     } else { stop("The column names defined for the coordinates could not be found in the data set")}
-  } else if(any(class(x) == "SpatialPointsDataFrame")){
+  } else if (inherits(x, "SpatialPointsDataFrame")) {
     x <- st_as_sf(x)
     xdf <- st_drop_geometry(x)
-  } else if(any(class(x) == "sf")){
+  } else if (inherits(x, "sf")) {
     xdf <- st_drop_geometry(x)## Just continue... :)
   } else {
     stop("The argument 'x' should be of class data.frame, sf or SpatialPointsDataFrame.")
   }
 
-  if(st_crs(x) != crs){
+  if (st_crs(x) != crs) {
     x <- st_transform(x, crs = crs)
   }
 
   ### Check the column names
-  if (any(duplicated(tolower(names(x))))){
+  if (any(duplicated(tolower(names(x))))) {
     stop("There are duplicated column names in the dataset (Note: case insensitive check).")
   }
 
   # Check if user wants to leave a certain level
-  if (!is.null(taxonRankCol)){
+  if (!is.null(taxonRankCol)) {
     TRCol.df <- findCols(taxonRankCol, x, exact = TRUE)
-    if (length(TRCol.df) > 0){
+    if (length(TRCol.df) > 0) {
       exact.taxonRank <- paste0("\\b", taxonRank, "\\b") ## exact match
       wIn <- unique(
                 unlist(
@@ -570,18 +566,18 @@ organizeBirds <- function(x,
                 )
               )
 
-      if (length(wIn) > 0){
+      if (length(wIn) > 0) {
         nOut <- nrow(x) - length(wIn)
         x <- x[wIn,]
-        if(nOut > 0) message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
+        if (nOut > 0) message(paste0(nOut, " observations did not match with the specified taxon rank and were removed."))
       } else { stop(paste0("No observation match with the specified taxon rank(s).")) }
     } else { stop(paste0("Taxon Rank: there is no column called ", taxonRankCol))}
   }
 
   # Simplify species names to reduce epithets and author names
   sppCol.df <- findCols(sppCol, x, exact = TRUE)
-  if (length(sppCol.df) > 0){
-    if (!is.null(simplifySppName) && simplifySppName == TRUE){
+  if (length(sppCol.df) > 0) {
+    if (!is.null(simplifySppName) && simplifySppName == TRUE) {
       x[, sppCol.df] <- simplifySpp(st_drop_geometry(x), sppCol.df)
     }
   } else { stop(paste0("Species name: there is no column called ", sppCol))}
@@ -610,11 +606,11 @@ organizeBirds <- function(x,
   #### Preparing the output as we want it
   res.df <- x[,c(sppCol.df, stdTimeCols, "visitUID", "geometry")]
 
-  if (!is.null(presenceCol)){
+  if (!is.null(presenceCol)) {
     presenceCol.df <- findCols(presenceCol, x)
-    if (length(presenceCol.df) > 0){
+    if (length(presenceCol.df) > 0) {
       presence <- x[, presenceCol.df]
-      presence <- ifelse(presence>=1, 1, 0)
+      presence <- ifelse(presence >= 1, 1, 0)
       res.df[,"presence"] <- presence
     } else {stop(paste0("Presence: there is no column called ", presenceCol))}
   }
@@ -623,14 +619,14 @@ organizeBirds <- function(x,
 
   #### Add the visits SLL to each visits
   x <- res.df
-  if(spOut) x <- as_Spatial(x)
+  if (spOut) x <- as_Spatial(x)
 
   res <- list(x)
 
-  names(res)<-"spdf"
+  names(res) <- "spdf"
 
-  class(res)<-c("OrganizedBirds")
-  attr(res, "visitCol")<-"visitUID"
+  class(res) <- c("OrganizedBirds")
+  attr(res, "visitCol") <- "visitUID"
 
   return(res)
 }

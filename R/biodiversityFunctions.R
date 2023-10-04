@@ -18,12 +18,12 @@
 #' @export
 #' @importFrom rlang .data
 #' @seealso \code{\link{summarizeBirds}}, \code{\link{exportBirds}}
-communityMatrix <- function(x, sampleUnit="observation"){
+communityMatrix <- function(x, sampleUnit = "observation"){
 
-  if (class(x) != "SummarizedBirds") {
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
-  visitCol<-attr(x, "visitCol")
+  visitCol <- attr(x, "visitCol")
 
   allSpecies <- listSpecies(x)
   nCells <- nrow(x$spatial)
@@ -31,13 +31,13 @@ communityMatrix <- function(x, sampleUnit="observation"){
   wNonEmpty <- whichNonEmpty(x$overlaid)
 
   res <- matrix(NA,
-                nrow=nCells,
+                nrow = nCells,
                 ncol = length(allSpecies),
                 dimnames = list(cellID,
                                 allSpecies))
 
-  if (sampleUnit == "visit"){
-    for(i in wNonEmpty){
+  if (sampleUnit == "visit") {
+    for (i in wNonEmpty) {
       tmp.vis <- group_by(x$overlaid[[i]],
                           .data$scientificName,
                           !!sym(visitCol)) %>%
@@ -47,11 +47,11 @@ communityMatrix <- function(x, sampleUnit="observation"){
       res[i, wSp] <- tmp
     }
   }
-  if (sampleUnit == "observation"){
-    for(i in wNonEmpty){
+  if (sampleUnit == "observation") {
+    for (i in wNonEmpty) {
       tmp <- group_by(x$overlaid[[i]],
                       .data$scientificName) %>%
-        summarise(n=n())
+        summarise(n = n())
       wSp <- match( tmp$scientificName, allSpecies)
       res[i, wSp] <- tmp$n
     }
@@ -86,16 +86,16 @@ communityMatrix <- function(x, sampleUnit="observation"){
 #' @seealso \code{\link{communityMatrix}}
 communityMatrixGrid <- function(x){
 
-  if (class(x) != "SummarizedBirds") {
+  if (!inherits(x, "SummarizedBirds")) {
     stop("The object 'x' must be of class SummarizedBirds.")
   }
-  visitCol<-attr(x, "visitCol")
+  visitCol <- attr(x, "visitCol")
   overlaid <- x$overlaid
   allSpecies <- listSpecies(x)
   nCells <- nrow(x$spatial)
   cellID <- rownames(x$spatial)
-  res<-vector("list",nCells)
-  names(res)<-cellID
+  res <- vector("list",nCells)
+  names(res) <- cellID
 
   # wNonEmpty <- wichNonEmpty(overlaid)
   wNonEmpty <- attr(x, "nonEmptyGridCells")
@@ -103,9 +103,9 @@ communityMatrixGrid <- function(x){
   comMatList <- lapply(wNonEmpty, function(x){
     specMat <- overlaid[[x]] %>%
       group_by(.data$visitUID,
-               "scientificName"=factor(.data$scientificName, levels=allSpecies),
+               "scientificName" = factor(.data$scientificName, levels = allSpecies),
                .drop = FALSE) %>%
-      summarise("count"=n()) %>%
+      summarise("count" = n()) %>%
       pivot_wider(names_from = .data$scientificName,
                          values_from = .data$count,
                          values_fill = list(count = 0))
@@ -142,18 +142,18 @@ communityMatrixGrid <- function(x){
 #' @export
 #' @importFrom tidyr pivot_wider
 #' @seealso \code{\link{communityMatrix}}
-recBySpp <- function(x, format="A", location="coordinates"){
-  if (class(x) != "OrganizedBirds") {
+recBySpp <- function(x, format = "A", location = "coordinates") {
+  if (!inherits(x, "OrganizedBirds")) {
     stop("The object 'x' must be of class OrganizedBirds. See the function 'organizedBirds()'.")
   }
 
-  if (is.null(location) | !(location %in% c("coordinates", "visit"))){
+  if (is.null(location) | !(location %in% c("coordinates", "visit"))) {
     stop("The argument 'location' needs to be one of 'coordinates' or 'visit'")
   }
-  if(location == "visit") location <- "visitUID"
+  if (location == "visit") location <- "visitUID"
 
   format <- tolower(format)
-  if(is.null(format) | !(format %in% c("a","b"))){
+  if (is.null(format) | !(format %in% c("a","b"))) {
     stop("The argument 'format' needs to be one of 'a' or 'b'")
   }
 
@@ -167,8 +167,8 @@ recBySpp <- function(x, format="A", location="coordinates"){
   ### typeA
   resA <- obCoor %>%
     group_by(.data$scientificName, !!sym(location)) %>%
-    summarise("count"=n())
-  if(format == "a"){
+    summarise("count" = n())
+  if (format == "a") {
     return(as.data.frame(resA))
   }else{
     ### typeB
