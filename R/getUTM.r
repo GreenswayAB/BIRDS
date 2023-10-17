@@ -111,9 +111,9 @@ getUTMzone <- function(sf){
     # ctr <- geosphere::geomean(coord)
     # meanPoint<-st_as_sf(data.frame("X"=ctr[1], "Y"=ctr[2]), coords=c("X", "Y"))
     # st_crs(meanPoint) <- st_crs(points)
-    meanPoint <- points %>%
-                    st_transform(3857) %>%
-                    st_centroid() %>%
+    meanPoint <- points |>
+                    st_transform(3857) |>
+                    st_centroid() |>
                     st_transform(4326)
 
     utmMeanZone <- suppressMessages(suppressWarnings(st_intersection(utmZones, meanPoint)))

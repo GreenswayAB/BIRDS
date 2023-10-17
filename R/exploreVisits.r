@@ -27,7 +27,8 @@
 #' @importFrom dplyr group_by summarise n n_distinct sym
 #' @importFrom dbscan dbscan
 #' @importFrom lubridate date day month year ymd
-#' @importFrom geosphere distGeo distm
+#' @importFrom units set_units
+#### @importFrom geosphere distGeo distm
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 #' @keywords internal
 lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
@@ -41,37 +42,41 @@ lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
   coordUnique <- matrix(coord[!duplicated(coordPaste)], ncol = 2)
   nUniqueLoc <- nrow(coordUnique)
 
-  ctr <- spdfTmpTr %>%
-    st_union() %>%
-    st_convex_hull() %>%
-    st_centroid() %>%
-    st_transform( 4326 ) %>%
+  ctr <- spdfTmpTr |>
+    st_union() |>
+    st_convex_hull() |>
+    st_centroid() |>
+    st_transform( 4326 ) |>
     st_coordinates()
-
   centroidX <- ctr[,"X"]
   centroidY <- ctr[,"Y"]
-
+  
   if (nUniqueLoc > 1) {
-    distances <- distGeo(ctr[, c("X", "Y")], coord)
-    distM <- distm(coord, coord) ## the untransformed spdf
+    ctrsf <- spdfTmpTr |>
+      st_union() |>
+      st_convex_hull() |>
+      st_centroid() |>
+      st_transform(4326)
+    
+    # distances <- distGeo(ctr[, c("X", "Y")], coord)
+    distances <- st_distance(ctrsf, spdfTmp) |> 
+      set_units(NULL)
+    # distM <- distm(coord, coord) ## the untransformed spdf
+    distM <- st_distance(spdfTmp, spdfTmp) |> ## the untransformed spdf
+      set_units(NULL)
     distMLT <- distM[lower.tri(distM)]
     distancesOut <- distMLT[which(distMLT > 0)]
-
-    # shotGroups::getMinCircle(coordUnique) # The minimum circle that covers all points
-    # this function is very much dependent on the projection
-    # issue #4 the function shotgun::minCircle() is not reliable for extreme
-    # cases with few points or with outliers. We stick to max distance from centroid.
 
     effortDiam <- round(max(distances) * 2, 0)
     medianDist <- round(median(distances), 0)
     iqrDist    <- round(IQR(distances), 0)
 
-    if(nUniqueLoc >= minPts ){
+    if (nUniqueLoc >= minPts ) {
       clusters  <- dbscan(st_coordinates(spdfTmpTr),
                           eps = median(distancesOut),
                           minPts = minPts)
-      nOutliers <- sum(clusters$cluster==0)
-      nClusters  <- sum(unique(clusters$cluster)!=0)
+      nOutliers <- sum(clusters$cluster == 0)
+      nClusters  <- sum(unique(clusters$cluster) != 0)
     } else {
       nClusters  <- 1
       nOutliers  <- 0
@@ -148,39 +153,39 @@ lapplyVisits <- function(x, dat, visitCol, spdf, minPts){
 #' @importFrom dplyr group_by summarise n n_distinct sym
 #' @importFrom dbscan dbscan
 #' @importFrom lubridate date day month year ymd
-#' @importFrom geosphere distGeo distm
+#### @importFrom geosphere distGeo distm
 #' @seealso \code{\link{createVisits}}, \code{\link{organiseBirds}}
 exploreVisits <- function(x,
-                        visitCol=NULL, #visitCol=attr(x, "visitCol"),
-                        sppCol="scientificName",
+                        visitCol = NULL, #visitCol=attr(x, "visitCol"),
+                        sppCol = "scientificName",
                         parallel = FALSE,
                         nc = NULL){
-  if(!is.logical(parallel)) stop("Argument 'parallel' is required and needs to be 'logical'")
+  if (!is.logical(parallel)) stop("Argument 'parallel' is required and needs to be 'logical'")
 
-  if(parallel){
+  if (parallel) {
     # if(!"parallel" %in% installed.packages()) stop("The package 'parallel' is required if the argument 'parallel' is set to TRUE")
-    if(length(find.package(package = "parallel", 
+    if (length(find.package(package = "parallel", 
                            quiet = TRUE, 
                            verbose = FALSE)) == 0) stop("The package 'parallel' is required if the argument 'parallel' is set to TRUE")
 
     ### handling cores
     ncDet <- parallel::detectCores()
-    if(is.null(nc)){
-      nc <- ncDet-1
+    if (is.null(nc)) {
+      nc <- ncDet - 1
     }else{
-      if(is.integer(nc) | is.numeric(nc)){
+      if (is.integer(nc) | is.numeric(nc)) {
         nc <- max(1, round(nc))
       }else{
         stop("'nc' need to be integer or numeric")
       }
     }
 
-    if(ncDet < nc){
-      nc <- ncDet-1
+    if (ncDet < nc) {
+      nc <- ncDet - 1
       warning("The number of detected cores is smaller than the required by 'nc'. Falling back to nc = 'number of cores - 1'")
     }
 
-    if(parallel & nc == 1){
+    if (parallel & nc == 1) {
       parallel <- FALSE
       message("Use 'nc' > 1 to take advantage of parallel")
     }
@@ -245,7 +250,9 @@ exploreVisits <- function(x,
                       spdf = spdf, minPts = minPts ) #end lapply
   }else{
     cl <- parallel::makeCluster(nc)
-    parallel::clusterExport(cl, varlist = list("uniqueUID", "dat", "visitCol", "spdf", "minPts"), envir = envirFunc)
+    parallel::clusterExport(cl, 
+                            varlist = list("uniqueUID", "dat", "visitCol", "spdf", "minPts"), 
+                            envir = envirFunc)
     parallel::clusterEvalQ(cl, {
                         library("sf")
                         library("dbscan")
@@ -306,9 +313,9 @@ exploreVisits <- function(x,
 #' @export
 #' @seealso \code{\link{exploreVisits}}, \code{\link{organiseBirds}}
 spatialVisits <- function(x,
-                          xyCols=c("centroidX","centroidY"),
-                          dataCRS="4326",
-                          radius="medianDist"){
+                          xyCols = c("centroidX","centroidY"),
+                          dataCRS = "4326",
+                          radius = "medianDist"){
   crs <- st_crs(as.numeric(dataCRS))
 
   if (inherits(x, "data.frame")) {

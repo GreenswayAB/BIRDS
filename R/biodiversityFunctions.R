@@ -40,7 +40,7 @@ communityMatrix <- function(x, sampleUnit = "observation"){
     for (i in wNonEmpty) {
       tmp.vis <- group_by(x$overlaid[[i]],
                           .data$scientificName,
-                          !!sym(visitCol)) %>%
+                          !!sym(visitCol)) |>
         summarise()
       tmp <- rowSums(table(tmp.vis))
       wSp <- match( names(tmp), allSpecies)
@@ -50,7 +50,7 @@ communityMatrix <- function(x, sampleUnit = "observation"){
   if (sampleUnit == "observation") {
     for (i in wNonEmpty) {
       tmp <- group_by(x$overlaid[[i]],
-                      .data$scientificName) %>%
+                      .data$scientificName) |>
         summarise(n = n())
       wSp <- match( tmp$scientificName, allSpecies)
       res[i, wSp] <- tmp$n
@@ -101,11 +101,11 @@ communityMatrixGrid <- function(x){
   wNonEmpty <- attr(x, "nonEmptyGridCells")
 
   comMatList <- lapply(wNonEmpty, function(x){
-    specMat <- overlaid[[x]] %>%
+    specMat <- overlaid[[x]] |>
       group_by(.data$visitUID,
                "scientificName" = factor(.data$scientificName, levels = allSpecies),
-               .drop = FALSE) %>%
-      summarise("count" = n()) %>%
+               .drop = FALSE) |>
+      summarise("count" = n()) |>
       pivot_wider(names_from = .data$scientificName,
                          values_from = .data$count,
                          values_fill = list(count = 0))
@@ -165,14 +165,14 @@ recBySpp <- function(x, format = "A", location = "coordinates") {
   colnames(obCoor)[3] <- "coordinates"
 
   ### typeA
-  resA <- obCoor %>%
-    group_by(.data$scientificName, !!sym(location)) %>%
+  resA <- obCoor |>
+    group_by(.data$scientificName, !!sym(location)) |>
     summarise("count" = n())
   if (format == "a") {
     return(as.data.frame(resA))
   }else{
     ### typeB
-    resB <- resA %>%
+    resB <- resA |>
       pivot_wider(names_from = .data$scientificName,
                   values_from = .data$count)
     return(as.data.frame(resB))
